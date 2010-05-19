@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="windows-1252"?>
+<faces-config version="1.2" xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:bridge="http://myfaces.apache.org/portletbridge">
+    <application>
+        <application-extension>
+            <bridge:public-parameter-mappings>
+                <bridge:public-parameter-mapping>
+                    <bridge:parameter>name</bridge:parameter>
+                    <bridge:model-el>UserBean.lastName</bridge:model-el>
+                </bridge:public-parameter-mapping>
+                <bridge:public-parameter-mapping>
+                    <parameter>MyPortlet:name</parameter>
+                    <model-el>UserBean.lastName</model-el>
+                </bridge:public-parameter-mapping>
+                <bridge:public-parameter-mapping>
+                    <parameter>AnotherPortlet:name</parameter>
+                    <model-el>AnotherUser.name</model-el>
+                </bridge:public-parameter-mapping>
+            </bridge:public-parameter-mappings>
+        </application-extension>
+    </application>
+</faces-config>

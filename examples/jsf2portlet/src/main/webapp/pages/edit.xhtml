@@ -1,0 +1,51 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
+	<h:form>
+		<rich:tabPanel>
+        <rich:tab label="First">
+            Here is tab #1
+        </rich:tab>
+        <rich:tab label="Second">
+            Here is tab #2
+        </rich:tab>
+        <rich:tab label="Third">
+            Here is tab #3
+        </rich:tab>
+    </rich:tabPanel>
+    <br/><br/>
+    <p>Here is an example of tab panel switched in "ajax" style. Second tab is disabled.</p>
+    <rich:tabPanel switchType="ajax">
+        <rich:tab label="First">
+            Here is tab #1
+        </rich:tab>
+        <rich:tab label="Second" disabled="true">
+            Here is tab #2
+        </rich:tab>
+        <rich:tab label="Third">
+            Here is tab #3
+        </rich:tab>
+    </rich:tabPanel>
+    <br/><br/>
+    <p>Here is an example of tab panel switched completely on client.</p>
+    <rich:tabPanel switchType="client">
+        <rich:tab label="First">
+            Here is tab #1
+        </rich:tab>
+        <rich:tab label="Second">
+            Here is tab #2
+        </rich:tab>
+        <rich:tab label="Third">
+            Here is tab #3
+        </rich:tab>
+    </rich:tabPanel>
+	
+	
+	</h:form>
+	 	
+</ui:composition>

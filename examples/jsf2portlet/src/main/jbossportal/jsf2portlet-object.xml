@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE deployments PUBLIC
+   "-//JBoss Portal//DTD Portal Object 2.6//EN"
+   "http://www.jboss.org/portal/dtd/portal-object_2_6.dtd">
+<deployments>
+  <deployment>
+     <parent-ref>default</parent-ref>
+     <if-exists>overwrite</if-exists>
+     <page>
+  	<page-name>jsf2portlet</page-name>
+        <window>
+            <window-name>jsf2portletWindow</window-name>
+		      <instance-ref>jsf2portletInstance</instance-ref>
+            <region>center</region>
+            <height>0</height>
+            <initial-window-state>maximized</initial-window-state>
+            <properties><!--
+               <property>
+                  <name>theme.renderSetId</name>
+                  <value>emptyRenderer</value>
+                </property>
+            --></properties>
+      </window>
+    </page>
+  </deployment>
+</deployments>

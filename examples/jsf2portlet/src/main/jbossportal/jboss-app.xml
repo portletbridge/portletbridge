@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE jboss-app PUBLIC
+   "-//JBoss Portal//DTD JBoss Web Application 2.6//EN"
+   "http://www.jboss.org/portal/dtd/jboss-app_2_6.dtd">
+<jboss-app>
+	<app-name>jsf2portlet</app-name>
+</jboss-app>
