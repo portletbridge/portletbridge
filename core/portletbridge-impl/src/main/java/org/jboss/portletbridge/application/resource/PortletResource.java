@@ -37,6 +37,32 @@ public class PortletResource extends ResourceWrapper {
 		return wrapped;
 	}
 
+	public String getLibraryName() {
+		return wrapped.getLibraryName();
+	}
+
+	public String getResourceName() {
+		return wrapped.getResourceName();
+	}
+
+	public void setContentType(String contentType) {
+		wrapped.setContentType(contentType);
+	}
+
+	public void setLibraryName(String libraryName) {
+		wrapped.setLibraryName(libraryName);
+	}
+
+	public void setResourceName(String resourceName) {
+		wrapped.setResourceName(resourceName);
+	}
+
+	@Override
+	public String getContentType() {
+		// ResourceWrapper does not delegate this method
+		return wrapped.getContentType();
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 

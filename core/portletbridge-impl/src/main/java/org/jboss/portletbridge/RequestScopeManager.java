@@ -56,6 +56,11 @@ import org.jboss.portletbridge.util.BridgeLogger;
  */
 public class RequestScopeManager implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8380848257623284922L;
+
 	public static final String REQUEST_STATE_MANAGER = RequestScopeManager.class
 			.getName();
 
@@ -182,13 +187,13 @@ public class RequestScopeManager implements Serializable{
 		} else {
 			stateId = new StateId(stateIdParameter);
 			// Check portlet mode for a changes:
-			if (!portletMode.equals(stateId.getMode())) {
+			if (!portletMode.toString().equals(stateId.getMode())) {
 				StateId historyStateId = getStateIdFromViewHistory(portletMode, 
 						session);
 				if(null != historyStateId){
 					stateId = historyStateId;
 				} else {
-					stateId.setMode(portletMode);
+					stateId.setMode(portletMode.toString());
 				}
 			}
 		}

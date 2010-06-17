@@ -560,7 +560,7 @@ public class AjaxPortletBridge implements Bridge, BridgeConfig {
 				PortletMode mode = new PortletMode(portletModeName);
 				PortalActionURL historyViewId = new PortalActionURL(
 				        redirectViewId);
-				stateId.setMode(mode);
+				stateId.setMode(mode.toString());
 				historyViewId.setParameter(
 				        RequestScopeManager.STATE_ID_PARAMETER, stateId
 				                .toString());

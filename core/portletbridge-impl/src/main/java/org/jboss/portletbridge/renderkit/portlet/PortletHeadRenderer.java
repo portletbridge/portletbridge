@@ -93,26 +93,26 @@ public class PortletHeadRenderer extends Renderer {
                 String rendererType = uiComponentResource.getRendererType();
                 String resourceName = getResourceName(uiComponentResource);
 
-                if (resourceName != null && resourceName.indexOf("jquery.js") < 0) {
+                if (resourceName != null ) {
                     String resourceLibraryName = getResourceLibraryName(uiComponentResource);
                     String resourceKey = (resourceLibraryName!=null?resourceLibraryName:"default") +":"+ resourceName;
-                    String contentType = getContentType(facesContext, resourceName);
                     String uid = String.valueOf(Math.abs((portletName+":"+resourceKey).hashCode()));
 
                     if (!isResourceAlreadyRendered(facesContext, resourceKey)) {
                         Resource resource = createResource(facesContext, resourceName, resourceLibraryName);
+                        String contentType = resource.getContentType();
                         ExternalContext externalContext = facesContext.getExternalContext();
                         String resourceURL = getEncodedResourceURL(externalContext, resource);
                         PortletRequest portletRequest = (PortletRequest) externalContext.getRequest();
                         PortletResponse portletResponse = (PortletResponse) externalContext.getResponse();
 
-                        if (contentType.equals(CONTENT_TYPE_SCRIPT)) {
+                        if (CONTENT_TYPE_SCRIPT.equals(contentType)) {
                             if (PortletContainerUtil.isMarkupHeadElementSupported(portletRequest)) {
                                 PortletContainerUtil.addScriptResourceToMarkupHeadElement(portletRequest, portletResponse, resourceURL);
                             } else {
                                 PortletContainerUtil.addScriptResourceToHead(portletRequest, resourceURL, uid);
                             }
-                        } else if (contentType.equals(CONTENT_TYPE_STYLESHEET)) {
+                        } else if (CONTENT_TYPE_STYLESHEET.equals(contentType)) {
                             if (PortletContainerUtil.isMarkupHeadElementSupported(portletRequest)) {
                                 PortletContainerUtil.addStyleSheetResourceToMarkupHeadElement(portletRequest, portletResponse,
                                         resourceURL);
@@ -121,8 +121,7 @@ public class PortletHeadRenderer extends Renderer {
                             }
                         } else {
                             logger.log(Level.WARNING,
-                                    "Unable to add UIComponent class=[{}] with rendererType=[{}] and contentType=[{}] to <head>...</head> section of portal page",
-                                    new Object[]{uiComponent.getClass(), rendererType, contentType});
+                                    "Unable to add UIComponent class=["+uiComponent.getClass()+"] with rendererType=["+rendererType+"] and contentType=["+contentType+"] to <head>...</head> section of portal page");
                         }
 
                         setResourceAlreadyRendered(facesContext, resourceKey);
@@ -130,7 +129,7 @@ public class PortletHeadRenderer extends Renderer {
                 } else {
 
                     // If the resource is an externally loaded script, then
-                    if (rendererType.equals(RENDERER_TYPE_SCRIPT)) {
+                    if (RENDERER_TYPE_SCRIPT.equals(rendererType)) {
                         ExternalContext externalContext = facesContext.getExternalContext();
                         PortletRequest portletRequest = (PortletRequest) externalContext.getRequest();
 
@@ -257,9 +256,5 @@ public class PortletHeadRenderer extends Renderer {
      */
     protected void setResourceAlreadyRendered(FacesContext facesContext, String resourceKey) {
         facesContext.getAttributes().put(resourceKey, Boolean.TRUE);
-    }
-
-    private String getContentType(FacesContext ctx, String resourceName) {
-        return ctx.getExternalContext().getMimeType(resourceName);
     }
 }

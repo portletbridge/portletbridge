@@ -15,7 +15,7 @@ import javax.portlet.faces.BridgeException;
 @SuppressWarnings("serial")
 public class StateId implements Serializable {
 	
-	private PortletMode mode;
+	private String mode;
 	
 	private final String uuid ;
 
@@ -25,14 +25,14 @@ public class StateId implements Serializable {
 	 * @param uuid
 	 */
 	public StateId(PortletMode mode, String uuid) {
-		this.mode = mode;
+		this.mode = mode.toString();
 		this.uuid = uuid;
 	}
 	
 	public StateId(String stateId) {
 		int modeEnd = stateId.indexOf(':');
 		if(modeEnd >= 0){
-				mode = new PortletMode(stateId.substring(0, modeEnd));
+				mode = stateId.substring(0, modeEnd);
 				uuid = stateId.substring(modeEnd+1);
 		} else {
 			throw new BridgeException("Invalid StateId format");
@@ -43,14 +43,14 @@ public class StateId implements Serializable {
 	/**
 	 * @return the mode
 	 */
-	public PortletMode getMode() {
+	public String getMode() {
 		return mode;
 	}
 
 	/**
 	 * @param mode the mode to set
 	 */
-	public void setMode(PortletMode mode) {
+	public void setMode(String mode) {
 		this.mode = mode;
 	}
 
@@ -63,7 +63,7 @@ public class StateId implements Serializable {
 
 	@Override
 	public String toString() {
-		return mode.toString()+':'+uuid;
+		return mode+':'+uuid;
 	}
 	
 	/* (non-Javadoc)
