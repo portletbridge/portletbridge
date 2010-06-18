@@ -1,7 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 
 <faces-config xmlns="http://java.sun.com/xml/ns/javaee"
-              version="2.0">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
+    version="2.0">
 
 	<application>
 		<!-- system-event-listener>
@@ -13,6 +15,11 @@
 	<managed-bean>
 		<managed-bean-name>testResource</managed-bean-name>
 		<managed-bean-class>org.richfaces.resource.TestResource2</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>requestBean</managed-bean-name>
+		<managed-bean-class>org.richfaces.demo.RequestBean</managed-bean-class>
 		<managed-bean-scope>request</managed-bean-scope>
 	</managed-bean>
 	
