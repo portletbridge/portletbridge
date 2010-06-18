@@ -23,6 +23,7 @@
 package org.jboss.portletbridge.component;
 
 import javax.faces.component.NamingContainer;
+import javax.faces.component.UINamingContainer;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -36,10 +37,7 @@ import javax.portlet.faces.annotation.PortletNamingContainer;
 public class UIPortletViewRoot extends UIViewRoot implements NamingContainer
 {
 
-  //TODO: This should be regenerated each time this is modified.  Can this be added to maven?
-  private static final long   serialVersionUID = -4524288011655837711L;
-  private static final String SEPARATOR        = (new Character(NamingContainer.SEPARATOR_CHAR))
-                                                                                                .toString();
+  private static final long   serialVersionUID = -4524288011655837712L;
 
   public UIPortletViewRoot()
   {
@@ -57,7 +55,7 @@ public class UIPortletViewRoot extends UIViewRoot implements NamingContainer
   public static String convertClientId(FacesContext context, UIViewRoot root, String additionalId)
   {
     ExternalContext ec = context.getExternalContext();
-    String namespace = ec.encodeNamespace(SEPARATOR);
+    String namespace = ec.encodeNamespace(String.valueOf(UINamingContainer.getSeparatorChar(context)));
 
     /*
      * In servlet world encodeNamespace does nothing -- so if we get back what we sent in then do

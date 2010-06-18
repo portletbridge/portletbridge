@@ -114,6 +114,7 @@ public class PortletResourceHandler extends ResourceHandlerWrapper {
             int bufferSize = extContext.getResponseBufferSize();
             if(0 == bufferSize) bufferSize = 2048;
 			ByteBuffer buf = ByteBuffer.allocate(bufferSize);
+            extContext.setResponseBufferSize(buf.capacity());
             try {
                 InputStream in = resource.getInputStream();
                 if (in == null) {
@@ -122,12 +123,12 @@ public class PortletResourceHandler extends ResourceHandlerWrapper {
                 }
                 resourceChannel =
                       Channels.newChannel(in);
-                out = Channels.newChannel(extContext.getResponseOutputStream());
-                extContext.setResponseBufferSize(buf.capacity());
                 String contentType = resource.getContentType();
                 if (contentType != null) {
                     extContext.setResponseContentType(resource.getContentType());
                 }
+                out = Channels.newChannel(extContext.getResponseOutputStream());
+                extContext.setResponseBufferSize(buf.capacity());
                 handleHeaders(context, resource);
 
                 int size = 0;

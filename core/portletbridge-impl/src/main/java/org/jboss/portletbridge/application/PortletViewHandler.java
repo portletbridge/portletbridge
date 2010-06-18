@@ -48,6 +48,7 @@ import javax.portlet.faces.BridgeUtil;
 import javax.portlet.faces.annotation.PortletNamingContainer;
 import javax.portlet.faces.component.PortletNamingContainerUIViewRoot;
 
+import org.jboss.portletbridge.component.UIPortletViewRoot;
 import org.jboss.portletbridge.context.PortalActionURL;
 import org.jboss.portletbridge.context.PortletBridgeContext;
 import org.jboss.portletbridge.util.BridgeLogger;
@@ -105,11 +106,12 @@ public class PortletViewHandler extends ViewHandlerWrapper {
 			}
 		}
 		UIViewRoot root = super.createView(facesContext, viewId);
+		
 		Class<? extends UIViewRoot> rootClass = root.getClass();
 
 		if (portletRequest) {
 			if (rootClass.getAnnotation(PortletNamingContainer.class) == null) {
-				UIViewRoot portletRoot = new PortletNamingContainerUIViewRoot();
+				UIViewRoot portletRoot = new UIPortletViewRoot();
 				portletRoot.setViewId(root.getViewId());
 				portletRoot.setLocale(root.getLocale());
 				portletRoot.setRenderKitId(root.getRenderKitId());
