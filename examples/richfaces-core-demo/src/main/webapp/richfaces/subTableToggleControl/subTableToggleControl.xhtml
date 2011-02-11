@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<ui:composition>
+	<p>This sample shows simple master-detail table implemented using<b>
+	rich:dataTable</b> and<b> rich:collapsibleSubTable</b> components</p>
+	<p>There is one feature which is completely new for 4.x - subtables
+	now could be collapsed/expanded by using new component <b>rich:collapsibleSubTableToggler</b></p>
+	<p>Switching customization:</p>
+	<ul>
+		<li>subTable's could be collapsed/expanded in different modes
+		defined via subTable expandMode attribute - "<i>client</i>", "<i>ajax</i>"
+		and "<i>server</i>"</li>
+		<li>The developer could get control on current states of
+		subTables using its <b>expanded</b> attribute.</li>
+	</ul>
+	<ui:include src="#{demoNavigator.sampleIncludeURI}" />
+	<ui:include src="/templates/includes/source-view.xhtml">
+		<ui:param name="src" value="#{demoNavigator.sampleIncludeURI}" />
+		<ui:param name="sourceType" value="xhtml" />
+		<ui:param name="openLabel" value="View Source" />
+		<ui:param name="hideLabel" value="Hide Source" />
+	</ui:include>
+</ui:composition>
+</html>

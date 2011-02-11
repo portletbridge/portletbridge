@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<ui:composition>
+	<p>ExtendedDataTable component provides next set of features:</p>
+	<ul>
+		<li>Horizontal/Vertical scrolling</li>
+		<li>Ajax lazy loading on vertical scroll</li>
+		<li>Support "frozen" columns which are not scrolled on using
+		horizontal scroll</li>
+	</ul>
+	<p>The component not requires special model usage but supports all the standard ones and all the
+	models which rich:dataTable supports.</p>
+	<ui:include src="#{demoNavigator.sampleIncludeURI}" />
+	<ui:include src="/templates/includes/source-view.xhtml">
+		<ui:param name="src" value="#{demoNavigator.sampleIncludeURI}" />
+		<ui:param name="sourceType" value="xhtml" />
+		<ui:param name="openLabel" value="View Source" />
+		<ui:param name="hideLabel" value="Hide Source" />
+	</ui:include>
+	<p>In order to turn on Ajax loading - just specify clientRows
+	attribute with number of rows to be loaded on the client</p>
+</ui:composition>
+
+</html>

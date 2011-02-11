@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<ui:composition>
+
+	<p><b>a4j:outputPanel</b> component designed to provide next
+	features:
+	<ul>
+		<li><b>Automaticall updates</b> of the child content on Ajax
+		requests</li>
+		<li>Wrapper component for <b>conditional rendering of nested
+		elements</b> via Ajax</li>
+		<li><b>Configurable layouts</b>:
+		<ul>
+			<li>inline - rendered as span element</li>
+			<li>block - rendered as div element</li>
+			<li>none - special layout for nested components confitional
+			rendering cases</li>
+		</ul>
+		</li>
+		<li></li>
+	</ul>
+	</p>
+	<ui:include src="#{demoNavigator.sampleIncludeURI}" />
+	<ui:include src="/templates/includes/source-view.xhtml">
+		<ui:param name="src" value="#{demoNavigator.sampleIncludeURI}" />
+		<ui:param name="sourceType" value="xhtml" />
+		<ui:param name="openLabel" value="View Source" />
+		<ui:param name="hideLabel" value="Hide Source" />
+	</ui:include>
+</ui:composition>
+
+</html>

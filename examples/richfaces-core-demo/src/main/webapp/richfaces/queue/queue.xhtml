@@ -1,0 +1,52 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+	
+	<p>JSF 2 provides queue mechanism out-of the box already. And
+	RichFaces queue just provides some additional customizations to improve
+	the queue usability and allow to tune your performance while using Ajax
+	as much as possible.</p>
+	<p>The only big difference which the developers who used queue in
+	3.3.x should remember: as JSF 2 already provides single queue and not
+	allows to have more than one queue instance(currently) you can't really
+	fire concurrent requests anymore. So the queue in RF now not actually
+	defines logical queue but just a component for defining queueing
+	options.</p>
+	<p>Here you could explore additional optimization parameters of the
+	queue and learn how they influence Ajax requests. This example is a
+	good start to learn about Ajax requests flood protection.</p>
+
+	<p>Pay attention to next point in the example:</p>
+	<ul>
+		<li>Setting <b>requestDelay</b> to greater value reduces the greatly
+		requests count on fast typing. (More similar requests are combined in
+		the result)</li>
+		<li>Setting requestDelay to smaller value(just for easier exploration) but using <b>ignoreDupResponse</b> flag set to true 
+		- reduces greatly DOM updates count.</li>
+	</ul>
+	<p>Also pay your attention to the queue definition. Such definition
+	(inside some form without a name) means that the queue options becomes
+	global for the form.</p>
+
+	<ui:include src="#{demoNavigator.sampleIncludeURI}" />
+	<ui:include src="/templates/includes/source-view.xhtml">
+		<ui:param name="src" value="#{demoNavigator.sampleIncludeURI}" />
+		<ui:param name="sourceType" value="xhtml" />
+		<ui:param name="openLabel" value="View Source" />
+		<ui:param name="hideLabel" value="Hide Source" />
+	</ui:include>
+	<p>Queue could be defined as</p>
+	<ul>
+		<li><b>Default for view.</b> In this case - the parameters will
+		be used for all the Ajax requests in view(if not redefined). In order
+		to define such queue - just place <b>a4j:queu</b> outside of any forms
+		without defining <b>name</b></li>
+		<li><b>Default for form.</b> Similar to view-scoped but should be
+		defiend in some form without defining <b>name</b></li>
+		<li><b>Referenced from ajax behaviors/components.</b> Queue
+		should be defined with name and referenced using attachQueue tag(see
+		corresponding sample).</li>
+	</ul>
+</ui:composition>
+

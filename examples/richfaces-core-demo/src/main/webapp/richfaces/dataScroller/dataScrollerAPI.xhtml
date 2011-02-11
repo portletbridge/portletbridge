@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<ui:composition>
+	<p>dataScroller provides cliens side API functions in order to
+	provide control from your JavaScript custom handlers. List of api
+	methods:</p>
+	<ul style="font-style: italic">
+		<li>next</li>
+		<li>previous</li>
+		<li>first</li>
+		<li>last</li>
+	</ul>
+	<p>This simple sample shows how the scroller could be controlled
+	via API from external controls(arrows images)</p>
+	<ui:include src="#{demoNavigator.sampleIncludeURI}" />
+	<ui:include src="/templates/includes/source-view.xhtml">
+		<ui:param name="src" value="#{demoNavigator.sampleIncludeURI}" />
+		<ui:param name="sourceType" value="xhtml" />
+		<ui:param name="openLabel" value="View Source" />
+		<ui:param name="hideLabel" value="Hide Source" />
+	</ui:include>
+</ui:composition>
+
+</html>
