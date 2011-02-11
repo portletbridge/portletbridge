@@ -36,7 +36,7 @@ public class StateIdTest extends TestCase {
 		PortletMode mode = PortletMode.HELP;
 		String uuid = UUID.randomUUID().toString();
 		StateId stateId = new StateId(mode.toString()+':'+uuid);
-		assertEquals(mode, stateId.getMode());
+		assertEquals(mode.toString(), stateId.getMode());
 		assertEquals(uuid, stateId.getUuid());
 	}
 

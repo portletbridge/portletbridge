@@ -22,15 +22,15 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.richfaces</groupId>
-        <artifactId>richfaces-parent</artifactId>
-        <version>7</version>
+        <groupId>org.jboss.portletbridge</groupId>
+        <artifactId>examples</artifactId>
+        <version>3.0.0-SNAPSHOT</version>
     </parent>
 
     <groupId>org.jboss.portletbridge.examples</groupId>
-    <artifactId>fichfaces-core-demo</artifactId>
+    <artifactId>richfaces-core-demo</artifactId>
     <packaging>war</packaging>
-    <version>4.0.0-SNAPSHOT</version>
+    <version>3.0.0-SNAPSHOT</version>
     <name>RichFaces Examples: Core</name>
 
     <properties>
@@ -72,12 +72,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>${jsf2.api.groupid}</groupId>
-            <artifactId>${jsf2.api.artifactid}</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>${jsf2.impl.groupid}</groupId>
-            <artifactId>${jsf2.impl.artifactid}</artifactId>
+            <groupId>com.sun.faces</groupId>
+            <artifactId>jsf-api</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -109,7 +106,7 @@
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
+            <artifactId>slf4j-simple</artifactId>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>
@@ -136,28 +133,8 @@
     </dependencies>
 
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <!-- Configure checkstyle report for this module -->
-                    <artifactId>maven-checkstyle-plugin</artifactId>
-                    <dependencies>
-                        <dependency>
-                            <groupId>org.richfaces</groupId>
-                            <artifactId>richfaces-build-checkstyle
-                            </artifactId>
-                            <version>${richfaces.checkstyle.version}
-                            </version>
-                        </dependency>
-                    </dependencies>
-                </plugin>
-            </plugins>
-        </pluginManagement>
 
         <plugins>
-            <plugin>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-            </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
             </plugin>
@@ -179,102 +156,6 @@
     </build>
 
     <profiles>
-        <profile>
-            <id>release</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-war-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>jee6</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>war</goal>
-                                </goals>
-                                <configuration>
-                                    <webappDirectory>${project.build.directory}/${project.build.finalName}-jee6</webappDirectory>
-                                    <classifier>jee6</classifier>
-                                    <packagingExcludes>WEB-INF/lib/jsf-api*,WEB-INF/lib/jsf-impl*,WEB-INF/lib/jta-*</packagingExcludes>
-                                    <warSourceExcludes>WEB-INF/lib/jsf-api*,WEB-INF/lib/jsf-impl*,WEB-INF/lib/jta-*</warSourceExcludes>
-                                </configuration>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <classifier>tomcat6</classifier>
-                        </configuration>
-                    </plugin>
-
-                    <plugin>
-                        <artifactId>maven-assembly-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>group-sources</id>
-                                <goals>
-                                    <goal>single</goal>
-                                </goals>
-                                <phase>package</phase>
-                                <configuration>
-                                    <finalName>sources</finalName>
-                                    <descriptor>assembler.xml</descriptor>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <artifactId>maven-jar-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                                <phase>package</phase>
-                                <configuration>
-                                    <!-- TODO - basedir might have a problem with release realitive
-                                          path might be better to use ${project.build.directory} -->
-                                    <classesDirectory>${basedir}/target/sources/sources</classesDirectory>
-                                    <classifier>sources</classifier>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-
-
-            </build>
-        </profile>
-        <profile>
-            <id>jee6</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-war-plugin</artifactId>
-                        <configuration>
-                            <webappDirectory>${project.build.directory}/${project.build.finalName}-jee6</webappDirectory>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-
-            <dependencies>
-                <dependency>
-                    <groupId>${jsf2.api.groupid}</groupId>
-                    <artifactId>${jsf2.api.artifactid}</artifactId>
-                    <scope>provided</scope>
-                </dependency>
-                <dependency>
-                    <groupId>${jsf2.impl.groupid}</groupId>
-                    <artifactId>${jsf2.impl.artifactid}</artifactId>
-                    <scope>provided</scope>
-                </dependency>
-                <dependency>
-                    <groupId>javax.transaction</groupId>
-                    <artifactId>jta</artifactId>
-                    <version>1.1</version>
-                    <scope>provided</scope>
-                </dependency>
-            </dependencies>
-        </profile>
     </profiles>
 
     <repositories>

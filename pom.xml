@@ -12,7 +12,7 @@
       JBoss JSF2 Portlet Bridge for a portlet environment, root pom
     </name>
     <properties>
-        <jsf.version>2.0.2</jsf.version>
+        <jsf.version>2.0.3-b03</jsf.version>
         <!--<richfaces.version>4.0.0-SNAPSHOT</richfaces.version>-->
     </properties>
     <packaging>pom</packaging>
@@ -21,7 +21,7 @@
         <dependency>
             <groupId>org.jboss.portletbridge</groupId>
             <artifactId>portletbridge-api</artifactId>
-            <version>2.0.0.FINAL</version>
+            <version>2.1.0.FINAL</version>
         </dependency>
         <dependency>
             <groupId>com.sun.faces</groupId>
@@ -36,12 +36,12 @@
         <dependency>
             <groupId>org.jboss.test-jsf</groupId>
             <artifactId>jsf-mock</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.6</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.7</version>
+            <version>4.8.2</version>
         </dependency>
     </dependencies>
    </dependencyManagement>
