@@ -163,11 +163,11 @@ public class PortletResourceHandler extends ResourceHandlerWrapper {
 
 	@SuppressWarnings("unchecked")
     private boolean isPortletResource(Resource res){
-		if(res instanceof PortletResource){
+		if(null == res || res instanceof PortletResource){
 			return true;
 		} else if (res instanceof FacesWrapper<?>) {
 			Resource wrapped = ((FacesWrapper<Resource>) res).getWrapped();
-			return null==wrapped?false:isPortletResource(wrapped);
+			return isPortletResource(wrapped);
 		} else {
 			return false;
 		}

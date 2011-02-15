@@ -24,8 +24,10 @@
 package org.jboss.portletbridge.context.flash;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
@@ -37,6 +39,12 @@ import javax.faces.context.Flash;
 public class PortletFlash extends Flash {
 	
 	public static final String ATTRIBUTE_NAME = "pcsfcff";
+	
+	public final Map<String,Object> flashParameters;
+	
+	public PortletFlash() {
+		flashParameters = new ConcurrentHashMap<String, Object>();
+	}
 
 	/* (non-Javadoc)
 	 * @see javax.faces.context.Flash#doPostPhaseActions(javax.faces.context.FacesContext)
@@ -66,12 +74,30 @@ public class PortletFlash extends Flash {
 	}
 
 	/* (non-Javadoc)
+	 * @see javax.faces.context.Flash#setKeepMessages(boolean)
+	 */
+	@Override
+	public void setKeepMessages(boolean newValue) {
+		// TODO Auto-generated method stub
+	
+	}
+
+	/* (non-Javadoc)
 	 * @see javax.faces.context.Flash#isRedirect()
 	 */
 	@Override
 	public boolean isRedirect() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see javax.faces.context.Flash#setRedirect(boolean)
+	 */
+	@Override
+	public void setRedirect(boolean newValue) {
+		// TODO Auto-generated method stub
+	
 	}
 
 	/* (non-Javadoc)
@@ -88,24 +114,6 @@ public class PortletFlash extends Flash {
 	 */
 	@Override
 	public void putNow(String key, Object value) {
-		// TODO Auto-generated method stub
-
-	}
-
-	/* (non-Javadoc)
-	 * @see javax.faces.context.Flash#setKeepMessages(boolean)
-	 */
-	@Override
-	public void setKeepMessages(boolean newValue) {
-		// TODO Auto-generated method stub
-
-	}
-
-	/* (non-Javadoc)
-	 * @see javax.faces.context.Flash#setRedirect(boolean)
-	 */
-	@Override
-	public void setRedirect(boolean newValue) {
 		// TODO Auto-generated method stub
 
 	}
@@ -139,7 +147,7 @@ public class PortletFlash extends Flash {
 	 */
 	public Set<java.util.Map.Entry<String, Object>> entrySet() {
 		// TODO Auto-generated method stub
-		return null;
+		return Collections.emptySet();
 	}
 
 	/* (non-Javadoc)
@@ -155,7 +163,7 @@ public class PortletFlash extends Flash {
 	 */
 	public boolean isEmpty() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	/* (non-Javadoc)
@@ -163,7 +171,7 @@ public class PortletFlash extends Flash {
 	 */
 	public Set<String> keySet() {
 		// TODO Auto-generated method stub
-		return null;
+		return Collections.emptySet();
 	}
 
 	/* (non-Javadoc)
@@ -203,30 +211,7 @@ public class PortletFlash extends Flash {
 	 */
 	public Collection<Object> values() {
 		// TODO Auto-generated method stub
-		return null;
+		return Collections.emptySet();
 	}
-	//============================================================
-	// public constants
-
-	//============================================================
-	// private constants
-
-	//============================================================
-	// static variables
-
-	//============================================================
-	// instance variables
-
-	//============================================================
-	// constructors
-
-	//============================================================
-	// public methods
-
-	//============================================================
-	// non-public methods
-
-	//============================================================
-	// inner classes
 
 }

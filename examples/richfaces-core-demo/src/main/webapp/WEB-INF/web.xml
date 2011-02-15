@@ -3,6 +3,17 @@
 	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 	<display-name>richfaces-showcase</display-name>
+	<!--
+	For Mojarra versions prior to 2.0.3, see https://javaserverfaces.dev.java.net/issues/show_bug.cgi?id=1509
+    <context-param>
+        <param-name>javax.faces.LIFECYCLE_ID</param-name>
+        <param-value>FIX_PORTLET_LIFECYCLE</param-value>
+    </context-param>
+	-->
+	<context-param>
+		<param-name>javax.portlet.faces.RENDER_POLICY</param-name>
+		<param-value>ALWAYS_DELEGATE</param-value>
+	</context-param>
 	<context-param>
 		<param-name>javax.faces.FACELETS_LIBRARIES</param-name>
 		<param-value>/WEB-INF/app-tags.taglib.xml</param-value>
