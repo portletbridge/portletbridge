@@ -56,6 +56,7 @@ public class PortletContainerUtil {
     private static final String ELEMENT_VALUE_CSS = "text/css";
     private static final String ELEMENT_VALUE_JAVASCRIPT = "text/javascript";
     private static final String ELEMENT_VALUE_STYLESHEET = "stylesheet";
+	private static final String ELEMENT_ATTR_HREF = "href";
 
     public static void addScriptResourceToHead(PortletRequest portletRequest, String resourceURL, String id) {
         Object liferayPortlet = LiferayUtil.getLiferayPortlet(portletRequest);
@@ -120,7 +121,7 @@ public class PortletContainerUtil {
         Element element = portletResponse.createElement(ELEMENT_NAME_LINK);
         element.setAttribute(ELEMENT_ATTR_REL, ELEMENT_VALUE_STYLESHEET);
         element.setAttribute(ELEMENT_ATTR_TYPE, ELEMENT_VALUE_CSS);
-        element.setAttribute(ELEMENT_ATTR_SRC, resourceURL);
+        element.setAttribute(ELEMENT_ATTR_HREF, resourceURL);
         portletResponse.addProperty(MimeResponse.MARKUP_HEAD_ELEMENT, element);
         logger.log(Level.FINER, "Added <link /> resource to <head>...</head> section using standard mechanism: url=[{}]",
                 resourceURL);

@@ -165,9 +165,6 @@ public class PortletResourceHandler extends ResourceHandlerWrapper {
     private boolean isPortletResource(Resource res){
 		if(null == res || res instanceof PortletResource){
 			return true;
-		} else if (res instanceof FacesWrapper<?>) {
-			Resource wrapped = ((FacesWrapper<Resource>) res).getWrapped();
-			return isPortletResource(wrapped);
 		} else {
 			return false;
 		}
