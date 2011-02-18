@@ -81,8 +81,10 @@ import javax.portlet.faces.BridgePublicRenderParameterHandler;
 import org.jboss.portletbridge.context.InitFacesContext;
 import org.jboss.portletbridge.context.PortalActionURL;
 import org.jboss.portletbridge.context.PortletBridgeContext;
+import org.jboss.portletbridge.lifecycle.PortletLifecycle;
 import org.jboss.portletbridge.util.BridgeLogger;
 import org.jboss.portletbridge.util.FacesConfig;
+import org.jboss.portletbridge.util.Util;
 import org.jboss.portletbridge.util.WebXML;
 
 /**
@@ -276,7 +278,11 @@ public class AjaxPortletBridge implements Bridge, BridgeConfig {
 			String lifecycleId = portletContext
 			        .getInitParameter(FacesServlet.LIFECYCLE_ID_ATTR);
 			if (null == lifecycleId) {
-				lifecycleId = LifecycleFactory.DEFAULT_LIFECYCLE;
+            if(Util.compareCurrentJSFVersion("2.0.3") < 0){
+               lifecycleId = PortletLifecycle.FIX_PORTLET_LIFECYCLE;
+            }else{
+               lifecycleId = LifecycleFactory.DEFAULT_LIFECYCLE;
+            }
 			}
 			if (log.isLoggable(Level.FINE)) {
 				log.fine("Create instance of a JSF lifecycle " + lifecycleId);
