@@ -43,8 +43,8 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>org.richfaces.ui.core</groupId>
-				<artifactId>richfaces-ui-core-bom</artifactId>
+				<groupId>org.richfaces</groupId>
+				<artifactId>richfaces-bom</artifactId>
 				<version>${org.richfaces.ui.core.version}</version>
 				<scope>import</scope>
 				<type>pom</type>

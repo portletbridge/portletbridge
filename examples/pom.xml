@@ -12,5 +12,6 @@
   <packaging>pom</packaging>
   <modules>
     <module>jsf2portlet</module>
+     <module>richfaces-core-demo</module>
   </modules>
 </project>
