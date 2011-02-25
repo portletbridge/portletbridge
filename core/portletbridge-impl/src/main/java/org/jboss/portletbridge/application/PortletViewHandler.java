@@ -25,6 +25,7 @@ package org.jboss.portletbridge.application;
 import java.io.IOException;
 import java.io.Writer;
 import java.net.MalformedURLException;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
@@ -82,6 +83,17 @@ public class PortletViewHandler extends ViewHandlerWrapper {
 			locale = context.getExternalContext().getRequestLocale();
 			if (null == locale) {
 				locale = super.calculateLocale(context);
+			} else {
+				// check if given locale is supported by JSF Application
+				for (Iterator<Locale> i = context.getApplication()
+						.getSupportedLocales(); i.hasNext();) {
+					Locale loc = i.next();
+					if (loc.equals(locale)) {
+						break;
+			}
+				}
+				// locale is not supported
+				locale = super.calculateLocale(context);
 			}
 		} else {
 			locale = super.calculateLocale(context);
@@ -112,19 +124,18 @@ public class PortletViewHandler extends ViewHandlerWrapper {
 		if (portletRequest) {
 			if (rootClass.getAnnotation(PortletNamingContainer.class) == null) {
 				UIViewRoot portletRoot = new UIPortletViewRoot();
-				portletRoot.setViewId(root.getViewId());
-				portletRoot.setLocale(root.getLocale());
-				portletRoot.setRenderKitId(root.getRenderKitId());
-				portletRoot.setId(root.getId());
-				root = portletRoot;
-			}
+                   portletRoot.setViewId(root.getViewId());
+                   portletRoot.setLocale(root.getLocale());
+                   portletRoot.setRenderKitId(root.getRenderKitId());
+				      portletRoot.setId(root.getId());
+                   root = portletRoot;
+			    }
 			Object response = facesContext.getExternalContext().getResponse();
 			if (response instanceof PortletResponse) {
 				PortletResponse portletResponse = (PortletResponse) response;
-				portletResponse.setProperty("X-JAVAX-PORTLET-IS-NAMESPACED",
-				        "true");
-			}
-		}
+				portletResponse.setProperty("X-JAVAX-PORTLET-IS-NAMESPACED","true");
+			   }
+		    }
 		return root;
 	}
 
@@ -201,8 +212,8 @@ public class PortletViewHandler extends ViewHandlerWrapper {
 					_log
 					        .log(
 					                Level.INFO,
-					                "Error rendering view by parent ViewHandler, try to render as portletbridge JSP page",
-					                t);
+                              "Error rendering view by parent ViewHandler, try to render as portletbridge JSP page",
+                              t);
 				}
 				// Restore request/response objects if parent renderer change
 				// them.

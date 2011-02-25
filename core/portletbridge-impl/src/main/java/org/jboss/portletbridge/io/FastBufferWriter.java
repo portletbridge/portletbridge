@@ -158,6 +158,11 @@ public class FastBufferWriter extends Writer {
 		return result;
 	}
 
+	@Override
+	public String toString() {
+	    return new String(toCharArray());
+	}
+
 	/**
 	 * Writes all data written up to the moment to out.
 	 * @param out

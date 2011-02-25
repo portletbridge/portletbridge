@@ -13,43 +13,44 @@ public interface BridgeConfig {
 	/**
 	 * @return the portletConfig
 	 */
-	public abstract PortletConfig getPortletConfig();
+	PortletConfig getPortletConfig();
 
-	public abstract String getInitParameter(String name);
+	String getInitParameter(String name);
 
 	/**
 	 * @return the facesServletMappings
 	 */
-	public abstract List<String> getFacesServletMappings();
+	List<String> getFacesServletMappings();
 
+	Map<String, String> getFilterInitParams(String className);
 	/**
 	 * @return the excludedAttributes
 	 */
-	public abstract Set<ExcludedRequestAttribute> getExcludedAttributes();
+	Set<ExcludedRequestAttribute> getExcludedAttributes();
 
 	/**
 	 * @return the portletName
 	 */
-	public abstract String getPortletName();
+	String getPortletName();
 
 	/**
 	 * @return the preserveActionParams
 	 */
-	public abstract boolean isPreserveActionParams();
+	boolean isPreserveActionParams();
 
 	/**
 	 * @return the defaultViewIdMap
 	 */
-	public abstract Map<String, String> getDefaultViewIdMap();
+	Map<String, String> getDefaultViewIdMap();
 
-	public abstract Map<Class<? extends Throwable>, String> getErrorPages();
+	Map<Class<? extends Throwable>, String> getErrorPages();
 
-	public abstract Lifecycle getFacesLifecycle();
+	Lifecycle getFacesLifecycle();
 
-	public abstract int getNumberOfRequestScopes();
+	int getNumberOfRequestScopes();
 
-	public abstract FacesContext createFacesContext(Object request, Object response);
+	FacesContext createFacesContext(Object request, Object response);
 	
-	public abstract BridgeStrategy getStrategy();
+	BridgeStrategy getStrategy();
 
 }

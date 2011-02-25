@@ -3,6 +3,9 @@
  */
 package org.jboss.portletbridge;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 import javax.portlet.PortletMode;
@@ -69,6 +72,7 @@ public class StateId implements Serializable {
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -81,25 +85,43 @@ public class StateId implements Serializable {
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
+      {
 			return true;
+      }
 		if (obj == null)
+      {
 			return false;
+      }
 		if (getClass() != obj.getClass())
+      {
 			return false;
+      }
 		StateId other = (StateId) obj;
 		if (mode == null) {
 			if (other.mode != null)
+         {
 				return false;
-		} else if (!mode.equals(other.mode))
+         }
+      }
+      else if (!mode.equals(other.mode))
+      {
 			return false;
-		if (uuid == null) {
+      }
+      if (uuid == null)
+      {
 			if (other.uuid != null)
+         {
 				return false;
-		} else if (!uuid.equals(other.uuid))
+         }
+      }
+      else if (!uuid.equals(other.uuid))
+      {
 			return false;
+      }
 		return true;
 	}
 

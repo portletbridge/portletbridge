@@ -141,6 +141,11 @@ public class FastBufferOutputStream extends OutputStream {
 		return result;
 	}
 
+	@Override
+	public String toString() {
+	    return new String(toByteArray());
+	}
+
 	/**
 	 * Writes all data written up to the moment to out.
 	 * @param out

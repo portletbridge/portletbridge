@@ -53,6 +53,7 @@ import org.jboss.portletbridge.context.PortletBridgeContext;
 /**
  * That class keep all request attributes that requires to store between portlet requests.
  * These parameters described by the chapter 5.1.2 "Managing Lifecycle State"
+ * TODO - synchronize access to state for concurrent AJAX requests.
  * @author asmirnov
  */
 /**
@@ -100,13 +101,13 @@ public class BridgeRequestScope implements Serializable {
 	/**
 	 * Saved {@link FacesMessage}
 	 */
-	private Map<String, List<FacesMessage>> messages;
+	private Map<String, List<FacesMessage>> messages = new HashMap<String, List<FacesMessage>>();
 
 	/**
 	 * Request scope beans. That map saved by the {@code writeObject} method to
 	 * avoid serialization exceptions.
 	 */
-	private transient Map<String, Object> beans;
+	private transient Map<String, Object> beans = new HashMap<String, Object>();
 
 	/**
 	 * JSF View state , used if bridge stores view state in its own
@@ -127,7 +128,7 @@ public class BridgeRequestScope implements Serializable {
 	/**
 	 * Request paremeters saved for consequentual render requests.
 	 */
-	private Map<String, String[]> requestParameters;
+	private Map<String, String[]> requestParameters = new HashMap<String, String[]>(4);
 
 	/**
 	 * Namespace from the last render request or default portlet namespace.
@@ -170,7 +171,7 @@ public class BridgeRequestScope implements Serializable {
 	/**
 	 * @return the _messages
 	 */
-	Map<String, List<FacesMessage>> getMessages() {
+	public Map<String, List<FacesMessage>> getMessages() {
 		return messages;
 	}
 
@@ -185,14 +186,14 @@ public class BridgeRequestScope implements Serializable {
 	/**
 	 * @return the beans
 	 */
-	Map<String, Object> getBeans() {
+	public Map<String, Object> getBeans() {
 		return beans;
 	}
 
 	/**
 	 * @param beans the beans to set
 	 */
-	void setBeans(Map<String, Object> beans) {
+	public void setBeans(Map<String, Object> beans) {
 		this.beans = beans;
 	}
 
@@ -295,9 +296,6 @@ public class BridgeRequestScope implements Serializable {
 	}
 
 	public Map<String, String[]> getRequestParameters() {
-		if (null == requestParameters) {
-			requestParameters = new HashMap<String, String[]>(4);
-		}
 		return requestParameters;
 	}
 
@@ -347,7 +345,6 @@ public class BridgeRequestScope implements Serializable {
 	 * @param facesContext
 	 */
 	public void saveMessages(FacesContext facesContext) {
-		messages = new HashMap<String, List<FacesMessage>>();
 		Iterator<String> idsWithMessages = facesContext
 				.getClientIdsWithMessages();
 		while (idsWithMessages.hasNext()) {
@@ -364,7 +361,6 @@ public class BridgeRequestScope implements Serializable {
 	 * @param facesContext
 	 */
 	public void restoreMessages(FacesContext facesContext) {
-		if (null != messages) {
 			Iterator<String> idsWithMessages = getClientIdsWithMessages();
 			while (idsWithMessages.hasNext()) {
 				String id = idsWithMessages.next();
@@ -374,8 +370,6 @@ public class BridgeRequestScope implements Serializable {
 					facesContext.addMessage(id, message);
 				}
 			}
-
-		}
 	}
 
 	/**
@@ -418,7 +412,6 @@ public class BridgeRequestScope implements Serializable {
 	 * @param facesContext
 	 */
 	public void saveBeans(FacesContext facesContext) {
-		beans = null;
 		ExternalContext externalContext = facesContext.getExternalContext();
 		PortletBridgeContext bridgeContext = PortletBridgeContext
 				.getCurrentInstance(facesContext);
@@ -496,24 +489,19 @@ public class BridgeRequestScope implements Serializable {
 		BridgeConfig bridgeConfig = bridgeContext.getBridgeConfig();
 		boolean preserveActionParam = bridgeConfig.isPreserveActionParams();
 		if (preserveActionParam) {
-			requestParameters = new HashMap<String, String[]>(externalContext
+			requestParameters.putAll(externalContext
 					.getRequestParameterValuesMap());
 
 			requestParameters.remove(AJAX_PARAMETER_NAME);
 
 			requestParameters.remove(ResponseStateManager.VIEW_STATE_PARAM);
-		} else {
-			requestParameters = new HashMap<String, String[]>();
-		}
+        }
 	}
-
 
 	public void restoreBeans(FacesContext facesContext) {
 		Map<String, Object> requestMap = facesContext.getExternalContext()
 				.getRequestMap();
-		if (null != beans) {
 			requestMap.putAll(beans);
-		}
 		Map<String, String[]> requestParameters = getRequestParameters();
 		if (requestParameters
 				.containsKey(ResponseStateManager.VIEW_STATE_PARAM)) {
@@ -526,14 +514,13 @@ public class BridgeRequestScope implements Serializable {
 	}
 
 	public void reset() {
-		this.requestParameters = null;
-		this.beans = null;
-		this.componentsState = null;
-		this.messages = null;
+		this.requestParameters = new HashMap<String, String[]>(4);
+		this.beans = new HashMap<String, Object>();
+		this.messages = new HashMap<String, List<FacesMessage>>();
 		this.viewRoot = null;
 		this.viewId = null;
+		this.conversationIdParameter = "conversationId";
 		this.conversationId = null;
-		this.conversationIdParameter = null;
         this.attributes = null;
         this.validationFailed = false;
 	}
@@ -564,7 +551,6 @@ public class BridgeRequestScope implements Serializable {
 		// Save all default fields
 		out.defaultWriteObject();
 		// Save serializable request-scope beans.
-		if (null != beans) {
 			for (Map.Entry<String, Object> entry : beans.entrySet()) {
 				String key = entry.getKey();
 				Object bean = entry.getValue();
@@ -573,8 +559,6 @@ public class BridgeRequestScope implements Serializable {
 					out.writeUTF(key);
 					out.writeObject(bean);
 				}
-			}
-
 		} // End of request scope beans marker.
 		out.writeUTF("");
 	}

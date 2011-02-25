@@ -16,11 +16,13 @@ import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.render.RenderKitFactory;
 import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
+import javax.portlet.faces.Bridge;
 import javax.portlet.faces.BridgeException;
 
 import org.jboss.portletbridge.util.BridgeLogger;
@@ -69,6 +71,9 @@ public abstract class BridgeStrategy {
 	 */
 	public abstract void beforeActionRequest(FacesContext facesContext);
 
+	/**
+	 * @param facesContext
+	 */
 	public abstract void afterActionRequestExecute(FacesContext facesContext);
 
 	/**
@@ -104,6 +109,11 @@ public abstract class BridgeStrategy {
 
 	/**
 	 * @param facesContext
+     */
+    //public abstract void afterResourceRequestExecute(FacesContext facesContext);
+
+	/**
+	 * @param facesContext
 	 * @param wrappedResponse
 	 */
 	public abstract void afterResourceRequest(FacesContext facesContext,
@@ -131,11 +141,15 @@ public abstract class BridgeStrategy {
     public abstract int getPortletSessionScopeForName(String name);
 
 	/**
+     * @return new UIViewRoot instance
+     */
+    //public abstract UIViewRoot createViewRoot();
+	/**
 	 * Factory method that creates strategy for current application configuration.
 	 * @param config
 	 * @return
 	 */
-	public static BridgeStrategy getCurrentStrategy(BridgeConfig config) throws BridgeException {
+	public static BridgeStrategy createStrategy(BridgeConfig config) throws BridgeException {
 		BridgeStrategy strategy;
 		// use contextClassLoader to load strategies, because when bridge-impl.jar is
 		// shared classes visible by application would be different.
@@ -144,6 +158,11 @@ public abstract class BridgeStrategy {
 			loader = BridgeStrategy.class.getClassLoader();
 		}
 		strategy = new Jsf20Strategy(config);
+        //PORT FROM TRUNK
+		//strategy = createStrategyInstance(config, strategy, loader, RichFacesStrategy.class.getName());
+		//strategy = createStrategyInstance(config, strategy, loader, SeamStrategy.class.getName());
+        //strategy = createStrategyInstance(config, strategy, loader, GateinStrategy.class.getName());
+
         // Attempt to load additional strategy from services.
 		try {
 		Enumeration<URL> resources = loader.getResources(SERVICE_CLASSPATH);

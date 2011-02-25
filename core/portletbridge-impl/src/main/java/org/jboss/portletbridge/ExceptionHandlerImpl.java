@@ -22,10 +22,12 @@
  ******************************************************************************/
 package org.jboss.portletbridge;
 
-import java.util.Map;
 
+import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
+import javax.portlet.PortletRequest;
 import javax.servlet.ServletException;
+import java.util.Map;
 
 import org.jboss.portletbridge.context.PortletBridgeContext;
 

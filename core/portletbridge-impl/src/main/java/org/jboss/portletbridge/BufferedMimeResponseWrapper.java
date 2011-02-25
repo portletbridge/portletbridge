@@ -112,6 +112,16 @@ public class BufferedMimeResponseWrapper extends PortletResponseWrapper
 		}
 	}
 
+	public String toString() {
+		if (fastBufferStream != null) {
+			return "Stream content: "+fastBufferStream.toString();
+		} else if (fastPrintWriter != null) {
+			return "Writer content: "+fastPrintWriter.toString();
+		} else {
+			return super.toString()+", no data written";
+		}
+	}
+
 	public boolean isUseWriter() {
 		return fastBufferStream == null;
 	}

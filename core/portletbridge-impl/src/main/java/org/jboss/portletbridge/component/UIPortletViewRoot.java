@@ -38,6 +38,7 @@ public class UIPortletViewRoot extends UIViewRoot implements NamingContainer
 {
 
   private static final long   serialVersionUID = -4524288011655837712L;
+   private static final String SEPARATOR        = (new Character(NamingContainer.SEPARATOR_CHAR)).toString();
 
   public UIPortletViewRoot()
   {
@@ -55,23 +56,23 @@ public class UIPortletViewRoot extends UIViewRoot implements NamingContainer
   public static String convertClientId(FacesContext context, UIViewRoot root, String additionalId)
   {
     ExternalContext ec = context.getExternalContext();
-    String namespace = ec.encodeNamespace(String.valueOf(UINamingContainer.getSeparatorChar(context)));
+    String namespace = ec.encodeNamespace(SEPARATOR);
 
     /*
      * In servlet world encodeNamespace does nothing -- so if we get back what we sent in then do
      * not perturn the NamingContainer Id
      *
-     * The "_" was added for LifeRay compatibility
+     * The "pb" was added for LifeRay compatibility
      */
     if (namespace.length() > 1)
     {
       if (additionalId != null)
       {
-        return "_"+namespace + additionalId;
+        return "pb"+namespace + additionalId;
       }
       else
       {
-        return "_"+namespace;
+        return "pb"+namespace;
       }
     }
     else

@@ -385,6 +385,8 @@ protected Object getSessionAttribute(String name,int scope) {
 
 	protected void calculateViewId() {
 		viewId = (String) getRequest().getAttribute(Bridge.VIEW_ID);
+      String portletModeName = getRequest()
+							.getPortletMode().toString();
 		// Get stored ViewId from window state
 		if (null == viewId) {
 			String viewPath = (String) getRequest().getAttribute(
@@ -399,8 +401,6 @@ protected Object getSessionAttribute(String name,int scope) {
 				}
 				if (null == viewId) {
 					// Try to get viewId from stored session attribute
-					String portletModeName = getRequest()
-							.getPortletMode().toString();
 					PortletSession portletSession = getRequest()
 							.getPortletSession(false);
 					if (null != portletSession) {
@@ -417,8 +417,7 @@ protected Object getSessionAttribute(String name,int scope) {
 							}
                         }					}
 					if (null == viewId) {
-						viewId = portletBridgeContext.getBridgeConfig()
-								.getDefaultViewIdMap().get(portletModeName);
+						viewId = calculateDefaultViewId(portletModeName);
 					}
 					if (null == viewId) {
 						throw new BridgeDefaultViewNotSpecifiedException();
@@ -431,6 +430,10 @@ protected Object getSessionAttribute(String name,int scope) {
 				.getFacesServletMappings();
 		calculateServletPath(viewId, servletMappings);
 	}
+
+   private String calculateDefaultViewId(String modeName){
+      return portletBridgeContext.getBridgeConfig().getDefaultViewIdMap().get(modeName);
+   }
 
 	protected void calculateServletPath(String viewId,
 			List<String> servletMappings) {

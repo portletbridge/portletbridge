@@ -1,5 +1,4 @@
 /******************************************************************************
- * $Id$
  * JBoss, a division of Red Hat                                               *
  * Copyright 2006, Red Hat Middleware, LLC, and individual                    *
  * contributors as indicated by the @authors tag. See the                     *
@@ -21,47 +20,72 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA         *
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.                   *
  ******************************************************************************/
-package org.jboss.portletbridge.io;
+package org.jboss.portletbridge.preference;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.Writer;
+import javax.portlet.PortletPreferences;
+import javax.portlet.ReadOnlyException;
+import javax.portlet.faces.preference.Preference;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
+/**
+ * @author Wesley Hales
+ */
+public class PreferenceImpl implements Preference
+{
+   private PortletPreferences portletPreferences;
+   private String preferenceKey = null;
+  
+   public PreferenceImpl(PortletPreferences preferences)
+   {
+    super();
+    portletPreferences = preferences;
+   }
 
-public class FastPrintWriter extends PrintWriter {
+   public PreferenceImpl(PortletPreferences preferences, String name)
+   {
+    this(preferences);
+    preferenceKey = name;
+   }
 
-	private final FastBufferWriter fastBufferWriter;
+   public void setName(String name)
+   {
+      preferenceKey = name;
+   }
 
-	public FastPrintWriter() {
-		this(new FastBufferWriter());
-	}
+   public String getName()
+   {
+      return preferenceKey;
+   }
 
-	/**
-	 * This is to call only by public default constructor
-	 * 
-	 * @param writer
-	 */
-	private FastPrintWriter(FastBufferWriter writer) {
-		super(writer);
+   public void setValue(String value) throws ReadOnlyException
+   {
+      portletPreferences.setValue(preferenceKey, value);
+   }
 
-		this.fastBufferWriter = writer;
-	}
+   public String getValue()
+   {
+      return portletPreferences.getValue(preferenceKey, null);
+   }
 
-	public void reset() {
-		fastBufferWriter.reset();
-	}
+   public void setValues(String[] values) throws ReadOnlyException
+   {
+      portletPreferences.setValues(preferenceKey, values);
+   }
 
-	public void writeTo(Writer writer) throws IOException {
-		fastBufferWriter.writeTo(writer);
-	}
-	
-	public char[] toCharArray() {
-        return fastBufferWriter.toCharArray();
-    }
+   public List<String> getValues()
+   {
+      return Arrays.asList(portletPreferences.getValues(preferenceKey, null));
+   }
 
-	@Override
-	public String toString() {
-	    return new String(toCharArray());
-}
+   public boolean isReadOnly()
+   {
+      return portletPreferences.isReadOnly(preferenceKey);
+   }
 
+   public void reset() throws ReadOnlyException
+   {
+      portletPreferences.reset(preferenceKey);
+   }
 }

@@ -5,6 +5,7 @@ package org.jboss.portletbridge.context;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.portlet.PortletContext;
@@ -105,13 +106,34 @@ public class ResourceRequestExternalContextImpl extends
 	public Map<String, String[]> getRequestParameterValuesMap() {
 		HttpServletRequest multipartRequest = getMultipartRequest();
 		if(multipartRequest!= null) {
-			return multipartRequest.getParameterMap();
+			return createParameterMap(multipartRequest);
 		} else {
 			return super.getRequestParameterValuesMap();
 		}
 	}
 	
 	
+	/**
+	 * ceate a parameter map out of the multi part request.
+	 * Fix related to PBR-170
+	 * @param multipartRequest the multipart request
+	 * @return value map of the parameters
+	 */
+	private Map<String, String[]> createParameterMap(HttpServletRequest multipartRequest) {
+	    Map<String, String[]> result = new HashMap<String, String[]>();
+	    Map<String, Object> multipartMap = multipartRequest.getParameterMap();
+	    for (String name : multipartMap.keySet()) {
+	        Object value = multipartMap.get(name);
+	        // This can happen because of an error in RF MultipartRequest
+	        // Line 666: params.put(name, vp.getValue()); as getValue can return a String
+	        if(value instanceof String) {
+	            result.put(name, new String[] {(String) value});
+	        } else if (value instanceof String[]) {
+	            result.put(name, (String[])value);
+	        }
+	    }
+	    return result;
+	}
 
 	
 }

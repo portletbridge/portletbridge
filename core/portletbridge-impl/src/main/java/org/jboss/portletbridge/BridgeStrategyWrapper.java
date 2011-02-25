@@ -23,6 +23,7 @@
  ******************************************************************************/
 package org.jboss.portletbridge;
 
+import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.render.RenderKitFactory;
 import javax.portlet.RenderResponse;
@@ -39,6 +40,15 @@ public abstract class BridgeStrategyWrapper extends BridgeStrategy {
 	public BridgeStrategyWrapper(BridgeConfig config) {
 	    super(config);
     }
+
+	/* (non-Javadoc)
+	 * @see org.jboss.portletbridge.BridgeStrategy#initRenderKit(javax.faces.context.FacesContext, javax.faces.render.RenderKitFactory)
+	 */
+	@Override
+	public void init(FacesContext context,
+	        RenderKitFactory renderKitFactory) {
+		getWrapped().init(context, renderKitFactory);
+	}
 
 	/**
 	 * @return
@@ -88,12 +98,6 @@ public abstract class BridgeStrategyWrapper extends BridgeStrategy {
 	    
     }
 
-	@Override
-    public void beforeResourceRequest(FacesContext facesContext) {
-	    getWrapped().beforeResourceRequest(facesContext);
-	    
-    }
-
 	/* (non-Javadoc)
      * @see org.jboss.portletbridge.BridgeStrategy#setupRenderParams(javax.faces.context.FacesContext, org.jboss.portletbridge.StateId)
      */
@@ -111,6 +115,24 @@ public abstract class BridgeStrategyWrapper extends BridgeStrategy {
 		getWrapped().afterRenderRequest(facesContext, wrappedResponse);
 
 	}
+
+	/* (non-Javadoc)
+	 * @see org.jboss.portletbridge.BridgeStrategy#beforeResourceRequest(javax.faces.context.FacesContext)
+	 */
+	@Override
+    public void beforeResourceRequest(FacesContext facesContext) {
+        getWrapped().beforeResourceRequest(facesContext);
+
+    }
+
+	/* (non-Javadoc)
+	 * @see org.jboss.portletbridge.BridgeStrategy#afterResourceRequestExecute(javax.faces.context.FacesContext)
+	 */
+	//@Override
+	//public void afterResourceRequestExecute(FacesContext facesContext) {
+	    //getWrapped().afterResourceRequestExecute(facesContext);
+
+	//}
 
 	/* (non-Javadoc)
 	 * @see org.jboss.portletbridge.BridgeStrategy#finishResponse(javax.faces.context.FacesContext, javax.portlet.ResourceResponse)
@@ -131,15 +153,6 @@ public abstract class BridgeStrategyWrapper extends BridgeStrategy {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.jboss.portletbridge.BridgeStrategy#initRenderKit(javax.faces.context.FacesContext, javax.faces.render.RenderKitFactory)
-	 */
-	@Override
-	public void init(FacesContext context,
-	        RenderKitFactory renderKitFactory) {
-		getWrapped().init(context, renderKitFactory);
-	}
-
-	/* (non-Javadoc)
 	 * @see org.jboss.portletbridge.BridgeStrategy#serveResource(javax.portlet.ResourceRequest, javax.portlet.ResourceResponse)
 	 */
 	@Override
@@ -148,4 +161,11 @@ public abstract class BridgeStrategyWrapper extends BridgeStrategy {
 		return getWrapped().serveResource(request, response);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.jboss.portletbridge.BridgeStrategy#createViewRoot()
+	 */
+	//@Override
+	//public UIViewRoot createViewRoot() {
+		//return getWrapped().createViewRoot();
+//}
 }
