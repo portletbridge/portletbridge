@@ -11,6 +11,21 @@
   <name>JBoss Portlet Bridge JSF 2 Core</name>
   <packaging>pom</packaging>
   <modules>
+    <module>portletbridge-api</module>
     <module>portletbridge-impl</module>
   </modules>
+   <dependencies>
+      <dependency>
+         <groupId>javax.portlet</groupId>
+         <artifactId>portlet-api</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>javax.servlet</groupId>
+         <artifactId>servlet-api</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>javax.servlet.jsp</groupId>
+         <artifactId>jsp-api</artifactId>
+      </dependency>
+   </dependencies>
 </project>
