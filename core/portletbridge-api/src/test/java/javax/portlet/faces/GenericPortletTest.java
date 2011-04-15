@@ -23,9 +23,12 @@
 package javax.portlet.faces;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -37,6 +40,7 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.servlet.ServletContext;
 
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.internal.MockHandler;
@@ -119,31 +123,26 @@ public class GenericPortletTest  {
 	 * 
 	 * @throws PortletException
 	 */
+	@Test
 	public void testInitPortletConfig() throws PortletException {
-//		servletContext.addInitParameter(Bridge.LIFECYCLE_ID, "CUSTOM");
-//		servletContext.addInitParameter("javax.portlet.faces.renderPolicy",
-//				Bridge.BridgeRenderPolicy.NEVER_DELEGATE.toString());
+		when(servletContext.getInitParameter(Bridge.LIFECYCLE_ID)).thenReturn("CUSTOM");
+		when(servletContext.getInitParameter("javax.portlet.faces.renderPolicy")).thenReturn(Bridge.BridgeRenderPolicy.NEVER_DELEGATE.toString());
 
-//		portletConfig.addInitParameter(
-//				"javax.portlet.faces.preserveActionParams", "true");
-//		portletConfig.addInitParameter(
-//				"javax.portlet.faces.excludedRequestAttributes", "bar,baz,boo");
-//		portletConfig.addInitParameter(
-//				"javax.portlet.faces.extension.my_package.my_attribute", "xxx");
+		when(portletConfig.getInitParameter(
+				"javax.portlet.faces.preserveActionParams")).thenReturn( "true");
+		when(portletConfig.getInitParameter(
+				"javax.portlet.faces.excludedRequestAttributes")).thenReturn("bar,baz,boo");
+		when(portletConfig.getInitParameter(
+				"javax.portlet.faces.extension.my_package.my_attribute")).thenReturn("xxx");
+		when(portletConfig.getPortletContext()).thenReturn(portletContext);
+		when(portletConfig.getInitParameterNames()).thenReturn(Collections.enumeration(Collections.singleton("javax.portlet.faces.extension.my_package.my_attribute")));
 		GenericFacesPortlet portlet = createGenericPortlet();
 		portlet.init(portletConfig);
-		assertEquals(Boolean.TRUE, portletContext
-				.getAttribute("javax.portlet.faces.foo.preserveActionParams"));
-		List<String> attrsList = (List<String>) portletContext
-				.getAttribute("javax.portlet.faces.foo.excludedRequestAttributes");
-		assertEquals(3, attrsList.size());
-		assertEquals("bar", attrsList.get(0));
-		assertEquals("baz", attrsList.get(1));
-		assertEquals("boo", attrsList.get(2));
-		assertEquals(
-				"xxx",
-				portletContext
-						.getAttribute("javax.portlet.faces.extension.my_package.foo.my_attribute"));
+		
+		verify(portletContext,atLeastOnce()).setAttribute("javax.portlet.faces.foo.preserveActionParams", Boolean.TRUE);
+		verify(portletContext,atLeastOnce()).setAttribute("javax.portlet.faces.foo.excludedRequestAttributes", Arrays.asList("bar","baz","boo"));
+		verify(portletContext,atLeastOnce()).setAttribute("javax.portlet.faces.foo.defaultViewIdMap", Collections.emptyMap());
+//		verify(portletContext,atLeastOnce()).setAttribute("javax.portlet.faces.extension.my_package.foo.my_attribute", "xxx");
 	}
 
 	/**
@@ -158,7 +157,7 @@ public class GenericPortletTest  {
 			throws PortletException, IOException {
 //		setupRenderRequest();
 		GenericFacesPortlet portlet = createGenericPortlet();
-//		portletConfig.addInitParameter(
+//		portletConfig.getInitParameter(
 //				"javax.portlet.faces.defaultViewId.view", "index.jsf");
 		portlet.init(portletConfig);
 //		portlet.doDispatch(renderRequest, renderResponse);
@@ -167,9 +166,8 @@ public class GenericPortletTest  {
 
 	private GenericFacesPortlet createGenericPortlet() {
 		GenericFacesPortlet portlet = new GenericFacesPortlet();
-//		portletContext.setInitParameter("javax.portlet.faces.BridgeImplClass",
-//				MockBridge.class.getName());
-//		portletConfig.setPortletName(FOO);
+		when(portletContext.getInitParameter("javax.portlet.faces.BridgeImplClass")).thenReturn(Bridge.class.getName());
+		when(portletConfig.getPortletName()).thenReturn(FOO);
 		return portlet;
 	}
 
@@ -185,7 +183,7 @@ public class GenericPortletTest  {
 			throws PortletException, IOException {
 //		setupRenderRequest();
 //		GenericFacesPortlet portlet = createGenericPortlet();
-//		portletConfig.addInitParameter(
+//		portletConfig.getInitParameter(
 //				"javax.portlet.faces.defaultViewId.edit", "index.jsf");
 //		renderRequest.mode = PortletMode.EDIT;
 //		portlet.init(portletConfig);
@@ -205,7 +203,7 @@ public class GenericPortletTest  {
 			throws PortletException, IOException {
 //		setupRenderRequest();
 //		GenericFacesPortlet portlet = createGenericPortlet();
-//		portletConfig.addInitParameter(
+//		portletConfig.getInitParameter(
 //				"javax.portlet.faces.defaultViewId.help", "index.jsf");
 //		renderRequest.mode = PortletMode.HELP;
 //		portlet.init(portletConfig);
@@ -224,7 +222,7 @@ public class GenericPortletTest  {
 	public void testDoEditRenderRequestRenderResponse()
 			throws PortletException, IOException {
 //		setupRenderRequest();
-//		portletConfig.addInitParameter(
+//		portletConfig.getInitParameter(
 //				"javax.portlet.faces.defaultViewId.view", "index.jsf");
 //		renderRequest.mode = PortletMode.EDIT;
 //		GenericFacesPortlet portlet = createGenericPortlet();
@@ -256,7 +254,7 @@ public class GenericPortletTest  {
 //		GenericFacesPortlet portlet = new GenericFacesPortlet();
 //		portletContext.setInitParameter("javax.portlet.faces.BridgeImplClass",
 //				MockBridge.class.getName());
-//		portletConfig.addInitParameter(
+//		portletConfig.getInitParameter(
 //				"javax.portlet.faces.defaultViewId.view", "index.jsf");
 //		portlet.init(portletConfig);
 //		portlet.doDispatch(renderRequest, renderResponse);
@@ -277,7 +275,7 @@ public class GenericPortletTest  {
 //		GenericFacesPortlet portlet = new GenericFacesPortlet();
 //		portletContext.setInitParameter("javax.portlet.faces.BridgeImplClass",
 //				MockBridge.class.getName());
-//		portletConfig.addInitParameter(
+//		portletConfig.getInitParameter(
 //				"javax.portlet.faces.defaultViewId.view", "index.jsf");
 //		portlet.init(portletConfig);
 //		portlet.processAction(actionRequest, actionResponse);
@@ -379,11 +377,11 @@ public class GenericPortletTest  {
 	 * @throws PortletException
 	 */
 	public void testGetDefaultViewIdMap() throws PortletException {
-//		portletConfig.addInitParameter(
+//		portletConfig.getInitParameter(
 //				"javax.portlet.faces.defaultViewId.view", "index.jsf");
-//		portletConfig.addInitParameter(
+//		portletConfig.getInitParameter(
 //				"javax.portlet.faces.defaultViewId.edit", "edit/index.jsf");
-//		portletConfig.addInitParameter(
+//		portletConfig.getInitParameter(
 //				"javax.portlet.faces.defaultViewId.help", "help/index.jsf");
 //		GenericFacesPortlet portlet = createGenericPortlet();
 //		portlet.init(portletConfig);
@@ -417,7 +415,7 @@ public class GenericPortletTest  {
 	}
 
 	public void testGetExcludedRequestAttributes() throws Exception {
-//		portletConfig.addInitParameter(
+//		portletConfig.getInitParameter(
 //				"javax.portlet.faces.excludedRequestAttributes",
 //				"foo.*,bar.baz.*");
 //		GenericFacesPortlet portlet = createGenericPortlet();
@@ -431,7 +429,7 @@ public class GenericPortletTest  {
 	}
 	
 	public void testIsPreserveActionParams() throws Exception {
-//		portletConfig.addInitParameter(
+//		portletConfig.getInitParameter(
 //				"javax.portlet.faces.preserveActionParams",
 //				"true");
 //		GenericFacesPortlet portlet = createGenericPortlet();
@@ -447,7 +445,7 @@ public class GenericPortletTest  {
 	}
 	
 	public void testGetBridgeEventHandler() throws Exception {
-//		portletConfig.addInitParameter(
+//		portletConfig.getInitParameter(
 //				"javax.portlet.faces.bridgeEventHandler",
 //				MockBridgeEventHandler.class.getName());
 //		GenericFacesPortlet portlet = createGenericPortlet();
@@ -460,7 +458,7 @@ public class GenericPortletTest  {
 //		assertTrue(handler instanceof MockBridgeEventHandler);
 	}
 	public void testGetBridgePublicRenderParameterHandler() throws Exception {
-//		portletConfig.addInitParameter(
+//		portletConfig.getInitParameter(
 //				"javax.portlet.faces.bridgePublicRenderParameterHandler",
 //				MockBridgePublicRenderParameterHandler.class.getName());
 //		GenericFacesPortlet portlet = createGenericPortlet();
