@@ -27,7 +27,11 @@ public class HelloPortletTest {
 		return ShrinkWrap.create(WebArchive.class, "integrationTest.war")
 		.addClass(Bean.class)
 		.addAsResource("home.xhtml")
+		.addAsWebInfResource("WEB-INF/themes/pluto.jsp", "themes/pluto.jsp")
+		.addAsWebInfResource("WEB-INF/themes/portlet-skin.jsp", "themes/portlet-skin.jsp")
+		.addAsWebInfResource("WEB-INF/tld/pluto.tld", "tld/pluto.tld")
 		.addAsWebInfResource("pluto-resources/web.xml", "web.xml")
+		.addAsWebInfResource("WEB-INF/pluto-portal-driver-config.xml")
 		.addAsWebInfResource("WEB-INF/faces-config.xml")
 		.addAsWebInfResource("WEB-INF/portlet.xml", "portlet.xml");
 	}
@@ -41,7 +45,7 @@ public class HelloPortletTest {
 		// http://localhost:8080/test/
 
 		String body = readAllAndClose(new URL(
-				"http://localhost:9090/integrationTest/PlutoInvoker/integrationTest").openStream());
+				"http://localhost:9090/integrationTest/portal").openStream());
 
 		Assert.assertEquals(
 
