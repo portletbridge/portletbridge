@@ -32,17 +32,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import javax.portlet.PortletConfig;
-import javax.portlet.PortletContext;
 import javax.portlet.PortletException;
 import javax.portlet.PortletMode;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
-import javax.servlet.ServletContext;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.internal.MockHandler;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -50,61 +44,7 @@ import org.mockito.runners.MockitoJUnitRunner;
  * @author asmirnov
  * 
  */
-@RunWith(MockitoJUnitRunner.class)
-public class GenericPortletTest  {
-
-	@Mock
-	ServletContext servletContext;
-
-	@Mock
-	PortletConfig portletConfig;
-
-	@Mock
-	PortletContext portletContext;
-	
-	private static final String FOO = "foo";
-
-	private final class GenericFacesPortletExtension extends
-			GenericFacesPortlet {
-		boolean editProcessed = false;
-		boolean viewProcessed = false;
-		boolean helpProcessed = false;
-
-		@Override
-		protected void doEdit(RenderRequest request, RenderResponse response)
-				throws PortletException, IOException {
-			editProcessed = true;
-		}
-
-		@Override
-		protected void doView(RenderRequest request, RenderResponse response)
-				throws PortletException, IOException {
-			viewProcessed = true;
-		}
-
-		@Override
-		protected void doHelp(RenderRequest request, RenderResponse response)
-				throws PortletException, IOException {
-			helpProcessed = true;
-		}
-	}
-
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see junit.framework.TestCase#setUp()
-	 */
-	public void setUp() throws Exception {
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see junit.framework.TestCase#tearDown()
-	 */
-	public void tearDown() throws Exception {
-	}
+public class OldTestsForPortlet extends GenericPortletTestBase  {
 
 	/**
 	 * Test method for {@link javax.portlet.faces.GenericFacesPortlet#destroy()}
@@ -116,35 +56,7 @@ public class GenericPortletTest  {
 	public void testDestroy() throws PortletException, IOException {
 	}
 
-	/**
-	 * Test method for
-	 * {@link javax.portlet.faces.GenericFacesPortlet#init(javax.portlet.PortletConfig)}
-	 * .
-	 * 
-	 * @throws PortletException
-	 */
-	@Test
-	public void testInitPortletConfig() throws PortletException {
-		when(servletContext.getInitParameter(Bridge.LIFECYCLE_ID)).thenReturn("CUSTOM");
-		when(servletContext.getInitParameter("javax.portlet.faces.renderPolicy")).thenReturn(Bridge.BridgeRenderPolicy.NEVER_DELEGATE.toString());
-
-		when(portletConfig.getInitParameter(
-				"javax.portlet.faces.preserveActionParams")).thenReturn( "true");
-		when(portletConfig.getInitParameter(
-				"javax.portlet.faces.excludedRequestAttributes")).thenReturn("bar,baz,boo");
-		when(portletConfig.getInitParameter(
-				"javax.portlet.faces.extension.my_package.my_attribute")).thenReturn("xxx");
-		when(portletConfig.getPortletContext()).thenReturn(portletContext);
-		when(portletConfig.getInitParameterNames()).thenReturn(Collections.enumeration(Collections.singleton("javax.portlet.faces.extension.my_package.my_attribute")));
-		GenericFacesPortlet portlet = createGenericPortlet();
-		portlet.init(portletConfig);
 		
-		verify(portletContext,atLeastOnce()).setAttribute("javax.portlet.faces.foo.preserveActionParams", Boolean.TRUE);
-		verify(portletContext,atLeastOnce()).setAttribute("javax.portlet.faces.foo.excludedRequestAttributes", Arrays.asList("bar","baz","boo"));
-		verify(portletContext,atLeastOnce()).setAttribute("javax.portlet.faces.foo.defaultViewIdMap", Collections.emptyMap());
-//		verify(portletContext,atLeastOnce()).setAttribute("javax.portlet.faces.extension.my_package.foo.my_attribute", "xxx");
-	}
-
 	/**
 	 * Test method for
 	 * {@link javax.portlet.faces.GenericFacesPortlet#doDispatch(javax.portlet.RenderRequest, javax.portlet.RenderResponse)}
@@ -162,13 +74,6 @@ public class GenericPortletTest  {
 		portlet.init(portletConfig);
 //		portlet.doDispatch(renderRequest, renderResponse);
 //		assertEquals(1, MockBridge.responseCount);
-	}
-
-	private GenericFacesPortlet createGenericPortlet() {
-		GenericFacesPortlet portlet = new GenericFacesPortlet();
-		when(portletContext.getInitParameter("javax.portlet.faces.BridgeImplClass")).thenReturn(Bridge.class.getName());
-		when(portletConfig.getPortletName()).thenReturn(FOO);
-		return portlet;
 	}
 
 	/**
