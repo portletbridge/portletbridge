@@ -25,7 +25,7 @@
 	</factory>
 	<component>
 		<component-type>javax.faces.ViewRoot</component-type>
-		<component-class>org.jboss.portletbridge.component.UIPortletViewRoot</component-class>
+		<component-class>javax.portlet.faces.component.PortletNamingContainerUIViewRoot</component-class>
 	</component>
 	<render-kit>
 		<renderer>
@@ -43,9 +43,4 @@
 			<renderer-class>org.jboss.portletbridge.renderkit.portlet.PortletHeadRenderer</renderer-class>
 		</renderer>
 	</render-kit>
-
-	<!-- <render-kit> <renderer> <description>override the viewroot</description> 
-		<component-family>javax.faces.ViewRoot</component-family> <renderer-type>org.jboss.portletbridge.ViewRoot</renderer-type> 
-		<renderer-class> org.jboss.portletbridge.renderkit.portlet.PortletViewRootRenderer 
-		</renderer-class> </renderer> </render-kit> -->
 </faces-config>

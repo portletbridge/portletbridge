@@ -1,5 +1,7 @@
 package org.jboss.portletbridge.test;
 
+import static org.hamcrest.Matchers.*;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -26,7 +28,8 @@ public class HelloPortletTest {
 
 		return ShrinkWrap.create(WebArchive.class, "integrationTest.war")
 		.addClass(Bean.class)
-		.addAsResource("home.xhtml")
+		.addAsWebResource("home.xhtml")
+		.addAsWebResource("resources/stylesheet.css","resources/stylesheet.css")
 		.addAsWebInfResource("WEB-INF/themes/pluto.jsp", "themes/pluto.jsp")
 		.addAsWebInfResource("WEB-INF/themes/portlet-skin.jsp", "themes/portlet-skin.jsp")
 		.addAsWebInfResource("WEB-INF/tld/pluto.tld", "tld/pluto.tld")
@@ -37,7 +40,7 @@ public class HelloPortletTest {
 	}
 
 	@Test
-	public void shouldBeAbleToCallServlet()
+	public void renderFacesPortlet()
 			throws Exception
 
 	{
@@ -47,13 +50,11 @@ public class HelloPortletTest {
 		String body = readAllAndClose(new URL(
 				"http://localhost:9090/integrationTest/portal").openStream());
 
-		Assert.assertEquals(
+		Assert.assertThat(
 
-		"Verify that the servlet was deployed and returns the expected result",
+		"Verify that the portlet was deployed and returns the expected result",
 
-		"hello",
-
-		body);
+		body,allOf(containsString("Hello From JSF"),containsString("stylesheet.css")));
 
 	}
 

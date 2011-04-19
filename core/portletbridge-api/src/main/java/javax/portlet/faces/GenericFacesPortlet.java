@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -119,7 +118,6 @@ public class GenericFacesPortlet extends GenericPortlet {
 	private volatile Bridge facesPortletBridge = null;
 	private volatile Map<String,String> viewIdMap;
 	private static final Logger log = Logger.getLogger("javax.portlet.faces");
-	private Method doHeaders = null;
 	private String defaultContentType;
 	private String defaultCaracterSetEncoding;
 	private boolean initialized = false;
@@ -142,14 +140,6 @@ public class GenericFacesPortlet extends GenericPortlet {
 			facesBridgeClass = loadClassForName(bridgeClassName);
 		} catch (ClassNotFoundException e) {
 			throw new PortletException("Faces portlet Bridge implementation class not found",e);
-		}
-		// HACK -Is bridge implementation supports header request ?
-		try {
-			doHeaders = facesBridgeClass.getMethod("doHeaders", RenderRequest.class,RenderResponse.class);
-		} catch (SecurityException e) {
-			log.log(Level.WARNING, "No acces to the bridge doHeaders method", e);
-		} catch (NoSuchMethodException e) {
-			log.log(Level.INFO, "The bridge does not support doHeaders method");
 		}
 		// Default content type and character set parameters.
 		defaultContentType = portletContext.getInitParameter(DEFAULT_CONTENT_TYPE);
@@ -436,7 +426,6 @@ public class GenericFacesPortlet extends GenericPortlet {
 		// clear portlet fields.
 		this.bridgeClassName = null;
 		this.viewIdMap = null;
-		this.doHeaders = null;
 		this.facesBridgeClass = null;
 		this.defaultCaracterSetEncoding = null;
 		this.defaultContentType = null;
@@ -486,26 +475,6 @@ public class GenericFacesPortlet extends GenericPortlet {
 		doFacesDispatch(request, response);
 	}
 	
-	@Override
-	protected void doHeaders(RenderRequest request, RenderResponse response) {
-		if(log.isLoggable(Level.FINE)){
-			log.fine("Process headers request for portlet "+getPortletName());
-		}
-		try {
-		if(null != doHeaders){
-			// HACK. If bridge has 'doHeaders' method, call it.
-			Bridge bridge = getFacesBridge();
-			setupResponseContentType(request, response);
-			setupBridgeRequest(request, response);
-			doHeaders.invoke(bridge, request,response);
-		}
-			// Otherwise call bridge render method.
-//			doFacesDispatch(request, response);
-		} catch (Exception e) {
-			log.log(Level.SEVERE,"Error process headers request", e);
-		}
-	}
-
 	/* (non-Javadoc)
 	 * @see javax.portlet.GenericPortlet#processAction(javax.portlet.ActionRequest, javax.portlet.ActionResponse)
 	 */
