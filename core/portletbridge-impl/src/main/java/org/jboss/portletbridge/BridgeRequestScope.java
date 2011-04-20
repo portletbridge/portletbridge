@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -62,8 +63,7 @@ import org.jboss.portletbridge.context.PortletBridgeContext;
  */
 public class BridgeRequestScope implements Serializable {
 
-    private static final String EVAL_MAP_KEY = "com.sun.faces.el.CompositeComponentAttributesELResolver_EVAL_MAP";
-	public static final String AJAX_PARAMETER_NAME = "AJAXREQUEST";
+	private static final String EVAL_MAP_KEY = "com.sun.faces.el.CompositeComponentAttributesELResolver_EVAL_MAP";
 
 	/**
     *
@@ -97,7 +97,8 @@ public class BridgeRequestScope implements Serializable {
 			ResponseStateManager.VIEW_STATE_PARAM,
 			AbstractExternalContext.INITIAL_REQUEST_ATTRIBUTES_NAMES };
 
-
+	private static final String[] excludedRequestParameters = { "javax.faces.",
+			ResponseStateManager.VIEW_STATE_PARAM };
 	/**
 	 * Saved {@link FacesMessage}
 	 */
@@ -110,17 +111,6 @@ public class BridgeRequestScope implements Serializable {
 	private transient Map<String, Object> beans = new HashMap<String, Object>();
 
 	/**
-	 * JSF View state , used if bridge stores view state in its own
-	 * {@link StateManager}
-	 */
-	private Object componentsState;
-
-	/**
-	 * JSF View Tree from the last ActionRerquest
-	 */
-	private transient UIViewRoot viewRoot;
-
-	/**
 	 * Latest viewId
 	 */
 	private String viewId;
@@ -128,7 +118,8 @@ public class BridgeRequestScope implements Serializable {
 	/**
 	 * Request paremeters saved for consequentual render requests.
 	 */
-	private Map<String, String[]> requestParameters = new HashMap<String, String[]>(4);
+	private Map<String, String[]> requestParameters = new HashMap<String, String[]>(
+			4);
 
 	/**
 	 * Namespace from the last render request or default portlet namespace.
@@ -146,9 +137,9 @@ public class BridgeRequestScope implements Serializable {
 
 	private String conversationId;
 
-    private transient Map<Object, Object> attributes;
+	private transient Map<Object, Object> attributes;
 
-    private boolean validationFailed;
+	private boolean validationFailed;
 
 	public BridgeRequestScope() {
 	}
@@ -191,48 +182,19 @@ public class BridgeRequestScope implements Serializable {
 	}
 
 	/**
-	 * @param beans the beans to set
+	 * @param beans
+	 *            the beans to set
 	 */
 	public void setBeans(Map<String, Object> beans) {
 		this.beans = beans;
 	}
 
-    Map<Object, Object> getAttributes() {
-        return attributes;
-    }
-
-    void setAttributes(Map<Object, Object> attributes) {
-        this.attributes = attributes;
-    }
-
-	/**
-	 * @return the _viewRoot
-	 */
-	public UIViewRoot getViewRoot() {
-		return viewRoot;
+	Map<Object, Object> getAttributes() {
+		return attributes;
 	}
 
-	/**
-	 * @param root
-	 *            the _viewRoot to set
-	 */
-	public void setViewRoot(UIViewRoot root) {
-		viewRoot = root;
-	}
-
-	/**
-	 * @return the componentsState
-	 */
-	public Object getComponentsState() {
-		return componentsState;
-	}
-
-	/**
-	 * @param componentsState
-	 *            the componentsState to set
-	 */
-	public void setComponentsState(Object componentsState) {
-		this.componentsState = componentsState;
+	void setAttributes(Map<Object, Object> attributes) {
+		this.attributes = attributes;
 	}
 
 	/**
@@ -309,36 +271,34 @@ public class BridgeRequestScope implements Serializable {
 	 */
 	public void restoreRequest(FacesContext facesContext, boolean render) {
 		if (render) {
-            if (getViewRoot() != null) {
-                facesContext.setViewRoot(getViewRoot());
-                setViewRoot(null);
-                restoreAttributes(facesContext);
-            }
-        }
+			// restoreAttributes(facesContext);
+		}
 		restoreMessages(facesContext);
 		restoreBeans(facesContext);
-        if (validationFailed) {
-            facesContext.validationFailed();
-        }
-    }
+		if (validationFailed) {
+			facesContext.validationFailed();
+		}
+	}
 
 	/**
 	 * @param facesContext
-	 * @param withViewRoot
+	 * @param withState
 	 */
-	public void saveRequest(FacesContext facesContext, boolean withViewRoot) {
-		if (withViewRoot) {
+	public void saveRequest(FacesContext facesContext, boolean withState) {
+		if (withState) {
 			UIViewRoot root = facesContext.getViewRoot();
-			setViewRoot(root);
 			if (null != root) {
 				setViewId(root.getViewId());
+				StateManager stateManager = facesContext.getApplication()
+						.getStateManager();
+				setViewStateParameter(stateManager.getViewState(facesContext));
 			}
-                        saveAttributes(facesContext);
+			// saveAttributes(facesContext);
 		}
 		saveBeans(facesContext);
 		saveMessages(facesContext);
 		saveRequestParameters(facesContext);
-        validationFailed = facesContext.isValidationFailed();
+		validationFailed = facesContext.isValidationFailed();
 	}
 
 	/**
@@ -361,52 +321,54 @@ public class BridgeRequestScope implements Serializable {
 	 * @param facesContext
 	 */
 	public void restoreMessages(FacesContext facesContext) {
-			Iterator<String> idsWithMessages = getClientIdsWithMessages();
-			while (idsWithMessages.hasNext()) {
-				String id = idsWithMessages.next();
-				Iterator<FacesMessage> messages = getMessages(id);
-				while (messages.hasNext()) {
-					FacesMessage message = messages.next();
-					facesContext.addMessage(id, message);
-				}
+		Iterator<String> idsWithMessages = getClientIdsWithMessages();
+		while (idsWithMessages.hasNext()) {
+			String id = idsWithMessages.next();
+			Iterator<FacesMessage> messages = getMessages(id);
+			while (messages.hasNext()) {
+				FacesMessage message = messages.next();
+				facesContext.addMessage(id, message);
 			}
+		}
 	}
 
 	/**
-     * @param facesContext
-     */
-    public void saveAttributes(FacesContext facesContext) {
-        attributes = new HashMap<Object, Object>();
-        Map<Object, Object> fattributes = facesContext.getAttributes();
-        attributes.putAll(fattributes);
-    }
+	 * @param facesContext
+	 */
+	public void saveAttributes(FacesContext facesContext) {
+		attributes = new HashMap<Object, Object>();
+		Map<Object, Object> fattributes = facesContext.getAttributes();
+		attributes.putAll(fattributes);
+	}
 
-    /**
-     * @param facesContext
-     */
-    public void restoreAttributes(FacesContext facesContext) {
-        if (null != attributes) {
-            Map<UIComponent, Object> topMap = (Map<UIComponent, Object>) attributes.get(EVAL_MAP_KEY);
-            if (topMap != null) {
-                for (Object exp : topMap.values()) {
-                    try {
-                        Class aClass = exp.getClass();
-                        Field field = aClass.getDeclaredField("ctx");
-                        field.setAccessible(true);
-                        field.set(exp, facesContext);
-                        field.setAccessible(false);
-                    } catch (Exception ex) {
-                        Logger.getLogger(BridgeRequestScope.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+	/**
+	 * @param facesContext
+	 */
+	public void restoreAttributes(FacesContext facesContext) {
+		if (null != attributes) {
+			Map<UIComponent, Object> topMap = (Map<UIComponent, Object>) attributes
+					.get(EVAL_MAP_KEY);
+			if (topMap != null) {
+				for (Object exp : topMap.values()) {
+					try {
+						Class aClass = exp.getClass();
+						Field field = aClass.getDeclaredField("ctx");
+						field.setAccessible(true);
+						field.set(exp, facesContext);
+						field.setAccessible(false);
+					} catch (Exception ex) {
+						Logger.getLogger(BridgeRequestScope.class.getName())
+								.log(Level.SEVERE, null, ex);
+					}
 
-                }
-            }
+				}
+			}
 
-            facesContext.getAttributes().putAll(attributes);
-        }
-    }
+			facesContext.getAttributes().putAll(attributes);
+		}
+	}
 
-    /**
+	/**
 	 * Save request-scope beans, as described in the JSR-301 5.1
 	 * 
 	 * @param facesContext
@@ -435,48 +397,55 @@ public class BridgeRequestScope implements Serializable {
 		for (Iterator<Entry<String, Object>> iterator = requestMap.entrySet()
 				.iterator(); iterator.hasNext();) {
 			Entry<String, Object> entry = iterator.next();
-			boolean include = true;
 			String attributeName = entry.getKey();
-			if (existingAttributes.contains(attributeName)) {
-				include = false;
-			}
-			Object bean = entry.getValue();
-			if (null != bean) {
-				if (bean.getClass().isAnnotationPresent(
-						ExcludeFromManagedRequestScope.class)) {
-					include = false;
-				}
-				for (int i = 0; (i < excludedClasses.length) && include; i++) {
-					if (excludedClasses[i].isInstance(bean)) {
-						include = false;
-						break;
-					}
-				}
-				for (int i = 0; (i < excludedRequestAttributes.length)
-						&& include; i++) {
-					if (attributeName.startsWith(excludedRequestAttributes[i])) {
-						include = false;
-						break;
-					}
-				}
-				if (include && null != excluded) {
-					for (ExcludedRequestAttribute excludedRequestAttribute : excluded) {
-						if (excludedRequestAttribute.match(attributeName)) {
-							include = false;
-							break;
-						}
-					}
-				}
-
-				if (include) {
-					if (null == beans) {
-						beans = new HashMap<String, Object>();
-					}
+			if (!existingAttributes.contains(attributeName)) {
+				Object bean = entry.getValue();
+				if (null != bean
+						&& isIncludeClass(bean)
+						&& isIncludeName(attributeName,
+								excludedRequestAttributes)
+						&& isIncludedAttribute(attributeName, excluded)) {
 					beans.put(attributeName, bean);
 				}
-
 			}
 		}
+	}
+
+	private boolean isIncludedAttribute(String attributeName,
+			Set<ExcludedRequestAttribute> excluded) {
+		boolean include = true;
+		if (null != excluded) {
+			for (ExcludedRequestAttribute excludedRequestAttribute : excluded) {
+				if (excludedRequestAttribute.match(attributeName)) {
+					include = false;
+					break;
+				}
+			}
+		}
+		return include;
+	}
+
+	private boolean isIncludeClass(Object bean) {
+		boolean include = !bean.getClass().isAnnotationPresent(
+				ExcludeFromManagedRequestScope.class);
+		for (int i = 0; (i < excludedClasses.length) && include; i++) {
+			if (excludedClasses[i].isInstance(bean)) {
+				include = false;
+				break;
+			}
+		}
+		return include;
+	}
+
+	private boolean isIncludeName(String attributeName, String[] names) {
+		boolean include = true;
+		for (int i = 0; (i < names.length) && include; i++) {
+			if (attributeName.startsWith(names[i])) {
+				include = false;
+				break;
+			}
+		}
+		return include;
 	}
 
 	public void saveRequestParameters(FacesContext facesContext) {
@@ -489,22 +458,21 @@ public class BridgeRequestScope implements Serializable {
 		BridgeConfig bridgeConfig = bridgeContext.getBridgeConfig();
 		boolean preserveActionParam = bridgeConfig.isPreserveActionParams();
 		if (preserveActionParam) {
-			requestParameters.putAll(externalContext
-					.getRequestParameterValuesMap());
-
-			requestParameters.remove(AJAX_PARAMETER_NAME);
-
-			requestParameters.remove(ResponseStateManager.VIEW_STATE_PARAM);
-        }
+			for (Map.Entry<String, String[]> entry : externalContext
+					.getRequestParameterValuesMap().entrySet()) {
+				String paramName = entry.getKey();
+				if (isIncludeName(paramName, excludedRequestParameters)) {
+					requestParameters.put(paramName, entry.getValue());
+				}
+			}
+		}
 	}
 
 	public void restoreBeans(FacesContext facesContext) {
 		Map<String, Object> requestMap = facesContext.getExternalContext()
 				.getRequestMap();
-			requestMap.putAll(beans);
-		Map<String, String[]> requestParameters = getRequestParameters();
-		if (requestParameters
-				.containsKey(ResponseStateManager.VIEW_STATE_PARAM)) {
+		requestMap.putAll(beans);
+		if (null != getViewStateParameter()) {
 			requestMap.put(Bridge.IS_POSTBACK_ATTRIBUTE, Boolean.TRUE);
 		}
 		if (null != conversationId) {
@@ -517,12 +485,12 @@ public class BridgeRequestScope implements Serializable {
 		this.requestParameters = new HashMap<String, String[]>(4);
 		this.beans = new HashMap<String, Object>();
 		this.messages = new HashMap<String, List<FacesMessage>>();
-		this.viewRoot = null;
 		this.viewId = null;
 		this.conversationIdParameter = "conversationId";
 		this.conversationId = null;
-        this.attributes = null;
-        this.validationFailed = false;
+		this.attributes = null;
+		this.validationFailed = false;
+		this.viewStateParameter = null;
 	}
 
 	private void addMessage(String clientId, FacesMessage message) {
@@ -551,14 +519,14 @@ public class BridgeRequestScope implements Serializable {
 		// Save all default fields
 		out.defaultWriteObject();
 		// Save serializable request-scope beans.
-			for (Map.Entry<String, Object> entry : beans.entrySet()) {
-				String key = entry.getKey();
-				Object bean = entry.getValue();
-				if (null != key && key.length() > 0 && null != bean
-						&& bean instanceof Serializable) {
-					out.writeUTF(key);
-					out.writeObject(bean);
-				}
+		for (Map.Entry<String, Object> entry : beans.entrySet()) {
+			String key = entry.getKey();
+			Object bean = entry.getValue();
+			if (null != key && key.length() > 0 && null != bean
+					&& bean instanceof Serializable) {
+				out.writeUTF(key);
+				out.writeObject(bean);
+			}
 		} // End of request scope beans marker.
 		out.writeUTF("");
 	}
@@ -566,9 +534,9 @@ public class BridgeRequestScope implements Serializable {
 	private void readObject(java.io.ObjectInputStream in) throws IOException,
 			ClassNotFoundException {
 		in.defaultReadObject();
+		beans = new HashMap<String, Object>();
 		String key = in.readUTF();
 		if (key.length() > 0) {
-			beans = new HashMap<String, Object>();
 			while (key.length() > 0) {
 				Object bean = in.readObject();
 				beans.put(key, bean);

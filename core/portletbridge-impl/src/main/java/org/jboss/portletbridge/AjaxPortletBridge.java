@@ -847,7 +847,7 @@ public class AjaxPortletBridge implements Bridge, BridgeConfig {
                // TODO - create applicable processing function.
                // processOutgoingParameters(facesContext,request,response);
                //TODO - do we need this? strategy.afterResourceRequestExecute(facesContext);
-               windowState.saveRequest(facesContext, false);
+               windowState.saveRequest(facesContext, true);
                if (!facesContext.getResponseComplete()) {
                   render(facesContext);
                }
@@ -957,7 +957,7 @@ public class AjaxPortletBridge implements Bridge, BridgeConfig {
          }
 
          // now place view root in request scope.
-         windowState.setViewRoot(facesContext.getViewRoot());
+         windowState.setViewId(facesContext.getViewRoot().getViewId());
 
          // set the request scope of this event (aka windowState)
          bridgeContext.setRequestScope(windowState);

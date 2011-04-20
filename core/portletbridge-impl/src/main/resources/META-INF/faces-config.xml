@@ -12,7 +12,6 @@
 	<application>
 		<el-resolver>org.jboss.portletbridge.el.PortletELResolver</el-resolver>
 		<view-handler>org.jboss.portletbridge.application.PortletViewHandler</view-handler>
-		<state-manager>org.jboss.portletbridge.application.PortletStateManager</state-manager>
 		<resource-handler>org.jboss.portletbridge.application.resource.PortletResourceHandler</resource-handler>
 	</application>
 	<lifecycle>

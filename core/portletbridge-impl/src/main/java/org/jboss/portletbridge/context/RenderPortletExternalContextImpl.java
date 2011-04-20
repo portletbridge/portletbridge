@@ -29,10 +29,13 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.faces.render.ResponseStateManager;
 import javax.portlet.PortletContext;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.faces.Bridge;
+
+import org.jboss.portletbridge.BridgeRequestScope;
 
 /**
  * @author asmirnov
@@ -122,10 +125,14 @@ public class RenderPortletExternalContextImpl extends MimeExternalContextImpl {
 			// Get parameters ( all or a View state only ) restored as requered
 			// in the JSR 301 PLT 5.1
 			Map<String, String[]> requestParameters = new HashMap<String, String[]>();
-			Map<String, String[]> savedRequestParameters = this.portletBridgeContext
-			        .getRequestScope().getRequestParameters();
+			BridgeRequestScope bridgeRequestScope = this.portletBridgeContext
+			        .getRequestScope();
+			Map<String, String[]> savedRequestParameters = bridgeRequestScope.getRequestParameters();
 			if (savedRequestParameters != null) {
 				requestParameters.putAll(savedRequestParameters);
+			}
+			if(null != bridgeRequestScope.getViewStateParameter()){
+				requestParameters.put(ResponseStateManager.VIEW_STATE_PARAM, new String[]{bridgeRequestScope.getViewStateParameter()});
 			}
 			// Add all real request parameters
 			Enumeration parameterNames = getRequest().getParameterNames();
