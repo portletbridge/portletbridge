@@ -8,11 +8,15 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.jboss.portletbridge</groupId>
   <version>3.0.0-SNAPSHOT</version>
-  <artifactId>examples</artifactId>
-  <name>JBoss Portlet Bridge JSF 2 examples</name>
+  <artifactId>tests</artifactId>
+  <name>JBoss Portlet Bridge JSF 2 integrationTests</name>
   <packaging>pom</packaging>
   <modules>
-    <module>jsf2portlet</module>
-     <module>richfaces-core-demo</module>
+    <module>embeddedPluto</module>
+    <module>jsf2plain</module>
+     <!--
+     <module>richfaces</module>
+    <module>weld</module>
+     -->
   </modules>
 </project>
