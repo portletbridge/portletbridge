@@ -23,4 +23,12 @@ public class PortletArchive {
 		.addAsLibrary(javaArchive)
 		;
 	}
+	
+	public static WebArchive create(String webInfResource,String portletResource,String facesConfigResource) {
+		return create()
+		.addAsWebInfResource(webInfResource, "web.xml")
+		.addAsWebInfResource(facesConfigResource,"faces-config.xml")
+		.addAsWebInfResource(portletResource, "portlet.xml");
+	}
+
 }
