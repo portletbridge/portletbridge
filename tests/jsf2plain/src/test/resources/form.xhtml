@@ -8,6 +8,13 @@
 </h:head>
 
 <h:body>
-		<h1><h:outputText value="${bean.text}" /></h1>		
+		<h:form>
+		<p id="input"><h:inputText value="${bean.text}" /></p>	
+		<p id="output"><h:outputText value="${bean.text}" /></p>
+		<p id="submit"><h:commandButton value="Ok"/></p>		
+		</h:form>
+		<p id="messages">
+		<h:messages/>
+		</p>
 </h:body>
 </f:view>

@@ -1,4 +1,5 @@
 package org.jboss.portletbridge.test;
+
 /**
  * License Agreement.
  *
@@ -20,16 +21,14 @@ package org.jboss.portletbridge.test;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
  */
 
-
 import java.util.Date;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
+import javax.faces.validator.ValidatorException;
 
 /**
  * @author $Autor$
@@ -38,6 +37,10 @@ import javax.faces.event.ValueChangeEvent;
 
 public class Bean {
 
+	public static final String ON_CHANGE_CALLED = "#{bean.onChange} called";
+	public static final String VALIDATE_CALLED = "#{bean.validate} called";
+	public static final String VALIDATOR_ERROR_MESSAGE = "#{bean.validate} wrong value";
+	public static final String WRONG = "Wrong";
 	public static final String HELLO_JSF_PORTLET = "Hello,JSF Portlet";
 	private java.lang.String text = HELLO_JSF_PORTLET;
 
@@ -51,39 +54,42 @@ public class Bean {
 
 	public String ok() {
 		System.out.println("Button pressed");
-		return null;
+		return text;
 	}
 
 	public void validate(FacesContext context, UIComponent input,
-			Object newValue) {
-		FacesMessage msg = new FacesMessage("#{bean.validate} called");
-		context.addMessage(input.getClientId(context), msg);
+			Object newValue) throws ValidatorException {
 		System.out.println("validate");
+		if (WRONG.equals(newValue)) {
+			FacesMessage msg = new FacesMessage(VALIDATOR_ERROR_MESSAGE);
+			throw new ValidatorException(msg);
+		} else {
+			FacesMessage msg = new FacesMessage(VALIDATE_CALLED);
+			context.addMessage(input.getClientId(context), msg);
+		}
 	}
 
 	public void onChange(ValueChangeEvent event) {
 		FacesContext context = FacesContext.getCurrentInstance();
 		UIComponent input = event.getComponent();
-		FacesMessage msg = new FacesMessage("#{bean.onChange} called");
+		FacesMessage msg = new FacesMessage(ON_CHANGE_CALLED);
 		context.addMessage(input.getClientId(context), msg);
 		System.out.println("onChange");
 
 	}
 
-
 	public String getTime() {
 		return (new Date(System.currentTimeMillis())).toString();
 	}
 
-Integer count = 0;
+	Integer count = 0;
 
-    public Integer getCount() {
-        return count++;
-    }
+	public Integer getCount() {
+		return count++;
+	}
 
-    public void reset(ActionEvent ae) {
-        count = 0;
-    }
-   
+	public void reset(ActionEvent ae) {
+		count = 0;
+	}
 
 }
