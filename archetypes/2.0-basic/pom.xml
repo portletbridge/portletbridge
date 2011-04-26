@@ -8,6 +8,41 @@
    <groupId>org.jboss.portletbridge.archetypes</groupId>
    <artifactId>2.0-basic</artifactId>
    <version>3.0.0-SNAPSHOT</version>
-   <packaging>maven-plugin</packaging>
+   <packaging>maven-archetype</packaging>
    <name>JSF 2.0 Portlet archetype</name>
+   <repositories>
+      <repository>
+        <id>snapshots</id>
+        <name>Snapshots Repository</name>
+        <url>https://repository.apache.org/content/repositories/snapshots/</url>
+      </repository>
+    </repositories>
+
+   <pluginRepositories>
+      <pluginRepository>
+        <id>snapshots plugins</id>
+        <name>Snapshots Repository</name>
+        <url>https://repository.apache.org/content/repositories/snapshots/</url>
+      </pluginRepository>
+   </pluginRepositories>
+
+   <build>
+    <extensions>
+      <extension>
+        <groupId>org.apache.maven.archetype</groupId>
+        <artifactId>archetype-packaging</artifactId>
+        <version>2.0</version>
+      </extension>
+    </extensions>
+
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <artifactId>maven-archetype-plugin</artifactId>
+          <version>2.0</version>
+          <extensions>true</extensions>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+   </build>
 </project>

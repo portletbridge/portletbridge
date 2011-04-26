@@ -15,6 +15,10 @@
       <maven>2.0.7</maven>
    </prerequisites>
 
+   <properties>
+      <jsf.version>2.0.2</jsf.version>
+   </properties>
+
    <licenses>
       <license>
          <name>LGPL 2.1</name>
@@ -203,35 +207,6 @@
 
    </dependencies>
 
-   <profiles>
-        <profile>
-            <id>jbossportal</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-war-plugin</artifactId>
-                        <configuration>
-                        <webResources>
-                            <resource>
-                                <filtering>false</filtering>
-                                <directory>${project.basedir}/src/main/jbossportal</directory>
-                                <targetPath>WEB-INF</targetPath>
-                                <includes>
-                                    <include>jboss-*.xml</include>
-                                    <include>portlet-instances.xml</include>
-                                    <include>riportlet-object.xml</include>
-                                </includes>
-                            </resource>
-                        </webResources>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-   </profiles>
 
-   <properties>
-      <jsf.version>2.0.2</jsf.version>
-   </properties>
 
 </project>
