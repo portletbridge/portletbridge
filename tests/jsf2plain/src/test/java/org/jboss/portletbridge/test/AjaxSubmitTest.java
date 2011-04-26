@@ -16,7 +16,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlSubmitInput;
 
 @RunWith(Arquillian.class)
-public class JsfFormSubmitTest extends PortalTestBase {
+public class AjaxSubmitTest extends PortalTestBase {
 
 	public static final String NEW_VALUE = "New Value";
 
@@ -26,8 +26,7 @@ public class JsfFormSubmitTest extends PortalTestBase {
 	{
 
 		return TestDeployment.createDeployment()
-				.addAsWebResource("output.xhtml", "output.xhtml")
-				.addAsWebResource("form.xhtml", "home.xhtml");
+				.addAsWebResource("ajax.xhtml", "home.xhtml");
 	}
 
 	@Test
@@ -36,23 +35,23 @@ public class JsfFormSubmitTest extends PortalTestBase {
 	{
 		HtmlPage portalPage = getPortalPage();
 
-		HtmlForm form = portalPage.getForms().get(0);
-
 		verifyOutput(portalPage, Bean.HELLO_JSF_PORTLET);
 
 		verifyInput(portalPage, Bean.HELLO_JSF_PORTLET);
 
 		HtmlSubmitInput submit = getSubmit(portalPage);
 
-		assertThat(submit.getValueAttribute(), containsString("Ok"));
+		assertThat(submit.getOnClickAttribute(), not(equalTo("")));
 	}
 
 	@Test
 	public void testSubmitAndRemainOnPage() throws Exception {
 		HtmlPage portalPage = getPortalPage();
 		HtmlPage responsePage = submitForm(portalPage,NEW_VALUE);
+		assertSame(portalPage, responsePage);
 		verifyInput(responsePage, NEW_VALUE);
 		verifyOutput(responsePage, NEW_VALUE);
+		// Re-render page
 		// Re-render page
 		HtmlPage reRenderPage = getPortalPage();
 		verifyInput(reRenderPage, NEW_VALUE);

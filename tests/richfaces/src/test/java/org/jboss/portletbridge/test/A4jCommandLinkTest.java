@@ -3,6 +3,9 @@ package org.jboss.portletbridge.test;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.List;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -11,12 +14,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.gargoylesoftware.htmlunit.Page;
+import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlSubmitInput;
+import com.gargoylesoftware.htmlunit.html.HtmlTextInput;
 
 @RunWith(Arquillian.class)
-public class JsfFormSubmitTest extends PortalTestBase {
+public class A4jCommandLinkTest extends PortalTestBase {
 
 	public static final String NEW_VALUE = "New Value";
 
@@ -27,7 +32,7 @@ public class JsfFormSubmitTest extends PortalTestBase {
 
 		return TestDeployment.createDeployment()
 				.addAsWebResource("output.xhtml", "output.xhtml")
-				.addAsWebResource("form.xhtml", "home.xhtml");
+				.addAsWebResource("a4jLink.xhtml", "home.xhtml");
 	}
 
 	@Test
@@ -36,27 +41,33 @@ public class JsfFormSubmitTest extends PortalTestBase {
 	{
 		HtmlPage portalPage = getPortalPage();
 
-		HtmlForm form = portalPage.getForms().get(0);
 
 		verifyOutput(portalPage, Bean.HELLO_JSF_PORTLET);
 
 		verifyInput(portalPage, Bean.HELLO_JSF_PORTLET);
 
-		HtmlSubmitInput submit = getSubmit(portalPage);
+		HtmlElement submit = getFirstChildById(portalPage,"submit");
 
-		assertThat(submit.getValueAttribute(), containsString("Ok"));
+		assertThat(submit.asText(), containsString("Ok"));
+
+		List<HtmlElement> links = portalPage.getElementsByTagName("script");
+		assertThat(links, hasItem(TestDeployment.htmlAttributeMatcher("src",containsString("richfaces"))));
 	}
+
+
 
 	@Test
 	public void testSubmitAndRemainOnPage() throws Exception {
 		HtmlPage portalPage = getPortalPage();
 		HtmlPage responsePage = submitForm(portalPage,NEW_VALUE);
+		assertSame(portalPage, responsePage);
 		verifyInput(responsePage, NEW_VALUE);
 		verifyOutput(responsePage, NEW_VALUE);
 		// Re-render page
-		HtmlPage reRenderPage = getPortalPage();
+		HtmlPage reRenderPage = portalPage;
 		verifyInput(reRenderPage, NEW_VALUE);
 		verifyOutput(reRenderPage, NEW_VALUE);
 	}
+
 
 }
