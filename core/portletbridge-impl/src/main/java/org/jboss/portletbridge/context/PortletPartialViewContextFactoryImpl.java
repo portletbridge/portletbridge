@@ -56,7 +56,7 @@ public class PortletPartialViewContextFactoryImpl extends PartialViewContextFact
      */
     public PartialViewContext getPartialViewContext(FacesContext context) {
 
-        return new PortletPartialViewContextImpl(context);
+        return new PortletPartialViewContextWrapper(context);
 
     }
     
