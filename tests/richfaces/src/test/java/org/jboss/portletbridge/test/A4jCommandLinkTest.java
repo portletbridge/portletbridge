@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
 
+import org.hamcrest.Matchers;
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
@@ -50,8 +51,8 @@ public class A4jCommandLinkTest extends PortalTestBase {
 
 		assertThat(submit.asText(), containsString("Ok"));
 
-		List<HtmlElement> links = portalPage.getElementsByTagName("script");
-		assertThat(links, hasItem(TestDeployment.htmlAttributeMatcher("src",containsString("richfaces"))));
+		Iterable<HtmlElement> links = portalPage.getElementsByTagName("script");
+		assertThat(links, Matchers.<HtmlElement>hasItem(TestDeployment.htmlAttributeMatcher("src",containsString("richfaces"))));
 	}
 
 

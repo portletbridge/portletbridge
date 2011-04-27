@@ -25,30 +25,42 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.context.PartialResponseWriter;
 import javax.faces.context.PartialViewContext;
-import javax.faces.event.PhaseId;
-import java.util.Collection;
+import javax.faces.context.PartialViewContextWrapper;
 
 /** @author <a href="mailto:whales@redhat.com">Wesley Hales</a> */
 
-public class PortletPartialViewContextWrapper extends PortletPartialViewContextImpl
-{
+public class PortletPartialViewContextWrapper extends PartialViewContextWrapper {
 
-   private FacesContext ctx;
+	private final FacesContext ctx;
+	private final PartialViewContext parent;
+	private boolean responseInitialized = false;
 
-   public PortletPartialViewContextWrapper(FacesContext ctx)
-   {
-      super(ctx);
-      this.ctx = ctx;
-   }
+	public PortletPartialViewContextWrapper(FacesContext ctx,
+			PartialViewContext parent) {
+		this.ctx = ctx;
+		this.parent = parent;
+	}
 
-   @Override
-   public PartialResponseWriter getPartialResponseWriter()
-   {
-      ExternalContext extContext = ctx.getExternalContext();
-      extContext.setResponseContentType("text/xml");
-      extContext.addResponseHeader("Cache-Control", "no-cache");
-      return super.getPartialResponseWriter();
-   }
+	@Override
+	public PartialResponseWriter getPartialResponseWriter() {
+		if (!responseInitialized) {
+			// In portal, content-type has to be set before getting response writer.
+			ExternalContext extContext = ctx.getExternalContext();
+			extContext.setResponseContentType("text/xml");
+			extContext.addResponseHeader("Cache-Control", "no-cache");
+			responseInitialized = true;
+		}
+		return super.getPartialResponseWriter();
+	}
 
+	@Override
+	public PartialViewContext getWrapped() {
+		return parent;
+	}
+
+	@Override
+	public void setPartialRequest(boolean isPartialRequest) {
+		getWrapped().setPartialRequest(isPartialRequest);
+	}
 
 }

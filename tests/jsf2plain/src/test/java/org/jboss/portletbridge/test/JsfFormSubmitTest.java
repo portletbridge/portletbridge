@@ -36,7 +36,7 @@ public class JsfFormSubmitTest extends PortalTestBase {
 	{
 		HtmlPage portalPage = getPortalPage();
 
-		HtmlForm form = portalPage.getForms().get(0);
+		System.out.println(portalPage.asXml());
 
 		verifyOutput(portalPage, Bean.HELLO_JSF_PORTLET);
 

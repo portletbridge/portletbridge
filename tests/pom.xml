@@ -11,11 +11,23 @@
   <artifactId>tests</artifactId>
   <name>JBoss Portlet Bridge JSF 2 integrationTests</name>
   <packaging>pom</packaging>
+  <build>
+  	<plugins>
+  		<plugin>
+  			<groupId>org.apache.maven.plugins</groupId>
+  			<artifactId>maven-deploy-plugin</artifactId>
+  			<version>2.5</version>
+  			<configuration>
+  			  <skip>true</skip>
+  			</configuration>
+  		</plugin>
+  	</plugins>
+  </build>
   <modules>
     <module>embeddedPluto</module>
     <module>jsf2plain</module>
-     <!--
      <module>richfaces</module>
+     <!--
     <module>weld</module>
      -->
   </modules>

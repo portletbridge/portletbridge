@@ -135,7 +135,8 @@
 	</dependencyManagement>
 	<modules>
 		<module>core</module>
-		<module>examples</module>
+		<module>tests</module>
+		<module>examples</module>		
 		<module>archetypes</module>
 	</modules>
 </project>
