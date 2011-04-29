@@ -4,12 +4,12 @@
 	<parent>
 		<artifactId>tests</artifactId>
 		<groupId>org.jboss.portletbridge</groupId>
-		<version>3.0.0.Beta1</version>
+		<version>3.0.0-SNAPSHOT</version>
 	</parent>
 	<groupId>org.jboss.portletbridge.tests</groupId>
 	<artifactId>richfaces</artifactId>
 	<packaging>jar</packaging>
-	<version>3.0.0.Beta1</version>
+	<version>3.0.0-SNAPSHOT</version>
 	<name>RichFaces and JSF 2 tests</name>
 
 	<properties>
@@ -54,7 +54,7 @@
 		<dependency>
 			<groupId>org.jboss.portletbridge.tests</groupId>
 			<artifactId>embeddedPluto</artifactId>
-			<version>3.0.0.Beta1</version>
+			<version>3.0.0-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 

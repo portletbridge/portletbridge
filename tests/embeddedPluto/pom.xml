@@ -4,12 +4,12 @@
 	<parent>
 		<artifactId>tests</artifactId>
 		<groupId>org.jboss.portletbridge</groupId>
-		<version>3.0.0.Beta1</version>
+		<version>3.0.0-SNAPSHOT</version>
 	</parent>
 	<groupId>org.jboss.portletbridge.tests</groupId>
 	<artifactId>embeddedPluto</artifactId>
 	<packaging>jar</packaging>
-	<version>3.0.0.Beta1</version>
+	<version>3.0.0-SNAPSHOT</version>
 	<name>integration Arquillian and Embedded Pluto on Jetty 7</name>
 
 	<properties>

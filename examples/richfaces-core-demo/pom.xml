@@ -19,13 +19,13 @@
 	<parent>
 		<groupId>org.jboss.portletbridge</groupId>
 		<artifactId>examples</artifactId>
-		<version>3.0.0.Beta1</version>
+		<version>3.0.0-SNAPSHOT</version>
 	</parent>
 
 	<groupId>org.jboss.portletbridge.examples</groupId>
 	<artifactId>richfaces-core-demo</artifactId>
 	<packaging>war</packaging>
-	<version>3.0.0.Beta1</version>
+	<version>3.0.0-SNAPSHOT</version>
 	<name>RichFaces Examples: Core</name>
 
 	<properties>
@@ -190,8 +190,8 @@
 	</repositories>
 
 	<scm>
-		<connection>scm:svn:http://anonsvn.jboss.org/repos/richfaces/root/examples/core-demo/tags/3.0.0.Beta1</connection>
-		<developerConnection>scm:svn:https://svn.jboss.org/repos/richfaces/root/examples/core-demo/tags/3.0.0.Beta1</developerConnection>
-		<url>http://fisheye.jboss.org/browse/richfaces/tags/3.0.0.Beta1</url>
+		<connection>scm:svn:http://anonsvn.jboss.org/repos/richfaces/root/examples/core-demo/trunk</connection>
+		<developerConnection>scm:svn:https://svn.jboss.org/repos/richfaces/root/examples/core-demo/trunk</developerConnection>
+		<url>http://fisheye.jboss.org/browse/richfaces</url>
 	</scm>
 </project>
