@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
 		<groupId>org.jboss</groupId>
 		<artifactId>jboss-parent</artifactId>
@@ -7,7 +6,7 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.jboss.portletbridge</groupId>
-	<version>3.0.0-SNAPSHOT</version>
+	<version>3.0.0.Beta1</version>
 	<artifactId>root</artifactId>
 	<name>
       JBoss JSF2 Portlet Bridge for a portlet environment, root pom
@@ -19,9 +18,10 @@
 	<packaging>pom</packaging>
 	<url>http://www.jboss.org/portletbridge/</url>
 	<scm>
-		<connection>scm:svn:http://anonsvn.jboss.org/repos/portletbridge/branches/3.0.X</connection>
-		<developerConnection>scm:svn:https://svn.jboss.org/repos/portletbridge/branches/3.0.X</developerConnection>
-	</scm>
+		<connection>scm:svn:http://anonsvn.jboss.org/repos/portletbridge/tags/3.0.0.Beta1</connection>
+		<developerConnection>scm:svn:https://svn.jboss.org/repos/portletbridge/tags/3.0.0.Beta1</developerConnection>
+	  <url>http://anonsvn.jboss.org/repos/maven/poms/jboss-parent-pom/tags/3.0.0.Beta1</url>
+  </scm>
 	<repositories>
 		<repository>
 			<id>jboss</id>
@@ -68,12 +68,12 @@
 			<dependency>
 				<groupId>org.jboss.portletbridge</groupId>
 				<artifactId>portletbridge-api</artifactId>
-				<version>3.0.0-SNAPSHOT</version>
+				<version>3.0.0.Beta1</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jboss.portletbridge</groupId>
 				<artifactId>portletbridge-impl</artifactId>
-				<version>3.0.0-SNAPSHOT</version>
+				<version>3.0.0.Beta1</version>
 			</dependency>
 			<dependency>
 				<groupId>com.sun.faces</groupId>
