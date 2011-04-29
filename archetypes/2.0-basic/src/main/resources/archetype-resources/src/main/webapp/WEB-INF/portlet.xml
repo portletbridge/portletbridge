@@ -21,6 +21,11 @@
          <name>javax.portlet.faces.defaultViewId.help</name>
          <value>/jsf/help.xhtml</value>
       </init-param>
+
+      <init-param>
+            <name>javax.portlet.faces.preserveActionParams</name>
+            <value>true</value>
+        </init-param>
       <expiration-cache>-0</expiration-cache>
       <portlet-info>
          <title>JSF RI Portlet</title>
