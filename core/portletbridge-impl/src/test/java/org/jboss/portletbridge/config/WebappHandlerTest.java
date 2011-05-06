@@ -1,10 +1,12 @@
 /**
  * 
  */
-package org.jboss.portletbridge.util;
+package org.jboss.portletbridge.config;
 
 import junit.framework.TestCase;
 
+import org.jboss.portletbridge.config.StringContentHandler;
+import org.jboss.portletbridge.config.WebappHandler;
 import org.xml.sax.ContentHandler;
 
 /**

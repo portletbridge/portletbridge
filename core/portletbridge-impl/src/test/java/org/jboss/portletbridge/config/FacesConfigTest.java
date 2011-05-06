@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.jboss.portletbridge.util;
+package org.jboss.portletbridge.config;
 
 import java.io.InputStream;
 import java.util.Map;
@@ -11,6 +11,8 @@ import javax.xml.parsers.SAXParser;
 
 import junit.framework.TestCase;
 
+import org.jboss.portletbridge.config.FacesConfig;
+import org.jboss.portletbridge.config.ParsingException;
 import org.xml.sax.SAXException;
 
 /**
@@ -35,7 +37,7 @@ public class FacesConfigTest extends TestCase {
 
 
 	/**
-	 * Test method for {@link org.jboss.portletbridge.util.FacesConfig#parse(java.io.InputStream)}.
+	 * Test method for {@link org.jboss.portletbridge.config.FacesConfig#parse(java.io.InputStream)}.
 	 * @throws ParsingException 
 	 */
 	public void testParseInputStream() throws Exception {
@@ -48,7 +50,7 @@ public class FacesConfigTest extends TestCase {
 	}
 
 	/**
-	 * Test method for {@link org.jboss.portletbridge.util.FacesConfig#parse(java.io.InputStream)}.
+	 * Test method for {@link org.jboss.portletbridge.config.FacesConfig#parse(java.io.InputStream)}.
 	 * @throws ParsingException 
 	 */
 	public void testPublicParameters() throws Exception {
@@ -61,7 +63,7 @@ public class FacesConfigTest extends TestCase {
 		assertEquals("AnotherUser.name", mapping.get("AnotherPortlet:name"));
 	}
 	/**
-	 * Test method for {@link org.jboss.portletbridge.util.FacesConfig#getParser()}.
+	 * Test method for {@link org.jboss.portletbridge.config.FacesConfig#getParser()}.
 	 * @throws SAXException 
 	 * @throws ParserConfigurationException 
 	 */

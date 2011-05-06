@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.jboss.portletbridge.util;
+package org.jboss.portletbridge.config;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,6 +12,8 @@ import java.util.Map;
 import javax.faces.FacesException;
 import javax.faces.application.ViewExpiredException;
 import javax.servlet.ServletException;
+
+import org.jboss.portletbridge.config.WebXML;
 
 import junit.framework.TestCase;
 
@@ -36,7 +38,7 @@ public class WebXMLTest extends TestCase {
 	}
 
 	/**
-	 * Test method for {@link org.jboss.portletbridge.util.WebXML#parse(java.io.InputStream)}.
+	 * Test method for {@link org.jboss.portletbridge.config.WebXML#parse(java.io.InputStream)}.
 	 */
 	public void testParse() throws Exception {
 		WebXML webXml = new WebXML();

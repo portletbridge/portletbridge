@@ -80,14 +80,14 @@ import javax.portlet.faces.BridgeException;
 import javax.portlet.faces.BridgePublicRenderParameterHandler;
 import javax.portlet.faces.event.EventNavigationResult;
 
+import org.jboss.portletbridge.config.FacesConfig;
+import org.jboss.portletbridge.config.WebXML;
 import org.jboss.portletbridge.context.InitFacesContext;
 import org.jboss.portletbridge.context.PortalActionURL;
 import org.jboss.portletbridge.context.PortletBridgeContext;
 import org.jboss.portletbridge.lifecycle.PortletLifecycle;
 import org.jboss.portletbridge.util.BridgeLogger;
-import org.jboss.portletbridge.util.FacesConfig;
 import org.jboss.portletbridge.util.Util;
-import org.jboss.portletbridge.util.WebXML;
 
 /**
  * @author asmirnov

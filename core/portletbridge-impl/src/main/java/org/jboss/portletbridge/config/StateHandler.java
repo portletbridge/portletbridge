@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.jboss.portletbridge.util;
+package org.jboss.portletbridge.config;
 
 import java.io.StringReader;
 

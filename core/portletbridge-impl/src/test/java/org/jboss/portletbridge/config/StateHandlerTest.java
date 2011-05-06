@@ -1,11 +1,12 @@
 /**
  * 
  */
-package org.jboss.portletbridge.util;
+package org.jboss.portletbridge.config;
 
 
 import junit.framework.TestCase;
 
+import org.jboss.portletbridge.config.StateHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
