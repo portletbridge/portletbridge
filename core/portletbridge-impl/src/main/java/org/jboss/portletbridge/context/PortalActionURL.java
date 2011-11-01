@@ -307,6 +307,8 @@ public class PortalActionURL {
 		// Clear parameters map.
 		parameters = new LinkedHashMap<String, String[]>(30);	
 		if (null != queryString && queryString.length()>0) {
+			// PBR-290 - Added conversion to & for all encoded ampersands
+			queryString = queryString.replace("&amp;", "&");
 			String[] queryParams = queryString.split("&");
 			for (int i = 0; i < queryParams.length; i++) {
 				String par = queryParams[i];

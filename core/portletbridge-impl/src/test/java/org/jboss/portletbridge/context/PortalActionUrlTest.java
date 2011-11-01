@@ -113,4 +113,11 @@ public class PortalActionUrlTest extends TestCase {
 	      assertEquals("+a=%40b", url.getQueryString());
 	      assertNull(url.getParameter("cd"));
 	   }
+   public void testParseQueryString3() throws Exception {
+      PortalActionURL url = new PortalActionURL("/some/path/index.jsf?a=b&amp;cd=ef");
+      assertEquals(2, url.parametersSize());
+      assertEquals("b", url.getParameter("a"));
+      assertEquals("ef", url.getParameter("cd"));
+      assertNull(url.getParameter("xxx"));
+   }
 }
