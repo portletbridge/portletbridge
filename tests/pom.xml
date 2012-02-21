@@ -3,13 +3,11 @@
   <parent>
       <groupId>org.jboss.portletbridge</groupId>
       <version>3.0.0-SNAPSHOT</version>
-      <artifactId>root</artifactId>
+      <artifactId>parent</artifactId>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.jboss.portletbridge</groupId>
-  <version>3.0.0-SNAPSHOT</version>
   <artifactId>tests</artifactId>
-  <name>JBoss Portlet Bridge JSF 2 integrationTests</name>
+  <name>JBoss Portlet Bridge Integration Tests</name>
   <packaging>pom</packaging>
   <build>
   	<plugins>

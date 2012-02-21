@@ -6,8 +6,7 @@
    </parent>
    <modelVersion>4.0.0</modelVersion>
    <groupId>org.jboss.portletbridge.archetypes</groupId>
-   <artifactId>2.0-basic</artifactId>
-   <version>3.0.0-SNAPSHOT</version>
+   <artifactId>2.0-basic-archetype</artifactId>
    <packaging>maven-archetype</packaging>
    <name>JSF 2.0 Portlet archetype</name>
    <repositories>

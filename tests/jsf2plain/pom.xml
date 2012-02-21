@@ -9,8 +9,7 @@
 	<groupId>org.jboss.portletbridge.tests</groupId>
 	<artifactId>jsf2plain</artifactId>
 	<packaging>jar</packaging>
-	<version>3.0.0-SNAPSHOT</version>
-	<name>Plain JSF 2 tests</name>
+	<name>JSF 2 Integration Tests</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

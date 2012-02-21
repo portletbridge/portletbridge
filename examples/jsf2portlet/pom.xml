@@ -6,10 +6,9 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.jboss.portletbridge.examples</groupId>
-    <artifactId>jsf2portlet</artifactId>
+    <artifactId>jsf2portlet-example</artifactId>
     <packaging>war</packaging>
-    <version>3.0.0-SNAPSHOT</version>
-    <name>jsf2portlet Maven Webapp</name>
+    <name>JSF 2 Portlet Example</name>
     <url>http://maven.apache.org</url>
     <build>
         <finalName>jsf2portlet</finalName>

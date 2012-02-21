@@ -9,8 +9,7 @@
 	<groupId>org.jboss.portletbridge.tests</groupId>
 	<artifactId>embeddedPluto</artifactId>
 	<packaging>jar</packaging>
-	<version>3.0.0-SNAPSHOT</version>
-	<name>integration Arquillian and Embedded Pluto on Jetty 7</name>
+	<name>Embedded Pluto on Jetty 7 Tests</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
