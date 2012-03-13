@@ -32,9 +32,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.ResourceBundle;
 import java.util.Set;
-import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -85,9 +85,7 @@ import org.jboss.portletbridge.config.WebXML;
 import org.jboss.portletbridge.context.InitFacesContext;
 import org.jboss.portletbridge.context.PortalActionURL;
 import org.jboss.portletbridge.context.PortletBridgeContext;
-import org.jboss.portletbridge.lifecycle.PortletLifecycle;
 import org.jboss.portletbridge.util.BridgeLogger;
-import org.jboss.portletbridge.util.Util;
 
 /**
  * @author asmirnov
@@ -285,12 +283,7 @@ public class AjaxPortletBridge implements Bridge, BridgeConfig {
          String lifecycleId = portletContext
                  .getInitParameter(FacesServlet.LIFECYCLE_ID_ATTR);
          if (null == lifecycleId) {
-            //PBR-189
-            if (Util.compareCurrentJSFVersion("2.0.3") < 0) {
-               lifecycleId = PortletLifecycle.FIX_PORTLET_LIFECYCLE;
-            } else {
-               lifecycleId = LifecycleFactory.DEFAULT_LIFECYCLE;
-            }
+            lifecycleId = LifecycleFactory.DEFAULT_LIFECYCLE;
          }
          if (log.isLoggable(Level.FINE)) {
             log.fine("Create instance of a JSF lifecycle " + lifecycleId);

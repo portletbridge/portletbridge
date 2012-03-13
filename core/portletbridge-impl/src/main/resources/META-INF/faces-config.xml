@@ -1,9 +1,9 @@
-<?xml version="1.0"?>
-<faces-config xmlns="http://java.sun.com/xml/ns/javaee"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
-	version="2.0">
-	<name>org.jboss.portletbridge</name>
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config version="2.0" xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:bridge="http://www.apache.org/myfaces/xml/ns/bridge/bridge-extension"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
+	<name>JBossPortletBridge</name>
 	<ordering>
 		<after>
 			<others />
@@ -19,7 +19,6 @@
 	</lifecycle>
 	<factory>
 		<external-context-factory>org.jboss.portletbridge.context.PortletExternalContextFactoryImpl</external-context-factory>
-		<lifecycle-factory>org.jboss.portletbridge.lifecycle.PortletLifecycleFactory</lifecycle-factory>
 		<partial-view-context-factory>org.jboss.portletbridge.context.PortletPartialViewContextFactoryImpl</partial-view-context-factory>
 	</factory>
 	<component>

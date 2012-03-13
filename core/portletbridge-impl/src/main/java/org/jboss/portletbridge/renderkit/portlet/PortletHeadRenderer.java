@@ -38,19 +38,12 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.faces.application.Resource;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;
-import javax.faces.component.ValueHolder;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.render.Renderer;
-import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
 
-import org.jboss.portletbridge.context.PortletBridgeContext;
 import org.jboss.portletbridge.util.BridgeLogger;
-import org.jboss.portletbridge.util.PortletContainerUtil;
 
 /**
  * This class is a JSF renderer that is designed for use with the h:head

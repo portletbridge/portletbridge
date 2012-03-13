@@ -28,9 +28,6 @@ import javax.faces.event.PhaseId;
 import javax.faces.event.PhaseListener;
 import javax.portlet.faces.Bridge;
 
-import org.jboss.portletbridge.BridgeRequestScope;
-import org.jboss.portletbridge.context.PortletBridgeContext;
-
 /**
  * @author asmirnov
  */
@@ -74,7 +71,6 @@ public class PortalPhaseListener implements PhaseListener {
      * @see
      * javax.faces.event.PhaseListener#beforePhase(javax.faces.event.PhaseEvent)
      */
-   @SuppressWarnings("unchecked")
    public void beforePhase(PhaseEvent event) {
 	   // DO nothing.
    }

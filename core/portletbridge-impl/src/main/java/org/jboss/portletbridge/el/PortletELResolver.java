@@ -350,7 +350,6 @@ public class PortletELResolver extends ELResolver {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	private Map<String, String> getPreferencesValueMap(FacesContext context) {
 		Map<String, String> m = new HashMap<String, String>();
 		Map preferencesValuesMap = getPreferencesValuesMap(context);
