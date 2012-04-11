@@ -1,44 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<faces-config version="2.0" xmlns="http://java.sun.com/xml/ns/javaee"
-    xmlns:bridge="http://www.apache.org/myfaces/xml/ns/bridge/bridge-extension"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
-	<name>JBossPortletBridge</name>
-	<ordering>
-		<after>
-			<others />
-		</after>
-	</ordering>
-	<application>
-		<el-resolver>org.jboss.portletbridge.el.PortletELResolver</el-resolver>
-		<view-handler>org.jboss.portletbridge.application.PortletViewHandler</view-handler>
-		<resource-handler>org.jboss.portletbridge.application.resource.PortletResourceHandler</resource-handler>
-	</application>
-	<lifecycle>
-		<phase-listener>org.jboss.portletbridge.lifecycle.PortalPhaseListener</phase-listener>
-	</lifecycle>
-	<factory>
-		<external-context-factory>org.jboss.portletbridge.context.PortletExternalContextFactoryImpl</external-context-factory>
-		<partial-view-context-factory>org.jboss.portletbridge.context.PortletPartialViewContextFactoryImpl</partial-view-context-factory>
-	</factory>
-	<component>
-		<component-type>javax.faces.ViewRoot</component-type>
-		<component-class>javax.portlet.faces.component.PortletNamingContainerUIViewRoot</component-class>
-	</component>
-	<render-kit>
-		<renderer>
-			<description>Overrides the BodyRenderer
+<faces-config version="2.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:bridge="http://jboss.org/xml/ns/bridge/bridge-extension"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
+    <name>JBossPortletBridge</name>
+    <ordering>
+        <after>
+            <others />
+        </after>
+    </ordering>
+    <application>
+        <el-resolver>org.jboss.portletbridge.el.PortletELResolver</el-resolver>
+        <view-handler>org.jboss.portletbridge.application.PortletViewHandler</view-handler>
+        <resource-handler>org.jboss.portletbridge.application.resource.PortletResourceHandler</resource-handler>
+        <system-event-listener>
+            <system-event-listener-class>
+                org.jboss.portletbridge.config.FacesConfigProcessor
+            </system-event-listener-class>
+            <system-event-class>
+                javax.faces.event.PostConstructApplicationEvent
+            </system-event-class>                     
+        </system-event-listener>
+    </application>
+    <factory>
+        <external-context-factory>org.jboss.portletbridge.context.PortletExternalContextFactoryImpl</external-context-factory>
+        <partial-view-context-factory>org.jboss.portletbridge.context.PortletPartialViewContextFactoryImpl</partial-view-context-factory>
+        <factory-extension>
+            <bridge:bridge-config-factory>org.jboss.portletbridge.bridge.factory.BridgeConfigFactoryImpl
+            </bridge:bridge-config-factory>
+            <bridge:bridge-context-factory>org.jboss.portletbridge.bridge.factory.BridgeContextFactoryImpl
+            </bridge:bridge-context-factory>
+            <bridge:bridge-controller-factory>org.jboss.portletbridge.bridge.factory.BridgeControllerFactoryImpl
+            </bridge:bridge-controller-factory>
+            <bridge:bridge-logger-factory>org.jboss.portletbridge.bridge.factory.BridgeLoggerFactoryImpl
+            </bridge:bridge-logger-factory>
+            <bridge:bridge-request-scope-manager-factory>org.jboss.portletbridge.bridge.factory.BridgeRequestScopeManagerFactoryImpl
+            </bridge:bridge-request-scope-manager-factory>
+            <bridge:bridge-request-scope-factory>org.jboss.portletbridge.bridge.factory.BridgeRequestScopeFactoryImpl
+            </bridge:bridge-request-scope-factory>
+        </factory-extension>
+    </factory>
+    <component>
+        <component-type>javax.faces.ViewRoot</component-type>
+        <component-class>javax.portlet.faces.component.PortletNamingContainerUIViewRoot</component-class>
+    </component>
+    <render-kit>
+        <renderer>
+            <description>Overrides the BodyRenderer
             that comes with the JSF implementation</description>
-			<component-family>javax.faces.Output</component-family>
-			<renderer-type>javax.faces.Body</renderer-type>
-			<renderer-class>org.jboss.portletbridge.renderkit.portlet.PortletBodyRenderer</renderer-class>
-		</renderer>
-		<renderer>
-			<description>Overrides the HeadRenderer
+            <component-family>javax.faces.Output</component-family>
+            <renderer-type>javax.faces.Body</renderer-type>
+            <renderer-class>org.jboss.portletbridge.renderkit.portlet.PortletBodyRenderer</renderer-class>
+        </renderer>
+        <renderer>
+            <description>Overrides the HeadRenderer
             that comes with the JSF implementation</description>
-			<component-family>javax.faces.Output</component-family>
-			<renderer-type>javax.faces.Head</renderer-type>
-			<renderer-class>org.jboss.portletbridge.renderkit.portlet.PortletHeadRenderer</renderer-class>
-		</renderer>
-	</render-kit>
+            <component-family>javax.faces.Output</component-family>
+            <renderer-type>javax.faces.Head</renderer-type>
+            <renderer-class>org.jboss.portletbridge.renderkit.portlet.PortletHeadRenderer</renderer-class>
+        </renderer>
+    </render-kit>
 </faces-config>

@@ -8,8 +8,9 @@ package javax.portlet.faces;
  * and the bridge is in an uninitialized state.
  */
 public class BridgeUninitializedException extends BridgeException {
+    private static final long serialVersionUID = -205259031167978785L;
 
-	public BridgeUninitializedException() {
+    public BridgeUninitializedException() {
 		super();
 	}
 

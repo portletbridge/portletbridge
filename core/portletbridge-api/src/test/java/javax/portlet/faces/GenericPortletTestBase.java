@@ -1,8 +1,8 @@
 package javax.portlet.faces;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -10,9 +10,6 @@ import java.util.Enumeration;
 
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletContext;
-import javax.portlet.PortletException;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
 import javax.servlet.ServletContext;
 
 import org.junit.After;
@@ -56,7 +53,7 @@ public class GenericPortletTestBase {
 		when(portletConfig.getPortletContext()).thenReturn(portletContext);
 		when(portletConfig.getPortletName()).thenReturn(FOO);
 		facesPortlet = spy(new GenericFacesPortlet());
-		when(portletContext.getInitParameter("javax.portlet.faces.BridgeImplClass")).thenReturn(Bridge.class.getName());
+		when(portletContext.getInitParameter("javax.portlet.faces.BridgeClassName")).thenReturn(Bridge.class.getName());
 	}
 	
 	private Answer<Enumeration<String>> enumerationAnswer(final Collection<String> collection){
@@ -64,7 +61,6 @@ public class GenericPortletTestBase {
 
 			public Enumeration<String> answer(InvocationOnMock invocation)
 					throws Throwable {
-				// TODO Auto-generated method stub
 				return Collections.enumeration(collection);
 			}
 		};

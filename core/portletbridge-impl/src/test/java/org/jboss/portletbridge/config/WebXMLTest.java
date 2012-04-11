@@ -1,19 +1,13 @@
-/**
- * 
- */
 package org.jboss.portletbridge.config;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.faces.FacesException;
 import javax.faces.application.ViewExpiredException;
+import javax.portlet.PortletContext;
 import javax.servlet.ServletException;
-
-import org.jboss.portletbridge.config.WebXML;
 
 import junit.framework.TestCase;
 
@@ -23,43 +17,28 @@ import junit.framework.TestCase;
  */
 public class WebXMLTest extends TestCase {
 
-	/* (non-Javadoc)
-	 * @see junit.framework.TestCase#setUp()
-	 */
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
-
-	/* (non-Javadoc)
-	 * @see junit.framework.TestCase#tearDown()
-	 */
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
-
 	/**
 	 * Test method for {@link org.jboss.portletbridge.config.WebXML#parse(java.io.InputStream)}.
 	 */
 	public void testParse() throws Exception {
-		WebXML webXml = new WebXML();
-		InputStream inputStream = this.getClass().getResourceAsStream("/test-web.xml");
-		webXml.parse(inputStream);
-		inputStream.close();
-		assertEquals(2, webXml.getFacesServletMappings().size());
-		assertEquals("*.jsf", webXml.getFacesServletMappings().get(1));
-		assertEquals("/faces/*", webXml.getFacesServletMappings().get(0));
-		webXml.createErrorViews(".jspx");
-		assertEquals(2, webXml.errorLocations.size());
-		assertEquals("/faces/error.xhtml", webXml.errorLocations.get(ServletException.class.getName()));
-		assertEquals("/error.jsf", webXml.errorLocations.get(ViewExpiredException.class.getName()));
+        InputStream inputStream = this.getClass().getResourceAsStream("/test-web.xml");
+	    WebXmlProcessor webXml = new WebXmlProcessor(inputStream);
+        inputStream.close();
+		assertEquals(2, webXml.getFacesServlet().getMappings().size());
+		assertEquals("*.jsf", webXml.getFacesServlet().getMappings().get(1));
+		assertEquals("/faces/*", webXml.getFacesServlet().getMappings().get(0));
+        Map<Class<? extends Throwable>, String> errorViews = webXml.createErrorViews(".jspx");
+		assertEquals(2, errorViews.size());
+		assertEquals("/error.xhtml", errorViews.get(ServletException.class));
+		assertEquals("/error.jspx", errorViews.get(ViewExpiredException.class));
 	}
 	
 	public void testGetViewIdFromLocation() throws Exception {
-		WebXML webXml = new WebXML();
-		webXml.facesServletMappings = new ArrayList<String>();
-		webXml.facesServletMappings.add("*.jsf");
-		webXml.facesServletMappings.add("/faces/*");
-		webXml.facesServletMappings.add("/seam*");
+        WebXmlProcessor.facesServlet = new ServletBean();
+        WebXmlProcessor.facesServlet.getMappings().add("*.jsf");
+        WebXmlProcessor.facesServlet.getMappings().add("/faces/*");
+        WebXmlProcessor.facesServlet.getMappings().add("/seam*");
+        WebXmlProcessor webXml = new WebXmlProcessor((PortletContext)null);
 		assertNull(webXml.getViewIdFromLocation("/foo/bar.jsp", ".jspx"));
 		assertEquals("/foo/bar.jspx",webXml.getViewIdFromLocation("/foo/bar.jsf", ".jspx"));
 		assertEquals("/foo/bar.jsp",webXml.getViewIdFromLocation("/faces/foo/bar.jsp", ".jspx"));
@@ -67,18 +46,18 @@ public class WebXMLTest extends TestCase {
 	}
 	
 	public void testCreateErrorViews() throws Exception {
-		WebXML webXml = new WebXML();
-		webXml.facesServletMappings = new ArrayList<String>();
-		webXml.facesServletMappings.add("*.jsf");
-		webXml.errorLocations = new LinkedHashMap<String, String>();
-		webXml.errorLocations.put(IOException.class.getName(), "/foo/bar.jsf");
-		webXml.errorLocations.put(FacesException.class.getName(), "/error/faces.jsf");
-		webXml.errorLocations.put(ServletException.class.getName(), "/foo/bar.jsp");
-		webXml.errorLocations.put("no.such.Exception", "/foo/baz.jsp");
+        WebXmlProcessor.facesServlet = new ServletBean();
+        WebXmlProcessor.facesServlet.getMappings().add("*.jsf");
+		WebXmlProcessor.errorPages.put(IOException.class.getName(), "/foo/bar.jsf");
+		WebXmlProcessor.errorPages.put(FacesException.class.getName(), "/error/faces.jsf");
+		WebXmlProcessor.errorPages.put(ServletException.class.getName(), "/foo/bar.jsp");
+		WebXmlProcessor.errorPages.put("no.such.Exception", "/foo/baz.jsp");
+        WebXmlProcessor webXml = new WebXmlProcessor((PortletContext)null);
 		Map<Class<? extends Throwable>, String> errorViews = webXml.createErrorViews(".jspx");
-		assertEquals(2, errorViews.size());
+		assertEquals(3, errorViews.size());
 		assertEquals("/foo/bar.jspx", errorViews.get(IOException.class));
 		assertEquals("/error/faces.jspx", errorViews.get(FacesException.class));
+        assertEquals("/error.jspx", errorViews.get(ViewExpiredException.class));
 	}
 
 }

@@ -1,10 +1,6 @@
-/**
- * 
- */
 package javax.portlet.faces;
 
 import javax.faces.context.FacesContext;
-import javax.portlet.Event;
 
  /**
   * The <code>BridgePublicRenderParameterHandler</code> interface defines the class the bridge relies

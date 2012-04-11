@@ -1,12 +1,13 @@
 package javax.portlet.faces;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 
 import javax.portlet.PortletException;
 import javax.portlet.PortletMode;
-import javax.portlet.PortletRequest;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.WindowState;
@@ -22,9 +23,6 @@ public class RenderRequestTest extends GenericPortletTestBase {
 	
 	@Mock
 	private RenderResponse response;
-	
-	@Mock
-	private Bridge bridge;
 
 	@Before
 	public void setupRequest(){

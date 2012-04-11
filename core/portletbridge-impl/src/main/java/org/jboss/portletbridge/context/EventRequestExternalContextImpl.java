@@ -16,127 +16,122 @@ import javax.portlet.PortletContext;
 
 /**
  * @author asmirnov
- *
+ * 
  */
 public class EventRequestExternalContextImpl extends PortletExternalContextImpl {
 
-	/**
-	 * @param context
-	 * @param request
-	 * @param response
-	 */
-	public EventRequestExternalContextImpl(PortletContext context,
-			EventRequest request, EventResponse response) {
-		super(context, request, response);
-	}
+    /**
+     * @param context
+     * @param request
+     * @param response
+     */
+    public EventRequestExternalContextImpl(PortletContext context, EventRequest request, EventResponse response) {
+        super(context, request, response);
+    }
 
-	@Override
+    @Override
     protected String createActionUrl(PortalActionURL url) {
-	    return ACTION_URL_DO_NOTHITG;
+        return ACTION_URL_DO_NOTHITG;
     }
 
-	
-	@Override
-	protected String createRenderUrl(PortalActionURL portalUrl,
-	        Map<String, List<String>> parameters) {
-	    return ACTION_URL_DO_NOTHITG;
-	}
+    @Override
+    protected String createRenderUrl(PortalActionURL portalUrl, Map<String, List<String>> parameters) {
+        return ACTION_URL_DO_NOTHITG;
+    }
 
-	@Override
-	protected String createResourceUrl(PortalActionURL portalUrl) {
-	    return RESOURCE_URL_DO_NOTHITG;
-	}
-	@Override
+    @Override
+    protected String createResourceUrl(PortalActionURL portalUrl) {
+        return RESOURCE_URL_DO_NOTHITG;
+    }
+
+    @Override
     public void redirect(String url) throws IOException {
-	    // TODO Auto-generated method stub
+        // TODO Auto-generated method stub
     }
 
-
-	@Override
+    @Override
     protected String createPartialActionUrl(PortalActionURL portalUrl) {
-	    return RESOURCE_URL_DO_NOTHITG;
+        return RESOURCE_URL_DO_NOTHITG;
     }
 
-	@Override
+    @Override
     public boolean isResponseCommitted() {
         return true;
     }
 
-	@Override
+    @Override
     public void addResponseHeader(String name, String value) {
         getResponse().addProperty(name, value);
     }
 
-	@Override
+    @Override
     public void setResponseHeader(String name, String value) {
         getResponse().setProperty(name, value);
     }
 
-	@Override
-    public void responseSendError(int statusCode, String message)
-            throws IOException {
-            
-            }
+    @Override
+    public void responseSendError(int statusCode, String message) throws IOException {
 
-	@Override
-    public void setResponseStatus(int statusCode) {
-    
     }
 
-	@Override
+    @Override
+    public void setResponseStatus(int statusCode) {
+
+    }
+
+    @Override
     public String getRequestCharacterEncoding() {
         return null;
     }
 
-	@Override
+    @Override
     public int getRequestContentLength() {
         return 0;
     }
 
-	@Override
+    @Override
     public int getResponseBufferSize() {
         return 0;
     }
 
-	@Override
+    @Override
     public OutputStream getResponseOutputStream() throws IOException {
         return null;
     }
 
-	@Override
+    @Override
     public Writer getResponseOutputWriter() throws IOException {
         return null;
     }
 
-	@Override
+    @Override
     public void responseFlushBuffer() throws IOException {
-    
+
     }
 
-	@Override
+    @Override
     public void responseReset() {
-    
+
     }
 
-	@Override
-    public void setRequestCharacterEncoding(String encoding)
-            throws UnsupportedEncodingException {
-            
-            }
+    @Override
+    public void setRequestCharacterEncoding(String encoding) throws UnsupportedEncodingException {
 
-	@Override
+    }
+
+    @Override
     public void setResponseBufferSize(int size) {
-    
+
     }
 
-	@Override
+    @Override
     public void setResponseContentLength(int length) {
-    
+
     }
 
-	@Override
+    @Override
     public void setResponseContentType(String contentType) {
-    
+
     }
 
 }

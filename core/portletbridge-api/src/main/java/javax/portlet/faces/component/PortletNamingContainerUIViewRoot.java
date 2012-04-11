@@ -42,8 +42,9 @@ import javax.portlet.faces.annotation.PortletNamingContainer;
 @PortletNamingContainer
 public class PortletNamingContainerUIViewRoot extends UIViewRoot implements Serializable, NamingContainer
 {
+    private static final long serialVersionUID = -690876000289020800L;
 
-	private static final String NAMESPACE_PREFIX = "pb";
+    private static final String NAMESPACE_PREFIX = "pb";
 
 	public PortletNamingContainerUIViewRoot() {
 		super();

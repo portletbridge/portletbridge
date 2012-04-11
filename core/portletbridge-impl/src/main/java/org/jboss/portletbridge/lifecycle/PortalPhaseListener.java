@@ -33,56 +33,42 @@ import javax.portlet.faces.Bridge;
  */
 public class PortalPhaseListener implements PhaseListener {
 
-   
-   /**
-    *
-    */
-   private static final long serialVersionUID = -4023885603543145666L;
+    private static final long serialVersionUID = -4023885603543145666L;
 
-
-   /*
-     * (non-Javadoc)
-     *
-     * @see
-     * javax.faces.event.PhaseListener#afterPhase(javax.faces.event.PhaseEvent)
+    /**
+     * @see javax.faces.event.PhaseListener#afterPhase(javax.faces.event.PhaseEvent)
      */
-   public void afterPhase(PhaseEvent event) {
-      PhaseId phaseId = event.getPhaseId();
-      FacesContext context = event.getFacesContext();
-      Object portletPhase = context.getExternalContext().getRequestMap().get(
-              Bridge.PORTLET_LIFECYCLE_PHASE);
+    public void afterPhase(PhaseEvent event) {
+        PhaseId phaseId = event.getPhaseId();
+        FacesContext context = event.getFacesContext();
+        Object portletPhase = context.getExternalContext().getRequestMap().get(Bridge.PORTLET_LIFECYCLE_PHASE);
 
-      if (phaseId.equals(PhaseId.RESTORE_VIEW)) {
-         if (Bridge.PortletPhase.RENDER_PHASE.equals(portletPhase)) {
-            context.renderResponse();
-         }
+        if (phaseId.equals(PhaseId.RESTORE_VIEW)) {
+            if (Bridge.PortletPhase.RENDER_PHASE.equals(portletPhase)) {
+                context.renderResponse();
+            }
 
-      } else if (phaseId.equals(PhaseId.PROCESS_VALIDATIONS)) {
-          if (Bridge.PortletPhase.EVENT_PHASE.equals(portletPhase)) {
-              context.responseComplete();
-           }
-      }
+        } else if (phaseId.equals(PhaseId.PROCESS_VALIDATIONS)) {
+            if (Bridge.PortletPhase.EVENT_PHASE.equals(portletPhase)) {
+                context.responseComplete();
+            }
+        }
 
-   }
+    }
 
-   /*
-     * (non-Javadoc)
-     *
-     * @see
-     * javax.faces.event.PhaseListener#beforePhase(javax.faces.event.PhaseEvent)
+    /**
+     * @see javax.faces.event.PhaseListener#beforePhase(javax.faces.event.PhaseEvent)
      */
-   public void beforePhase(PhaseEvent event) {
-	   // DO nothing.
-   }
+    public void beforePhase(PhaseEvent event) {
+        // DO nothing.
+    }
 
-   /*
-     * (non-Javadoc)
-     *
+    /**
      * @see javax.faces.event.PhaseListener#getPhaseId()
      */
-   public PhaseId getPhaseId() {
-      // This listener process all phases.
-      return PhaseId.ANY_PHASE;
-   }
+    public PhaseId getPhaseId() {
+        // This listener process all phases.
+        return PhaseId.ANY_PHASE;
+    }
 
 }

@@ -31,53 +31,39 @@ import javax.el.ELResolver;
 import javax.el.FunctionMapper;
 import javax.el.ValueExpression;
 import javax.el.VariableMapper;
+import javax.portlet.PortletConfig;
 
 /**
  * @author asmirnov
  * 
  */
 public class ELContextImpl extends ELContext {
-    /**
-         * @author asmirnov
-         * 
-         */
+
     public static final class FunctionMapperImpl extends FunctionMapper {
-   /*
-         * (non-Javadoc)
-         * 
-         * @see javax.el.FunctionMapper#resolveFunction(java.lang.String,
-         *      java.lang.String)
+        /**
+         * @see javax.el.FunctionMapper#resolveFunction(java.lang.String, java.lang.String)
          */
-   public Method resolveFunction(String arg0, String arg1) {
-       return null;
-   }
+        public Method resolveFunction(String arg0, String arg1) {
+            return null;
+        }
     }
 
-    /**
-         * @author asmirnov
-         * 
-         */
     public static final class VariableMapperImpl extends VariableMapper {
-   private Map variables = new HashMap();
+        private Map<String, ValueExpression> variables = new HashMap<String, ValueExpression>();
 
-   /*
-         * (non-Javadoc)
-         * 
+        /**
          * @see javax.el.VariableMapper#resolveVariable(java.lang.String)
          */
-   public ValueExpression resolveVariable(String name) {
-       return (ValueExpression) this.variables.get(name);
-   }
+        public ValueExpression resolveVariable(String name) {
+            return (ValueExpression) this.variables.get(name);
+        }
 
-   /*
-         * (non-Javadoc)
-         * 
-         * @see javax.el.VariableMapper#setVariable(java.lang.String,
-         *      javax.el.ValueExpression)
+        /**
+         * @see javax.el.VariableMapper#setVariable(java.lang.String, javax.el.ValueExpression)
          */
-   public ValueExpression setVariable(String name, ValueExpression variable) {
-       return (ValueExpression) this.variables.put(name, variable);
-   }
+        public ValueExpression setVariable(String name, ValueExpression variable) {
+            return (ValueExpression) this.variables.put(name, variable);
+        }
     }
 
     private ELResolver resolver;
@@ -86,41 +72,58 @@ public class ELContextImpl extends ELContext {
 
     private FunctionMapper functionMapper = new FunctionMapperImpl();
 
+    private PortletConfig portletConfig;
+    private boolean facesResolved = false;
+
     public ELContextImpl(ELResolver resolver) {
-   this.resolver = resolver;
+        this.resolver = resolver;
     }
 
     /**
-         * @return the functionMapper
-         */
+     * @return the functionMapper
+     */
     public FunctionMapper getFunctionMapper() {
-   return this.functionMapper;
+        return this.functionMapper;
     }
 
     /**
-         * @param functionMapper
-         *                the functionMapper to set
-         */
+     * @param functionMapper the functionMapper to set
+     */
     public void setFunctionMapper(FunctionMapper functionMapper) {
-   this.functionMapper = functionMapper;
+        this.functionMapper = functionMapper;
     }
 
     /**
-         * @return the variableMapper
-         */
+     * @return the variableMapper
+     */
     public VariableMapper getVariableMapper() {
-   return this.variableMapper;
+        return this.variableMapper;
     }
 
     /**
-         * @param variableMapper
-         *                the variableMapper to set
-         */
+     * @param variableMapper the variableMapper to set
+     */
     public void setVariableMapper(VariableMapper variableMapper) {
-   this.variableMapper = variableMapper;
+        this.variableMapper = variableMapper;
     }
 
     public ELResolver getELResolver() {
-   return this.resolver;
+        return this.resolver;
+    }
+
+    public PortletConfig getPortletConfig() {
+        return portletConfig;
+    }
+
+    public void setPortletConfig(PortletConfig config) {
+        portletConfig = config;
+    }
+
+    public boolean isFacesResolved() {
+        return facesResolved;
+    }
+
+    public void setFacesResolved(boolean facesResolved) {
+        this.facesResolved = facesResolved;
     }
 }

@@ -26,9 +26,6 @@ import java.io.Writer;
 import java.net.MalformedURLException;
 import java.util.Iterator;
 import java.util.Locale;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
@@ -48,9 +45,11 @@ import javax.portlet.faces.BridgeUtil;
 import javax.portlet.faces.annotation.PortletNamingContainer;
 import javax.portlet.faces.component.PortletNamingContainerUIViewRoot;
 
+import org.jboss.portletbridge.bridge.context.BridgeContext;
+import org.jboss.portletbridge.bridge.logger.BridgeLogger;
+import org.jboss.portletbridge.bridge.logger.BridgeLogger.Level;
+import org.jboss.portletbridge.bridge.logger.JULLoggerImpl;
 import org.jboss.portletbridge.context.PortalActionURL;
-import org.jboss.portletbridge.context.PortletBridgeContext;
-import org.jboss.portletbridge.util.BridgeLogger;
 
 /**
  * @author asmirnov
@@ -58,7 +57,7 @@ import org.jboss.portletbridge.util.BridgeLogger;
  */
 public class PortletViewHandler extends ViewHandlerWrapper {
 
-    private static final Logger _log = BridgeLogger.FACES.getLogger();
+    private static final BridgeLogger logger = new JULLoggerImpl(PortletViewHandler.class.getName());
 
     private static final String SAVESTATE_FIELD_MARKER = "~org.jboss.portletbridge.saveStateFieldMarker~";
 
@@ -98,37 +97,39 @@ public class PortletViewHandler extends ViewHandlerWrapper {
 
     @Override
     public UIViewRoot createView(FacesContext facesContext, String viewId) {
-        boolean portletRequest = BridgeUtil.isPortletRequest();
-        if (portletRequest) {
-            viewId = evaluateUrl(facesContext, viewId);
-            try {
-                PortalActionURL viewIdUrl = new PortalActionURL(viewId);
-                viewId = viewIdUrl.getPath();
-                Map<String, String[]> viewIdParameters = viewIdUrl.getParameters();
-                PortletBridgeContext.getCurrentInstance(facesContext).setViewIdParameters(viewIdParameters);
-            } catch (MalformedURLException e) {
-                // Do nothing, it is ordinary view Id
-                _log.log(Level.WARNING, "Mailformed ViewId url", e);
-            }
+        if (!BridgeUtil.isPortletRequest()) {
+            return super.createView(facesContext, viewId);
         }
+
+        viewId = evaluateUrl(facesContext, viewId);
+        try {
+            PortalActionURL viewIdUrl = new PortalActionURL(viewId);
+            viewId = viewIdUrl.getPath();
+            BridgeContext.getCurrentInstance().setNavigationQueryString(viewIdUrl.getQueryString());
+        } catch (MalformedURLException e) {
+            // Do nothing, it is ordinary view Id
+            logger.log(Level.INFO, "Mailformed ViewId url", e);
+        }
+
         UIViewRoot root = super.createView(facesContext, viewId);
 
         Class<? extends UIViewRoot> rootClass = root.getClass();
 
-        if (portletRequest) {
-            if (rootClass.getAnnotation(PortletNamingContainer.class) == null) {
-                UIViewRoot portletRoot = new PortletNamingContainerUIViewRoot();
-                portletRoot.setViewId(root.getViewId());
-                portletRoot.setLocale(root.getLocale());
-                portletRoot.setRenderKitId(root.getRenderKitId());
-                portletRoot.setId(root.getId());
-                root = portletRoot;
-            }
-            Object response = facesContext.getExternalContext().getResponse();
-            if (response instanceof PortletResponse) {
-                PortletResponse portletResponse = (PortletResponse) response;
-                portletResponse.setProperty("X-JAVAX-PORTLET-IS-NAMESPACED", "true");
-            }
+        if (rootClass.getAnnotation(PortletNamingContainer.class) == null) {
+            // Creates correct UIViewRoot with our NamingContainer if for some reason createComponent of PortletApplicationImpl
+            // was not called
+            UIViewRoot portletRoot = new PortletNamingContainerUIViewRoot();
+            portletRoot.setViewId(root.getViewId());
+            portletRoot.setLocale(root.getLocale());
+            portletRoot.setRenderKitId(root.getRenderKitId());
+            portletRoot.setId(root.getId());
+            root = portletRoot;
+        }
+
+        Object response = facesContext.getExternalContext().getResponse();
+        if (response instanceof PortletResponse) {
+            PortletResponse portletResponse = (PortletResponse) response;
+            portletResponse.setProperty("X-JAVAX-PORTLET-IS-NAMESPACED", "true");
         }
         return root;
     }
@@ -145,6 +146,10 @@ public class PortletViewHandler extends ViewHandlerWrapper {
     }
 
     public String getActionURL(FacesContext context, String url) {
+        if (!BridgeUtil.isPortletRequest()) {
+            return super.getActionURL(context, url);
+        }
+
         // action URLs are processed by the bridge in encodeActionURL
         // however the bridge extends Faces navigation rule support in that it
         // allows a to-view-id element to contain an EL expression.
@@ -155,11 +160,36 @@ public class PortletViewHandler extends ViewHandlerWrapper {
 
         url = evaluateUrl(context, url);
 
-        return super.getActionURL(context, url);
+        // Faces can't do suffix mapping (extension mapping) properly if there is a query string
+        PortalActionURL viewIdUrl = null;
+        try {
+            viewIdUrl = new PortalActionURL(url);
+            url = viewIdUrl.getPath();
+        } catch (MalformedURLException e) {
+            // Do nothing, it is ordinary view Id
+            logger.log(Level.INFO, "Mailformed ViewId url", e);
+        }
 
+        String actionURL = super.getActionURL(context, url);
+
+        // Now add the parameters back on
+        if (viewIdUrl.parametersSize() > 0) {
+            int qMark = actionURL.indexOf('?');
+            if (qMark < 0) {
+                actionURL += "?" + viewIdUrl.getQueryString();
+            } else {
+                actionURL += "&" + viewIdUrl.getQueryString();
+            }
+        }
+
+        return actionURL;
     }
 
     protected String evaluateUrl(FacesContext context, String url) {
+        if (url.startsWith("/#")) {
+            url = url.substring(1);
+        }
+
         if (url.startsWith("#")) {
             // evaluate this as an EL expression
             url = (String) context.getApplication().evaluateExpressionGet(context, url, String.class);
@@ -172,6 +202,11 @@ public class PortletViewHandler extends ViewHandlerWrapper {
 
     @Override
     public void renderView(FacesContext context, UIViewRoot viewToRender) throws IOException, FacesException {
+        if (!BridgeUtil.isPortletRequest()) {
+            super.renderView(context, viewToRender);
+            return;
+        }
+
         // Get the renderPolicy from the init parameters
         ExternalContext externalContext = context.getExternalContext();
         String renderPolicyParam = externalContext.getInitParameter(Bridge.RENDER_POLICY);
@@ -183,8 +218,7 @@ public class PortletViewHandler extends ViewHandlerWrapper {
             renderPolicy = Bridge.BridgeRenderPolicy.valueOf(renderPolicyParam);
         }
 
-        if (null == externalContext.getRequestMap().get(Bridge.PORTLET_LIFECYCLE_PHASE)
-                || renderPolicy == Bridge.BridgeRenderPolicy.ALWAYS_DELEGATE) {
+        if (renderPolicy == Bridge.BridgeRenderPolicy.ALWAYS_DELEGATE) {
             super.renderView(context, viewToRender);
         } else if (renderPolicy == Bridge.BridgeRenderPolicy.DEFAULT) {
             // https://jira.jboss.org/jira/browse/PBR-121 - save original
@@ -197,10 +231,8 @@ public class PortletViewHandler extends ViewHandlerWrapper {
                 // to use original view handler functionality.
                 super.renderView(context, viewToRender);
             } catch (Throwable t) {
-                if (_log.isLoggable(Level.INFO)) {
-                    _log.log(Level.INFO, "Error rendering view by parent ViewHandler, try to render as portletbridge JSP page",
-                            t);
-                }
+                logger.log(Level.DEBUG, "Error rendering view by parent ViewHandler, try to render as portletbridge JSP page",
+                        t);
                 // Restore request/response objects if parent renderer change
                 // them.
                 if (portletRequest != externalContext.getRequest()) {
@@ -225,6 +257,7 @@ public class PortletViewHandler extends ViewHandlerWrapper {
 
     }
 
+    //TODO Replace with VDL overriden classes?
     private void doRenderView(FacesContext context, UIViewRoot viewToRender) throws IOException {
         ExternalContext externalContext = context.getExternalContext();
         MimeResponse renderResponse = (MimeResponse) externalContext.getResponse();
@@ -360,6 +393,7 @@ public class PortletViewHandler extends ViewHandlerWrapper {
             }
         }
 
+        @SuppressWarnings("unused")
         public StringBuilder getBuffer() {
             return mBuilder;
         }

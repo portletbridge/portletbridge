@@ -1,17 +1,14 @@
-/**
- * 
- */
 package org.jboss.portletbridge.config;
+
+import javax.portlet.PortletContext;
 
 import junit.framework.TestCase;
 
-import org.jboss.portletbridge.config.StringContentHandler;
-import org.jboss.portletbridge.config.WebappHandler;
+import org.jboss.portletbridge.config.WebXmlProcessor.WebXmlHandler;
 import org.xml.sax.ContentHandler;
 
 /**
- * @author asmirnov
- *
+ * @author asmirnov, kenfinnigan
  */
 public class WebappHandlerTest extends TestCase {
 
@@ -27,29 +24,24 @@ public class WebappHandlerTest extends TestCase {
 	private static final String SERVLET_MAPPING = "servlet-mapping";
 	private MockXmlReader reader;
 
-	/* (non-Javadoc)
+	/**
 	 * @see junit.framework.TestCase#setUp()
 	 */
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		reader = new MockXmlReader();
 	}
-
-	/* (non-Javadoc)
-	 * @see junit.framework.TestCase#tearDown()
-	 */
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
 	
 	public void testServletElement() throws Exception {
-		WebappHandler handler = new WebappHandler(reader);
+	    WebXmlProcessor processor = new WebXmlProcessor((PortletContext)null);
+	    WebXmlHandler handler = processor.new WebXmlHandler(reader);
 		reader.setContentHandler(handler);
 		handler.startElement(null, WEBAPP, WEBAPP, null);
 		assertEquals(handler, reader.getContentHandler());
 		handler.startElement(null, SERVLET, SERVLET, null);
 		ContentHandler servletHandler = reader.getContentHandler();
-		assertSame(WebappHandler.ServletHandler.class, reader.getContentHandler().getClass());
+		assertSame(WebXmlHandler.ServletHandler.class, reader.getContentHandler().getClass());
 		servletHandler.startElement(null, SERVLET_NAME, SERVLET_NAME, null);
 		assertSame(StringContentHandler.class, reader.getContentHandler().getClass());
 		ContentHandler servletNameHandler = reader.getContentHandler();
@@ -66,37 +58,39 @@ public class WebappHandlerTest extends TestCase {
 		assertEquals(handler, reader.getContentHandler());
 		handler.endElement(null, WEBAPP, WEBAPP);
 		handler.endDocument();
-		assertEquals("Faces Servlet", handler.getFacesServlet().getName());
+		assertEquals("Faces Servlet", WebXmlProcessor.facesServlet.getName());
 	}
 	
 	public void testMappingElement() throws Exception {
-		WebappHandler handler = new WebappHandler(reader);
+        WebXmlProcessor processor = new WebXmlProcessor((PortletContext)null);
+        WebXmlHandler handler = processor.new WebXmlHandler(reader);
 		reader.setContentHandler(handler);
 		handler.startElement(null, WEBAPP, WEBAPP, null);
 		assertEquals(handler, reader.getContentHandler());
 		handler.startElement(null, SERVLET_MAPPING, SERVLET_MAPPING, null);
 		ContentHandler servletHandler = reader.getContentHandler();
-		assertSame(WebappHandler.MappingHandler.class, reader.getContentHandler().getClass());
+		assertSame(WebXmlHandler.MappingHandler.class, reader.getContentHandler().getClass());
 		servletHandler.startElement(null, SERVLET_NAME, SERVLET_NAME, null);
 		assertSame(StringContentHandler.class, reader.getContentHandler().getClass());
 		
 	}
 
 	public void testErrorPagesElement() throws Exception {
-		WebappHandler handler = new WebappHandler(reader);
+        WebXmlProcessor processor = new WebXmlProcessor((PortletContext)null);
+        WebXmlHandler handler = processor.new WebXmlHandler(reader);
 		reader.setContentHandler(handler);
 		handler.startElement(null, WEBAPP, WEBAPP, null);
 		assertEquals(handler, reader.getContentHandler());
 		handler.startElement(null, ERROR_PAGE, ERROR_PAGE, null);
 		ContentHandler errorPageHandler = reader.getContentHandler();
-		assertSame(WebappHandler.ErrorPageHandler.class, reader.getContentHandler().getClass());
+		assertSame(WebXmlHandler.ErrorPageHandler.class, reader.getContentHandler().getClass());
 		errorPageHandler.startElement(null, EXCEPTION_TYPE,EXCEPTION_TYPE, null);
 		assertSame(StringContentHandler.class, reader.getContentHandler().getClass());
 		reader.getContentHandler().endElement(null, EXCEPTION_TYPE,EXCEPTION_TYPE);
 		errorPageHandler.startElement(null, LOCATION,LOCATION, null);
 		assertSame(StringContentHandler.class, reader.getContentHandler().getClass());
 		reader.getContentHandler().endElement(null, LOCATION,LOCATION);
-		assertSame(WebappHandler.ErrorPageHandler.class, reader.getContentHandler().getClass());
+		assertSame(WebXmlHandler.ErrorPageHandler.class, reader.getContentHandler().getClass());
 		errorPageHandler.endElement(null, ERROR_PAGE, ERROR_PAGE);
 		assertEquals(handler, reader.getContentHandler());
 		

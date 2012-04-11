@@ -23,10 +23,6 @@ package javax.portlet.faces;
 
 import java.io.IOException;
 
-import javax.faces.context.FacesContext;
-import javax.portlet.Event;
-import javax.portlet.faces.event.EventNavigationResult;
-
 
 /**
  * The <code>BridgeWriteBehindResponse</code> interface defines the api the bridge relies

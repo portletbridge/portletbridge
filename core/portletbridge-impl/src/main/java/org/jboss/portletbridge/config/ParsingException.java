@@ -1,19 +1,14 @@
-/**
- * 
- */
 package org.jboss.portletbridge.config;
+
+import org.xml.sax.SAXException;
 
 /**
  * @author asmirnov
- *
  */
-public class ParsingException extends Exception {
+public class ParsingException extends SAXException {
+    private static final long serialVersionUID = -5290968254626492196L;
 
-	/**
-	 * 
-	 */
 	public ParsingException() {
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -21,24 +16,21 @@ public class ParsingException extends Exception {
 	 */
 	public ParsingException(String message) {
 		super(message);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
 	 * @param cause
 	 */
-	public ParsingException(Throwable cause) {
+	public ParsingException(Exception cause) {
 		super(cause);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
 	 * @param message
 	 * @param cause
 	 */
-	public ParsingException(String message, Throwable cause) {
+	public ParsingException(String message, Exception cause) {
 		super(message, cause);
-		// TODO Auto-generated constructor stub
 	}
 
 }

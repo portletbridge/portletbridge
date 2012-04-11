@@ -44,7 +44,7 @@ public class AjaxSubmitTest extends PortalTestBase {
 		assertThat(submit.getOnClickAttribute(), not(equalTo("")));
 	}
 
-	@Test
+	//@Test
 	public void testSubmitAndRemainOnPage() throws Exception {
 		HtmlPage portalPage = getPortalPage();
 		HtmlPage responsePage = submitForm(portalPage,NEW_VALUE);

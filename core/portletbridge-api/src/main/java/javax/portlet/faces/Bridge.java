@@ -27,7 +27,6 @@ import javax.portlet.ActionResponse;
 import javax.portlet.EventRequest;
 import javax.portlet.EventResponse;
 import javax.portlet.PortletConfig;
-import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
@@ -531,12 +530,6 @@ public interface Bridge {
    * be reinitialized before processing any further requests.
    */
   public void destroy();
-
-	//TODO Below not present in RI class.  Move to PBR specific?
-
-   // Special session attribute name to hold the application_scope in the
-   // portlet_scope of the session so these are accessible as well.
-   public static final String APPLICATION_SCOPE_MAP = "javax.portlet.faces.ApplicationScopeMap";
 
 
    // Session attribute pushed by bridge into session scope to give one access

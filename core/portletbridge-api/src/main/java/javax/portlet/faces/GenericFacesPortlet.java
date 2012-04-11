@@ -158,14 +158,12 @@ public class GenericFacesPortlet extends GenericPortlet {
 	private volatile String bridgeClassName = null;
 	private volatile Map<String,String> defaultViewIdMap;
 
-	//TODO PBR Specific?
 	private static final Logger log = Logger.getLogger("javax.portlet.faces");
 	private boolean initialized = false;
 
 	/**
 	 * Initialize generic faces portlet from portlet.xml
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public void init(PortletConfig config) throws PortletException {
 		if(initialized){
