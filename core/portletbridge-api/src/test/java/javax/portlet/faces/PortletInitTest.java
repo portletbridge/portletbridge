@@ -1,10 +1,10 @@
 package javax.portlet.faces;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
-import java.util.Collections;
 
 import javax.portlet.PortletException;
 

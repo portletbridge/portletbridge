@@ -22,21 +22,29 @@
  ******************************************************************************/
 package javax.portlet.faces.component;
 
+import java.io.Serializable;
+
 import javax.faces.component.NamingContainer;
-import javax.faces.component.UINamingContainer;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.portlet.faces.annotation.PortletNamingContainer;
 import javax.portlet.faces.Bridge;
-import javax.portlet.faces.BridgeUtil;
+import javax.portlet.faces.annotation.PortletNamingContainer;
 
-/** @author asmirnov */
+
+/**
+ * <code>UIViewRoot</code> that implements portlet specific <code>NamingContainer</code>
+ * that ensures the consumer's unique portlet Id is encoded in all tree components.
+ * The class is annotated by <code>javax.portlet.faces.annotation.PortletNamingContainer</code>
+ * allowing the bridge to recognize that this specific <code>UIViewRoot</code>
+ * implements the behavior.
+ */
 @PortletNamingContainer
-public class PortletNamingContainerUIViewRoot extends UIViewRoot implements
-		NamingContainer {
+public class PortletNamingContainerUIViewRoot extends UIViewRoot implements Serializable, NamingContainer
+{
+    private static final long serialVersionUID = -690876000289020800L;
 
-	private static final String PREFIX = "pb";
+    private static final String NAMESPACE_PREFIX = "pb";
 
 	public PortletNamingContainerUIViewRoot() {
 		super();
@@ -65,9 +73,9 @@ public class PortletNamingContainerUIViewRoot extends UIViewRoot implements
 		 */
 		if (namespace.length() > 0) {
 			if (additionalId != null) {
-				return PREFIX + namespace + additionalId;
+				return NAMESPACE_PREFIX + namespace + additionalId;
 			} else {
-				return PREFIX + namespace;
+				return NAMESPACE_PREFIX + namespace;
 			}
 		} else {
 			return additionalId;
@@ -88,7 +96,7 @@ public class PortletNamingContainerUIViewRoot extends UIViewRoot implements
 		if (externalContext.getRequestMap().containsKey(
 				Bridge.PORTLET_LIFECYCLE_PHASE)) {
 			String rootId = getId();
-			if (null == rootId || !rootId.startsWith(PREFIX)) {
+			if (null == rootId || !rootId.startsWith(NAMESPACE_PREFIX)) {
 				setId(convertClientId(context, rootId));
 			}
 		}

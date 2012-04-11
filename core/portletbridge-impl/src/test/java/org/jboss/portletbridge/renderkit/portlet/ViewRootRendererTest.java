@@ -1,10 +1,6 @@
 package org.jboss.portletbridge.renderkit.portlet;
 
 
-import static org.junit.Assert.*;
-
-import javax.portlet.PortalContext;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

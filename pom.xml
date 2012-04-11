@@ -12,8 +12,7 @@
       JBoss JSF2 Portlet Bridge for a portlet environment, root pom
     </name>
 	<properties>
-		<jsf.version>2.0.3-b03</jsf.version>
-		<!--<richfaces.version>4.0.0-SNAPSHOT</richfaces.version> -->
+		<jsf.version>2.1.5</jsf.version>
 	</properties>
 	<packaging>pom</packaging>
 	<url>http://www.jboss.org/portletbridge/</url>

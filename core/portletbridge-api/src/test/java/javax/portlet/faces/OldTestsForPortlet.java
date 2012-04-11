@@ -22,23 +22,11 @@
  ******************************************************************************/
 package javax.portlet.faces;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertFalse;
 
 import java.io.IOException;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 
 import javax.portlet.PortletException;
-import javax.portlet.PortletMode;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.internal.MockHandler;
-import org.mockito.runners.MockitoJUnitRunner;
 
 /**
  * @author asmirnov

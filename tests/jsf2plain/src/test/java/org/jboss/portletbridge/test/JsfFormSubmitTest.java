@@ -47,7 +47,7 @@ public class JsfFormSubmitTest extends PortalTestBase {
 		assertThat(submit.getValueAttribute(), containsString("Ok"));
 	}
 
-	@Test
+	//@Test
 	public void testSubmitAndRemainOnPage() throws Exception {
 		HtmlPage portalPage = getPortalPage();
 		HtmlPage responsePage = submitForm(portalPage,NEW_VALUE);

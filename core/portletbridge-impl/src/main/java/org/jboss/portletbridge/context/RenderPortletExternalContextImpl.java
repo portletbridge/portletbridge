@@ -26,16 +26,12 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Map;
 
-import javax.faces.render.ResponseStateManager;
 import javax.portlet.PortletContext;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.faces.Bridge;
-
-import org.jboss.portletbridge.BridgeRequestScope;
 
 /**
  * @author asmirnov
@@ -43,118 +39,85 @@ import org.jboss.portletbridge.BridgeRequestScope;
  */
 public class RenderPortletExternalContextImpl extends MimeExternalContextImpl {
 
-	private Map<String, String[]> _requestParameters;
+    private Map<String, String[]> _requestParameters;
 
-	public RenderPortletExternalContextImpl(PortletContext context,
-	        RenderRequest request, RenderResponse response) {
-		super(context, request, response);
-	}
-
-    @Override
-	public void setRequestCharacterEncoding(String encoding)
-	        throws UnsupportedEncodingException {
-		// Do nothing.
-	}
+    public RenderPortletExternalContextImpl(PortletContext context, RenderRequest request, RenderResponse response) {
+        super(context, request, response);
+        _requestParameters = request.getParameterMap();
+    }
 
     @Override
-	public String getRequestCharacterEncoding() {
-		return null;
-	}
-
-	@Override
-	public void redirect(String url) throws IOException {
-		if (null == url) {
-			throw new NullPointerException("Path to redirect is null");
-		}
-		PortalActionURL actionURL = new PortalActionURL(url);
-		if ((!actionURL.isInContext(getRequestContextPath()) && null == actionURL
-		        .getParameter(Bridge.FACES_VIEW_ID_PARAMETER))
-		        || "true".equalsIgnoreCase(actionURL
-		                .getParameter(Bridge.DIRECT_LINK))) {
-			// dispatch(url);
-
-			// throw new IllegalStateException(
-			// "Redirect to new url not at action phase");
-		} else {
-			// HACK - if page is in the context, just treat it as navigation
-			// case
-			internalRedirect(actionURL);
-		}
-	}
-
-	@Override
-	public Map<String, String[]> getRequestParameterValuesMap() {
-		return getSavedRequestParameters();
-	}
+    public void setRequestCharacterEncoding(String encoding) throws UnsupportedEncodingException {
+        // Do nothing.
+    }
 
     @Override
-	public RenderRequest getRequest() {
-		return (RenderRequest) super.getRequest();
-	}
+    public String getRequestCharacterEncoding() {
+        return null;
+    }
 
     @Override
-	public RenderResponse getResponse() {
-		return (RenderResponse) super.getResponse();
-	}
+    public void redirect(String url) throws IOException {
+        if (null == url) {
+            throw new NullPointerException("Path to redirect is null");
+        }
+        PortalActionURL actionURL = new PortalActionURL(url);
+        if ((!actionURL.isInContext(getRequestContextPath()) && null == actionURL.getParameter(Bridge.FACES_VIEW_ID_PARAMETER))
+                || "true".equalsIgnoreCase(actionURL.getParameter(Bridge.DIRECT_LINK))) {
+            // dispatch(url);
+
+            // throw new IllegalStateException(
+            // "Redirect to new url not at action phase");
+        } else {
+            // HACK - if page is in the context, just treat it as navigation
+            // case
+            internalRedirect(actionURL);
+        }
+    }
 
     @Override
-	protected String getRequestParameter(String name) {
-		String[] retObj = getRequestParameterValues(name);
-		if (retObj == null) {
-			return null;
-		}
-		return retObj[0];
-	}
+    public Map<String, String[]> getRequestParameterValuesMap() {
+        return _requestParameters;
+    }
 
     @Override
-	protected Enumeration<String> enumerateRequestParameterNames() {
-		Map<String, String[]> requestParameters = getSavedRequestParameters();
-		if (null != requestParameters) {
-			return Collections.enumeration(requestParameters.keySet());
-		} else {
-			return Collections.enumeration(Collections.<String> emptyList());
-		}
-	}
-
-	/**
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	private Map<String, String[]> getSavedRequestParameters() {
-		if (null == _requestParameters) {
-			// Get parameters ( all or a View state only ) restored as requered
-			// in the JSR 301 PLT 5.1
-			Map<String, String[]> requestParameters = new HashMap<String, String[]>();
-			BridgeRequestScope bridgeRequestScope = this.portletBridgeContext
-			        .getRequestScope();
-			Map<String, String[]> savedRequestParameters = bridgeRequestScope.getRequestParameters();
-			if (savedRequestParameters != null) {
-				requestParameters.putAll(savedRequestParameters);
-			}
-			if(null != bridgeRequestScope.getViewStateParameter()){
-				requestParameters.put(ResponseStateManager.VIEW_STATE_PARAM, new String[]{bridgeRequestScope.getViewStateParameter()});
-			}
-			// Add all real request parameters
-			Enumeration parameterNames = getRequest().getParameterNames();
-			while (parameterNames.hasMoreElements()) {
-				String name = (String) parameterNames.nextElement();
-				requestParameters.put(name, getRequest().getParameterValues(
-				        name));
-			}
-			_requestParameters = Collections.unmodifiableMap(requestParameters);
-		}
-		return _requestParameters;
-	}
+    public RenderRequest getRequest() {
+        return (RenderRequest) super.getRequest();
+    }
 
     @Override
-	protected String[] getRequestParameterValues(String name) {
-		Map<String, String[]> requestParameters = getSavedRequestParameters();
-		if (null != requestParameters) {
-			return requestParameters.get(name);
-		} else {
-			return null;
-		}
-	}
+    public RenderResponse getResponse() {
+        return (RenderResponse) super.getResponse();
+    }
+
+    @Override
+    protected String getRequestParameter(String name) {
+        String[] retObj = getRequestParameterValues(name);
+        if (retObj == null) {
+            return null;
+        }
+        return retObj[0];
+    }
+
+    @Override
+    protected Enumeration<String> enumerateRequestParameterNames() {
+        Map<String, String[]> requestParameters = _requestParameters;
+        if (null != requestParameters) {
+            return Collections.enumeration(requestParameters.keySet());
+        } else {
+            return Collections.enumeration(Collections.<String> emptyList());
+        }
+    }
+
+    @Override
+    protected String[] getRequestParameterValues(String name) {
+        Map<String, String[]> requestParameters = _requestParameters;
+        if (null != requestParameters) {
+            return requestParameters.get(name);
+        } else {
+            return null;
+        }
+    }
 
     @Override
     public void addResponseHeader(String name, String value) {
@@ -162,7 +125,7 @@ public class RenderPortletExternalContextImpl extends MimeExternalContextImpl {
             this.getResponse().setTitle(value);
         } else {
             super.addResponseHeader(name, value);
-}
+        }
     }
 
     @Override

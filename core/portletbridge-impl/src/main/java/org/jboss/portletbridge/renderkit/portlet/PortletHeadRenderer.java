@@ -35,67 +35,57 @@ package org.jboss.portletbridge.renderkit.portlet;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import javax.faces.application.Resource;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;
-import javax.faces.component.ValueHolder;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.render.Renderer;
-import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
 
-import org.jboss.portletbridge.context.PortletBridgeContext;
-import org.jboss.portletbridge.util.BridgeLogger;
-import org.jboss.portletbridge.util.PortletContainerUtil;
+import org.jboss.portletbridge.bridge.logger.BridgeLogger;
+import org.jboss.portletbridge.bridge.logger.BridgeLogger.Level;
+import org.jboss.portletbridge.bridge.logger.JULLoggerImpl;
 
 /**
- * This class is a JSF renderer that is designed for use with the h:head
- * component tag. Portlets are forbidden from rendering the <head>...</head>
- * section, which is what is done by the JSF implementation's version of this
- * renderer. This renderer avoids rendering the <head>...</head> section and
- * instead delegates that responsibility to the portal.
+ * This class is a JSF renderer that is designed for use with the h:head component tag. Portlets are forbidden from rendering
+ * the <head>...</head> section, which is what is done by the JSF implementation's version of this renderer. This renderer
+ * avoids rendering the <head>...</head> section and instead delegates that responsibility to the portal.
  * 
  * @author Neil Griffin
  */
 public class PortletHeadRenderer extends Renderer {
 
-	// Logger
-	private static Logger logger = BridgeLogger.CONTEXT.getLogger();
-	private static final String TARGET_HEAD = "head";
+    // Logger
+    private static BridgeLogger logger = new JULLoggerImpl(PortletHeadRenderer.class.getName());
 
-	@Override
-	public void decode(FacesContext context, UIComponent component) {
-		// do nothing
-	}
-	/**
-	 * Rather than render the <head>...</head> section to the response, this
-	 * method attempts to delegate this responsibility to the portlet container.
-	 * 
-	 * @see Renderer#encodeBegin(FacesContext, UIComponent)
-	 */
-	@Override
-	public void encodeBegin(FacesContext facesContext, UIComponent uiComponent)
-			throws IOException {
-		logger.log(Level.FINEST, "Header encodeBegin()");
-		UIViewRoot uiViewRoot = facesContext.getViewRoot();
-		List<UIComponent> uiComponentResources = uiViewRoot
-				.getComponentResources(facesContext, TARGET_HEAD);
-			for (UIComponent uiComponentResource : uiComponentResources) {
-				uiComponentResource.encodeAll(facesContext);
-			}
-	}
+    private static final String TARGET_HEAD = "head";
 
-	@Override
-	public void encodeChildren(FacesContext context, UIComponent component)
-			throws IOException {
-		// this renderer only encodes head resources
-	}
-	
-	public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
-		// Do nothing
-	};
+    @Override
+    public void decode(FacesContext context, UIComponent component) {
+        // do nothing
+    }
+
+    /**
+     * Rather than render the <head>...</head> section to the response, this method attempts to delegate this responsibility to
+     * the portlet container.
+     * 
+     * @see Renderer#encodeBegin(FacesContext, UIComponent)
+     */
+    @Override
+    public void encodeBegin(FacesContext facesContext, UIComponent uiComponent) throws IOException {
+        logger.log(Level.INFO, "Header encodeBegin()");
+        UIViewRoot uiViewRoot = facesContext.getViewRoot();
+        List<UIComponent> uiComponentResources = uiViewRoot.getComponentResources(facesContext, TARGET_HEAD);
+        for (UIComponent uiComponentResource : uiComponentResources) {
+            uiComponentResource.encodeAll(facesContext);
+        }
+    }
+
+    @Override
+    public void encodeChildren(FacesContext context, UIComponent component) throws IOException {
+        // this renderer only encodes head resources
+    }
+
+    public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
+        // Do nothing
+    };
 }

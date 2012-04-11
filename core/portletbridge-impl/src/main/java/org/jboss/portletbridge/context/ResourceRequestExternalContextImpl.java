@@ -30,7 +30,6 @@ public class ResourceRequestExternalContextImpl extends
 	public ResourceRequestExternalContextImpl(PortletContext context,
 			ResourceRequest request, ResourceResponse response) {
 		super(context, request, response);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -119,7 +118,8 @@ public class ResourceRequestExternalContextImpl extends
 	 * @param multipartRequest the multipart request
 	 * @return value map of the parameters
 	 */
-	private Map<String, String[]> createParameterMap(HttpServletRequest multipartRequest) {
+	@SuppressWarnings("unchecked")
+    private Map<String, String[]> createParameterMap(HttpServletRequest multipartRequest) {
 	    Map<String, String[]> result = new HashMap<String, String[]>();
 	    Map<String, Object> multipartMap = multipartRequest.getParameterMap();
 	    for (String name : multipartMap.keySet()) {

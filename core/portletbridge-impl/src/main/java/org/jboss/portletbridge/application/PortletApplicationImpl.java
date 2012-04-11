@@ -1,72 +1,54 @@
-/* Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+/*
+ * JBoss, Home of Professional Open Source.
+ * Copyright 2012, Red Hat, Inc., and individual contributors
+ * as indicated by the @author tags. See the copyright.txt file in the
+ * distribution for a full listing of individual contributors.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
  *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 package org.jboss.portletbridge.application;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
-
-import javax.el.ELContextListener;
-import javax.el.ELException;
-import javax.el.ELResolver;
-import javax.el.ExpressionFactory;
-import javax.el.ValueExpression;
 import javax.faces.FacesException;
 import javax.faces.application.Application;
 import javax.faces.application.ApplicationWrapper;
-import javax.faces.application.ProjectStage;
-import javax.faces.application.Resource;
-import javax.faces.application.ResourceHandler;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;
-import javax.faces.component.behavior.Behavior;
-import javax.faces.context.FacesContext;
-import javax.faces.event.SystemEvent;
-import javax.faces.event.SystemEventListener;
 import javax.portlet.faces.BridgeUtil;
 import javax.portlet.faces.annotation.PortletNamingContainer;
 import javax.portlet.faces.component.PortletNamingContainerUIViewRoot;
 
 public class PortletApplicationImpl extends ApplicationWrapper {
 
-    private Application mWrapped;
+    private Application wrappedApplication;
 
     public PortletApplicationImpl(Application app) {
-        mWrapped = app;
+        wrappedApplication = app;
     }
 
- 
     /**
-     * Create a new UIComponent subclass, using the mappings defined by previous
-     * calls to the addComponent method of this class.
+     * Create a new UIComponent subclass, using the mappings defined by previous calls to the addComponent method of this class.
      * <p>
-     * @throws FacesException if there is no mapping defined for the specified
-     * componentType, or if an instance of the specified type could not be
-     * created for any reason.
+     * 
+     * @throws FacesException if there is no mapping defined for the specified componentType, or if an instance of the specified
+     *         type could not be created for any reason.
      */
-    public javax.faces.component.UIComponent createComponent(String componentType)
-            throws FacesException {
-        UIComponent component = mWrapped.createComponent(componentType);
-        if (BridgeUtil.isPortletRequest()
-                && component instanceof UIViewRoot
+    @Override
+    public javax.faces.component.UIComponent createComponent(String componentType) throws FacesException {
+        UIComponent component = wrappedApplication.createComponent(componentType);
+        if (BridgeUtil.isPortletRequest() && component instanceof UIViewRoot
                 && UIViewRoot.class.getAnnotation(PortletNamingContainer.class) == null) {
             // replace with our own UIViewRoot
             UIViewRoot root = (UIViewRoot) component;
@@ -82,6 +64,6 @@ public class PortletApplicationImpl extends ApplicationWrapper {
 
     @Override
     public Application getWrapped() {
-        return mWrapped;
+        return wrappedApplication;
     }
 }

@@ -50,185 +50,189 @@ import javax.portlet.PortletSession;
 import javax.portlet.faces.Bridge;
 import javax.portlet.faces.BridgeDefaultViewNotSpecifiedException;
 
-import org.jboss.portletbridge.BridgeRequestScope;
+import org.jboss.portletbridge.bridge.context.BridgeContext;
+import org.jboss.portletbridge.bridge.logger.BridgeLogger;
+import org.jboss.portletbridge.bridge.logger.BridgeLogger.Level;
 
 /**
- * Version of the {@link ExternalContext} for a Portlet request.
- * {@link FacesContextFactory} will create instance of this class for a portal
- * <code>action</code> phase.
- *
+ * Version of the {@link ExternalContext} for a Portlet request. {@link FacesContextFactory} will create instance of this class
+ * for a portal <code>action</code> phase.
+ * 
  * @author asmirnov
- *
  */
 public abstract class PortletExternalContextImpl extends AbstractExternalContext {
 
-	public static final String SERVLET_PATH_ATTRIBUTE = "javax.servlet.include.servlet_path";
-	public static final String PATH_INFO_ATTRIBUTE = "javax.servlet.include.path_info";
-	public static final String ACTION_URL_DO_NOTHITG = "/JBossPortletBridge/actionUrl/do/nothing";
-	public static final String RESOURCE_URL_DO_NOTHITG = "/JBossPortletBridge/resourceUrl/do/nothing";
-	public static final String PARTIAL_URL_DO_NOTHITG = "/JBossPortletBridge/resourceUrl/do/nothing";
-	private String namespace;
+    public static final String SERVLET_PATH_ATTRIBUTE = "javax.servlet.include.servlet_path";
+    public static final String PATH_INFO_ATTRIBUTE = "javax.servlet.include.path_info";
+    public static final String ACTION_URL_DO_NOTHITG = "/JBossPortletBridge/actionUrl/do/nothing";
+    public static final String RESOURCE_URL_DO_NOTHITG = "/JBossPortletBridge/resourceUrl/do/nothing";
+    public static final String PARTIAL_URL_DO_NOTHITG = "/JBossPortletBridge/resourceUrl/do/nothing";
 
-	public PortletExternalContextImpl(PortletContext context,
-			PortletRequest request, PortletResponse response) {
-		super(context, request, response);
-		portletBridgeContext = (PortletBridgeContext) request
-				.getAttribute(PortletBridgeContext.REQUEST_PARAMETER_NAME);
-		if (null == portletBridgeContext) {
-			throw new FacesException("No portlet bridge context");
-		}
-		// Calculate FacesServlet prefix.
-		calculateViewId();
-	}
+    private String namespace;
+    private String servletPath = null;
+    private String pathInfo = null;
+    private String servletMappingSuffix;
+    private String defaultJsfSuffix;
+    private String servletMappingPrefix;
+    private String viewId;
+    private boolean hasNavigationRedirect = false;
+    protected BridgeContext bridgeContext;
 
-    @Override
-	public void setResponseCharacterEncoding(String encoding) {
-		// Do nothing
-	}
+    public PortletExternalContextImpl(PortletContext context, PortletRequest request, PortletResponse response) {
+        super(context, request, response);
 
-    @Override
-	public String getResponseCharacterEncoding() {
-		return null;
-	}
-
-    @Override
-	public String getResponseContentType() {
-		return null;
-	}
-
-    @Override
-	public String getRequestContentType() {
-		return null;
-	}
-
-    @Override
-	public PortletContext getContext() {
-		return (PortletContext) super.getContext();
-	}
-
-    @Override
-	public PortletRequest getRequest() {
-		return (PortletRequest) super.getRequest();
-	}
-
-    @Override
-	public PortletResponse getResponse() {
-		return (PortletResponse) super.getResponse();
-	}
-
-	public String getInitParameter(String name) {
-		return getContext().getInitParameter(name);
-	}
-
-	protected String getNamespace() {
-		if (null == namespace) {
-				namespace = getResponse().getNamespace();
-		}
-		return namespace;
-	}
-
-	public URL getResource(String path) throws MalformedURLException {
-		return getContext().getResource(path);
-	}
-
-	public InputStream getResourceAsStream(String path) {
-		return getContext().getResourceAsStream(path);
-	}
-
-	public Set<String> getResourcePaths(String path) {
-		return getContext().getResourcePaths(path);
-	}
-
-	protected Enumeration<String> enumerateRequestParameterNames() {
-		return getRequest().getParameterNames();
-	}
-
-	protected Object getContextAttribute(String name) {
-		return getContext().getAttribute(name);
-	}
-
-	protected Enumeration<String> getContextAttributeNames() {
-		return getContext().getAttributeNames();
-	}
-
-	protected Enumeration<String> getInitParametersNames() {
-		return getContext().getInitParameterNames();
-	}
-
-	protected Object getRequestAttribute(String name) {
-		if(PATH_INFO_ATTRIBUTE.equals(name)){
-			return getRequestPathInfo();
-		} else if (SERVLET_PATH_ATTRIBUTE.equals(name)) {
-			return getRequestServletPath();
-		} else {
-			return getRequest().getAttribute(name);
-		}
-	}
-
-	protected Enumeration<String> getRequestAttributeNames() {
-		return getRequest().getAttributeNames();
-	}
-
-    @Override
-	public Map<String, String[]> getRequestParameterValuesMap() {
-		return getRequest().getParameterMap();
-	}
-
-	protected String[] getRequestParameterValues(String name) {
-		return getRequest().getParameterValues(name);
-	}
-
-	protected String getRequestHeader(String name) {
-		String headerValue = getRequest().getProperty(name);
-		if(null == headerValue){
-			// HACK - GateIn converts all request header names to the lower case.
-			headerValue = getRequest().getProperty(name.toLowerCase());
-		}
-		return headerValue;
-	}
-
-	protected Enumeration<String> getRequestHeaderNames() {
-		return getRequest().getPropertyNames();
-	}
-
-	protected String[] getRequestHeaderValues(String name) {
-		Enumeration<String> properties = getRequest()
-				.getProperties(name);
-		if(!properties.hasMoreElements()){
-			// HACK - GateIn converts all request header names to the lower case.
-			properties = getRequest()
-			.getProperties(name.toLowerCase());
-		}
-		if (properties.hasMoreElements()) {
-			List<String> values = new ArrayList<String>();
-			while (properties.hasMoreElements()) {
-				String value = properties.nextElement();
-				values.add(value);
-			}
-			return (String[]) values.toArray(EMPTY_STRING_ARRAY);
-		} else {
-			return null;
-		}
-	}
-
-	protected String getRequestParameter(String name) {
-		return getRequest().getParameter(name);
-	}
-
-	protected Object getSessionAttribute(String name) {
-		return getSessionAttribute(name, getScopeForName(name));
-	}
-
-   protected int getScopeForName(String name) {
-	    return this.portletBridgeContext.getBridgeConfig().getStrategy().getPortletSessionScopeForName(name);
+        bridgeContext = BridgeContext.getCurrentInstance();
+        if (null == bridgeContext) {
+            throw new FacesException("No BridgeContext instance found");
+        }
     }
 
-protected Object getSessionAttribute(String name,int scope) {
-		return getRequest().getPortletSession(true).getAttribute(name, scope);
-	}
+    @Override
+    public void setResponseCharacterEncoding(String encoding) {
+        // Do nothing
+    }
 
-	protected Enumeration<String> getSessionAttributeNames() {
-		class AttributeEnumeration implements Enumeration<String> {
+    @Override
+    public String getResponseCharacterEncoding() {
+        return null;
+    }
+
+    @Override
+    public String getResponseContentType() {
+        return null;
+    }
+
+    @Override
+    public String getRequestContentType() {
+        return null;
+    }
+
+    @Override
+    public PortletContext getContext() {
+        return (PortletContext) super.getContext();
+    }
+
+    @Override
+    public PortletRequest getRequest() {
+        return (PortletRequest) super.getRequest();
+    }
+
+    @Override
+    public PortletResponse getResponse() {
+        return (PortletResponse) super.getResponse();
+    }
+
+    public String getInitParameter(String name) {
+        return getContext().getInitParameter(name);
+    }
+
+    protected String getNamespace() {
+        if (null == namespace) {
+            namespace = getResponse().getNamespace();
+        }
+        return namespace;
+    }
+
+    public URL getResource(String path) throws MalformedURLException {
+        return getContext().getResource(path);
+    }
+
+    public InputStream getResourceAsStream(String path) {
+        return getContext().getResourceAsStream(path);
+    }
+
+    public Set<String> getResourcePaths(String path) {
+        return getContext().getResourcePaths(path);
+    }
+
+    protected Enumeration<String> enumerateRequestParameterNames() {
+        return getRequest().getParameterNames();
+    }
+
+    protected Object getContextAttribute(String name) {
+        return getContext().getAttribute(name);
+    }
+
+    protected Enumeration<String> getContextAttributeNames() {
+        return getContext().getAttributeNames();
+    }
+
+    protected Enumeration<String> getInitParametersNames() {
+        return getContext().getInitParameterNames();
+    }
+
+    protected Object getRequestAttribute(String name) {
+        if (PATH_INFO_ATTRIBUTE.equals(name)) {
+            return getRequestPathInfo();
+        } else if (SERVLET_PATH_ATTRIBUTE.equals(name)) {
+            return getRequestServletPath();
+        } else {
+            return getRequest().getAttribute(name);
+        }
+    }
+
+    protected Enumeration<String> getRequestAttributeNames() {
+        return getRequest().getAttributeNames();
+    }
+
+    @Override
+    public Map<String, String[]> getRequestParameterValuesMap() {
+        return getRequest().getParameterMap();
+    }
+
+    protected String[] getRequestParameterValues(String name) {
+        return getRequest().getParameterValues(name);
+    }
+
+    protected String getRequestHeader(String name) {
+        String headerValue = getRequest().getProperty(name);
+        if (null == headerValue) {
+            // HACK - GateIn converts all request header names to the lower case.
+            headerValue = getRequest().getProperty(name.toLowerCase());
+        }
+        return headerValue;
+    }
+
+    protected Enumeration<String> getRequestHeaderNames() {
+        return getRequest().getPropertyNames();
+    }
+
+    protected String[] getRequestHeaderValues(String name) {
+        Enumeration<String> properties = getRequest().getProperties(name);
+        if (!properties.hasMoreElements()) {
+            // HACK - GateIn converts all request header names to the lower case.
+            properties = getRequest().getProperties(name.toLowerCase());
+        }
+        if (properties.hasMoreElements()) {
+            List<String> values = new ArrayList<String>();
+            while (properties.hasMoreElements()) {
+                String value = properties.nextElement();
+                values.add(value);
+            }
+            return (String[]) values.toArray(EMPTY_STRING_ARRAY);
+        } else {
+            return null;
+        }
+    }
+
+    protected String getRequestParameter(String name) {
+        return getRequest().getParameter(name);
+    }
+
+    protected Object getSessionAttribute(String name) {
+        return getSessionAttribute(name, getScopeForName(name));
+    }
+
+    protected int getScopeForName(String name) {
+        return PortletSession.PORTLET_SCOPE;
+    }
+
+    protected Object getSessionAttribute(String name, int scope) {
+        return getRequest().getPortletSession(true).getAttribute(name, scope);
+    }
+
+    protected Enumeration<String> getSessionAttributeNames() {
+        class AttributeEnumeration implements Enumeration<String> {
             int scope;
             Enumeration<String> attributes;
 
@@ -248,8 +252,7 @@ protected Object getSessionAttribute(String name,int scope) {
             public String nextElement() {
                 final String result = attributes.nextElement();
 
-                if (!attributes.hasMoreElements()
-                    && scope == PortletSession.PORTLET_SCOPE) {
+                if (!attributes.hasMoreElements() && scope == PortletSession.PORTLET_SCOPE) {
                     scope = PortletSession.APPLICATION_SCOPE;
                     attributes = getSessionAttributeNames(scope);
                 }
@@ -260,325 +263,256 @@ protected Object getSessionAttribute(String name,int scope) {
 
         return new AttributeEnumeration();
 
-        //return getSessionAttributeNames(PortletSession.PORTLET_SCOPE);
-	}
+        // return getSessionAttributeNames(PortletSession.PORTLET_SCOPE);
+    }
 
-	protected Enumeration<String> getSessionAttributeNames(int scope) {
-		return getRequest().getPortletSession(true).getAttributeNames(
-				scope);
-	}
+    protected Enumeration<String> getSessionAttributeNames(int scope) {
+        return getRequest().getPortletSession(true).getAttributeNames(scope);
+    }
 
-	protected void removeContextAttribute(String name) {
-		getContext().removeAttribute(name);
-	}
+    protected void removeContextAttribute(String name) {
+        getContext().removeAttribute(name);
+    }
 
-	protected void removeRequestAttribute(String name) {
-		getRequest().removeAttribute(name);
-	}
+    protected void removeRequestAttribute(String name) {
+        getRequest().removeAttribute(name);
+    }
 
-	protected void removeSessionAttribute(String name) {
-		removeSessionAttribute(name, getScopeForName(name));
-	}
+    protected void removeSessionAttribute(String name) {
+        removeSessionAttribute(name, getScopeForName(name));
+    }
 
-   protected void removeSessionAttribute(String name,int scope) {
-		getRequest().getPortletSession(true).removeAttribute(name,
-				scope);
-	}
+    protected void removeSessionAttribute(String name, int scope) {
+        getRequest().getPortletSession(true).removeAttribute(name, scope);
+    }
 
-	protected void setContextAttribute(String name, Object value) {
-		getContext().setAttribute(name, value);
-	}
+    protected void setContextAttribute(String name, Object value) {
+        getContext().setAttribute(name, value);
+    }
 
-	protected void setRequestAttribute(String name, Object value) {
-		getRequest().setAttribute(name, value);
-	}
+    protected void setRequestAttribute(String name, Object value) {
+        getRequest().setAttribute(name, value);
+    }
 
-	protected void setSessionAttribute(String name, Object value) {
-		setSessionAttribute(name, value, getScopeForName(name));
-	}
+    protected void setSessionAttribute(String name, Object value) {
+        setSessionAttribute(name, value, getScopeForName(name));
+    }
 
-	protected void setSessionAttribute(String name, Object value, int scope) {
-      getRequest().getPortletSession(true).setAttribute(name, value,
-				scope);
-	}
+    protected void setSessionAttribute(String name, Object value, int scope) {
+        getRequest().getPortletSession(true).setAttribute(name, value, scope);
+    }
 
+    /**
+     * @param url
+     * @return
+     */
+    protected String encodeURL(String url) {
+        return getResponse().encodeURL(url);
+    }
 
-	// private static final Pattern absoluteUrl = Pattern.compile("");
-	// private static final Pattern directLink = Pattern.compile("");
-	// private static final Pattern viewIdParam = Pattern.compile("");
+    public String getAuthType() {
+        return getRequest().getAuthType();
+    }
 
+    public String getRemoteUser() {
+        String user = getRequest().getRemoteUser();
+        if (user == null) {
+            Principal userPrincipal = getUserPrincipal();
+            if (null != userPrincipal) {
+                user = userPrincipal.getName();
 
-	/**
-	 * @param url
-	 * @return
-	 */
-	protected String encodeURL(String url) {
-		return getResponse().encodeURL(url);
-	}
+            }
+        }
+        return user;
+    }
 
-	public String getAuthType() {
-		return getRequest().getAuthType();
-	}
+    public String getRequestContextPath() {
+        return getRequest().getContextPath();
+    }
 
-	public String getRemoteUser() {
-		String user = getRequest().getRemoteUser();
-		if (user == null) {
-			Principal userPrincipal = getUserPrincipal();
-			if (null != userPrincipal) {
-				user = userPrincipal.getName();
+    public Locale getRequestLocale() {
+        return getRequest().getLocale();
+    }
 
-			}
-		}
-		return user;
-	}
+    public Iterator<Locale> getRequestLocales() {
+        return new EnumerationIterator<Locale>(getRequest().getLocales());
+    }
 
-	public String getRequestContextPath() {
-		return getRequest().getContextPath();
-	}
+    public String getRequestPathInfo() {
+        if (null == pathInfo) {
+            calculateViewId();
+        }
+        return pathInfo;
+    }
 
-	public Locale getRequestLocale() {
-		return getRequest().getLocale();
-	}
+    public String getRequestServletPath() {
+        if (null == servletPath) {
+            calculateViewId();
+        }
+        return servletPath;
+    }
 
-	public Iterator<Locale> getRequestLocales() {
-		return new EnumerationIterator<Locale>(getRequest().getLocales());
-	}
+    public Object getSession(boolean create) {
+        return getRequest().getPortletSession(create);
+    }
 
-	private String _pathInfo = null;
+    public Principal getUserPrincipal() {
+        return getRequest().getUserPrincipal();
+    }
 
-	public String getRequestPathInfo() {
-		return _pathInfo;
-	}
+    public boolean isUserInRole(String role) {
+        return getRequest().isUserInRole(role);
+    }
 
-	private String _servletPath = null;
-	private String servletMappingSuffix;
-	private String defaultJsfSuffix;
-	private String servletMappingPrefix;
-	private String viewId;
-	private boolean hasNavigationRedirect = false;
-	protected PortletBridgeContext portletBridgeContext;
+    public void log(String message) {
+        getContext().log(message);
+    }
 
-	public String getRequestServletPath() {
-		return _servletPath;
-	}
+    public void log(String message, Throwable exception) {
+        getContext().log(message, exception);
+    }
 
-	public Object getSession(boolean create) {
-		return getRequest().getPortletSession(create);
-	}
+    protected void calculateViewId() {
+        String newViewId = bridgeContext.getFacesViewIdFromRequest(false);
 
-	public Principal getUserPrincipal() {
-		return getRequest().getUserPrincipal();
-	}
+        if (null == newViewId) {
+            // Try to get viewId from stored session attribute
+            PortletSession portletSession = getRequest().getPortletSession(false);
+            if (null != portletSession) {
+                String historyViewId = (String) portletSession.getAttribute(Bridge.VIEWID_HISTORY + "."
+                        + getRequest().getPortletMode().toString());
+                if (null != historyViewId) {
+                    try {
+                        PortalActionURL viewIdUrl = new PortalActionURL(historyViewId);
+                        newViewId = viewIdUrl.getPath();
+                    } catch (MalformedURLException e) {
+                        // Ignore it.
+                    }
+                }
+            }
 
-	public boolean isUserInRole(String role) {
-		return getRequest().isUserInRole(role);
-	}
+            if (null == newViewId) {
+                newViewId = bridgeContext.getDefaultFacesViewIdForRequest(false);
 
-	public void log(String message) {
-		getContext().log(message);
-	}
+                if (null == newViewId) {
+                    throw new BridgeDefaultViewNotSpecifiedException();
+                }
+            }
+        }
 
-	public void log(String message, Throwable exception) {
-		getContext().log(message, exception);
-	}
+        if (null != newViewId && newViewId.equals(viewId)) {
+            // No ViewId change
+            return;
+        }
 
+        viewId = newViewId;
 
-	protected void calculateViewId() {
-		viewId = (String) getRequest().getAttribute(Bridge.VIEW_ID);
-      String portletModeName = getRequest()
-							.getPortletMode().toString();
-		// Get stored ViewId from window state
-		if (null == viewId) {
-			String viewPath = (String) getRequest().getAttribute(
-					Bridge.VIEW_PATH);
-			if (null != viewPath) {
-				viewId = getViewIdFromPath(viewPath);
-			} else {
-				BridgeRequestScope windowState = portletBridgeContext
-						.getRequestScope();
-				if (null != windowState) {
-					viewId = windowState.getViewId();
-				}
-				if (null == viewId) {
-					// Try to get viewId from stored session attribute
-					PortletSession portletSession = getRequest()
-							.getPortletSession(false);
-					if (null != portletSession) {
-						String historyViewId = (String) portletSession
-								.getAttribute(Bridge.VIEWID_HISTORY + "."
-										+ portletModeName);
-						if (null != historyViewId) {
-							try {
-								PortalActionURL viewIdUrl = new PortalActionURL(
-								        historyViewId);
-								viewId = viewIdUrl.getPath();
-							} catch (MalformedURLException e) {
-								// Ignore it.
-							}
-                        }					}
-					if (null == viewId) {
-						viewId = calculateDefaultViewId(portletModeName);
-					}
-					if (null == viewId) {
-						throw new BridgeDefaultViewNotSpecifiedException();
-					}
-				}
-			}
-		}
-		// TODO - detect mapping and convert viewId into appropriate url
-		List<String> servletMappings = portletBridgeContext.getBridgeConfig()
-				.getFacesServletMappings();
-		calculateServletPath(viewId, servletMappings);
-	}
+        calculateServletPath(viewId, bridgeContext.getBridgeConfig().getFacesServletMappings());
+    }
 
-   private String calculateDefaultViewId(String modeName){
-      return portletBridgeContext.getBridgeConfig().getDefaultViewIdMap().get(modeName);
-   }
+    protected void calculateServletPath(String viewId, List<String> servletMappings) {
+        if (null != servletMappings && servletMappings.size() > 0) {
+            String mapping = servletMappings.get(0);
+            if (mapping.startsWith("*")) {
+                // Suffix Mapping
+                servletMappingSuffix = mapping.substring(mapping.indexOf('.'));
+                viewId = viewId.substring(0, viewId.lastIndexOf('.')) + servletMappingSuffix;
+                servletPath = viewId;
+                pathInfo = null;
 
-	protected void calculateServletPath(String viewId,
-			List<String> servletMappings) {
-		if (null != servletMappings && servletMappings.size() > 0) {
-			String mapping = servletMappings.get(0);
-			if (mapping.startsWith("*")) {
-				// Suffix Mapping
-				servletMappingSuffix = mapping.substring(mapping.indexOf('.'));
-				defaultJsfSuffix = getContext().getInitParameter(
-						ViewHandler.DEFAULT_SUFFIX_PARAM_NAME);
-				if (null == defaultJsfSuffix) {
-					defaultJsfSuffix = ViewHandler.DEFAULT_SUFFIX;
-				}
-				int i = viewId.lastIndexOf(defaultJsfSuffix);
-				if (i < 0) {
-					i = viewId.lastIndexOf('.');
-				}
-				if (i >= 0) {
-					viewId = viewId.substring(0, i) + servletMappingSuffix;
-				}
-				_servletPath = viewId;
-				getRequest().setAttribute(
-						SERVLET_PATH_ATTRIBUTE, viewId);
-				getRequest().setAttribute(
-						"com.sun.faces.INVOCATION_PATH", servletMappingSuffix);
-				_pathInfo = null;
-			} else if (mapping.endsWith("*")) {
-				mapping = mapping.substring(0, mapping.length() - 1);
-				if (mapping.endsWith("/")) {
-					mapping = mapping.substring(0, mapping.length() - 1);
-				}
-				servletMappingPrefix = _servletPath = mapping;
-				getRequest().setAttribute(
-						"com.sun.faces.INVOCATION_PATH", mapping);
-				_pathInfo = viewId;
-			} else {
-				_servletPath = null;
-				_pathInfo = viewId;
-			}
-		} else {
-			_servletPath = null;
-			_pathInfo = viewId;
-		}
-	}
+                getRequest().setAttribute(SERVLET_PATH_ATTRIBUTE, servletPath);
+                getRequest().setAttribute("com.sun.faces.INVOCATION_PATH", servletMappingSuffix);
+            } else if (mapping.endsWith("*")) {
+                // Prefix Mapping
+                mapping = mapping.substring(0, mapping.length() - 1);
+                if (mapping.endsWith("/")) {
+                    mapping = mapping.substring(0, mapping.length() - 1);
+                }
+                servletMappingPrefix = servletPath = mapping;
+                pathInfo = viewId;
+                getRequest().setAttribute("com.sun.faces.INVOCATION_PATH", servletMappingSuffix);
+            } else {
+                servletPath = null;
+                pathInfo = viewId;
+            }
+        } else {
+            servletPath = null;
+            pathInfo = viewId;
+        }
+    }
 
-	/**
-	 * @param actionURL
-	 */
-	protected void internalRedirect(PortalActionURL actionURL) {
-		// Detect ViewId from URL and create new view for them.
-		String viewId = actionURL.getParameter(Bridge.FACES_VIEW_ID_PARAMETER);
-		if (null != viewId) {
-			// Save new viewId to restore after redirect.
-			portletBridgeContext.setRedirectViewId(viewId);
-			// FacesContext facesContext =
-			// FacesContext.getCurrentInstance();
-			// ViewHandler viewHandler = facesContext.getApplication()
-			// .getViewHandler();
-			// facesContext.setViewRoot(viewHandler.createView(facesContext,
-			// viewId));
-			// setHasNavigationRedirect(true);
-			Map<String, String[]> requestParameters = actionURL.getParameters();
-			if (requestParameters.size() > 0) {
-				portletBridgeContext
-						.setRedirectRequestParameters(requestParameters);
-			}
+    /**
+     * @param actionURL
+     */
+    protected void internalRedirect(PortalActionURL actionURL) {
+        // Detect ViewId from URL and create new view for them.
+        String viewId = actionURL.getParameter(Bridge.FACES_VIEW_ID_PARAMETER);
+        if (null != viewId) {
+            Map<String, String[]> requestParameters = actionURL.getParameters();
+            if (requestParameters.size() > 0) {
+                bridgeContext.setRenderRedirectQueryString(actionURL.getQueryString());
+            }
 
-		}
-	}
+        }
+    }
 
-	/**
-	 * @return the servletMappingSuffix
-	 */
-	public String getServletMappingSuffix() {
-		return servletMappingSuffix;
-	}
+    /**
+     * @return the servletMappingSuffix
+     */
+    public String getServletMappingSuffix() {
+        return servletMappingSuffix;
+    }
 
-	/**
-	 * @return the defaultJsfSuffix
-	 */
-	public String getDefaultJsfSuffix() {
-		return defaultJsfSuffix;
-	}
+    /**
+     * @return the defaultJsfSuffix
+     */
+    public String getDefaultJsfSuffix() {
+        return defaultJsfSuffix;
+    }
 
-	/**
-	 * @return the defaultJsfPrefix
-	 */
-	public String getServletMappingPrefix() {
-		return servletMappingPrefix;
-	}
+    /**
+     * @return the defaultJsfPrefix
+     */
+    public String getServletMappingPrefix() {
+        return servletMappingPrefix;
+    }
 
-	protected String getViewIdFromUrl(PortalActionURL url) {
-		String viewId;
-		viewId = url.getParameter(Bridge.FACES_VIEW_ID_PARAMETER);
-		if (null == viewId) {
-			viewId = url.getPath();
-			if (viewId.startsWith(getRequestContextPath())) {
-				viewId = viewId.substring(getRequestContextPath().length());
-			}
-			viewId = getViewIdFromPath(viewId);
+    protected String getViewIdFromUrl(PortalActionURL url) {
+        String viewId;
+        viewId = url.getParameter(Bridge.FACES_VIEW_ID_PARAMETER);
+        if (null == viewId) {
+            viewId = url.getPath();
+            if (viewId.startsWith(getRequestContextPath())) {
+                viewId = viewId.substring(getRequestContextPath().length());
+            }
+            viewId = bridgeContext.getFacesViewIdFromPath(viewId);
 
-		}
-		return viewId;
-	}
+        }
+        return viewId;
+    }
 
-	protected String getViewIdFromPath(String viewId) {
-		if (null != getServletMappingPrefix() && viewId.startsWith(getServletMappingPrefix())) {
-				viewId = viewId.substring(getServletMappingPrefix()
-						.length());
-		} else if (null != getServletMappingSuffix()) {
-			int i = viewId.lastIndexOf(getServletMappingSuffix());
-			if (i >= 0) {
-				viewId = viewId.substring(0, i) + getDefaultJsfSuffix();
-//			} else {
-//				throw new BridgeInvalidViewPathException(viewId);
-			}
-		}
-		return viewId;
-	}
-
-	public void dispatch(String path) throws IOException {
-          if (null == path) {
-             throw new NullPointerException("Path to new view is null");
-          }
-          PortletRequestDispatcher dispatcher = getContext()
-                .getRequestDispatcher(path);
-          if (null == dispatcher) {
-             throw new IllegalStateException(
-                   "Dispatcher for render request is not created");
-          }
-          // Bridge has had to set this attribute so  Faces RI will skip servlet dependent
-          // code when mapping from request paths to viewIds -- however we need to remove it
-          // as it screws up the dispatch
-    //      Object oldPath = getRequestMap().remove(SERVLET_PATH_ATTRIBUTE);
-          try {
-             dispatcher.forward(getRequest(), getResponse());
-          } catch (PortletException e) {
-             throw new FacesException(e);
-          } finally {
-    //    	  if(null !=oldPath){
-    //    		  getRequestMap().put(SERVLET_PATH_ATTRIBUTE, oldPath);
-    //    	  }
-          }
-       }
-
+    public void dispatch(String path) throws IOException {
+        if (null == path) {
+            throw new NullPointerException("Path to new view is null");
+        }
+        PortletRequestDispatcher dispatcher = getContext().getRequestDispatcher(path);
+        if (null == dispatcher) {
+            throw new IllegalStateException("Dispatcher for render request is not created");
+        }
+        // Bridge has had to set this attribute so Faces RI will skip servlet dependent
+        // code when mapping from request paths to viewIds -- however we need to remove it
+        // as it screws up the dispatch
+        // Object oldPath = getRequestMap().remove(SERVLET_PATH_ATTRIBUTE);
+        try {
+            dispatcher.forward(getRequest(), getResponse());
+        } catch (PortletException e) {
+            throw new FacesException(e);
+        } finally {
+            // if(null !=oldPath){
+            // getRequestMap().put(SERVLET_PATH_ATTRIBUTE, oldPath);
+            // }
+        }
+    }
 
     @Override
     public String getMimeType(String file) {
@@ -589,11 +523,10 @@ protected Object getSessionAttribute(String name,int scope) {
         return mimeType;
     }
 
-
     @Override
     public String getContextName() {
         return getContext().getPortletContextName();
-}
+    }
 
     @Override
     public String getRealPath(String path) {
@@ -627,176 +560,174 @@ protected Object getSessionAttribute(String name,int scope) {
      * @return the hasNavigationRedirect
      */
     boolean isHasNavigationRedirect() {
-    	return hasNavigationRedirect;
+        return hasNavigationRedirect;
     }
 
-	/**
-     * @param hasNavigationRedirect
-     *            the hasNavigationRedirect to set
+    /**
+     * @param hasNavigationRedirect the hasNavigationRedirect to set
      */
     void setHasNavigationRedirect(boolean hasNavigationRedirect) {
-    	this.hasNavigationRedirect = hasNavigationRedirect;
+        this.hasNavigationRedirect = hasNavigationRedirect;
     }
 
-	public String encodeActionURL(String url) {
-    		if (null == url) {
-    			throw new NullPointerException();
-    		}
-    		String actionUrl = url;
-    		if (!actionUrl.startsWith("#")) {
-    			try {
-    				PortalActionURL portalUrl = new PortalActionURL(url);
-    				boolean inContext = isInContext(portalUrl);
-    				if (inContext){
-    					actionUrl = createActionUrl(portalUrl);
-    				} else {
-    					return encodeURL(portalUrl.toString());
-    				}
-    			} catch (MalformedURLException e) {
-    				throw new FacesException(e);
-    			}
-    		}
-    		return actionUrl.replaceAll("\\&amp\\;", "&");
-    	}
-	
-	@Override
-	public String encodePartialActionURL(String url) {
-		if (null == url) {
-			throw new NullPointerException();
-		}
-		String actionUrl = url;
-		if (!actionUrl.startsWith("#")) {
-			try {
-				PortalActionURL portalUrl = new PortalActionURL(url);
-				boolean inContext = isInContext(portalUrl);
-				if (inContext){
-					actionUrl = createPartialActionUrl(portalUrl);
-				} else {
-					return encodeURL(portalUrl.toString());
-				}
-			} catch (MalformedURLException e) {
-				throw new FacesException(e);
-			}
-		}
-		return actionUrl.replaceAll("\\&amp\\;", "&");
-	}
+    public String encodeActionURL(String url) {
+        if (null == url) {
+            getLogger().log(Level.WARNING, "Unable to encode ActionURL for url=[null]");
+            return null;
+        }
+        String actionUrl = url;
+        if (!actionUrl.startsWith("#")) {
+            try {
+                PortalActionURL portalUrl = new PortalActionURL(url);
+                boolean inContext = isInContext(portalUrl);
+                if (inContext) {
+                    actionUrl = createActionUrl(portalUrl);
+                } else {
+                    return encodeURL(portalUrl.toString());
+                }
+            } catch (MalformedURLException e) {
+                throw new FacesException(e);
+            }
+        }
+        return actionUrl;
+    }
 
-	public String encodeResourceURL(String url) {
-    	try {
-    		PortalActionURL portalUrl = new PortalActionURL(url);
-    		// JSR-301 chapter 6.1.3.1 requirements:
-    		// 1) opaque URL
-    		String path = portalUrl.getPath();
-    		if(null != portalUrl.getProtocol() && !path.startsWith("/")){
-    			return url;
-    		} else if(!isInContext(portalUrl)) {
-    			// 2) hierarchial url outside context.
-    			encodeBackLink(portalUrl);
-    			return encodeURL(portalUrl.toString());
-    		} else if("true".equalsIgnoreCase(portalUrl.getParameter(Bridge.VIEW_LINK))){
-    			// 3) hierarchical and targets a resource that is within this application
-    			portalUrl.removeParameter(Bridge.VIEW_LINK);
+    @Override
+    public String encodePartialActionURL(String url) {
+        if (null == url) {
+            throw new NullPointerException();
+        }
+        String actionUrl = url;
+        if (!actionUrl.startsWith("#")) {
+            try {
+                PortalActionURL portalUrl = new PortalActionURL(url);
+                boolean inContext = isInContext(portalUrl);
+                if (inContext) {
+                    actionUrl = createPartialActionUrl(portalUrl);
+                } else {
+                    return encodeURL(portalUrl.toString());
+                }
+            } catch (MalformedURLException e) {
+                throw new FacesException(e);
+            }
+        }
+        return actionUrl.replaceAll("\\&amp\\;", "&");
+    }
+
+    public String encodeResourceURL(String url) {
+        try {
+            PortalActionURL portalUrl = new PortalActionURL(url);
+            // JSR-301 chapter 6.1.3.1 requirements:
+            // 1) opaque URL
+            String path = portalUrl.getPath();
+            if (null != portalUrl.getProtocol() && !path.startsWith("/")) {
+                return url;
+            } else if (!isInContext(portalUrl)) {
+                // 2) hierarchial url outside context.
                 encodeBackLink(portalUrl);
-    			// 1. view link. TODO - would it better to create renderURL ?
-    			return encodeActionURL(portalUrl.toString());
-    		} else {
-    			// For resources in the portletbridge application context add
-    			// namespace as URL parameter, to restore portletbridge session.
-    			// Remove context path from resource ID.
-    			// TODO detect jsf view reference, even for omited "viewLink" parameter.
-    			if (path.startsWith("/")) {
-    				// absolute path, remove context path from ID.
-    				portalUrl.setPath(path.substring(
-    				        getRequestContextPath().length()));
-    
-    			} else {
-    				// resolve relative URL aganist current view.
-    				FacesContext facesContext = FacesContext.getCurrentInstance();
-    				UIViewRoot viewRoot = facesContext.getViewRoot();
-    				if(null != viewRoot && null != viewRoot.getViewId() && viewRoot.getViewId().length()>0){
-    					String viewId = viewRoot.getViewId();
-    					int indexOfSlash = viewId.lastIndexOf('/');
-    					if(indexOfSlash >=0){
-    						portalUrl.setPath(viewId.substring(0, indexOfSlash+1)+path);
-    					} else {
-    						portalUrl.setPath('/'+path);
-    					}
-    				} else {
-    					// No clue where we are
-                         portalUrl.setPath('/'+path);
-    				}
-    			}
-    			url = createResourceUrl(portalUrl);
-    		}
-    	} catch (MalformedURLException e) {
-    		throw new FacesException(e);
-    	}
-    	return url.replaceAll("\\&amp\\;", "&");
-    }
-	
-	@Override
-	public String encodeBookmarkableURL(String baseUrl,
-	        Map<String, List<String>> parameters) {
-		if (null == baseUrl) {
-			throw new NullPointerException();
-		}
-		String actionUrl = baseUrl;
-		if (!actionUrl.startsWith("#")) {
-			try {
-				PortalActionURL portalUrl = new PortalActionURL(baseUrl);
-				boolean inContext = isInContext(portalUrl);
-				if (inContext){
-					actionUrl = createRenderUrl(portalUrl,parameters);
-				} else {
-					return encodeURL(portalUrl.toString());
-				}
-			} catch (MalformedURLException e) {
-				throw new FacesException(e);
-			}
-		}
-		return actionUrl.replaceAll("\\&amp\\;", "&");
-	}
+                return encodeURL(portalUrl.toString());
+            } else if ("true".equalsIgnoreCase(portalUrl.getParameter(Bridge.VIEW_LINK))) {
+                // 3) hierarchical and targets a resource that is within this application
+                portalUrl.removeParameter(Bridge.VIEW_LINK);
+                encodeBackLink(portalUrl);
+                // 1. view link. TODO - would it better to create renderURL ?
+                return encodeActionURL(portalUrl.toString());
+            } else {
+                // For resources in the portletbridge application context add
+                // namespace as URL parameter, to restore portletbridge session.
+                // Remove context path from resource ID.
+                // TODO detect jsf view reference, even for omited "viewLink" parameter.
+                if (path.startsWith("/")) {
+                    // absolute path, remove context path from ID.
+                    portalUrl.setPath(path.substring(getRequestContextPath().length()));
 
-	@Override
-	public String encodeRedirectURL(String baseUrl,
-	        Map<String, List<String>> parameters) {
-	    // TODO Auto-generated method stub
-	    return super.encodeRedirectURL(baseUrl, parameters);
-	}
-	
-	protected boolean isInContext(PortalActionURL portalUrl) {
-    	String directLink = portalUrl.getParameter(Bridge.DIRECT_LINK);
-    	if(null != directLink){
-    		portalUrl.removeParameter(Bridge.DIRECT_LINK);
-    		if(Boolean.parseBoolean(directLink)){
-    			return false;
-    		}
-    	}
+                } else {
+                    // resolve relative URL aganist current view.
+                    FacesContext facesContext = FacesContext.getCurrentInstance();
+                    UIViewRoot viewRoot = facesContext.getViewRoot();
+                    if (null != viewRoot && null != viewRoot.getViewId() && viewRoot.getViewId().length() > 0) {
+                        String viewId = viewRoot.getViewId();
+                        int indexOfSlash = viewId.lastIndexOf('/');
+                        if (indexOfSlash >= 0) {
+                            portalUrl.setPath(viewId.substring(0, indexOfSlash + 1) + path);
+                        } else {
+                            portalUrl.setPath('/' + path);
+                        }
+                    } else {
+                        // No clue where we are
+                        portalUrl.setPath('/' + path);
+                    }
+                }
+                url = createResourceUrl(portalUrl);
+            }
+        } catch (MalformedURLException e) {
+            throw new FacesException(e);
+        }
+        return url.replaceAll("\\&amp\\;", "&");
+    }
+
+    @Override
+    public String encodeBookmarkableURL(String baseUrl, Map<String, List<String>> parameters) {
+        if (null == baseUrl) {
+            throw new NullPointerException();
+        }
+        String actionUrl = baseUrl;
+        if (!actionUrl.startsWith("#")) {
+            try {
+                PortalActionURL portalUrl = new PortalActionURL(baseUrl);
+                boolean inContext = isInContext(portalUrl);
+                if (inContext) {
+                    actionUrl = createRenderUrl(portalUrl, parameters);
+                } else {
+                    return encodeURL(portalUrl.toString());
+                }
+            } catch (MalformedURLException e) {
+                throw new FacesException(e);
+            }
+        }
+        return actionUrl.replaceAll("\\&amp\\;", "&");
+    }
+
+    @Override
+    public String encodeRedirectURL(String baseUrl, Map<String, List<String>> parameters) {
+        return super.encodeRedirectURL(baseUrl, parameters);
+    }
+
+    protected boolean isInContext(PortalActionURL portalUrl) {
+        String directLink = portalUrl.getParameter(Bridge.DIRECT_LINK);
+        if (null != directLink) {
+            portalUrl.removeParameter(Bridge.DIRECT_LINK);
+            if (Boolean.parseBoolean(directLink)) {
+                return false;
+            }
+        }
         return portalUrl.isInContext(getRequestContextPath());
     }
 
-	protected void encodeBackLink(PortalActionURL portalUrl) {
+    protected void encodeBackLink(PortalActionURL portalUrl) {
         String backLink = portalUrl.getParameter(Bridge.BACK_LINK);
-        if(null != backLink){
-        	portalUrl.removeParameter(Bridge.BACK_LINK);
-        	FacesContext facesContext = FacesContext.getCurrentInstance();
-        	String viewId;
-        	if( null != facesContext.getViewRoot() && null != (viewId =facesContext.getViewRoot().getViewId())){
-        		ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
-        		String actionURL = viewHandler.getActionURL(facesContext, viewId);
-        		portalUrl.addParameter(backLink, encodeActionURL(actionURL));
-        	}
+        if (null != backLink) {
+            portalUrl.removeParameter(Bridge.BACK_LINK);
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            String viewId;
+            if (null != facesContext.getViewRoot() && null != (viewId = facesContext.getViewRoot().getViewId())) {
+                ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
+                String actionURL = viewHandler.getActionURL(facesContext, viewId);
+                portalUrl.addParameter(backLink, encodeActionURL(actionURL));
+            }
         }
     }
 
-	protected abstract String createRenderUrl(PortalActionURL portalUrl,
-    Map<String, List<String>> parameters);
+    protected BridgeLogger getLogger() {
+        return bridgeContext.getBridgeConfig().getLogger();
+    }
 
-	protected abstract String createResourceUrl(PortalActionURL portalUrl);
+    protected abstract String createRenderUrl(PortalActionURL portalUrl, Map<String, List<String>> parameters);
 
-	protected abstract String createPartialActionUrl(PortalActionURL portalUrl);
+    protected abstract String createResourceUrl(PortalActionURL portalUrl);
 
-	protected abstract String createActionUrl(PortalActionURL url);
+    protected abstract String createPartialActionUrl(PortalActionURL portalUrl);
 
+    protected abstract String createActionUrl(PortalActionURL url);
 
 }

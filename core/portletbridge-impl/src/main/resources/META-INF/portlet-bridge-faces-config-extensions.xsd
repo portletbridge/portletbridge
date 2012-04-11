@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://jboss.org/portletbridge" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="excluded-attributes">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="excluded-attribute" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="public-parameter-mappings">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="public-parameter-mapping" type="parameter-mappingType" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="parameter-mappingType">
+    <xs:sequence>
+      <xs:element name="parameter" type="xs:string" />
+      <xs:element name="model-el" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="write-behind-response-wrappers">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="render-response-wrapper-class" type="xs:string" />
+        <xs:element minOccurs="0" maxOccurs="1" name="resource-response-wrapper-class" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="factories">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="bridge-config-factory" type="xs:string" />
+        <xs:element minOccurs="0" maxOccurs="1" name="bridge-context-factory" type="xs:string" />
+        <xs:element minOccurs="0" maxOccurs="1" name="bridge-controller-factory" type="xs:string" />
+        <xs:element minOccurs="0" maxOccurs="1" name="bridge-logger-factory" type="xs:string" />
+        <xs:element minOccurs="0" maxOccurs="1" name="bridge-request-scope-manager-factory" type="xs:string" />
+        <xs:element minOccurs="0" maxOccurs="1" name="bridge-request-scope-factory" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

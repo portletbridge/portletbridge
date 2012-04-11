@@ -4,16 +4,14 @@
 package javax.portlet.faces;
 
 /**
- * @author asmirnov
- *
+ * Thrown when the bridge's <code>doFacesRequest</code> method is called
+ * and the bridge is in an uninitialized state.
  */
 public class BridgeUninitializedException extends BridgeException {
+    private static final long serialVersionUID = -205259031167978785L;
 
-	/**
-	 * 
-	 */
-	public BridgeUninitializedException() {
-		// TODO Auto-generated constructor stub
+    public BridgeUninitializedException() {
+		super();
 	}
 
 	/**
@@ -21,7 +19,6 @@ public class BridgeUninitializedException extends BridgeException {
 	 */
 	public BridgeUninitializedException(String message) {
 		super(message);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -29,7 +26,6 @@ public class BridgeUninitializedException extends BridgeException {
 	 */
 	public BridgeUninitializedException(Throwable cause) {
 		super(cause);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -38,7 +34,6 @@ public class BridgeUninitializedException extends BridgeException {
 	 */
 	public BridgeUninitializedException(String message, Throwable cause) {
 		super(message, cause);
-		// TODO Auto-generated constructor stub
 	}
 
 }

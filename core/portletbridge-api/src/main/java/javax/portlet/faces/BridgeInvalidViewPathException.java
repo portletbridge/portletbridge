@@ -4,15 +4,12 @@
 package javax.portlet.faces;
 
 /**
- * @author asmirnov
- *
+ * Thrown when the bridge can't resolve the target view from the ViewPath
+ * PortletRequest attribute <code>javax.portlet.faces.viewPath</code>.
  */
 @SuppressWarnings("serial")
 public class BridgeInvalidViewPathException extends BridgeException {
 
-	/**
-	 * 
-	 */
 	public BridgeInvalidViewPathException() {
 		super();
 	}

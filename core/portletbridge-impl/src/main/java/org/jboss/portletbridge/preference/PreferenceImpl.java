@@ -22,12 +22,12 @@
  ******************************************************************************/
 package org.jboss.portletbridge.preference;
 
+import java.util.Arrays;
+import java.util.List;
+
 import javax.portlet.PortletPreferences;
 import javax.portlet.ReadOnlyException;
 import javax.portlet.faces.preference.Preference;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author Wesley Hales

@@ -1,8 +1,14 @@
 package javax.portlet.faces.event;
 
 /**
- * @author asmirnov
- *
+ * An <code>EventNavigationResult</code> is the type of object that can
+ * be returned from a <code>BrdigeEventHandler.handleEvent</code> call.
+ * When it is returned (non-null) it conveys the Faces navigation information
+ * to the bridge that it needs to utilize the Faces <code>NavigationHandler</code>
+ * to evaluate the navigation according to the configured rules.  The
+ * <code>fromAction</code> corresponds to the <code>fromAction</code> string
+ * in the faces-config.xml navigation rule.  The <code>outcome</code> 
+ * corresponds to the <code>outcome</code> string in the navigation rule.
  */
 public class EventNavigationResult {
     private String fromAction;
@@ -11,6 +17,7 @@ public class EventNavigationResult {
     
     public EventNavigationResult() {
 	}
+
 	/**
 	 * @param fromAction
 	 * @param outcome
@@ -19,27 +26,45 @@ public class EventNavigationResult {
 		this.fromAction = fromAction;
 		this.outcome = outcome;
 	}
-	/**
-	 * @return the fromAction
-	 */
+  /**
+   * Gets the fromAction stored in this object. The <code>fromAction</code>
+   * corresponds to the <code>fromAction</code> string in the faces-config.xml
+   * navigation rule.
+   * 
+   * @return <code>String</code> containing the fromAction
+   */
 	public String getFromAction() {
 		return fromAction;
 	}
-	/**
-	 * @param fromAction the fromAction to set
-	 */
+  /**
+   * Sets the fromAction for this object. The <code>fromAction</code>
+   * corresponds to the <code>fromAction</code> string in the faces-config.xml
+   * navigation rule.
+   * 
+   * @param action
+   *       new fromAction
+   */    
 	public void setFromAction(String fromAction) {
 		this.fromAction = fromAction;
 	}
-	/**
-	 * @return the outcome
-	 */
+  /**
+   * Gets the outcome stored in this object. The <code>outcome</code>
+   * corresponds to the <code>outcome</code> string in the faces-config.xml
+   * navigation rule.
+   * 
+   * @return <code>String</code> containing the fromAction
+   */    
 	public String getOutcome() {
 		return outcome;
 	}
-	/**
-	 * @param outcome the outcome to set
-	 */
+  /**
+   * Sets the fromAction for this object. The <code>fromAction</code>
+   * corresponds to the <code>fromAction</code> string in the faces-config.xml
+   * navigation rule.
+   * 
+   * @param outcome
+   *       new outcome
+   */ 
 	public void setOutcome(String outcome) {
 		this.outcome = outcome;
 	}
