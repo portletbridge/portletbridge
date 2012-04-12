@@ -89,34 +89,28 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 
 /**
- * This bean is responsible for building the metadata used in generating the
- * demo index page.
+ * This bean is responsible for building the metadata used in generating the demo index page.
  */
 @ManagedBean(name = "demoBean", eager = true)
 @ApplicationScoped
 public class DemoResourceBean implements Serializable {
-    
-    private static final long serialVersionUID = 6392120974203756551L;
 
+    private static final long serialVersionUID = 6392120974203756551L;
 
     /**
      * The path and filename to the demo metadata descriptor.
      */
     private static final String DEMO_DESCRIPTOR = "/WEB-INF/demo.xml";
 
-
     /**
      * List of <code>DemoBean</code>s for this application instance.
      */
     private List<DemoBean> demoBeans;
 
-
     // ---------------------------------------------------------- Public Methods
 
-
     /**
-     * @return a <code>Collection</code> of <code>DemoBeans</code> for this
-     *  application.
+     * @return a <code>Collection</code> of <code>DemoBeans</code> for this application.
      */
     public Collection<DemoBean> getDemoBeans() {
 
@@ -124,9 +118,7 @@ public class DemoResourceBean implements Serializable {
 
     }
 
-
     // --------------------------------------------------------- Private Methods
-
 
     /**
      * @return a non-validating, non-namespace aware <code>DocumentBuilder</code>
@@ -141,10 +133,8 @@ public class DemoResourceBean implements Serializable {
 
     }
 
-
     /**
-     * @return the <code>Document</code> based off the content found within
-     *  {@link #DEMO_DESCRIPTOR}
+     * @return the <code>Document</code> based off the content found within {@link #DEMO_DESCRIPTOR}
      * @throws Exception if an error occurs parsing {@link #DEMO_DESCRIPTOR}
      */
     private Document getDemoMetadata() throws Exception {
@@ -155,21 +145,19 @@ public class DemoResourceBean implements Serializable {
 
     }
 
-
     /**
      * <p>
-     * This method is responsible for constructing the <code>DemoBean</code>
-     * instances based on the parsed content of {@link #DEMO_DESCRIPTOR}.
+     * This method is responsible for constructing the <code>DemoBean</code> instances based on the parsed content of
+     * {@link #DEMO_DESCRIPTOR}.
      * </p>
      * <p>
-     * This method will be called by the JSF managed bean facility before the
-     * bean is automatically pushed to the application scope when the
-     * application starts.
+     * This method will be called by the JSF managed bean facility before the bean is automatically pushed to the application
+     * scope when the application starts.
      * </p>
      */
-    @SuppressWarnings({"UnusedDeclaration"})
+    @SuppressWarnings({ "UnusedDeclaration" })
     @PostConstruct
-    private void buildDemoMetaData()  {
+    private void buildDemoMetaData() {
 
         try {
             Document d = getDemoMetadata();
@@ -189,11 +177,9 @@ public class DemoResourceBean implements Serializable {
 
     }
 
-
     /**
      * @param demoNode node representing the &lt;demo&gt; element.
-     * @return a new <code>DemoBean</code> instance based off the provided
-     *  <code>Node</code> and it's children.
+     * @return a new <code>DemoBean</code> instance based off the provided <code>Node</code> and it's children.
      */
     private DemoBean processDemo(Node demoNode) {
 
@@ -228,11 +214,9 @@ public class DemoResourceBean implements Serializable {
 
     }
 
-
     /**
      * @param sourceInfo node representing the &lt;sources&gt; element.
-     * @return a new <code>DemoSourceInfo</code> instance based off the provided
-     *  <code>Node</code> and it's children.
+     * @return a new <code>DemoSourceInfo</code> instance based off the provided <code>Node</code> and it's children.
      */
     private DemoSourceInfo createDemoSourceInfo(Node sourceInfo) {
 
@@ -255,7 +239,6 @@ public class DemoResourceBean implements Serializable {
 
     }
 
-
     /**
      * @param node target <code>Node</code>
      * @return the textual value of the <code>Node</code>
@@ -274,16 +257,13 @@ public class DemoResourceBean implements Serializable {
 
     }
 
-
     // ---------------------------------------------------------- Nested Classes
-
 
     public static final class DemoBean {
 
         private List<DemoSourceInfo> sourceInfo;
         private String demoName;
         private String page;
-
 
         DemoBean(String demoName, String page, List<DemoSourceInfo> sourceInfo) {
 
@@ -293,9 +273,7 @@ public class DemoResourceBean implements Serializable {
 
         }
 
-
         // ------------------------------------------------------ Public Methods
-
 
         public String getDemoName() {
 
@@ -303,13 +281,11 @@ public class DemoResourceBean implements Serializable {
 
         }
 
-
         public String getPage() {
 
             return page;
 
         }
-
 
         public List<DemoSourceInfo> getSourceInfo() {
 
@@ -317,19 +293,14 @@ public class DemoResourceBean implements Serializable {
 
         }
 
-
     } // END DemoBean
 
-
-    public static final class DemoSourceInfo  {
-
+    public static final class DemoSourceInfo {
 
         private String label;
         private String sourceFilePath;
 
-
         // -------------------------------------------------------- Constructors
-
 
         DemoSourceInfo(String label, String sourceFilePath) {
 
@@ -338,9 +309,7 @@ public class DemoResourceBean implements Serializable {
 
         }
 
-
         // ------------------------------------------------------ Public Methods
-
 
         public String getLabel() {
 
@@ -348,13 +317,11 @@ public class DemoResourceBean implements Serializable {
 
         }
 
-
         public String getSourceFilePath() {
 
             return sourceFilePath;
 
         }
-
 
     } // END DemoSourceInfo
 

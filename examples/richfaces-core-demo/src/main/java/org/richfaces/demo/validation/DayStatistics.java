@@ -52,8 +52,7 @@ public class DayStatistics {
     }
 
     public void store(ActionEvent event) {
-        FacesContext.getCurrentInstance().addMessage(
-            event.getComponent().getClientId(FacesContext.getCurrentInstance()),
-            new FacesMessage(FacesMessage.SEVERITY_INFO, "Changes Stored Successfully", "Changes Stored Successfully"));
+        FacesContext.getCurrentInstance().addMessage(event.getComponent().getClientId(FacesContext.getCurrentInstance()),
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Changes Stored Successfully", "Changes Stored Successfully"));
     }
 }

@@ -11,7 +11,7 @@ import org.richfaces.demo.tables.model.capitals.Capital;
 
 @ManagedBean
 @SessionScoped
-public class CapitalsBean implements Serializable{
+public class CapitalsBean implements Serializable {
     /**
      * 
      */

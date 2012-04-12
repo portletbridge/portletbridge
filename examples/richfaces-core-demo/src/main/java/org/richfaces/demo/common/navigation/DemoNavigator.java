@@ -100,8 +100,8 @@ public class DemoNavigator implements Serializable {
         if (handler instanceof ConfigurableNavigationHandler) {
             ConfigurableNavigationHandler navigationHandler = (ConfigurableNavigationHandler) handler;
 
-            NavigationCase navCase = navigationHandler.getNavigationCase(context, null, getCurrentDemo().getId()
-                + SEPARATOR + getCurrentSample().getId());
+            NavigationCase navCase = navigationHandler.getNavigationCase(context, null, getCurrentDemo().getId() + SEPARATOR
+                    + getCurrentSample().getId());
 
             return navCase.getToViewId(context);
         }
@@ -110,18 +110,17 @@ public class DemoNavigator implements Serializable {
     }
 
     /**
-     * @return actual sample inclusion src Consider that: 1) all the samples should be placed in "samples" subfolder of
-     *         the actual sample 2) all the samples pages should use the same name as main sample page with "-sample"
-     *         prefix
+     * @return actual sample inclusion src Consider that: 1) all the samples should be placed in "samples" subfolder of the
+     *         actual sample 2) all the samples pages should use the same name as main sample page with "-sample" prefix
      */
     public String getSampleIncludeURI() {
         String sampleURI = getSampleURI();
         StringBuffer sampleURIBuffer = new StringBuffer(sampleURI);
         int folderOffset = sampleURIBuffer.lastIndexOf(currentSample.getId());
         int fileNameOffset = sampleURIBuffer.lastIndexOf(currentSample.getId()) + currentSample.getId().length()
-            + SAMPLE_PREFIX.length() + 1;
-        String result = new StringBuffer(sampleURI).insert(folderOffset, SAMPLES_FOLDER).insert(fileNameOffset,
-            SAMPLE_PREFIX).toString();
+                + SAMPLE_PREFIX.length() + 1;
+        String result = new StringBuffer(sampleURI).insert(folderOffset, SAMPLES_FOLDER).insert(fileNameOffset, SAMPLE_PREFIX)
+                .toString();
         return result;
     }
 

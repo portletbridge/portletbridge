@@ -45,138 +45,134 @@ import javax.portlet.faces.Bridge;
 
 /**
  * @author asmirnov
- *
+ * 
  */
 public abstract class MimeExternalContextImpl extends PortletExternalContextImpl {
 
+    private static final String[] STRINGS = new String[] {};
 
-	private static final String[] STRINGS = new String[]{};
-
-	/**
-	 * @param context
-	 * @param request
-	 * @param response
-	 */
-	public MimeExternalContextImpl(PortletContext context,
-	        PortletRequest request, MimeResponse response) {
-		super(context, request, response);
-	}
-
-	//============================================================
-	// public methods
-    @Override
-	public PortletRequest getRequest() {
-		return (PortletRequest) super.getRequest();
-	}
-
-    @Override
-	public MimeResponse getResponse() {
-		return (MimeResponse) super.getResponse();
-	}
-
-
-	@Override
-    protected String createActionUrl(PortalActionURL url) {
-    	  String viewId = getViewIdFromUrl(url);
-          MimeResponse renderResponse = getResponse();
-          PortletURL portletURL = renderResponse.createActionURL();
-          portletURL.setParameter(Bridge.FACES_VIEW_ID_PARAMETER, viewId);
-    //      portletURL.setParameter(AbstractExternalContext.NAMESPACE_PARAMETER,
-    //            renderResponse.getNamespace());
-          for (String key : url.getParameters().keySet()) {
-    		String value = url.getParameter(key);
-    		if(Bridge.PORTLET_MODE_PARAMETER.equals(key)){
-    			PortletMode mode = new PortletMode(value);
-    			try {
-    				portletURL.setPortletMode(mode);
-    			} catch (PortletModeException e) {
-    				// only valid modes supported.
-    			}
-    		} else if (Bridge.PORTLET_WINDOWSTATE_PARAMETER.equals(key)) {
-    			try {
-    				WindowState state = new WindowState(value);
-    				portletURL.setWindowState(state);
-    			} catch (WindowStateException e) {
-    				// only valid modes supported.
-    			}
-    
-    		} else if (Bridge.PORTLET_SECURE_PARAMETER.equals(key)) {
-    			try {
-    				portletURL.setSecure(Boolean.getBoolean(value));
-    			} catch (PortletSecurityException e) {
-    				// Just ignore it.
-    			}
-    
-    		} else {
-    			portletURL.setParameter(key, value);
-    		}
-          }
-          return portletURL.toString();
-       }
-
-	@Override
-    protected String createResourceUrl(PortalActionURL portalUrl) {
-    	MimeResponse renderResponse = getResponse();
-    	ResourceURL resourceURL = renderResponse.createResourceURL();
-    	setBaseUrlParameters(portalUrl, resourceURL);
-    	resourceURL.setResourceID(portalUrl.getPath());
-    	resourceURL.setParameters(portalUrl.getParameters());
-    	return resourceURL.toString();
+    /**
+     * @param context
+     * @param request
+     * @param response
+     */
+    public MimeExternalContextImpl(PortletContext context, PortletRequest request, MimeResponse response) {
+        super(context, request, response);
     }
-	
-	@Override
-	protected String createRenderUrl(PortalActionURL portalUrl,
-	        Map<String, List<String>> parameters) {
-    	MimeResponse renderResponse = getResponse();
-    	PortletURL renderURL = renderResponse.createRenderURL();
-    	setBaseUrlParameters(portalUrl, renderURL);
-    	renderURL.setParameters(portalUrl.getParameters());
-    	for (String paramName : parameters.keySet()) {
-	        renderURL.setParameter(paramName, parameters.get(paramName).toArray(STRINGS));
-        }
-    	renderURL.setParameter(Bridge.FACES_VIEW_ID_PARAMETER, getViewIdFromUrl(portalUrl));
-    	return renderURL.toString();
-	}
-	
-	protected void setPortletUrlParameters(PortalActionURL portalUrl, PortletURL portletURL) {
-    	String modeParameter = portalUrl.getParameter(Bridge.PORTLET_MODE_PARAMETER);
-    	if(null != modeParameter){
-			try {
-				PortletMode mode = new PortletMode(modeParameter);
-				portletURL.setPortletMode(mode);
-			} catch (PortletModeException e) {
-				// only valid modes supported.
-			}
-    		
-    	}
-    	String windowParameter = portalUrl.getParameter(Bridge.PORTLET_WINDOWSTATE_PARAMETER);
-    	if(null != windowParameter){
-			try {
-				WindowState state = new WindowState(windowParameter);
-				portletURL.setWindowState(state);
-			} catch (WindowStateException e) {
-				// only valid modes supported.
-			}
-    	}
-    	setBaseUrlParameters(portalUrl, portletURL);
-	}
 
-	protected void setBaseUrlParameters(PortalActionURL portalUrl, BaseURL resourceURL) {
-	    portalUrl.removeParameter(Bridge.PORTLET_MODE_PARAMETER);
-    	portalUrl.removeParameter(Bridge.PORTLET_WINDOWSTATE_PARAMETER);
-    	String secure = portalUrl.getParameter(Bridge.PORTLET_SECURE_PARAMETER);
-    	if(null != secure){
-    		try {
-    		if("true".equalsIgnoreCase(secure)){
-    			resourceURL.setSecure(true);
-    		} else if ("false".equalsIgnoreCase(secure)) {
-    			resourceURL.setSecure(false);				
-    		}
-    		} catch (PortletSecurityException e) {
-    			// do nothing
-    		}
-    		portalUrl.removeParameter(Bridge.PORTLET_SECURE_PARAMETER);
-    	}
+    // ============================================================
+    // public methods
+    @Override
+    public PortletRequest getRequest() {
+        return (PortletRequest) super.getRequest();
+    }
+
+    @Override
+    public MimeResponse getResponse() {
+        return (MimeResponse) super.getResponse();
+    }
+
+    @Override
+    protected String createActionUrl(PortalActionURL url) {
+        String viewId = getViewIdFromUrl(url);
+        MimeResponse renderResponse = getResponse();
+        PortletURL portletURL = renderResponse.createActionURL();
+        portletURL.setParameter(Bridge.FACES_VIEW_ID_PARAMETER, viewId);
+        // portletURL.setParameter(AbstractExternalContext.NAMESPACE_PARAMETER,
+        // renderResponse.getNamespace());
+        for (String key : url.getParameters().keySet()) {
+            String value = url.getParameter(key);
+            if (Bridge.PORTLET_MODE_PARAMETER.equals(key)) {
+                PortletMode mode = new PortletMode(value);
+                try {
+                    portletURL.setPortletMode(mode);
+                } catch (PortletModeException e) {
+                    // only valid modes supported.
+                }
+            } else if (Bridge.PORTLET_WINDOWSTATE_PARAMETER.equals(key)) {
+                try {
+                    WindowState state = new WindowState(value);
+                    portletURL.setWindowState(state);
+                } catch (WindowStateException e) {
+                    // only valid modes supported.
+                }
+
+            } else if (Bridge.PORTLET_SECURE_PARAMETER.equals(key)) {
+                try {
+                    portletURL.setSecure(Boolean.getBoolean(value));
+                } catch (PortletSecurityException e) {
+                    // Just ignore it.
+                }
+
+            } else {
+                portletURL.setParameter(key, value);
+            }
+        }
+        return portletURL.toString();
+    }
+
+    @Override
+    protected String createResourceUrl(PortalActionURL portalUrl) {
+        MimeResponse renderResponse = getResponse();
+        ResourceURL resourceURL = renderResponse.createResourceURL();
+        setBaseUrlParameters(portalUrl, resourceURL);
+        resourceURL.setResourceID(portalUrl.getPath());
+        resourceURL.setParameters(portalUrl.getParameters());
+        return resourceURL.toString();
+    }
+
+    @Override
+    protected String createRenderUrl(PortalActionURL portalUrl, Map<String, List<String>> parameters) {
+        MimeResponse renderResponse = getResponse();
+        PortletURL renderURL = renderResponse.createRenderURL();
+        setBaseUrlParameters(portalUrl, renderURL);
+        renderURL.setParameters(portalUrl.getParameters());
+        for (String paramName : parameters.keySet()) {
+            renderURL.setParameter(paramName, parameters.get(paramName).toArray(STRINGS));
+        }
+        renderURL.setParameter(Bridge.FACES_VIEW_ID_PARAMETER, getViewIdFromUrl(portalUrl));
+        return renderURL.toString();
+    }
+
+    protected void setPortletUrlParameters(PortalActionURL portalUrl, PortletURL portletURL) {
+        String modeParameter = portalUrl.getParameter(Bridge.PORTLET_MODE_PARAMETER);
+        if (null != modeParameter) {
+            try {
+                PortletMode mode = new PortletMode(modeParameter);
+                portletURL.setPortletMode(mode);
+            } catch (PortletModeException e) {
+                // only valid modes supported.
+            }
+
+        }
+        String windowParameter = portalUrl.getParameter(Bridge.PORTLET_WINDOWSTATE_PARAMETER);
+        if (null != windowParameter) {
+            try {
+                WindowState state = new WindowState(windowParameter);
+                portletURL.setWindowState(state);
+            } catch (WindowStateException e) {
+                // only valid modes supported.
+            }
+        }
+        setBaseUrlParameters(portalUrl, portletURL);
+    }
+
+    protected void setBaseUrlParameters(PortalActionURL portalUrl, BaseURL resourceURL) {
+        portalUrl.removeParameter(Bridge.PORTLET_MODE_PARAMETER);
+        portalUrl.removeParameter(Bridge.PORTLET_WINDOWSTATE_PARAMETER);
+        String secure = portalUrl.getParameter(Bridge.PORTLET_SECURE_PARAMETER);
+        if (null != secure) {
+            try {
+                if ("true".equalsIgnoreCase(secure)) {
+                    resourceURL.setSecure(true);
+                } else if ("false".equalsIgnoreCase(secure)) {
+                    resourceURL.setSecure(false);
+                }
+            } catch (PortletSecurityException e) {
+                // do nothing
+            }
+            portalUrl.removeParameter(Bridge.PORTLET_SECURE_PARAMETER);
+        }
     }
 
     @Override
@@ -197,7 +193,7 @@ public abstract class MimeExternalContextImpl extends PortletExternalContextImpl
     @Override
     public String getResponseContentType() {
         return getResponse().getContentType();
-}
+    }
 
     @Override
     public void setResponseContentType(String contentType) {
@@ -235,7 +231,7 @@ public abstract class MimeExternalContextImpl extends PortletExternalContextImpl
 
     @Override
     public void responseFlushBuffer() throws IOException {
-//        getFlash().doLastPhaseActions(FacesContext.getCurrentInstance(), false);
+        // getFlash().doLastPhaseActions(FacesContext.getCurrentInstance(), false);
         getResponse().flushBuffer();
     }
 
@@ -244,46 +240,39 @@ public abstract class MimeExternalContextImpl extends PortletExternalContextImpl
         getResponse().reset();
     }
 
-
-	@Override
+    @Override
     public void addResponseHeader(String name, String value) {
         getResponse().addProperty(name, value);
     }
 
-	@Override
+    @Override
     public void setResponseHeader(String name, String value) {
         getResponse().setProperty(name, value);
     }
 
-	@Override
-    public void responseSendError(int statusCode, String message)
-            throws IOException {
-            
-            }
+    @Override
+    public void responseSendError(int statusCode, String message) throws IOException {
 
-	@Override
+    }
+
+    @Override
     public void setResponseStatus(int statusCode) {
     }
 
-	@Override
+    @Override
     public String getRequestCharacterEncoding() {
-		// TODO - save character encoding from action request.
+        // TODO - save character encoding from action request.
         return null;
     }
 
-	@Override
+    @Override
     public int getRequestContentLength() {
         return 0;
     }
 
+    @Override
+    public void setRequestCharacterEncoding(String encoding) throws UnsupportedEncodingException {
 
-
-	@Override
-    public void setRequestCharacterEncoding(String encoding)
-            throws UnsupportedEncodingException {
-            
     }
-
-
 
 }

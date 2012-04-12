@@ -1,42 +1,41 @@
-<portlet-app version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:schemaLocation="http://java.sun.com/xml/ns/portlet"
-             xmlns="http://java.sun.com/xml/ns/portlet">
-   <portlet>
-      <portlet-name>riPortlet</portlet-name>
-      <portlet-class>
-         javax.portlet.faces.GenericFacesPortlet
-      </portlet-class>
+<portlet-app version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/portlet"
+    xmlns="http://java.sun.com/xml/ns/portlet">
+    <portlet>
+        <portlet-name>riPortlet</portlet-name>
+        <portlet-class>
+            javax.portlet.faces.GenericFacesPortlet
+        </portlet-class>
 
-      <init-param>
-         <name>javax.portlet.faces.defaultViewId.view</name>
-         <value>/home.xhtml</value>
-      </init-param>
+        <init-param>
+            <name>javax.portlet.faces.defaultViewId.view</name>
+            <value>/home.xhtml</value>
+        </init-param>
 
-      <init-param>
-         <name>javax.portlet.faces.defaultViewId.edit</name>
-         <value>/jsf/edit.xhtml</value>
-      </init-param>
+        <init-param>
+            <name>javax.portlet.faces.defaultViewId.edit</name>
+            <value>/jsf/edit.xhtml</value>
+        </init-param>
 
-      <init-param>
-         <name>javax.portlet.faces.defaultViewId.help</name>
-         <value>/jsf/help.xhtml</value>
-      </init-param>
+        <init-param>
+            <name>javax.portlet.faces.defaultViewId.help</name>
+            <value>/jsf/help.xhtml</value>
+        </init-param>
 
-      <init-param>
+        <init-param>
             <name>javax.portlet.faces.preserveActionParams</name>
             <value>true</value>
         </init-param>
-      <expiration-cache>-0</expiration-cache>
-      <portlet-info>
-         <title>JSF RI Portlet</title>
-      </portlet-info>
-      <supports>
-         <mime-type>text/html</mime-type>
-         <portlet-mode>VIEW</portlet-mode>
-         <portlet-mode>EDIT</portlet-mode>
-         <portlet-mode>HELP</portlet-mode>
-      </supports>
-   </portlet>
+        <expiration-cache>-0</expiration-cache>
+        <portlet-info>
+            <title>JSF RI Portlet</title>
+        </portlet-info>
+        <supports>
+            <mime-type>text/html</mime-type>
+            <portlet-mode>VIEW</portlet-mode>
+            <portlet-mode>EDIT</portlet-mode>
+            <portlet-mode>HELP</portlet-mode>
+        </supports>
+    </portlet>
 </portlet-app>
 
    

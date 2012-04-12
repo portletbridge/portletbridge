@@ -19,20 +19,19 @@
     02110-1301 USA, or see the FSF site: http://www.fsf.org.
 
 -->
-<gatein-resources
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<gatein-resources xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.gatein.org/xml/ns/gatein_resources_1_0 http://www.gatein.org/xml/ns/gatein_resources_1_0"
     xmlns="http://www.gatein.org/xml/ns/gatein_resources_1_0">
 
 
 	<!-- Skins for portlets in 'jsf2portlet' application -->
-	
-	<portlet-skin>
-		<application-name>web</application-name>
-		<portlet-name>jsf2portlet</portlet-name>
-		<skin-name>Default</skin-name>
-		<css-path>/skin/Default.css</css-path>
-	</portlet-skin>
-	
-	
+
+    <portlet-skin>
+        <application-name>web</application-name>
+        <portlet-name>jsf2portlet</portlet-name>
+        <skin-name>Default</skin-name>
+        <css-path>/skin/Default.css</css-path>
+    </portlet-skin>
+
+
 </gatein-resources>

@@ -23,56 +23,50 @@ import org.mockito.stubbing.Answer;
 @RunWith(MockitoJUnitRunner.class)
 public class GenericPortletTestBase {
 
-	
-	
-	static final String FOO = "foo";
-	
-	@Mock
-	protected ServletContext servletContext;
-	@Mock
-	protected PortletConfig portletConfig;
-	@Mock
-	protected PortletContext portletContext;
-	
-	protected GenericFacesPortlet facesPortlet;
-	
-	protected Collection<String> portletInitParameters = new ArrayList<String>();
+    static final String FOO = "foo";
 
-	protected Collection<String> contextInitParameters = new ArrayList<String>();
+    @Mock
+    protected ServletContext servletContext;
+    @Mock
+    protected PortletConfig portletConfig;
+    @Mock
+    protected PortletContext portletContext;
 
-	public GenericPortletTestBase() {
-		super();
-	}
+    protected GenericFacesPortlet facesPortlet;
 
-	@Before
-	public void setUp() throws Exception {
-		when(portletConfig.getInitParameterNames()).thenAnswer(
-				enumerationAnswer(portletInitParameters));
-		when(portletContext.getInitParameterNames()).thenAnswer(
-				enumerationAnswer(contextInitParameters));
-		when(portletConfig.getPortletContext()).thenReturn(portletContext);
-		when(portletConfig.getPortletName()).thenReturn(FOO);
-		facesPortlet = spy(new GenericFacesPortlet());
-		when(portletContext.getInitParameter("javax.portlet.faces.BridgeClassName")).thenReturn(Bridge.class.getName());
-	}
-	
-	private Answer<Enumeration<String>> enumerationAnswer(final Collection<String> collection){
-		return new Answer<Enumeration<String>>() {
+    protected Collection<String> portletInitParameters = new ArrayList<String>();
 
-			public Enumeration<String> answer(InvocationOnMock invocation)
-					throws Throwable {
-				return Collections.enumeration(collection);
-			}
-		};
-	}
+    protected Collection<String> contextInitParameters = new ArrayList<String>();
 
-	@After
-	public void tearDown() throws Exception {
-	}
+    public GenericPortletTestBase() {
+        super();
+    }
 
-	protected GenericFacesPortlet createGenericPortlet() {
-		return facesPortlet;
-	}
+    @Before
+    public void setUp() throws Exception {
+        when(portletConfig.getInitParameterNames()).thenAnswer(enumerationAnswer(portletInitParameters));
+        when(portletContext.getInitParameterNames()).thenAnswer(enumerationAnswer(contextInitParameters));
+        when(portletConfig.getPortletContext()).thenReturn(portletContext);
+        when(portletConfig.getPortletName()).thenReturn(FOO);
+        facesPortlet = spy(new GenericFacesPortlet());
+        when(portletContext.getInitParameter("javax.portlet.faces.BridgeClassName")).thenReturn(Bridge.class.getName());
+    }
+
+    private Answer<Enumeration<String>> enumerationAnswer(final Collection<String> collection) {
+        return new Answer<Enumeration<String>>() {
+
+            public Enumeration<String> answer(InvocationOnMock invocation) throws Throwable {
+                return Collections.enumeration(collection);
+            }
+        };
+    }
+
+    @After
+    public void tearDown() throws Exception {
+    }
+
+    protected GenericFacesPortlet createGenericPortlet() {
+        return facesPortlet;
+    }
 
 }
-

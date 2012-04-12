@@ -59,5 +59,5 @@ public class Company extends NamedNode implements TreeNode {
     public List<CD> getCds() {
         return cds;
     }
-    
+
 }

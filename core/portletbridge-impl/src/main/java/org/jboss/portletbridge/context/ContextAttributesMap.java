@@ -23,57 +23,56 @@
 package org.jboss.portletbridge.context;
 
 /**
- * Abstract base class for all attributes/sessions/cookies maps in external
- * contexts.
+ * Abstract base class for all attributes/sessions/cookies maps in external contexts.
  * 
  * @author asmirnov
  * 
  */
 public abstract class ContextAttributesMap<V> extends ContextMap<String, V> {
-	
-	@Override
-	public V get(Object key) {
-		if (null == key) {
-			throw new NullPointerException();
-		}
-		return getAttribute(key.toString());
-	}
 
-	@Override
-	public boolean containsKey(Object key) {
-		if (null == key) {
-			throw new NullPointerException();
-		}
-		return null != getAttribute(key.toString());
-	}
+    @Override
+    public V get(Object key) {
+        if (null == key) {
+            throw new NullPointerException();
+        }
+        return getAttribute(key.toString());
+    }
 
-	@Override
-	public V put(String key, V value) {
-		if (null == key) {
-			throw new NullPointerException();
-		}
-		String stringKey = key.toString();
-		V oldValue = getAttribute(stringKey);
-		setAttribute(stringKey, value);
-		return oldValue;
-	}
+    @Override
+    public boolean containsKey(Object key) {
+        if (null == key) {
+            throw new NullPointerException();
+        }
+        return null != getAttribute(key.toString());
+    }
 
-	@Override
-	public V remove(Object key) {
-		if (null == key) {
-			throw new NullPointerException();
-		}
-		String stringKey = key.toString();
-		V oldValue = getAttribute(stringKey);
-		removeAttribute(stringKey);
-		return oldValue;
-	}
+    @Override
+    public V put(String key, V value) {
+        if (null == key) {
+            throw new NullPointerException();
+        }
+        String stringKey = key.toString();
+        V oldValue = getAttribute(stringKey);
+        setAttribute(stringKey, value);
+        return oldValue;
+    }
 
-	protected abstract V getAttribute(String name);
+    @Override
+    public V remove(Object key) {
+        if (null == key) {
+            throw new NullPointerException();
+        }
+        String stringKey = key.toString();
+        V oldValue = getAttribute(stringKey);
+        removeAttribute(stringKey);
+        return oldValue;
+    }
 
-	protected abstract void setAttribute(String name, V value);
+    protected abstract V getAttribute(String name);
 
-	protected void removeAttribute(String name) {
-		setAttribute(name, null);
-	}
+    protected abstract void setAttribute(String name, V value);
+
+    protected void removeAttribute(String name) {
+        setAttribute(name, null);
+    }
 }

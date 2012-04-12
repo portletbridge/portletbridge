@@ -37,32 +37,31 @@
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:ui="http://java.sun.com/jsf/facelets">
-<f:view contentType="text/html; charset=iso-8859-1"/>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets">
+<f:view contentType="text/html; charset=iso-8859-1" />
 <h:head>
     <title>Ajax</title>
 </h:head>
 <h:body>
-    <h:form id="form1">    <!-- Note that unlike previous examples, prependid='true' -->
-        Output: <h:outputText id="out1" value="#{echo.str}"/>
-        <br/>
+    <h:form id="form1">
+        <!-- Note that unlike previous examples, prependid='true' -->
+        Output: <h:outputText id="out1" value="#{echo.str}" />
+        <br />
         Input: <h:inputText id="in1" autocomplete="off" value="#{echo.str}">
-            <f:ajax render="out1"/>
+            <f:ajax render="out1" />
         </h:inputText>
-        <br/>
+        <br />
         <!-- A no-op button, just to lose the focus from "in1" -->
-        <h:commandButton id="button1" value="Echo" type="button"/>
-        <br/>
+        <h:commandButton id="button1" value="Echo" type="button" />
+        <br />
         <!-- Resets the string, refreshes the form, but not the page -->
         <h:commandButton id="reset" value="reset" actionListener="#{echo.reset}">
             <f:ajax render="@form" />
         </h:commandButton>
         <!-- Reloads the page, doesn't reset the string -->
-        <h:commandButton id="reload" value="reload"/>
-        <h:messages/>
+        <h:commandButton id="reload" value="reload" />
+        <h:messages />
     </h:form>
 </h:body>
 </html>

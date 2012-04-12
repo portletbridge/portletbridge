@@ -26,29 +26,29 @@ import javax.faces.application.ApplicationFactory;
 
 public class PortletApplicationFactoryImpl extends ApplicationFactory {
 
-	private ApplicationFactory mHandler;
-	private volatile Application applicationImpl;
+    private ApplicationFactory mHandler;
+    private volatile Application applicationImpl;
 
-	public PortletApplicationFactoryImpl(ApplicationFactory handler) {
-		mHandler = handler;
-		applicationImpl = new PortletApplicationImpl(mHandler.getApplication());
-	}
-
-	@Override
-	public Application getApplication() {
-		if (applicationImpl == null) {
-			synchronized (this) {
-				if (applicationImpl == null) {
-					applicationImpl = new PortletApplicationImpl(mHandler.getApplication());
-				}
-			}
-		}
-		return applicationImpl;
-	}
+    public PortletApplicationFactoryImpl(ApplicationFactory handler) {
+        mHandler = handler;
+        applicationImpl = new PortletApplicationImpl(mHandler.getApplication());
+    }
 
     @Override
-	public void setApplication(Application app) {
-		applicationImpl = null;
-		mHandler.setApplication(app);
-	}
+    public Application getApplication() {
+        if (applicationImpl == null) {
+            synchronized (this) {
+                if (applicationImpl == null) {
+                    applicationImpl = new PortletApplicationImpl(mHandler.getApplication());
+                }
+            }
+        }
+        return applicationImpl;
+    }
+
+    @Override
+    public void setApplication(Application app) {
+        applicationImpl = null;
+        mHandler.setApplication(app);
+    }
 }

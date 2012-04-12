@@ -1,4 +1,5 @@
 package org.jboss.portletbridge.test;
+
 import java.io.IOException;
 import java.security.Principal;
 import java.util.Arrays;
@@ -15,56 +16,55 @@ import javax.servlet.http.HttpServletRequestWrapper;
 
 public class FakeUserPrincipalFilter implements Filter {
 
-	private Principal fakePrincipal;
-	private List principalRoles;
+    private Principal fakePrincipal;
+    private List principalRoles;
 
-	public void destroy() {
-	}
+    public void destroy() {
+    }
 
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-			ServletException {
-		if (fakePrincipal != null && request instanceof HttpServletRequest) {
-			HttpServletRequest httpRequest = (HttpServletRequest) request;
-			HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(httpRequest) {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
+            ServletException {
+        if (fakePrincipal != null && request instanceof HttpServletRequest) {
+            HttpServletRequest httpRequest = (HttpServletRequest) request;
+            HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(httpRequest) {
 
-				public String getRemoteUser() {
-					return fakePrincipal.getName();
-				}
+                public String getRemoteUser() {
+                    return fakePrincipal.getName();
+                }
 
-				public Principal getUserPrincipal() {
-					return fakePrincipal;
-				}
+                public Principal getUserPrincipal() {
+                    return fakePrincipal;
+                }
 
-				public boolean isUserInRole(String roleName) {
-					return principalRoles != null && principalRoles.contains(roleName);
-				}
+                public boolean isUserInRole(String roleName) {
+                    return principalRoles != null && principalRoles.contains(roleName);
+                }
 
-			};
-			chain.doFilter(wrapper, response);
-		}
-		else {
-			chain.doFilter(request, response);
-		}
-	}
+            };
+            chain.doFilter(wrapper, response);
+        } else {
+            chain.doFilter(request, response);
+        }
+    }
 
-	public void init(final FilterConfig config) throws ServletException {
-		final String principalName = System.getProperty("org.apache.pluto.embedded.principalName");
-		final String principalRolesStr = System.getProperty("org.apache.pluto.embedded.principalRoles");
-		if (principalName != null) {
-			if(principalRolesStr != null) {
-				String[] roles = principalRolesStr.split(",");
-				principalRoles = Arrays.asList(roles);
-			}
-			fakePrincipal = new Principal() {
-				public String getName() {
-					return principalName;
-				}
+    public void init(final FilterConfig config) throws ServletException {
+        final String principalName = System.getProperty("org.apache.pluto.embedded.principalName");
+        final String principalRolesStr = System.getProperty("org.apache.pluto.embedded.principalRoles");
+        if (principalName != null) {
+            if (principalRolesStr != null) {
+                String[] roles = principalRolesStr.split(",");
+                principalRoles = Arrays.asList(roles);
+            }
+            fakePrincipal = new Principal() {
+                public String getName() {
+                    return principalName;
+                }
 
-				public String toString() {
-					return "PrincipalName: " + principalName + ", Roles: " + principalRoles;
-				}
-			};
-		}
-	}
+                public String toString() {
+                    return "PrincipalName: " + principalName + ", Roles: " + principalRoles;
+                }
+            };
+        }
+    }
 
 }

@@ -45,24 +45,23 @@ import javax.faces.context.PartialViewContextFactory;
  * Factory to vend the default <code>PartialViewContext</code> instance.
  * </p>
  */
-public class PortletPartialViewContextFactoryImpl extends
-		PartialViewContextFactory {
+public class PortletPartialViewContextFactoryImpl extends PartialViewContextFactory {
 
-	private final PartialViewContextFactory parent;
+    private final PartialViewContextFactory parent;
 
-	public PortletPartialViewContextFactoryImpl(PartialViewContextFactory parent) {
-		this.parent = parent;
-	}
+    public PortletPartialViewContextFactoryImpl(PartialViewContextFactory parent) {
+        this.parent = parent;
+    }
 
-	// ---------------------------------- Methods from PartialViewContextFactory
+    // ---------------------------------- Methods from PartialViewContextFactory
 
-	/**
-	 * @see PartialViewContextFactory#getPartialViewContext(javax.faces.context.FacesContext)
-	 */
-	public PartialViewContext getPartialViewContext(FacesContext context) {
+    /**
+     * @see PartialViewContextFactory#getPartialViewContext(javax.faces.context.FacesContext)
+     */
+    public PartialViewContext getPartialViewContext(FacesContext context) {
 
-		return new PortletPartialViewContextWrapper(context,parent.getPartialViewContext(context));
+        return new PortletPartialViewContextWrapper(context, parent.getPartialViewContext(context));
 
-	}
+    }
 
 }

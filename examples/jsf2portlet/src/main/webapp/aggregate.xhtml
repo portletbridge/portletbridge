@@ -37,33 +37,29 @@
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:ui="http://java.sun.com/jsf/facelets">
-<f:view contentType="text/html; charset=iso-8859-1"/>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets">
+<f:view contentType="text/html; charset=iso-8859-1" />
 <h:head>
     <title>Ajax Aggregation</title>
 </h:head>
 <h:body>
     <h:form id="form1" prependId="false">
-        <h:outputScript name="jsf.js" library="javax.faces" target="head"/>
-        <h:outputScript name="javascript/aggregate.js" target="head"/>
+        <h:outputScript name="jsf.js" library="javax.faces" target="head" />
+        <h:outputScript name="javascript/aggregate.js" target="head" />
 
-        Output: <h:outputText id="out1" value="#{echo.str}"/>
-        <br/>
-        Input: <h:inputText id="in2" value="#{echo.str}" autocomplete="off"
-                            onkeyup="aggregate('out1 in1', this)"/>
-        <br/>
+        Output: <h:outputText id="out1" value="#{echo.str}" />
+        <br />
+        Input: <h:inputText id="in2" value="#{echo.str}" autocomplete="off" onkeyup="aggregate('out1 in1', this)" />
+        <br />
         Status:
-        <br/>
-        <textarea id="status" rows="10" cols="50" readonly="readonly"/>
+        <br />
+        <textarea id="status" rows="10" cols="50" readonly="readonly" />
     </h:form>
-    <hr/>
+    <hr />
     <p>
-        <a href="http://weblogs.java.net/blog/driscoll/archive/2009/10/19/request-aggregation-jsf-2-ajax">
-            Blog discussing this example.
-        </a>
+        <a href="http://weblogs.java.net/blog/driscoll/archive/2009/10/19/request-aggregation-jsf-2-ajax"> Blog discussing
+            this example. </a>
     </p>
 </h:body>
 </html>

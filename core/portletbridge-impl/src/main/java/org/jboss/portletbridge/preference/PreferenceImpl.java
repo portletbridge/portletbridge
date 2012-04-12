@@ -32,60 +32,49 @@ import javax.portlet.faces.preference.Preference;
 /**
  * @author Wesley Hales
  */
-public class PreferenceImpl implements Preference
-{
-   private PortletPreferences portletPreferences;
-   private String preferenceKey = null;
-  
-   public PreferenceImpl(PortletPreferences preferences)
-   {
-    super();
-    portletPreferences = preferences;
-   }
+public class PreferenceImpl implements Preference {
+    private PortletPreferences portletPreferences;
+    private String preferenceKey = null;
 
-   public PreferenceImpl(PortletPreferences preferences, String name)
-   {
-    this(preferences);
-    preferenceKey = name;
-   }
+    public PreferenceImpl(PortletPreferences preferences) {
+        super();
+        portletPreferences = preferences;
+    }
 
-   public void setName(String name)
-   {
-      preferenceKey = name;
-   }
+    public PreferenceImpl(PortletPreferences preferences, String name) {
+        this(preferences);
+        preferenceKey = name;
+    }
 
-   public String getName()
-   {
-      return preferenceKey;
-   }
+    public void setName(String name) {
+        preferenceKey = name;
+    }
 
-   public void setValue(String value) throws ReadOnlyException
-   {
-      portletPreferences.setValue(preferenceKey, value);
-   }
+    public String getName() {
+        return preferenceKey;
+    }
 
-   public String getValue()
-   {
-      return portletPreferences.getValue(preferenceKey, null);
-   }
+    public void setValue(String value) throws ReadOnlyException {
+        portletPreferences.setValue(preferenceKey, value);
+    }
 
-   public void setValues(String[] values) throws ReadOnlyException
-   {
-      portletPreferences.setValues(preferenceKey, values);
-   }
+    public String getValue() {
+        return portletPreferences.getValue(preferenceKey, null);
+    }
 
-   public List<String> getValues()
-   {
-      return Arrays.asList(portletPreferences.getValues(preferenceKey, null));
-   }
+    public void setValues(String[] values) throws ReadOnlyException {
+        portletPreferences.setValues(preferenceKey, values);
+    }
 
-   public boolean isReadOnly()
-   {
-      return portletPreferences.isReadOnly(preferenceKey);
-   }
+    public List<String> getValues() {
+        return Arrays.asList(portletPreferences.getValues(preferenceKey, null));
+    }
 
-   public void reset() throws ReadOnlyException
-   {
-      portletPreferences.reset(preferenceKey);
-   }
+    public boolean isReadOnly() {
+        return portletPreferences.isReadOnly(preferenceKey);
+    }
+
+    public void reset() throws ReadOnlyException {
+        portletPreferences.reset(preferenceKey);
+    }
 }

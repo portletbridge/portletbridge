@@ -42,7 +42,7 @@ public class BridgeLoggerFactoryImpl extends BridgeLoggerFactory {
      */
     @Override
     public BridgeLogger getBridgeLogger(BridgeConfig config) throws FacesException {
-        //TODO Config for setting logger impl?  ie. log4j, slf4j, logback, jul
+        // TODO Config for setting logger impl? ie. log4j, slf4j, logback, jul
         return new JULLoggerImpl();
     }
 

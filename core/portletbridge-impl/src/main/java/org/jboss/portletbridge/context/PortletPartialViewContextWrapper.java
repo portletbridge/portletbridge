@@ -31,36 +31,35 @@ import javax.faces.context.PartialViewContextWrapper;
 
 public class PortletPartialViewContextWrapper extends PartialViewContextWrapper {
 
-	private final FacesContext ctx;
-	private final PartialViewContext parent;
-	private boolean responseInitialized = false;
+    private final FacesContext ctx;
+    private final PartialViewContext parent;
+    private boolean responseInitialized = false;
 
-	public PortletPartialViewContextWrapper(FacesContext ctx,
-			PartialViewContext parent) {
-		this.ctx = ctx;
-		this.parent = parent;
-	}
+    public PortletPartialViewContextWrapper(FacesContext ctx, PartialViewContext parent) {
+        this.ctx = ctx;
+        this.parent = parent;
+    }
 
-	@Override
-	public PartialResponseWriter getPartialResponseWriter() {
-		if (!responseInitialized) {
-			// In portal, content-type has to be set before getting response writer.
-			ExternalContext extContext = ctx.getExternalContext();
-			extContext.setResponseContentType("text/xml");
-			extContext.addResponseHeader("Cache-Control", "no-cache");
-			responseInitialized = true;
-		}
-		return super.getPartialResponseWriter();
-	}
+    @Override
+    public PartialResponseWriter getPartialResponseWriter() {
+        if (!responseInitialized) {
+            // In portal, content-type has to be set before getting response writer.
+            ExternalContext extContext = ctx.getExternalContext();
+            extContext.setResponseContentType("text/xml");
+            extContext.addResponseHeader("Cache-Control", "no-cache");
+            responseInitialized = true;
+        }
+        return super.getPartialResponseWriter();
+    }
 
-	@Override
-	public PartialViewContext getWrapped() {
-		return parent;
-	}
+    @Override
+    public PartialViewContext getWrapped() {
+        return parent;
+    }
 
-	@Override
-	public void setPartialRequest(boolean isPartialRequest) {
-		getWrapped().setPartialRequest(isPartialRequest);
-	}
+    @Override
+    public void setPartialRequest(boolean isPartialRequest) {
+        getWrapped().setPartialRequest(isPartialRequest);
+    }
 
 }

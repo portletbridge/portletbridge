@@ -44,7 +44,7 @@ import java.io.Serializable;
 @SessionScoped
 public class Count implements Serializable {
 
-    private static final long serialVersionUID = 6499154494910177344L;    
+    private static final long serialVersionUID = 6499154494910177344L;
 
     Integer count = 0;
 
@@ -52,7 +52,7 @@ public class Count implements Serializable {
         return count++;
     }
 
-    @SuppressWarnings({"UnusedDeclaration"})
+    @SuppressWarnings({ "UnusedDeclaration" })
     public void reset(ActionEvent ae) {
         count = 0;
     }

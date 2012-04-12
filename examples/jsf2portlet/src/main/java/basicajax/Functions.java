@@ -54,15 +54,13 @@ public class Functions {
 
     private static final Logger LOGGER = Logger.getLogger(Functions.class.getName());
 
-
     // ---------------------------------------------------------- Public Methods
-
 
     /**
      * <p>
      * Write the file content to the current ResponseWriter.
      * </p>
-     *
+     * 
      * @param ctx the <code>FacesContext</code> for the current request
      * @param file the file to display
      */
@@ -72,9 +70,7 @@ public class Functions {
         // PENDING - add logic to strip licence header
 
         ExternalContext extCtx = ctx.getExternalContext();
-        BufferedReader r =
-              new BufferedReader(
-                    new InputStreamReader(extCtx.getResourceAsStream(file)));
+        BufferedReader r = new BufferedReader(new InputStreamReader(extCtx.getResourceAsStream(file)));
         StringWriter w = new StringWriter();
         PrintWriter pw = new PrintWriter(w);
 
@@ -89,9 +85,7 @@ public class Functions {
             ctx.getResponseWriter().writeText(w.toString(), null);
         } catch (IOException ioe) {
             if (LOGGER.isLoggable(Level.SEVERE)) {
-                LOGGER.log(Level.SEVERE,
-                           ioe.toString(),
-                           ioe);
+                LOGGER.log(Level.SEVERE, ioe.toString(), ioe);
             }
         }
 

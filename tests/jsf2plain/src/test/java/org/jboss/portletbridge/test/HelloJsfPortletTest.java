@@ -23,36 +23,33 @@ import org.junit.runner.RunWith;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
-
 @RunWith(Arquillian.class)
 public class HelloJsfPortletTest extends PortalTestBase {
 
-	@Deployment(testable = false)
-	public static WebArchive createDeployment()
+    @Deployment(testable = false)
+    public static WebArchive createDeployment()
 
-	{
+    {
 
-		return TestDeployment.createDeployment()
-		.addAsWebResource("output.xhtml","home.xhtml")
-		.addAsWebResource("resources/stylesheet.css","resources/stylesheet.css");
-	}
+        return TestDeployment.createDeployment().addAsWebResource("output.xhtml", "home.xhtml")
+                .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css");
+    }
 
-	@Test
-	public void renderFacesPortlet()
-			throws Exception
+    @Test
+    public void renderFacesPortlet() throws Exception
 
-	{
+    {
 
-		HtmlPage body = getPortalPage();
-		HtmlElement element = body.getElementById("output");
-		assertNotNull("Check what page contains output element",element);
-		Assert.assertThat(
+        HtmlPage body = getPortalPage();
+        HtmlElement element = body.getElementById("output");
+        assertNotNull("Check what page contains output element", element);
+        Assert.assertThat(
 
-		"Verify that the portlet was deployed and returns the expected result",
+        "Verify that the portlet was deployed and returns the expected result",
 
-		element.asText(),containsString(Bean.HELLO_JSF_PORTLET));
-		List<HtmlElement> links = body.getElementsByTagName("link");
-		assertThat(links, contains(TestDeployment.htmlAttributeMatcher("href",containsString("stylesheet.css"))));
-	}
+        element.asText(), containsString(Bean.HELLO_JSF_PORTLET));
+        List<HtmlElement> links = body.getElementsByTagName("link");
+        assertThat(links, contains(TestDeployment.htmlAttributeMatcher("href", containsString("stylesheet.css"))));
+    }
 
 }

@@ -11,7 +11,7 @@ public class Capital implements Serializable {
     private static final long serialVersionUID = -1042449580199397136L;
 
     private static final String FILE_EXT = ".gif";
-    
+
     private String name;
     private String state;
     private String timeZone;

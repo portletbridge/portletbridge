@@ -18,80 +18,80 @@ import javax.servlet.http.HttpServletResponse;
 
 public class PlutoResourceFilter implements Filter {
 
-	private ServletContext servletContext;
+    private ServletContext servletContext;
 
-	private final static Calendar LAST_MODIFIED = Calendar.getInstance();
+    private final static Calendar LAST_MODIFIED = Calendar.getInstance();
 
-	public void destroy() {
-	}
+    public void destroy() {
+    }
 
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-			ServletException {
-		if (request instanceof HttpServletRequest && response instanceof HttpServletResponse) {
-			HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-			HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-			String resource = httpServletRequest.getServletPath();
-			if (resource == null) {
-				resource = httpServletRequest.getPathInfo();
-			}
-			URL resourceUrl = servletContext.getResource(resource);
-			if (resourceUrl == null) {
-				// Serve resource from classpath
-				resourceUrl = Thread.currentThread().getContextClassLoader().getResource(resource);
-				if (resourceUrl == null && resource.startsWith("/")) {
-					resourceUrl = Thread.currentThread().getContextClassLoader().getResource(resource.substring(1));
-				}
-				if(resourceUrl == null) {
-					chain.doFilter(request, response);
-				} else {
-					Calendar cal = Calendar.getInstance();
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
+            ServletException {
+        if (request instanceof HttpServletRequest && response instanceof HttpServletResponse) {
+            HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+            HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+            String resource = httpServletRequest.getServletPath();
+            if (resource == null) {
+                resource = httpServletRequest.getPathInfo();
+            }
+            URL resourceUrl = servletContext.getResource(resource);
+            if (resourceUrl == null) {
+                // Serve resource from classpath
+                resourceUrl = Thread.currentThread().getContextClassLoader().getResource(resource);
+                if (resourceUrl == null && resource.startsWith("/")) {
+                    resourceUrl = Thread.currentThread().getContextClassLoader().getResource(resource.substring(1));
+                }
+                if (resourceUrl == null) {
+                    chain.doFilter(request, response);
+                } else {
+                    Calendar cal = Calendar.getInstance();
 
-					// check for if-modified-since, prior to any other headers
-					long ifModifiedSince = 0;
-					try {
-						ifModifiedSince = httpServletRequest.getDateHeader("If-Modified-Since");
-					} catch (Exception e) {
+                    // check for if-modified-since, prior to any other headers
+                    long ifModifiedSince = 0;
+                    try {
+                        ifModifiedSince = httpServletRequest.getDateHeader("If-Modified-Since");
+                    } catch (Exception e) {
 
-					}
-					long lastModifiedMillis = LAST_MODIFIED.getTimeInMillis();
-					long now = cal.getTimeInMillis();
-					cal.add(Calendar.DAY_OF_MONTH, 1);
-					long expires = cal.getTimeInMillis();
+                    }
+                    long lastModifiedMillis = LAST_MODIFIED.getTimeInMillis();
+                    long now = cal.getTimeInMillis();
+                    cal.add(Calendar.DAY_OF_MONTH, 1);
+                    long expires = cal.getTimeInMillis();
 
-					if (ifModifiedSince > 0 && ifModifiedSince <= lastModifiedMillis) {
-						// not modified, content is not sent - only basic
-						// headers and status SC_NOT_MODIFIED
-						httpServletResponse.setDateHeader("Expires", expires);
-						httpServletResponse.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-					} else {
-						httpServletResponse.setDateHeader("Date", now);
-						httpServletResponse.setDateHeader("Expires", expires);
-						httpServletResponse.setDateHeader("Retry-After", expires);
-						httpServletResponse.setHeader("Cache-Control", "public");
-						httpServletResponse.setDateHeader("Last-Modified", lastModifiedMillis);
-						InputStream stream = resourceUrl.openStream();
-						OutputStream out = response.getOutputStream();
-						try {
-							int read = stream.read();
-							while (read != -1) {
-								out.write(read);
-								read = stream.read();
-							}
-						} finally {
-								stream.close();
-						}
-					}
-				}
-			} else {
-				chain.doFilter(request, response);
-			}
-		} else {
-			chain.doFilter(request, response);
-		}
-	}
+                    if (ifModifiedSince > 0 && ifModifiedSince <= lastModifiedMillis) {
+                        // not modified, content is not sent - only basic
+                        // headers and status SC_NOT_MODIFIED
+                        httpServletResponse.setDateHeader("Expires", expires);
+                        httpServletResponse.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+                    } else {
+                        httpServletResponse.setDateHeader("Date", now);
+                        httpServletResponse.setDateHeader("Expires", expires);
+                        httpServletResponse.setDateHeader("Retry-After", expires);
+                        httpServletResponse.setHeader("Cache-Control", "public");
+                        httpServletResponse.setDateHeader("Last-Modified", lastModifiedMillis);
+                        InputStream stream = resourceUrl.openStream();
+                        OutputStream out = response.getOutputStream();
+                        try {
+                            int read = stream.read();
+                            while (read != -1) {
+                                out.write(read);
+                                read = stream.read();
+                            }
+                        } finally {
+                            stream.close();
+                        }
+                    }
+                }
+            } else {
+                chain.doFilter(request, response);
+            }
+        } else {
+            chain.doFilter(request, response);
+        }
+    }
 
-	public void init(FilterConfig filterconfig) throws ServletException {
-		this.servletContext = filterconfig.getServletContext();
-	}
+    public void init(FilterConfig filterconfig) throws ServletException {
+        this.servletContext = filterconfig.getServletContext();
+    }
 
 }

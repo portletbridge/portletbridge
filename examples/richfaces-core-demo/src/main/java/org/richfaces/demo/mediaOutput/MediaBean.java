@@ -385,8 +385,8 @@ public class MediaBean {
 
                 int read = 0;
 
-                InputStream inflaterInputStream = new BufferedInputStream(new InflaterInputStream(
-                    new LimitedInputStream(inChannel), new Inflater(), 2048), BUFFER_SIZE);
+                InputStream inflaterInputStream = new BufferedInputStream(new InflaterInputStream(new LimitedInputStream(
+                        inChannel), new Inflater(), 2048), BUFFER_SIZE);
                 ByteArrayOutputStream baos = new ByteArrayOutputStream(sectionLength);
                 DeflaterOutputStream deflaterOutputStream = new DeflaterOutputStream(baos, new Deflater(), 2048);
 
@@ -455,8 +455,8 @@ public class MediaBean {
         colors = ((MediaData) data).getNewColors();
 
         ExternalContext extContext = FacesContext.getCurrentInstance().getExternalContext();
-        BufferedInputStream inStream = new BufferedInputStream(extContext
-            .getResourceAsStream(RICHFACES_MEDIA_OUTPUT_IMAGE_SOURCE), BUFFER_SIZE);
+        BufferedInputStream inStream = new BufferedInputStream(
+                extContext.getResourceAsStream(RICHFACES_MEDIA_OUTPUT_IMAGE_SOURCE), BUFFER_SIZE);
         try {
             // skip 8-bytes of header
             byte[] bs = new byte[8];

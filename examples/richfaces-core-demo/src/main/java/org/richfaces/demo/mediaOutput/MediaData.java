@@ -9,7 +9,7 @@ import javax.faces.bean.ViewScoped;
 @ViewScoped
 public class MediaData implements Serializable {
     private static final Color[] COLORS = { new Color(255, 0, 0), new Color(0, 0, 255), new Color(0, 255, 0),
-        new Color(255, 255, 0), new Color(0, 255, 255) };
+            new Color(255, 255, 0), new Color(0, 255, 255) };
     private static final long serialVersionUID = 1L;
     private int colorIndex1 = 0;
     private int colorIndex2 = 1;

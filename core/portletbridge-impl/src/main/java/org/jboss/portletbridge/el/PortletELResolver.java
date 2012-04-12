@@ -290,8 +290,10 @@ public class PortletELResolver extends ELResolver {
 
     private Map<String, String> getPreferencesValueMap(FacesContext context) {
         Map<String, String> m = new HashMap<String, String>();
-        Map<String, String[]> preferencesValuesMap = ((PortletRequest) context.getExternalContext().getRequest()).getPreferences().getMap();
-        for (Iterator<Entry<String, String[]>> entryIterator = preferencesValuesMap.entrySet().iterator(); entryIterator.hasNext();) {
+        Map<String, String[]> preferencesValuesMap = ((PortletRequest) context.getExternalContext().getRequest())
+                .getPreferences().getMap();
+        for (Iterator<Entry<String, String[]>> entryIterator = preferencesValuesMap.entrySet().iterator(); entryIterator
+                .hasNext();) {
             Map.Entry<String, String[]> entry = (Map.Entry<String, String[]>) entryIterator.next();
             String[] preferenceValues = (String[]) entry.getValue();
             if (null != preferenceValues && preferenceValues.length > 0) {

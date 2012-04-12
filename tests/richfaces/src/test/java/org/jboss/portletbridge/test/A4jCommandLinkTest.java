@@ -24,51 +24,47 @@ import com.gargoylesoftware.htmlunit.html.HtmlTextInput;
 //@RunWith(Arquillian.class)
 public class A4jCommandLinkTest extends PortalTestBase {
 
-	public static final String NEW_VALUE = "New Value";
+    public static final String NEW_VALUE = "New Value";
 
-	@Deployment(testable = false)
-	public static WebArchive createDeployment()
+    @Deployment(testable = false)
+    public static WebArchive createDeployment()
 
-	{
+    {
 
-		return TestDeployment.createDeployment()
-				.addAsWebResource("output.xhtml", "output.xhtml")
-				.addAsWebResource("a4jLink.xhtml", "home.xhtml");
-	}
+        return TestDeployment.createDeployment().addAsWebResource("output.xhtml", "output.xhtml")
+                .addAsWebResource("a4jLink.xhtml", "home.xhtml");
+    }
 
-	//@Test
-	public void renderFormPortlet() throws Exception
+    // @Test
+    public void renderFormPortlet() throws Exception
 
-	{
-		HtmlPage portalPage = getPortalPage();
+    {
+        HtmlPage portalPage = getPortalPage();
 
+        verifyOutput(portalPage, Bean.HELLO_JSF_PORTLET);
 
-		verifyOutput(portalPage, Bean.HELLO_JSF_PORTLET);
+        verifyInput(portalPage, Bean.HELLO_JSF_PORTLET);
 
-		verifyInput(portalPage, Bean.HELLO_JSF_PORTLET);
+        HtmlElement submit = getFirstChildById(portalPage, "submit");
 
-		HtmlElement submit = getFirstChildById(portalPage,"submit");
+        assertThat(submit.asText(), containsString("Ok"));
 
-		assertThat(submit.asText(), containsString("Ok"));
+        Iterable<HtmlElement> links = portalPage.getElementsByTagName("script");
+        assertThat(links,
+                Matchers.<HtmlElement> hasItem(TestDeployment.htmlAttributeMatcher("src", containsString("richfaces"))));
+    }
 
-		Iterable<HtmlElement> links = portalPage.getElementsByTagName("script");
-		assertThat(links, Matchers.<HtmlElement>hasItem(TestDeployment.htmlAttributeMatcher("src",containsString("richfaces"))));
-	}
-
-
-
-	//@Test
-	public void testSubmitAndRemainOnPage() throws Exception {
-		HtmlPage portalPage = getPortalPage();
-		HtmlPage responsePage = submitForm(portalPage,NEW_VALUE);
-		assertSame(portalPage, responsePage);
-		verifyInput(responsePage, NEW_VALUE);
-		verifyOutput(responsePage, NEW_VALUE);
-		// Re-render page
-		HtmlPage reRenderPage = portalPage;
-		verifyInput(reRenderPage, NEW_VALUE);
-		verifyOutput(reRenderPage, NEW_VALUE);
-	}
-
+    // @Test
+    public void testSubmitAndRemainOnPage() throws Exception {
+        HtmlPage portalPage = getPortalPage();
+        HtmlPage responsePage = submitForm(portalPage, NEW_VALUE);
+        assertSame(portalPage, responsePage);
+        verifyInput(responsePage, NEW_VALUE);
+        verifyOutput(responsePage, NEW_VALUE);
+        // Re-render page
+        HtmlPage reRenderPage = portalPage;
+        verifyInput(reRenderPage, NEW_VALUE);
+        verifyOutput(reRenderPage, NEW_VALUE);
+    }
 
 }

@@ -23,39 +23,37 @@
 package javax.portlet.faces;
 
 /**
- * Thrown when the bridge can't resolve the target view from the request and
- * the portlet hasn't set the PortletRequest attribute
+ * Thrown when the bridge can't resolve the target view from the request and the portlet hasn't set the PortletRequest attribute
  * <code>javax.portlet.faces.defaultViewId</code>.
  */
 public class BridgeDefaultViewNotSpecifiedException extends BridgeException {
 
-   private static final long serialVersionUID = 540438273186022660L;
+    private static final long serialVersionUID = 540438273186022660L;
 
-   public BridgeDefaultViewNotSpecifiedException() {
-      super();
-   }
+    public BridgeDefaultViewNotSpecifiedException() {
+        super();
+    }
 
-   /**
-    * @param message
-    */
-   public BridgeDefaultViewNotSpecifiedException(String message) {
-      super(message);
-   }
+    /**
+     * @param message
+     */
+    public BridgeDefaultViewNotSpecifiedException(String message) {
+        super(message);
+    }
 
-   /**
-    * @param cause
-    */
-   public BridgeDefaultViewNotSpecifiedException(Throwable cause) {
-      super(cause);
-   }
+    /**
+     * @param cause
+     */
+    public BridgeDefaultViewNotSpecifiedException(Throwable cause) {
+        super(cause);
+    }
 
-   /**
-    * @param message
-    * @param cause
-    */
-   public BridgeDefaultViewNotSpecifiedException(String message,
-         Throwable cause) {
-      super(message, cause);
-   }
+    /**
+     * @param message
+     * @param cause
+     */
+    public BridgeDefaultViewNotSpecifiedException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
 }

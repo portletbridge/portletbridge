@@ -27,7 +27,7 @@ import org.jboss.portletbridge.bridge.config.BridgeConfig;
 
 /**
  * This abstract class provides a contract for defining a factory that knows how to create instances of type
- * {@link BridgeConfig}. 
+ * {@link BridgeConfig}.
  */
 public abstract class BridgeConfigFactory extends BridgeFactory<BridgeConfigFactory> {
 

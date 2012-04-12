@@ -45,16 +45,15 @@ import java.io.Serializable;
 @SessionScoped
 public class HideNShow implements Serializable {
 
-
     private static final long serialVersionUID = -7299773608161438216L;
 
     Boolean render = false;
-    
+
     public Boolean getRender() {
         return render;
     }
 
-    @SuppressWarnings({"UnusedDeclaration"})
+    @SuppressWarnings({ "UnusedDeclaration" })
     public void toggle(ActionEvent ae) {
         render = !render;
     }

@@ -44,11 +44,9 @@ import java.io.Serializable;
 @SessionScoped
 public class Echo implements Serializable {
 
-
     private static final long serialVersionUID = 8301865434469950945L;
 
     String str = "hello";
-    
 
     public String getStr() {
         return str;
@@ -58,7 +56,7 @@ public class Echo implements Serializable {
         this.str = str;
     }
 
-    @SuppressWarnings({"UnusedDeclaration"})
+    @SuppressWarnings({ "UnusedDeclaration" })
     public void reset(ActionEvent ae) {
         str = "";
     }

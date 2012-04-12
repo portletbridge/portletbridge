@@ -1,30 +1,27 @@
-<f:view id="ajaxEcho" xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:ui="http://java.sun.com/jsf/facelets"
-        xmlns:f="http://java.sun.com/jsf/core"
-        xmlns:h="http://java.sun.com/jsf/html"
-   >
-   <h:head/>
-   <h:body>
-      <h2>JSF 2 portlet</h2>
+<f:view id="ajaxEcho" xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html">
+    <h:head />
+    <h:body>
+        <h2>JSF 2 portlet</h2>
 
-      <p>Simple ajax echo example.</p>
-      <h:form id="form1">
-         Output: <h:outputText id="out1" value="#{myBean.str}"/>
-         <br/>
+        <p>Simple ajax echo example.</p>
+        <h:form id="form1">
+         Output: <h:outputText id="out1" value="#{myBean.str}" />
+            <br />
          Input: <h:inputText id="in1" autocomplete="off" value="#{myBean.str}">
-                   <f:ajax render="out1"/>
-                </h:inputText>
-         <br/>
-         <!-- A no-op button, just to lose the focus from "in1" -->
-         <h:commandButton id="button1" value="Echo" type="button"/>
-         <br/>
-         <!-- Resets the string, refreshes the form, but not the page -->
-         <h:commandButton id="reset" value="reset" actionListener="#{myBean.reset}">
-            <f:ajax render="@form"/>
-         </h:commandButton>
-         <!-- Reloads the page, doesn't reset the string -->
-         <h:commandButton id="reload" value="reload"/>
-         <h:messages/>
-      </h:form>
-   </h:body>
+                <f:ajax render="out1" />
+            </h:inputText>
+            <br />
+            <!-- A no-op button, just to lose the focus from "in1" -->
+            <h:commandButton id="button1" value="Echo" type="button" />
+            <br />
+            <!-- Resets the string, refreshes the form, but not the page -->
+            <h:commandButton id="reset" value="reset" actionListener="#{myBean.reset}">
+                <f:ajax render="@form" />
+            </h:commandButton>
+            <!-- Reloads the page, doesn't reset the string -->
+            <h:commandButton id="reload" value="reload" />
+            <h:messages />
+        </h:form>
+    </h:body>
 </f:view>

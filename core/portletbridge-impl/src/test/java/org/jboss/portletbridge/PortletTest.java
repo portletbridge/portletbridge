@@ -27,25 +27,20 @@ import junit.framework.TestCase;
 /**
  * Unit test for simple App.
  */
-public class PortletTest 
-    extends TestCase
-{
+public class PortletTest extends TestCase {
     /**
      * Create the test case
-     *
+     * 
      * @param testName name of the test case
      */
-    public PortletTest( String testName )
-    {
-        super( testName );
+    public PortletTest(String testName) {
+        super(testName);
     }
-
 
     /**
      * Rigourous Test :-)
      */
-    public void testApp()
-    {
-        assertTrue( true );
+    public void testApp() {
+        assertTrue(true);
     }
 }

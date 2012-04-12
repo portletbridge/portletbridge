@@ -257,7 +257,7 @@ public class PortletViewHandler extends ViewHandlerWrapper {
 
     }
 
-    //TODO Replace with VDL overriden classes?
+    // TODO Replace with VDL overriden classes?
     private void doRenderView(FacesContext context, UIViewRoot viewToRender) throws IOException {
         ExternalContext externalContext = context.getExternalContext();
         MimeResponse renderResponse = (MimeResponse) externalContext.getResponse();

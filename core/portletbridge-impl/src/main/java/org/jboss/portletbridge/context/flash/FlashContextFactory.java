@@ -30,7 +30,7 @@ import javax.faces.context.Flash;
 public class FlashContextFactory {
 
     public static Flash getFlashForBridge(ExternalContext extContext) {
-        //TODO Support retrieval of Mojarra Flash?
+        // TODO Support retrieval of Mojarra Flash?
         return new PortletFlashDefault();
     }
 }

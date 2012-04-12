@@ -4,14 +4,8 @@
     xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
     version="2.5">
 
-    <display-name>Archetype Created Web Application</display-name><!--
+    <display-name>Archetype Created Web Application</display-name>
     <context-param>
-        <param-name>org.jboss.jbossfaces.WAR_BUNDLES_JSF_IMPL
-        </param-name>
-        <param-value>true</param-value>
-    </context-param>
-
-    --><context-param>
         <param-name>javax.portlet.faces.RENDER_POLICY</param-name>
         <param-value>ALWAYS_DELEGATE</param-value>
     </context-param>

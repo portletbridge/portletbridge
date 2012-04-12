@@ -53,7 +53,8 @@ public class RedirectBean {
 
         FacesContext ctx = FacesContext.getCurrentInstance();
         ExternalContext extContext = ctx.getExternalContext();
-        String url = extContext.encodeActionURL(ctx.getApplication().getViewHandler().getActionURL(ctx, "/redirecttarget1.xhtml"));
+        String url = extContext.encodeActionURL(ctx.getApplication().getViewHandler()
+                .getActionURL(ctx, "/redirecttarget1.xhtml"));
         try {
             extContext.redirect(url);
         } catch (IOException ioe) {
@@ -66,8 +67,8 @@ public class RedirectBean {
 
         FacesContext ctx = FacesContext.getCurrentInstance();
         ExternalContext extContext = ctx.getExternalContext();
-        ViewHandler viewHandler =  ctx.getApplication().getViewHandler();
-                
+        ViewHandler viewHandler = ctx.getApplication().getViewHandler();
+
         String newurl = (String) evt.getNewValue();
 
         String url = viewHandler.getActionURL(ctx, newurl);

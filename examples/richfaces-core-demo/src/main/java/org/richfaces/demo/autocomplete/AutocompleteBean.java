@@ -43,7 +43,7 @@ public class AutocompleteBean {
             while (iterator.hasNext()) {
                 Capital elem = ((Capital) iterator.next());
                 if ((elem.getState() != null && elem.getState().toLowerCase().indexOf(prefix.toLowerCase()) == 0)
-                    || "".equals(prefix)) {
+                        || "".equals(prefix)) {
                     result.add(elem.getState());
                 }
             }

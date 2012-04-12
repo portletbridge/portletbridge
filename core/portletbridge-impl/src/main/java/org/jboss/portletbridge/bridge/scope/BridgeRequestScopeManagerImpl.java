@@ -69,7 +69,9 @@ public class BridgeRequestScopeManagerImpl implements BridgeRequestScopeManager 
             String portletMode) {
         BridgeRequestScope scope = scopeFactory.getBridgeRequestScope(portletName, sessionId, viewId, portletMode);
         this.bridgeRequestScopeCache.put(scope.getId(), scope);
-        this.scopeIdMap.put(BridgeRequestScopeUtil.generateBridgeRequestScopeIdPrefix(portletName, sessionId, viewId, portletMode), scope.getId());
+        this.scopeIdMap.put(
+                BridgeRequestScopeUtil.generateBridgeRequestScopeIdPrefix(portletName, sessionId, viewId, portletMode),
+                scope.getId());
         return scope;
     }
 
@@ -83,7 +85,8 @@ public class BridgeRequestScopeManagerImpl implements BridgeRequestScopeManager 
     }
 
     /**
-     * @see org.jboss.portletbridge.bridge.scope.BridgeRequestScopeManager#getRequestScopeById(org.jboss.portletbridge.bridge.context.BridgeContext, java.lang.String)
+     * @see org.jboss.portletbridge.bridge.scope.BridgeRequestScopeManager#getRequestScopeById(org.jboss.portletbridge.bridge.context.BridgeContext,
+     *      java.lang.String)
      */
     public BridgeRequestScope getRequestScopeById(BridgeContext ctx, String id) {
         return this.bridgeRequestScopeCache.get(id);
@@ -95,7 +98,8 @@ public class BridgeRequestScopeManagerImpl implements BridgeRequestScopeManager 
      */
     public BridgeRequestScope getRequestScope(BridgeContext ctx, String portletName, String sessionId, String viewId,
             String portletMode) {
-        String idPrefix = BridgeRequestScopeUtil.generateBridgeRequestScopeIdPrefix(portletName, sessionId, viewId, portletMode);
+        String idPrefix = BridgeRequestScopeUtil
+                .generateBridgeRequestScopeIdPrefix(portletName, sessionId, viewId, portletMode);
         String scopeKey = this.scopeIdMap.get(idPrefix);
         BridgeRequestScope scope = null;
         if (null != scopeKey) {
@@ -158,7 +162,8 @@ public class BridgeRequestScopeManagerImpl implements BridgeRequestScopeManager 
      */
     public BridgeRequestScope removeRequestScope(BridgeContext ctx, String portletName, String sessionId, String viewId,
             String portletMode) {
-        String idPrefix = BridgeRequestScopeUtil.generateBridgeRequestScopeIdPrefix(portletName, sessionId, viewId, portletMode);
+        String idPrefix = BridgeRequestScopeUtil
+                .generateBridgeRequestScopeIdPrefix(portletName, sessionId, viewId, portletMode);
         String scopeKey = this.scopeIdMap.get(idPrefix);
         BridgeRequestScope scope = null;
         if (null != scopeKey) {

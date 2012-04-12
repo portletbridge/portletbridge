@@ -1,4 +1,5 @@
 package org.jboss.portletbridge.example;
+
 /******************************************************************************
  * $Id$
  * JBoss, a division of Red Hat                                               *
@@ -25,14 +26,14 @@ package org.jboss.portletbridge.example;
 
 /**
  * @author asmirnov
- *
+ * 
  */
 public interface ErrorGenerator {
 
-	public String viewExpired();
+    public String viewExpired();
 
-	public String facesError();
+    public String facesError();
 
-	public String customException() throws ApplicationException;
+    public String customException() throws ApplicationException;
 
 }

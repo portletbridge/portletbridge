@@ -26,22 +26,22 @@ import java.util.Enumeration;
 import java.util.Iterator;
 
 class EnumerationIterator<T> implements Iterator<T> {
-	@SuppressWarnings("unchecked")
-	public EnumerationIterator(Enumeration<?> enumeration) {
-		this.enumeration = (Enumeration<T>) enumeration;
-	}
+    @SuppressWarnings("unchecked")
+    public EnumerationIterator(Enumeration<?> enumeration) {
+        this.enumeration = (Enumeration<T>) enumeration;
+    }
 
-	private Enumeration<T> enumeration;
+    private Enumeration<T> enumeration;
 
-	public boolean hasNext() {
-		return this.enumeration.hasMoreElements();
-	}
+    public boolean hasNext() {
+        return this.enumeration.hasMoreElements();
+    }
 
-	public T next() {
-		return this.enumeration.nextElement();
-	}
+    public T next() {
+        return this.enumeration.nextElement();
+    }
 
-	public void remove() {
-		throw new UnsupportedOperationException();
-	}
+    public void remove() {
+        throw new UnsupportedOperationException();
+    }
 }

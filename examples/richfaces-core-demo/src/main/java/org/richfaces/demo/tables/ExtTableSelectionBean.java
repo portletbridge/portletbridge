@@ -15,20 +15,20 @@ import org.richfaces.demo.tables.model.cars.InventoryItem;
 
 @ManagedBean
 @SessionScoped
-public class ExtTableSelectionBean implements Serializable{
+public class ExtTableSelectionBean implements Serializable {
     private Collection<Object> selection;
     @ManagedProperty(value = "#{carsBean.allInventoryItems}")
     private List<InventoryItem> inventoryItems;
     private List<InventoryItem> selectionItems = new ArrayList<InventoryItem>();
-    
-    public void selectionListener(AjaxBehaviorEvent event){
-        UIExtendedDataTable dataTable = (UIExtendedDataTable)event.getComponent();
+
+    public void selectionListener(AjaxBehaviorEvent event) {
+        UIExtendedDataTable dataTable = (UIExtendedDataTable) event.getComponent();
         Object originalKey = dataTable.getRowKey();
         selectionItems.clear();
-        for (Object selectionKey: selection) {
+        for (Object selectionKey : selection) {
             dataTable.setRowKey(selectionKey);
-            if (dataTable.isRowAvailable()){
-                selectionItems.add((InventoryItem)dataTable.getRowData());
+            if (dataTable.isRowAvailable()) {
+                selectionItems.add((InventoryItem) dataTable.getRowData());
             }
         }
         dataTable.setRowKey(originalKey);

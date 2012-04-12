@@ -16,80 +16,68 @@ import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.XMLReader;
 
 final class MockXmlReader implements XMLReader {
-	
-	ContentHandler contentHandler;
-	
-	public ContentHandler getContentHandler() {
-		return contentHandler;
-	}
 
-	public DTDHandler getDTDHandler() {
+    ContentHandler contentHandler;
 
-		return null;
-	}
+    public ContentHandler getContentHandler() {
+        return contentHandler;
+    }
 
-	public EntityResolver getEntityResolver() {
+    public DTDHandler getDTDHandler() {
 
-		return null;
-	}
+        return null;
+    }
 
-	public ErrorHandler getErrorHandler() {
+    public EntityResolver getEntityResolver() {
 
-		return null;
-	}
+        return null;
+    }
 
-	public boolean getFeature(String name)
-			throws SAXNotRecognizedException, SAXNotSupportedException {
+    public ErrorHandler getErrorHandler() {
 
-		return false;
-	}
+        return null;
+    }
 
-	public Object getProperty(String name)
-			throws SAXNotRecognizedException, SAXNotSupportedException {
+    public boolean getFeature(String name) throws SAXNotRecognizedException, SAXNotSupportedException {
 
-		return null;
-	}
+        return false;
+    }
 
-	public void parse(InputSource input) throws IOException,
-			SAXException {
+    public Object getProperty(String name) throws SAXNotRecognizedException, SAXNotSupportedException {
 
-		
-	}
+        return null;
+    }
 
-	public void parse(String systemId) throws IOException, SAXException {
+    public void parse(InputSource input) throws IOException, SAXException {
 
-		
-	}
+    }
 
-	public void setContentHandler(ContentHandler handler) {
-		contentHandler = handler;
-		
-	}
+    public void parse(String systemId) throws IOException, SAXException {
 
-	public void setDTDHandler(DTDHandler handler) {
+    }
 
-		
-	}
+    public void setContentHandler(ContentHandler handler) {
+        contentHandler = handler;
 
-	public void setEntityResolver(EntityResolver resolver) {
+    }
 
-		
-	}
+    public void setDTDHandler(DTDHandler handler) {
 
-	public void setErrorHandler(ErrorHandler handler) {
+    }
 
-		
-	}
+    public void setEntityResolver(EntityResolver resolver) {
 
-	public void setFeature(String name, boolean value)
-			throws SAXNotRecognizedException, SAXNotSupportedException {
+    }
 
-		
-	}
+    public void setErrorHandler(ErrorHandler handler) {
 
-	public void setProperty(String name, Object value)
-			throws SAXNotRecognizedException, SAXNotSupportedException {
+    }
 
-		
-	}
+    public void setFeature(String name, boolean value) throws SAXNotRecognizedException, SAXNotSupportedException {
+
+    }
+
+    public void setProperty(String name, Object value) throws SAXNotRecognizedException, SAXNotSupportedException {
+
+    }
 }

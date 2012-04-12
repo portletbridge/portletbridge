@@ -1,4 +1,5 @@
 package org.jboss.portletbridge.example;
+
 import javax.faces.FacesException;
 import javax.faces.application.ViewExpiredException;
 
@@ -28,29 +29,35 @@ import javax.faces.application.ViewExpiredException;
 
 /**
  * @author asmirnov
- *
+ * 
  */
 public class ErrorGeneratorBean implements ErrorGenerator {
 
-	/* (non-Javadoc)
-	 * @see ErrorGenerator#customException()
-	 */
-	public String customException() throws ApplicationException {
-		throw new ApplicationException("Application specific error");
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see ErrorGenerator#customException()
+     */
+    public String customException() throws ApplicationException {
+        throw new ApplicationException("Application specific error");
+    }
 
-	/* (non-Javadoc)
-	 * @see ErrorGenerator#facesError()
-	 */
-	public String facesError() {
-		throw new FacesException("simulated JSF error");
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see ErrorGenerator#facesError()
+     */
+    public String facesError() {
+        throw new FacesException("simulated JSF error");
+    }
 
-	/* (non-Javadoc)
-	 * @see ErrorGenerator#viewExpired()
-	 */
-	public String viewExpired() {
-		throw new ViewExpiredException("Simulated view expiration","/pages/main.xhtml");
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see ErrorGenerator#viewExpired()
+     */
+    public String viewExpired() {
+        throw new ViewExpiredException("Simulated view expiration", "/pages/main.xhtml");
+    }
 
 }

@@ -8,29 +8,29 @@ import org.xml.sax.SAXException;
 public class ParsingException extends SAXException {
     private static final long serialVersionUID = -5290968254626492196L;
 
-	public ParsingException() {
-	}
+    public ParsingException() {
+    }
 
-	/**
-	 * @param message
-	 */
-	public ParsingException(String message) {
-		super(message);
-	}
+    /**
+     * @param message
+     */
+    public ParsingException(String message) {
+        super(message);
+    }
 
-	/**
-	 * @param cause
-	 */
-	public ParsingException(Exception cause) {
-		super(cause);
-	}
+    /**
+     * @param cause
+     */
+    public ParsingException(Exception cause) {
+        super(cause);
+    }
 
-	/**
-	 * @param message
-	 * @param cause
-	 */
-	public ParsingException(String message, Exception cause) {
-		super(message, cause);
-	}
+    /**
+     * @param message
+     * @param cause
+     */
+    public ParsingException(String message, Exception cause) {
+        super(message, cause);
+    }
 
 }

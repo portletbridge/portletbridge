@@ -1,46 +1,33 @@
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:s="http://jboss.com/products/seam/taglib"
-                xmlns:ui="http://java.sun.com/jsf/facelets"
-                xmlns:f="http://java.sun.com/jsf/core"
-                xmlns:h="http://java.sun.com/jsf/html">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html">
 
     <h1>Error</h1>
 
 
     <p>Something bad happened :-(</p>
-    
-            <table>
-                <tr>
-                    <td>Response status:</td>
-                    <td>
-                        <h:outputText value="#{requestScope['javax.servlet.error.status_code']}"/>
-                    </td>
-                    <td>Error message:</td>
-                    <td>
-                        <h:outputText value="#{requestScope['javax.servlet.error.message']}"/>
-                    </td>
-                    <td>Original request URI:</td>
-                    <td>
-                        <h:outputText value="#{requestScope['javax.servlet.error.request_uri']}"/>
-                    </td>
-                    </tr>
-                    <tr>
-                    <td>Servlet name:</td>
-                    <td>
-                        <h:outputText value="#{requestScope['javax.servlet.error.servlet_name']}"/>
-                    </td>
-                    <td>Exception:</td>
-                    <td>
-                        <h:outputText value="#{requestScope['javax.servlet.error.exception']}"/>
-                    </td>
-                </tr>
-            </table>
-    <h:messages styleClass="message"/>
-          <h:outputLink value="#{facesContext.externalContext.requestContextPath}/pages/main.xhtml">
-                <f:param name="javax.portlet.faces.ViewLink" value="true"/>
+
+    <table>
+        <tr>
+            <td>Response status:</td>
+            <td><h:outputText value="#{requestScope['javax.servlet.error.status_code']}" /></td>
+            <td>Error message:</td>
+            <td><h:outputText value="#{requestScope['javax.servlet.error.message']}" /></td>
+            <td>Original request URI:</td>
+            <td><h:outputText value="#{requestScope['javax.servlet.error.request_uri']}" /></td>
+        </tr>
+        <tr>
+            <td>Servlet name:</td>
+            <td><h:outputText value="#{requestScope['javax.servlet.error.servlet_name']}" /></td>
+            <td>Exception:</td>
+            <td><h:outputText value="#{requestScope['javax.servlet.error.exception']}" /></td>
+        </tr>
+    </table>
+    <h:messages styleClass="message" />
+    <h:outputLink value="#{facesContext.externalContext.requestContextPath}/pages/main.xhtml">
+        <f:param name="javax.portlet.faces.ViewLink" value="true" />
                 Go to main page
           </h:outputLink>
-        
+
 </ui:composition>

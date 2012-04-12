@@ -40,7 +40,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.AjaxBehaviorEvent;
 
-@ManagedBean(name="listenBean")
+@ManagedBean(name = "listenBean")
 @ViewScoped
 public class ListenerBean {
 

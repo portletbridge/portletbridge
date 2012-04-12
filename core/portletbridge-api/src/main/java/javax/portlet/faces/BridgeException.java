@@ -25,38 +25,37 @@ package javax.portlet.faces;
 import javax.faces.FacesException;
 
 /**
- * Generic exception thrown when the bridge encounters an unexpected error.  The
- * message returned in this exeception should contain the details of the specific
- * problem.
+ * Generic exception thrown when the bridge encounters an unexpected error. The message returned in this exeception should
+ * contain the details of the specific problem.
  */
 public class BridgeException extends FacesException {
 
-   private static final long serialVersionUID = 6758659847475864393L;
+    private static final long serialVersionUID = 6758659847475864393L;
 
-   public BridgeException() {
-      super();
-   }
+    public BridgeException() {
+        super();
+    }
 
-   /**
-    * @param message
-    */
-   public BridgeException(String message) {
-      super(message);
-   }
+    /**
+     * @param message
+     */
+    public BridgeException(String message) {
+        super(message);
+    }
 
-   /**
-    * @param cause
-    */
-   public BridgeException(Throwable cause) {
-      super(cause);
-   }
+    /**
+     * @param cause
+     */
+    public BridgeException(Throwable cause) {
+        super(cause);
+    }
 
-   /**
-    * @param message
-    * @param cause
-    */
-   public BridgeException(String message, Throwable cause) {
-      super(message, cause);
-   }
+    /**
+     * @param message
+     * @param cause
+     */
+    public BridgeException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
 }

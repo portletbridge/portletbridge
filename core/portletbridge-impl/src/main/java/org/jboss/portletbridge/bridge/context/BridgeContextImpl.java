@@ -520,7 +520,7 @@ public class BridgeContextImpl extends BridgeContext implements ELContextListene
         if (null != facesContext) {
             request = (PortletRequest) facesContext.getExternalContext().getRequest();
         }
-        
+
         if (null == request) {
             request = getPortletRequest();
             if (null == request) {

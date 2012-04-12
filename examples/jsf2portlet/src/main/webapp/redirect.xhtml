@@ -38,11 +38,9 @@
 <!DOCTYPE html
       PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:ui="http://java.sun.com/jsf/facelets">
-<f:view contentType="text/html; charset=iso-8859-1"/>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets">
+<f:view contentType="text/html; charset=iso-8859-1" />
 <h:head>
     <title>Ajax Redirect</title>
 </h:head>
@@ -51,10 +49,10 @@
     <h:form id="form">
         <h:selectOneMenu valueChangeListener="#{redirectBean.redirectPage}">
             <f:selectItem itemLabel="Pick One" noSelectionOption="true" />
-            <f:selectItem itemValue="/redirecttarget1.xhtml" itemLabel="Page 1"/>
-            <f:selectItem itemValue="/redirecttarget2.xhtml" itemLabel="Page 2"/>
-            <f:selectItem itemValue="/redirecttarget3.xhtml" itemLabel="Page 3"/>
-            <f:ajax/>
+            <f:selectItem itemValue="/redirecttarget1.xhtml" itemLabel="Page 1" />
+            <f:selectItem itemValue="/redirecttarget2.xhtml" itemLabel="Page 2" />
+            <f:selectItem itemValue="/redirecttarget3.xhtml" itemLabel="Page 3" />
+            <f:ajax />
         </h:selectOneMenu>
     </h:form>
 </h:body>

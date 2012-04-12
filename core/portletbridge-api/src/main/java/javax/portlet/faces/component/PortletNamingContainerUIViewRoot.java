@@ -31,75 +31,66 @@ import javax.faces.context.FacesContext;
 import javax.portlet.faces.Bridge;
 import javax.portlet.faces.annotation.PortletNamingContainer;
 
-
 /**
- * <code>UIViewRoot</code> that implements portlet specific <code>NamingContainer</code>
- * that ensures the consumer's unique portlet Id is encoded in all tree components.
- * The class is annotated by <code>javax.portlet.faces.annotation.PortletNamingContainer</code>
- * allowing the bridge to recognize that this specific <code>UIViewRoot</code>
- * implements the behavior.
+ * <code>UIViewRoot</code> that implements portlet specific <code>NamingContainer</code> that ensures the consumer's unique
+ * portlet Id is encoded in all tree components. The class is annotated by
+ * <code>javax.portlet.faces.annotation.PortletNamingContainer</code> allowing the bridge to recognize that this specific
+ * <code>UIViewRoot</code> implements the behavior.
  */
 @PortletNamingContainer
-public class PortletNamingContainerUIViewRoot extends UIViewRoot implements Serializable, NamingContainer
-{
+public class PortletNamingContainerUIViewRoot extends UIViewRoot implements Serializable, NamingContainer {
     private static final long serialVersionUID = -690876000289020800L;
 
     private static final String NAMESPACE_PREFIX = "pb";
 
-	public PortletNamingContainerUIViewRoot() {
-		super();
-	}
+    public PortletNamingContainerUIViewRoot() {
+        super();
+    }
 
-	/**
-	 * Static method that implements NamingContainer semantics. Ensures that the
-	 * returned identifier contains the consumer (portal) provided unique
-	 * portlet id. This ensures that those components in this NamingContainer
-	 * generate ids which will not collide in the consumer page.
-	 * <p>
-	 * This method is provided for existing <code>UIViewRoot</code>
-	 * implementations that prefer not to subclass
-	 * <code>PortletNamingContainerUIViewRoot</code>
-	 */
-	private static String convertClientId(FacesContext context,
-			String additionalId) {
-		ExternalContext ec = context.getExternalContext();
-		String namespace = ec.encodeNamespace("");
+    /**
+     * Static method that implements NamingContainer semantics. Ensures that the returned identifier contains the consumer
+     * (portal) provided unique portlet id. This ensures that those components in this NamingContainer generate ids which will
+     * not collide in the consumer page.
+     * <p>
+     * This method is provided for existing <code>UIViewRoot</code> implementations that prefer not to subclass
+     * <code>PortletNamingContainerUIViewRoot</code>
+     */
+    private static String convertClientId(FacesContext context, String additionalId) {
+        ExternalContext ec = context.getExternalContext();
+        String namespace = ec.encodeNamespace("");
 
-		/*
-		 * In servlet world encodeNamespace does nothing -- so if we get back
-		 * what we sent in then do not perturn the NamingContainer Id
-		 * 
-		 * The PREFIX was added for LifeRay compatibility
-		 */
-		if (namespace.length() > 0) {
-			if (additionalId != null) {
-				return NAMESPACE_PREFIX + namespace + additionalId;
-			} else {
-				return NAMESPACE_PREFIX + namespace;
-			}
-		} else {
-			return additionalId;
-		}
-	}
+        /*
+         * In servlet world encodeNamespace does nothing -- so if we get back what we sent in then do not perturn the
+         * NamingContainer Id
+         * 
+         * The PREFIX was added for LifeRay compatibility
+         */
+        if (namespace.length() > 0) {
+            if (additionalId != null) {
+                return NAMESPACE_PREFIX + namespace + additionalId;
+            } else {
+                return NAMESPACE_PREFIX + namespace;
+            }
+        } else {
+            return additionalId;
+        }
+    }
 
-	/**
-	 * Implements NamingContainer semantics. Ensures that the returned
-	 * identifier contains the consumer (portal) provided unique portlet id.
-	 * This ensures that those components in this NamingContainer generate ids
-	 * which will not collide in the consumer page. Implementation merely calls
-	 * the static form of this method.
-	 */
+    /**
+     * Implements NamingContainer semantics. Ensures that the returned identifier contains the consumer (portal) provided unique
+     * portlet id. This ensures that those components in this NamingContainer generate ids which will not collide in the
+     * consumer page. Implementation merely calls the static form of this method.
+     */
 
-	@Override
-	public String getContainerClientId(FacesContext context) {
-		ExternalContext externalContext = context.getExternalContext();
-		if (externalContext.getRequestMap().containsKey(
-				Bridge.PORTLET_LIFECYCLE_PHASE)) {
-			String rootId = getId();
-			if (null == rootId || !rootId.startsWith(NAMESPACE_PREFIX)) {
-				setId(convertClientId(context, rootId));
-			}
-		}
-		return super.getContainerClientId(context);
-	}
+    @Override
+    public String getContainerClientId(FacesContext context) {
+        ExternalContext externalContext = context.getExternalContext();
+        if (externalContext.getRequestMap().containsKey(Bridge.PORTLET_LIFECYCLE_PHASE)) {
+            String rootId = getId();
+            if (null == rootId || !rootId.startsWith(NAMESPACE_PREFIX)) {
+                setId(convertClientId(context, rootId));
+            }
+        }
+        return super.getContainerClientId(context);
+    }
 }

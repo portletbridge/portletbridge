@@ -26,98 +26,108 @@ import junit.framework.TestCase;
 
 /**
  * @author asmirnov
- *
+ * 
  */
 public class PortalActionUrlTest extends TestCase {
 
-   /**
-    * @param name
-    */
-   public PortalActionUrlTest(String name) {
-      super(name);
-   }
+    /**
+     * @param name
+     */
+    public PortalActionUrlTest(String name) {
+        super(name);
+    }
 
-   /* (non-Javadoc)
-    * @see junit.framework.TestCase#setUp()
-    */
-   protected void setUp() throws Exception {
-      super.setUp();
-   }
+    /*
+     * (non-Javadoc)
+     * 
+     * @see junit.framework.TestCase#setUp()
+     */
+    protected void setUp() throws Exception {
+        super.setUp();
+    }
 
-   /* (non-Javadoc)
-    * @see junit.framework.TestCase#tearDown()
-    */
-   protected void tearDown() throws Exception {
-      super.tearDown();
-   }
+    /*
+     * (non-Javadoc)
+     * 
+     * @see junit.framework.TestCase#tearDown()
+     */
+    protected void tearDown() throws Exception {
+        super.tearDown();
+    }
 
-   public void testActionUrl() throws Exception {
-      PortalActionURL url = new PortalActionURL("ftp://foo.bar:90/some/path/index.jsf?a=b&cd=ef");
-      assertEquals("ftp:", url.getProtocol());
-      assertEquals("//foo.bar", url.getHost());
-      assertEquals(90, url.getPort());
-      assertEquals("/some/path/index.jsf", url.getPath());
-      assertEquals("a=b&cd=ef", url.getQueryString());
-   }
-   public void testActionUrl1() throws Exception {
-      PortalActionURL url = new PortalActionURL("//foo.bar:90/some/path/index.jsf?a=b&cd=ef");
-      assertNull( url.getProtocol());
-      assertEquals("//foo.bar", url.getHost());
-      assertEquals(90, url.getPort());
-      assertEquals("/some/path/index.jsf", url.getPath());
-      assertEquals("a=b&cd=ef", url.getQueryString());
-   }
-   public void testActionUrl2() throws Exception {
-      PortalActionURL url = new PortalActionURL("//foo.bar/some/path/index.jsf?a=b&cd=ef");
-      assertNull( url.getProtocol());
-      assertEquals("//foo.bar", url.getHost());
-      assertEquals(-1, url.getPort());
-      assertEquals("/some/path/index.jsf", url.getPath());
-      assertEquals("a=b&cd=ef", url.getQueryString());
-   }
-   public void testActionUrl3() throws Exception {
-      PortalActionURL url = new PortalActionURL("/some/path/index.jsf?a=b&cd=ef");
-      assertNull( url.getProtocol());
-      assertNull( url.getHost());
-      assertEquals(-1, url.getPort());
-      assertEquals("/some/path/index.jsf", url.getPath());
-      assertEquals("a=b&cd=ef", url.getQueryString());
-   }
-   public void testActionUrl4() throws Exception {
-      PortalActionURL url = new PortalActionURL("/some/path/index.jsf");
-      assertNull( url.getProtocol());
-      assertNull( url.getHost());
-      assertEquals(-1, url.getPort());
-      assertEquals("/some/path/index.jsf", url.getPath());
-      assertNull( url.getQueryString());
-   }
+    public void testActionUrl() throws Exception {
+        PortalActionURL url = new PortalActionURL("ftp://foo.bar:90/some/path/index.jsf?a=b&cd=ef");
+        assertEquals("ftp:", url.getProtocol());
+        assertEquals("//foo.bar", url.getHost());
+        assertEquals(90, url.getPort());
+        assertEquals("/some/path/index.jsf", url.getPath());
+        assertEquals("a=b&cd=ef", url.getQueryString());
+    }
 
-   public void testParseQueryString() throws Exception {
-      PortalActionURL url = new PortalActionURL("/some/path/index.jsf?a=b&cd=ef");
-      assertEquals(2, url.parametersSize());
-      assertEquals("b", url.getParameter("a"));
-      assertEquals("ef", url.getParameter("cd"));
-      assertNull(url.getParameter("xxx"));
-   }
-   public void testParseQueryString1() throws Exception {
-      PortalActionURL url = new PortalActionURL("/some/path/index.jsf?a=b");
-      assertEquals(1, url.parametersSize());
-      assertEquals("b", url.getParameter("a"));
-      assertNull(url.getParameter("cd"));
-   }
+    public void testActionUrl1() throws Exception {
+        PortalActionURL url = new PortalActionURL("//foo.bar:90/some/path/index.jsf?a=b&cd=ef");
+        assertNull(url.getProtocol());
+        assertEquals("//foo.bar", url.getHost());
+        assertEquals(90, url.getPort());
+        assertEquals("/some/path/index.jsf", url.getPath());
+        assertEquals("a=b&cd=ef", url.getQueryString());
+    }
 
-   public void testParseQueryString2() throws Exception {
-	      PortalActionURL url = new PortalActionURL("/some/path/index.jsf?+a=%40b");
-	      assertEquals(1, url.parametersSize());
-	      assertEquals("@b", url.getParameter(" a"));
-	      assertEquals("+a=%40b", url.getQueryString());
-	      assertNull(url.getParameter("cd"));
-	   }
-   public void testParseQueryString3() throws Exception {
-      PortalActionURL url = new PortalActionURL("/some/path/index.jsf?a=b&amp;cd=ef");
-      assertEquals(2, url.parametersSize());
-      assertEquals("b", url.getParameter("a"));
-      assertEquals("ef", url.getParameter("cd"));
-      assertNull(url.getParameter("xxx"));
-   }
+    public void testActionUrl2() throws Exception {
+        PortalActionURL url = new PortalActionURL("//foo.bar/some/path/index.jsf?a=b&cd=ef");
+        assertNull(url.getProtocol());
+        assertEquals("//foo.bar", url.getHost());
+        assertEquals(-1, url.getPort());
+        assertEquals("/some/path/index.jsf", url.getPath());
+        assertEquals("a=b&cd=ef", url.getQueryString());
+    }
+
+    public void testActionUrl3() throws Exception {
+        PortalActionURL url = new PortalActionURL("/some/path/index.jsf?a=b&cd=ef");
+        assertNull(url.getProtocol());
+        assertNull(url.getHost());
+        assertEquals(-1, url.getPort());
+        assertEquals("/some/path/index.jsf", url.getPath());
+        assertEquals("a=b&cd=ef", url.getQueryString());
+    }
+
+    public void testActionUrl4() throws Exception {
+        PortalActionURL url = new PortalActionURL("/some/path/index.jsf");
+        assertNull(url.getProtocol());
+        assertNull(url.getHost());
+        assertEquals(-1, url.getPort());
+        assertEquals("/some/path/index.jsf", url.getPath());
+        assertNull(url.getQueryString());
+    }
+
+    public void testParseQueryString() throws Exception {
+        PortalActionURL url = new PortalActionURL("/some/path/index.jsf?a=b&cd=ef");
+        assertEquals(2, url.parametersSize());
+        assertEquals("b", url.getParameter("a"));
+        assertEquals("ef", url.getParameter("cd"));
+        assertNull(url.getParameter("xxx"));
+    }
+
+    public void testParseQueryString1() throws Exception {
+        PortalActionURL url = new PortalActionURL("/some/path/index.jsf?a=b");
+        assertEquals(1, url.parametersSize());
+        assertEquals("b", url.getParameter("a"));
+        assertNull(url.getParameter("cd"));
+    }
+
+    public void testParseQueryString2() throws Exception {
+        PortalActionURL url = new PortalActionURL("/some/path/index.jsf?+a=%40b");
+        assertEquals(1, url.parametersSize());
+        assertEquals("@b", url.getParameter(" a"));
+        assertEquals("+a=%40b", url.getQueryString());
+        assertNull(url.getParameter("cd"));
+    }
+
+    public void testParseQueryString3() throws Exception {
+        PortalActionURL url = new PortalActionURL("/some/path/index.jsf?a=b&amp;cd=ef");
+        assertEquals(2, url.parametersSize());
+        assertEquals("b", url.getParameter("a"));
+        assertEquals("ef", url.getParameter("cd"));
+        assertNull(url.getParameter("xxx"));
+    }
 }

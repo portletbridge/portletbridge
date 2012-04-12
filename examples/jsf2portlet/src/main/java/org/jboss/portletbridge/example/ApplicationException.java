@@ -1,4 +1,5 @@
 package org.jboss.portletbridge.example;
+
 /******************************************************************************
  * JBoss, a division of Red Hat                                               *
  * Copyright 2006, Red Hat Middleware, LLC, and individual                    *
@@ -22,44 +23,42 @@ package org.jboss.portletbridge.example;
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.                   *
  ******************************************************************************/
 
-
 /**
  * @author <a href="mailto:whales@redhat.com">Wesley Hales</a>
  * @version $Revision: 630 $
  */
 public class ApplicationException extends Exception {
 
-	/**
+    /**
 	 *
 	 */
-	public ApplicationException() {
-		// TODO Auto-generated constructor stub
-	}
+    public ApplicationException() {
+        // TODO Auto-generated constructor stub
+    }
 
-	/**
-	 * @param message
-	 */
-	public ApplicationException(String message) {
-		super(message);
-		// TODO Auto-generated constructor stub
-	}
+    /**
+     * @param message
+     */
+    public ApplicationException(String message) {
+        super(message);
+        // TODO Auto-generated constructor stub
+    }
 
-	/**
-	 * @param cause
-	 */
-	public ApplicationException(Throwable cause) {
-		super(cause);
-		// TODO Auto-generated constructor stub
-	}
+    /**
+     * @param cause
+     */
+    public ApplicationException(Throwable cause) {
+        super(cause);
+        // TODO Auto-generated constructor stub
+    }
 
-	/**
-	 * @param message
-	 * @param cause
-	 */
-	public ApplicationException(String message, Throwable cause) {
-		super(message, cause);
-		// TODO Auto-generated constructor stub
-	}
+    /**
+     * @param message
+     * @param cause
+     */
+    public ApplicationException(String message, Throwable cause) {
+        super(message, cause);
+        // TODO Auto-generated constructor stub
+    }
 
 }
-

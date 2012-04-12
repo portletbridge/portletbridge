@@ -34,165 +34,163 @@ import java.util.Set;
  * 
  * 
  * 
- * Base class for All maps in <code>ExternalContextCocoonImpl</code> get from
+ *         Base class for All maps in <code>ExternalContextCocoonImpl</code> get from
  * 
- * Sun Jsf-ri
+ *         Sun Jsf-ri
  * 
  * 
  * 
  */
-abstract class ContextMap<K,V> extends AbstractMap<K,V> {
-    
-   private transient volatile Set<K> keySet;
+abstract class ContextMap<K, V> extends AbstractMap<K, V> {
 
-   private transient volatile Set<Entry<K,V>> entrySet;
+    private transient volatile Set<K> keySet;
 
-   /*
-    *
-    * (non-Javadoc)
-    *
-    *
-    *
-    * @see java.util.Map#entrySet()
-    *
-    */
-   public Set<Entry<K, V>> entrySet() {
-      if(this.entrySet == null){
-          this.entrySet = new AbstractSet<Entry<K,V>>(){
+    private transient volatile Set<Entry<K, V>> entrySet;
 
-            @Override
-            public Iterator<Entry<K,V>> iterator() {
-               return new Iterator<Entry<K,V>>(){
+    /*
+     * 
+     * (non-Javadoc)
+     * 
+     * 
+     * 
+     * @see java.util.Map#entrySet()
+     */
+    public Set<Entry<K, V>> entrySet() {
+        if (this.entrySet == null) {
+            this.entrySet = new AbstractSet<Entry<K, V>>() {
 
-                   private Enumeration<K> enumeration = getEnumeration();
+                @Override
+                public Iterator<Entry<K, V>> iterator() {
+                    return new Iterator<Entry<K, V>>() {
 
-                  public boolean hasNext() {
-                     return enumeration.hasMoreElements();
-                  }
+                        private Enumeration<K> enumeration = getEnumeration();
 
-                  public Entry<K,V> next() {
-                      K key = enumeration.nextElement();
-                     return new ContextEntry<K,V>(key, get(key));
-                  }
+                        public boolean hasNext() {
+                            return enumeration.hasMoreElements();
+                        }
 
-                  public void remove() {
-                     throw new UnsupportedOperationException();
-                  }
+                        public Entry<K, V> next() {
+                            K key = enumeration.nextElement();
+                            return new ContextEntry<K, V>(key, get(key));
+                        }
 
-               };
-            }
+                        public void remove() {
+                            throw new UnsupportedOperationException();
+                        }
 
-            @Override
-            public int size() {
-               return ContextMap.this.size();
-            }
+                    };
+                }
 
-
-          };
-      }
-
-      return this.entrySet;
-   }
-
-   protected boolean isValidParameter(String paramName) {
-      return true;
-   }
-
-   public Set<K> keySet() {
-      if (this.keySet == null) {
-         this.keySet = new AbstractSet<K>() {
-            public Iterator<K> iterator() {
-               return new EnumerationIterator<K>(getEnumeration());
-            }
-
-            public int size() {
+                @Override
+                public int size() {
                     return ContextMap.this.size();
-            }
-         };
-      }
-      return this.keySet;
-   }
+                }
 
-   public Collection<V> values() {
-      return super.values();
-   }
+            };
+        }
 
-   /**
-    *
-    *
-    *
-    * Template metod - all maps in ExternalFacesContext creates Set from
-    *
-    * parameters <code>Enumeration</code>
-    *
-    *
-    *
-    * @return enumeration for current map.
-    *
-    */
-   protected abstract Enumeration<K> getEnumeration();
+        return this.entrySet;
+    }
 
-   // Unsupported by all Maps.
-   public void clear() {
-      throw new UnsupportedOperationException();
-   }
+    protected boolean isValidParameter(String paramName) {
+        return true;
+    }
 
-   // public void putAll(Map t) {
-   // for (Iterator entries = t.entrySet().iterator(); entries.hasNext();) {
-   // Map.Entry entry = (Entry) entries.next();
-   // put(entry.getKey(),entry.getValue());
-   // }
-   // }
+    public Set<K> keySet() {
+        if (this.keySet == null) {
+            this.keySet = new AbstractSet<K>() {
+                public Iterator<K> iterator() {
+                    return new EnumerationIterator<K>(getEnumeration());
+                }
 
-   // Supported by maps if overridden
-   public V remove(Object key) {
-      throw new UnsupportedOperationException();
-   }
+                public int size() {
+                    return ContextMap.this.size();
+                }
+            };
+        }
+        return this.keySet;
+    }
 
-   static class ContextEntry<K,V> implements Map.Entry<K,V> {
-      // immutable Entry
-      private final K key;
+    public Collection<V> values() {
+        return super.values();
+    }
 
-      private final V value;
+    /**
+     * 
+     * 
+     * 
+     * Template metod - all maps in ExternalFacesContext creates Set from
+     * 
+     * parameters <code>Enumeration</code>
+     * 
+     * 
+     * 
+     * @return enumeration for current map.
+     * 
+     */
+    protected abstract Enumeration<K> getEnumeration();
 
-      ContextEntry(K key, V value) {
-         this.key = key;
-         this.value = value;
-      }
+    // Unsupported by all Maps.
+    public void clear() {
+        throw new UnsupportedOperationException();
+    }
 
-      public K getKey() {
-         return this.key;
-      }
+    // public void putAll(Map t) {
+    // for (Iterator entries = t.entrySet().iterator(); entries.hasNext();) {
+    // Map.Entry entry = (Entry) entries.next();
+    // put(entry.getKey(),entry.getValue());
+    // }
+    // }
 
-      public V getValue() {
-         return this.value;
-      }
+    // Supported by maps if overridden
+    public V remove(Object key) {
+        throw new UnsupportedOperationException();
+    }
 
-      // No support of setting the value
-      public V setValue(V value) {
-         throw new UnsupportedOperationException();
-      }
+    static class ContextEntry<K, V> implements Map.Entry<K, V> {
+        // immutable Entry
+        private final K key;
 
-   }
+        private final V value;
 
-   public boolean equals(Object obj) {
-      if ((obj == null) || !(obj instanceof ContextMap)) {
-         return false;
-      }
-      return super.equals(obj);
-   }
+        ContextEntry(K key, V value) {
+            this.key = key;
+            this.value = value;
+        }
 
-   /**
-    * @return
-    */
-   public int size() {
-      Enumeration<?> enumeration = getEnumeration();
-      int size = 0;
-      while (enumeration.hasMoreElements()) {
-         enumeration.nextElement();
-         size++;
-      }
-      ;
-      return size;
-   }
+        public K getKey() {
+            return this.key;
+        }
+
+        public V getValue() {
+            return this.value;
+        }
+
+        // No support of setting the value
+        public V setValue(V value) {
+            throw new UnsupportedOperationException();
+        }
+
+    }
+
+    public boolean equals(Object obj) {
+        if ((obj == null) || !(obj instanceof ContextMap)) {
+            return false;
+        }
+        return super.equals(obj);
+    }
+
+    /**
+     * @return
+     */
+    public int size() {
+        Enumeration<?> enumeration = getEnumeration();
+        int size = 0;
+        while (enumeration.hasMoreElements()) {
+            enumeration.nextElement();
+            size++;
+        }
+        ;
+        return size;
+    }
 }

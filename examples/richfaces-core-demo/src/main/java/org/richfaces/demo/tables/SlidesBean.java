@@ -15,7 +15,7 @@ import org.richfaces.demo.tables.model.slides.Picture;
  */
 @ManagedBean
 @ViewScoped
-public class SlidesBean implements Serializable{
+public class SlidesBean implements Serializable {
 
     private static final long serialVersionUID = -6498592143189891265L;
     private static final String FILE_EXT = ".jpg";
