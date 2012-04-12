@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>tests</artifactId>
 		<groupId>org.jboss.portletbridge</groupId>
-		<version>3.0.0-SNAPSHOT</version>
+		<version>3.0.0.Beta2</version>
 	</parent>
 	<groupId>org.jboss.portletbridge.tests</groupId>
 	<artifactId>embeddedPluto</artifactId>

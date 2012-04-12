@@ -7,7 +7,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.jboss.portletbridge</groupId>
-    <version>3.0.0-SNAPSHOT</version>
+    <version>3.0.0.Beta2</version>
     <artifactId>parent</artifactId>
     <name>
       JBoss JSF2 Portlet Bridge for a portlet environment, root pom
@@ -27,12 +27,12 @@
             <dependency>
                 <groupId>org.jboss.portletbridge</groupId>
                 <artifactId>portletbridge-api</artifactId>
-                <version>3.0.0-SNAPSHOT</version>
+                <version>3.0.0.Beta2</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.portletbridge</groupId>
                 <artifactId>portletbridge-impl</artifactId>
-                <version>3.0.0-SNAPSHOT</version>
+                <version>3.0.0.Beta2</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.faces</groupId>
