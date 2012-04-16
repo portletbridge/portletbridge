@@ -21,26 +21,16 @@
  */
 package org.jboss.portletbridge.test;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.List;
+import static org.hamcrest.Matchers.containsString;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThat;
 
 import org.hamcrest.Matchers;
-import org.jboss.arquillian.api.Deployment;
-import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 
-import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
-import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.gargoylesoftware.htmlunit.html.HtmlSubmitInput;
-import com.gargoylesoftware.htmlunit.html.HtmlTextInput;
 
 //@RunWith(Arquillian.class)
 public class A4jCommandLinkTest extends PortalTestBase {

@@ -48,15 +48,14 @@
 
 		<!-- Arquillian -->
 		<dependency>
-			<groupId>org.jboss.arquillian</groupId>
-			<artifactId>arquillian-junit</artifactId>
-			<version>1.0.0.Alpha5</version>
+			<groupId>org.jboss.arquillian.junit</groupId>
+			<artifactId>arquillian-junit-container</artifactId>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.arquillian.container</groupId>
 			<artifactId>arquillian-jetty-embedded-7</artifactId>
-			<version>1.0.0.Alpha5</version>
+			<version>1.0.0.CR1</version>
 			<scope>compile</scope>
 		</dependency>
 
