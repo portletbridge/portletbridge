@@ -71,36 +71,12 @@
 			<artifactId>jsf-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet.jsp</groupId>
-			<artifactId>jsp-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.el</groupId>
-			<artifactId>el-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.validation</groupId>
-			<artifactId>validation-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
         <dependency>
              <groupId>org.hibernate</groupId>
              <artifactId>hibernate-validator</artifactId>
              <version>4.1.0.Final</version>
 			<scope>provided</scope>
         </dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>jstl</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>org.richfaces.ui</groupId>
 			<artifactId>richfaces-components-api</artifactId>
@@ -114,10 +90,6 @@
 			<artifactId>richfaces-core-impl</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>net.sf.ehcache</groupId>
-			<artifactId>ehcache</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
 		</dependency>
@@ -126,15 +98,9 @@
 			<artifactId>log4j</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>javax.portlet</groupId>
-			<artifactId>portlet-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.jboss.portletbridge</groupId>
 			<artifactId>portletbridge-api</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.jboss.portletbridge</groupId>
 			<artifactId>portletbridge-impl</artifactId>
@@ -143,7 +109,6 @@
 	</dependencies>
 
 	<build>
-
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -154,41 +119,6 @@
 					<target>1.6</target>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.mortbay.jetty</groupId>
-				<artifactId>maven-jetty-plugin</artifactId>
-				<version>6.1.18</version>
-				<configuration>
-					<scanIntervalSeconds>10</scanIntervalSeconds>
-					<connectors>
-						<connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
-							<port>${jetty.port}</port>
-							<maxIdleTime>60000</maxIdleTime>
-						</connector>
-					</connectors>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
-
-	<profiles>
-	</profiles>
-
-	<repositories>
-		<!-- FIXME - should come from parent I believe -->
-		<repository>
-			<id>maven-repository2.dev.java.net</id>
-			<name>Java.net Repository for Maven 2</name>
-			<url>http://download.java.net/maven/2</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
-
-	<scm>
-		<connection>scm:svn:http://anonsvn.jboss.org/repos/richfaces/root/examples/core-demo/trunk</connection>
-		<developerConnection>scm:svn:https://svn.jboss.org/repos/richfaces/root/examples/core-demo/trunk</developerConnection>
-		<url>http://fisheye.jboss.org/browse/richfaces</url>
-	</scm>
 </project>

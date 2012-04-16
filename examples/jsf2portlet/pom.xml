@@ -1,8 +1,9 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
-      <groupId>org.jboss.portletbridge</groupId>
-      <version>3.0.0-SNAPSHOT</version>
-      <artifactId>examples</artifactId>
+        <groupId>org.jboss.portletbridge</groupId>
+        <version>3.0.0-SNAPSHOT</version>
+        <artifactId>examples</artifactId>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.jboss.portletbridge.examples</groupId>
@@ -10,6 +11,31 @@
     <packaging>war</packaging>
     <name>JSF 2 Portlet Example</name>
     <url>http://maven.apache.org</url>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.sun.faces</groupId>
+            <artifactId>jsf-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.portlet</groupId>
+            <artifactId>portlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.portletbridge</groupId>
+            <artifactId>portletbridge-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.portletbridge</groupId>
+            <artifactId>portletbridge-impl</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+    </dependencies>
+
     <build>
         <finalName>jsf2portlet</finalName>
         <plugins>
@@ -23,6 +49,7 @@
             </plugin>
         </plugins>
     </build>
+
     <profiles>
         <!--Run this example in LifeRay-->
         <!--example usage: mvn install -Pliferay-->
@@ -34,109 +61,22 @@
                         <artifactId>maven-war-plugin</artifactId>
                         <configuration>
                             <webXml>src/main/liferay/liferay-web.xml</webXml>
-                <webResources>
-                    <resource>
-                        <filtering>false</filtering>
-                        <directory>${basedir}/src/main/liferay</directory>
-                        <targetPath>WEB-INF</targetPath>
-                        <includes>
-                            <include>liferay-display.xml</include>
-                            <include>liferay-plugin-package.properties</include>
-                            <include>liferay-portlet.xml</include>
-                        </includes>
-                    </resource>
-                </webResources>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>jbossportal</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-war-plugin</artifactId>
-                        <configuration>
-                        <webResources>
-                            <resource>
-                                <filtering>false</filtering>
-                                <directory>${basedir}/src/main/jbossportal</directory>
-                                <targetPath>WEB-INF</targetPath>
-                            </resource>
-                        </webResources>
+                            <webResources>
+                                <resource>
+                                    <filtering>false</filtering>
+                                    <directory>${basedir}/src/main/liferay</directory>
+                                    <targetPath>WEB-INF</targetPath>
+                                    <includes>
+                                        <include>liferay-display.xml</include>
+                                        <include>liferay-plugin-package.properties</include>
+                                        <include>liferay-portlet.xml</include>
+                                    </includes>
+                                </resource>
+                            </webResources>
                         </configuration>
                     </plugin>
                 </plugins>
             </build>
         </profile>
     </profiles>
-    <dependencies>
-
-        <dependency>
-            <groupId>com.sun.faces</groupId>
-            <artifactId>jsf-api</artifactId>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.sun.faces</groupId>
-            <artifactId>jsf-impl</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.portlet</groupId>
-            <artifactId>portlet-api</artifactId>
-            <scope>provided</scope>
-        </dependency><!--
-
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.1</version>
-        </dependency>
-
-        --><dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>jsp-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>jsr250-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.el</groupId>
-            <artifactId>el-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>jstl</artifactId>
-            <version>1.2</version>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jboss.portletbridge</groupId>
-            <artifactId>portletbridge-api</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jboss.portletbridge</groupId>
-            <artifactId>portletbridge-impl</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-    </dependencies>
 </project>
