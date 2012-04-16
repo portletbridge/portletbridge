@@ -30,6 +30,6 @@ import javax.el.ValueExpression;
  * @author kenfinnigan
  */
 public interface ParameterFunction {
-    public boolean processParameter(ELContext elContext, Map<String, String[]> publicParameters, String name,
-            ValueExpression valueExpression);
+    boolean processParameter(ELContext elContext, Map<String, String[]> publicParameters, String name,
+        ValueExpression valueExpression);
 }

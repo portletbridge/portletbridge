@@ -25,7 +25,7 @@ import junit.framework.TestCase;
 
 /**
  * @author asmirnov
- * 
+ *
  */
 public class PortalActionUrlTest extends TestCase {
 
@@ -38,7 +38,7 @@ public class PortalActionUrlTest extends TestCase {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see junit.framework.TestCase#setUp()
      */
     protected void setUp() throws Exception {
@@ -47,7 +47,7 @@ public class PortalActionUrlTest extends TestCase {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see junit.framework.TestCase#tearDown()
      */
     protected void tearDown() throws Exception {

@@ -29,17 +29,17 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * 
+ *
  * @author shura
- * 
- * 
- * 
+ *
+ *
+ *
  *         Base class for All maps in <code>ExternalContextCocoonImpl</code> get from
- * 
+ *
  *         Sun Jsf-ri
- * 
- * 
- * 
+ *
+ *
+ *
  */
 abstract class ContextMap<K, V> extends AbstractMap<K, V> {
 
@@ -48,11 +48,11 @@ abstract class ContextMap<K, V> extends AbstractMap<K, V> {
     private transient volatile Set<Entry<K, V>> entrySet;
 
     /*
-     * 
+     *
      * (non-Javadoc)
-     * 
-     * 
-     * 
+     *
+     *
+     *
      * @see java.util.Map#entrySet()
      */
     public Set<Entry<K, V>> entrySet() {
@@ -116,17 +116,17 @@ abstract class ContextMap<K, V> extends AbstractMap<K, V> {
     }
 
     /**
-     * 
-     * 
-     * 
+     *
+     *
+     *
      * Template metod - all maps in ExternalFacesContext creates Set from
-     * 
+     *
      * parameters <code>Enumeration</code>
-     * 
-     * 
-     * 
+     *
+     *
+     *
      * @return enumeration for current map.
-     * 
+     *
      */
     protected abstract Enumeration<K> getEnumeration();
 
@@ -145,6 +145,19 @@ abstract class ContextMap<K, V> extends AbstractMap<K, V> {
     // Supported by maps if overridden
     public V remove(Object key) {
         throw new UnsupportedOperationException();
+    }
+
+    /**
+     * @return
+     */
+    public int size() {
+        Enumeration<?> enumeration = getEnumeration();
+        int size = 0;
+        while (enumeration.hasMoreElements()) {
+            enumeration.nextElement();
+            size++;
+        }
+        return size;
     }
 
     static class ContextEntry<K, V> implements Map.Entry<K, V> {
@@ -171,26 +184,5 @@ abstract class ContextMap<K, V> extends AbstractMap<K, V> {
             throw new UnsupportedOperationException();
         }
 
-    }
-
-    public boolean equals(Object obj) {
-        if ((obj == null) || !(obj instanceof ContextMap)) {
-            return false;
-        }
-        return super.equals(obj);
-    }
-
-    /**
-     * @return
-     */
-    public int size() {
-        Enumeration<?> enumeration = getEnumeration();
-        int size = 0;
-        while (enumeration.hasMoreElements()) {
-            enumeration.nextElement();
-            size++;
-        }
-        ;
-        return size;
     }
 }

@@ -53,7 +53,7 @@ import org.jboss.portletbridge.context.PortalActionURL;
 
 /**
  * @author asmirnov
- * 
+ *
  */
 public class PortletViewHandler extends ViewHandlerWrapper {
 
@@ -116,7 +116,8 @@ public class PortletViewHandler extends ViewHandlerWrapper {
         Class<? extends UIViewRoot> rootClass = root.getClass();
 
         if (rootClass.getAnnotation(PortletNamingContainer.class) == null) {
-            // Creates correct UIViewRoot with our NamingContainer if for some reason createComponent of PortletApplicationImpl
+            // Creates correct UIViewRoot with our NamingContainer if for some reason createComponent of
+            // PortletApplicationImpl
             // was not called
             UIViewRoot portletRoot = new PortletNamingContainerUIViewRoot();
             portletRoot.setViewId(root.getViewId());
@@ -231,8 +232,8 @@ public class PortletViewHandler extends ViewHandlerWrapper {
                 // to use original view handler functionality.
                 super.renderView(context, viewToRender);
             } catch (Throwable t) {
-                logger.log(Level.DEBUG, "Error rendering view by parent ViewHandler, try to render as portletbridge JSP page",
-                        t);
+                logger.log(Level.DEBUG,
+                    "Error rendering view by parent ViewHandler, try to render as portletbridge JSP page", t);
                 // Restore request/response objects if parent renderer change
                 // them.
                 if (portletRequest != externalContext.getRequest()) {
@@ -316,6 +317,33 @@ public class PortletViewHandler extends ViewHandlerWrapper {
         renderResponse.flushBuffer();
     }
 
+    /**
+     * Execute the target view. If the HTTP status code range is not 2xx, then return true to indicate the response
+     * should be immediately flushed by the caller so that conditions such as 404 are properly handled.
+     *
+     * @param context
+     *            the <code>FacesContext</code> for the current request
+     * @param viewToExecute
+     *            the view to build
+     * @return <code>true</code> if the response should be immediately flushed to the client, otherwise
+     *         <code>false</code>
+     * @throws IOException
+     *             if an error occurs executing the page
+     */
+    private boolean executePageToBuildView(FacesContext context, UIViewRoot viewToExecute) throws IOException {
+        String requestURI = viewToExecute.getViewId();
+
+        ExternalContext extContext = context.getExternalContext();
+
+        extContext.dispatch(requestURI);
+        return false;
+    }
+
+    @Override
+    public ViewHandler getWrapped() {
+        return parent;
+    }
+
     private static final class StringBuilderWriter extends Writer {
 
         private static final ThreadLocal<StringBuilderWriter> instance = new ThreadLocal<StringBuilderWriter>();
@@ -372,8 +400,9 @@ public class PortletViewHandler extends ViewHandlerWrapper {
 
         /**
          * Write a string.
-         * 
-         * @param str String to be written
+         *
+         * @param str
+         *            String to be written
          */
         @Override
         public void write(String str) throws IOException {
@@ -422,29 +451,6 @@ public class PortletViewHandler extends ViewHandlerWrapper {
                 context.setResponseWriter(oldResponseWriter);
             }
         }
-    }
-
-    /**
-     * Execute the target view. If the HTTP status code range is not 2xx, then return true to indicate the response should be
-     * immediately flushed by the caller so that conditions such as 404 are properly handled.
-     * 
-     * @param context the <code>FacesContext</code> for the current request
-     * @param viewToExecute the view to build
-     * @return <code>true</code> if the response should be immediately flushed to the client, otherwise <code>false</code>
-     * @throws IOException if an error occurs executing the page
-     */
-    private boolean executePageToBuildView(FacesContext context, UIViewRoot viewToExecute) throws IOException {
-        String requestURI = viewToExecute.getViewId();
-
-        ExternalContext extContext = context.getExternalContext();
-
-        extContext.dispatch(requestURI);
-        return false;
-    }
-
-    @Override
-    public ViewHandler getWrapped() {
-        return parent;
     }
 
 }

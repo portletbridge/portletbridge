@@ -34,7 +34,7 @@ import javax.portlet.faces.Bridge;
 
 /**
  * @author asmirnov
- * 
+ *
  */
 public class RenderPortletExternalContextImpl extends MimeExternalContextImpl {
 
@@ -61,8 +61,9 @@ public class RenderPortletExternalContextImpl extends MimeExternalContextImpl {
             throw new NullPointerException("Path to redirect is null");
         }
         PortalActionURL actionURL = new PortalActionURL(url);
-        if ((!actionURL.isInContext(getRequestContextPath()) && null == actionURL.getParameter(Bridge.FACES_VIEW_ID_PARAMETER))
-                || "true".equalsIgnoreCase(actionURL.getParameter(Bridge.DIRECT_LINK))) {
+        if ((!actionURL.isInContext(getRequestContextPath()) && null == actionURL
+            .getParameter(Bridge.FACES_VIEW_ID_PARAMETER))
+            || "true".equalsIgnoreCase(actionURL.getParameter(Bridge.DIRECT_LINK))) {
             // dispatch(url);
 
             // throw new IllegalStateException(

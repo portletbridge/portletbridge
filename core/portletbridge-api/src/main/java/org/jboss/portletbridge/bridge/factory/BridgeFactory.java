@@ -25,10 +25,10 @@ import javax.faces.FacesWrapper;
 
 /**
  * This abstract class is inspired by the factory pattern found in the JSF API like
- * {@link javax.faces.context.FacesContextFactory} and {@link javax.faces.context.ExternalContextFactory}. By implementing the
- * {@link javax.faces.FacesWrapper} interface, the class provides implementations with the opportunity to wrap another factory
- * (participate in a chain-of-responsibility pattern). If an implementation wraps a factory, then it should provide a one-arg
- * constructor so that the wrappable factory can be passed at initialization time.
+ * {@link javax.faces.context.FacesContextFactory} and {@link javax.faces.context.ExternalContextFactory}. By
+ * implementing the {@link javax.faces.FacesWrapper} interface, the class provides implementations with the opportunity
+ * to wrap another factory (participate in a chain-of-responsibility pattern). If an implementation wraps a factory,
+ * then it should provide a one-arg constructor so that the wrappable factory can be passed at initialization time.
  */
 public abstract class BridgeFactory<T> implements FacesWrapper<BridgeFactory<T>> {
     public BridgeFactory() {

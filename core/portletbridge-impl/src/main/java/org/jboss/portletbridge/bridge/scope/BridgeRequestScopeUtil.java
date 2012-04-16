@@ -42,41 +42,49 @@ import javax.servlet.http.HttpSession;
 import org.jboss.portletbridge.context.AbstractExternalContext;
 
 /**
- * Contains static methods to determine whether an attribute belongs in the managed {@link BridgeRequestScope} or not, based on
- * the exclusion definition from JSR-329 5.1.2.1. Also provides method to generate {@link BridgeRequestScope} Id prefix.
- * 
+ * Contains static methods to determine whether an attribute belongs in the managed {@link BridgeRequestScope} or not,
+ * based on the exclusion definition from JSR-329 5.1.2.1. Also provides method to generate {@link BridgeRequestScope}
+ * Id prefix.
+ *
  * @author kenfinnigan
  */
 public class BridgeRequestScopeUtil {
 
+    private BridgeRequestScopeUtil() {
+        // Prevent instantiation
+    }
+
     /**
      * Allows the caller to determine if a given attribute name/value pair will be excluded or not from the
      * {@link BridgeRequestScope}.
-     * 
-     * @param key name of the attribute
-     * @param value of the attribute
-     * @param localExcludes any excludes that are not part of the JSR-329 5.1.2.1 spec
+     *
+     * @param key
+     *            name of the attribute
+     * @param value
+     *            of the attribute
+     * @param localExcludes
+     *            any excludes that are not part of the JSR-329 5.1.2.1 spec
      * @return true if the attribute will be excluded, false otherwise.
      */
     public static boolean isExcluded(String key, Object value, List<String> localExcludes) {
         return ((null != value && isExcludedBean(value)) || (null != localExcludes && localExcludes.contains(key))
-                || isExcludedByDefinition(key, value) || isExcludedNamespace(key, localExcludes));
+            || isExcludedByDefinition(key, value) || isExcludedNamespace(key, localExcludes));
     }
 
     public static boolean isExcludedByDefinition(String key, Object value) {
         if (null != value
-                && (value instanceof PortletConfig || value instanceof PortletContext || value instanceof PortletRequest
-                        || value instanceof PortletResponse || value instanceof PortletSession
-                        || value instanceof PortletPreferences || value instanceof PortalContext
-                        || value instanceof FacesContext || value instanceof ExternalContext || value instanceof ServletConfig
-                        || value instanceof ServletContext || value instanceof ServletRequest
-                        || value instanceof ServletResponse || value instanceof HttpSession)) {
+            && (value instanceof PortletConfig || value instanceof PortletContext || value instanceof PortletRequest
+                || value instanceof PortletResponse || value instanceof PortletSession
+                || value instanceof PortletPreferences || value instanceof PortalContext
+                || value instanceof FacesContext || value instanceof ExternalContext || value instanceof ServletConfig
+                || value instanceof ServletContext || value instanceof ServletRequest
+                || value instanceof ServletResponse || value instanceof HttpSession)) {
             return true;
         }
 
         return isNamespaceMatch(key, "javax.portlet.") || isNamespaceMatch(key, "javax.faces.")
-                || isNamespaceMatch(key, "javax.servlet.")
-                || isNamespaceMatch(key, AbstractExternalContext.INITIAL_REQUEST_ATTRIBUTES_NAMES);
+            || isNamespaceMatch(key, "javax.servlet.")
+            || isNamespaceMatch(key, AbstractExternalContext.INITIAL_REQUEST_ATTRIBUTES_NAMES);
     }
 
     public static boolean isExcludedBean(Object bean) {
@@ -109,7 +117,7 @@ public class BridgeRequestScopeUtil {
 
     /**
      * Generate a {@link BridgeRequestScope} Id prefix from portletName, sessionId, viewId, and portletMode.
-     * 
+     *
      * @param portletName
      * @param sessionId
      * @param viewId
@@ -117,8 +125,8 @@ public class BridgeRequestScopeUtil {
      * @return
      */
     public static String generateBridgeRequestScopeIdPrefix(String portletName, String sessionId, String viewId,
-            String portletMode) {
+        String portletMode) {
         return new StringBuffer(portletName).append(':').append(sessionId).append(':').append(viewId).append(':')
-                .append(portletMode).toString();
+            .append(portletMode).toString();
     }
 }

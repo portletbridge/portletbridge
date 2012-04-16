@@ -42,7 +42,7 @@ import org.jboss.portletbridge.el.ELContextImpl;
 
 /**
  * @author asmirnov
- * 
+ *
  */
 public class InitFacesContext extends FacesContext {
 
@@ -75,7 +75,7 @@ public class InitFacesContext extends FacesContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.context.FacesContext#addMessage(java.lang.String, javax.faces.application.FacesMessage)
      */
     @Override
@@ -84,7 +84,7 @@ public class InitFacesContext extends FacesContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.context.FacesContext#getApplication()
      */
     @Override
@@ -94,7 +94,7 @@ public class InitFacesContext extends FacesContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.context.FacesContext#getClientIdsWithMessages()
      */
     @Override
@@ -115,7 +115,7 @@ public class InitFacesContext extends FacesContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.context.FacesContext#getExternalContext()
      */
     @Override
@@ -125,7 +125,7 @@ public class InitFacesContext extends FacesContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.context.FacesContext#getMaximumSeverity()
      */
     @Override
@@ -135,7 +135,7 @@ public class InitFacesContext extends FacesContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.context.FacesContext#getMessages()
      */
     @Override
@@ -146,7 +146,7 @@ public class InitFacesContext extends FacesContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.context.FacesContext#getMessages(java.lang.String)
      */
     @Override
@@ -157,7 +157,7 @@ public class InitFacesContext extends FacesContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.context.FacesContext#getRenderKit()
      */
     @Override
@@ -167,7 +167,7 @@ public class InitFacesContext extends FacesContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.context.FacesContext#getRenderResponse()
      */
     @Override
@@ -177,7 +177,7 @@ public class InitFacesContext extends FacesContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.context.FacesContext#getResponseComplete()
      */
     @Override
@@ -187,7 +187,7 @@ public class InitFacesContext extends FacesContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.context.FacesContext#getResponseStream()
      */
     @Override
@@ -197,7 +197,7 @@ public class InitFacesContext extends FacesContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.context.FacesContext#getResponseWriter()
      */
     @Override
@@ -207,7 +207,7 @@ public class InitFacesContext extends FacesContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.context.FacesContext#getViewRoot()
      */
     @Override
@@ -217,7 +217,7 @@ public class InitFacesContext extends FacesContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.context.FacesContext#release()
      */
     @Override
@@ -228,7 +228,7 @@ public class InitFacesContext extends FacesContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.context.FacesContext#renderResponse()
      */
     @Override
@@ -237,7 +237,7 @@ public class InitFacesContext extends FacesContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.context.FacesContext#responseComplete()
      */
     @Override
@@ -246,7 +246,7 @@ public class InitFacesContext extends FacesContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.context.FacesContext#setResponseStream(javax.faces.context.ResponseStream)
      */
     @Override
@@ -255,7 +255,7 @@ public class InitFacesContext extends FacesContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.context.FacesContext#setResponseWriter(javax.faces.context.ResponseWriter)
      */
     @Override
@@ -264,7 +264,7 @@ public class InitFacesContext extends FacesContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.context.FacesContext#setViewRoot(javax.faces.component.UIViewRoot)
      */
     @Override

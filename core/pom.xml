@@ -1,32 +1,35 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <parent>
-      <groupId>org.jboss.portletbridge</groupId>
-      <version>3.0.0-SNAPSHOT</version>
-      <artifactId>parent</artifactId>
-  </parent>
-  <modelVersion>4.0.0</modelVersion>
-  <artifactId>core</artifactId>
-  <name>JBoss Portlet Bridge JSF 2 Core</name>
-  <packaging>pom</packaging>
-  <modules>
-    <module>portletbridge-api</module>
-    <module>portletbridge-impl</module>
-  </modules>
-   <dependencies>
-      <dependency>
-         <groupId>javax.portlet</groupId>
-         <artifactId>portlet-api</artifactId>
-         <scope>provided</scope>
-      </dependency>
-      <dependency>
-         <groupId>javax.servlet</groupId>
-         <artifactId>servlet-api</artifactId>
-         <scope>provided</scope>
-      </dependency>
-      <dependency>
-         <groupId>javax.servlet.jsp</groupId>
-         <artifactId>jsp-api</artifactId>
-         <scope>provided</scope>
-      </dependency>
-   </dependencies>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <groupId>org.jboss.portletbridge</groupId>
+        <version>3.0.0-SNAPSHOT</version>
+        <artifactId>portletbridge-parent</artifactId>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>core</artifactId>
+    <name>JBoss Portlet Bridge JSF 2 Core</name>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>portletbridge-api</module>
+        <module>portletbridge-impl</module>
+    </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>javax.portlet</groupId>
+            <artifactId>portlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>jsp-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 </project>

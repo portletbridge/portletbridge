@@ -46,10 +46,10 @@ import org.jboss.portletbridge.bridge.logger.BridgeLogger.Level;
 import org.jboss.portletbridge.bridge.logger.JULLoggerImpl;
 
 /**
- * This class is a JSF renderer that is designed for use with the h:head component tag. Portlets are forbidden from rendering
- * the <head>...</head> section, which is what is done by the JSF implementation's version of this renderer. This renderer
- * avoids rendering the <head>...</head> section and instead delegates that responsibility to the portal.
- * 
+ * This class is a JSF renderer that is designed for use with the h:head component tag. Portlets are forbidden from
+ * rendering the <head>...</head> section, which is what is done by the JSF implementation's version of this renderer.
+ * This renderer avoids rendering the <head>...</head> section and instead delegates that responsibility to the portal.
+ *
  * @author Neil Griffin
  */
 public class PortletHeadRenderer extends Renderer {
@@ -65,9 +65,9 @@ public class PortletHeadRenderer extends Renderer {
     }
 
     /**
-     * Rather than render the <head>...</head> section to the response, this method attempts to delegate this responsibility to
-     * the portlet container.
-     * 
+     * Rather than render the <head>...</head> section to the response, this method attempts to delegate this
+     * responsibility to the portlet container.
+     *
      * @see Renderer#encodeBegin(FacesContext, UIComponent)
      */
     @Override

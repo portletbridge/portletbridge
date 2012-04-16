@@ -110,7 +110,7 @@ public final class WebXmlProcessor {
 
     /**
      * getter for the map between error class and corresponding JSF view id.
-     * 
+     *
      * @return the {@link #errorViews}
      */
     public Map<Class<? extends Throwable>, String> getErrorViews() {
@@ -136,10 +136,11 @@ public final class WebXmlProcessor {
     }
 
     /**
-     * Create map between error class and corresponding JSF view id. Map created from the {@link #errorLocations} string-based
-     * map.
-     * 
-     * @param viewSuffix JSF view id suffix for mapping.
+     * Create map between error class and corresponding JSF view id. Map created from the {@link #errorLocations}
+     * string-based map.
+     *
+     * @param viewSuffix
+     *            JSF view id suffix for mapping.
      * @return map between exception class and view id.
      */
     protected Map<Class<? extends Throwable>, String> createErrorViews(String viewSuffix) {
@@ -166,9 +167,11 @@ public final class WebXmlProcessor {
 
     /**
      * Convert error page location into JSF viewId.
-     * 
-     * @param location error page location
-     * @param viewSuffix JSF view suffix.
+     *
+     * @param location
+     *            error page location
+     * @param viewSuffix
+     *            JSF view suffix.
      * @return view id if this location is mapped to the {@link FacesServlet} othervise null.
      */
     protected String getViewIdFromLocation(String location, String viewSuffix) {
@@ -206,8 +209,8 @@ public final class WebXmlProcessor {
             return new InputSource(new StringReader(""));
         }
 
-        public InputSource resolveEntity(String name, String publicId, String baseURI, String systemId) throws SAXException,
-                IOException {
+        public InputSource resolveEntity(String name, String publicId, String baseURI, String systemId)
+            throws SAXException, IOException {
             // Do nothing, to avoid network requests to external DTD/Schema
             return new InputSource(new StringReader(""));
 

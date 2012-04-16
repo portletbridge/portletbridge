@@ -29,8 +29,9 @@ import junit.framework.TestCase;
 public class PortletTest extends TestCase {
     /**
      * Create the test case
-     * 
-     * @param testName name of the test case
+     *
+     * @param testName
+     *            name of the test case
      */
     public PortletTest(String testName) {
         super(testName);

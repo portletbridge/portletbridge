@@ -53,9 +53,7 @@ import javax.portlet.RenderRequest;
 import javax.portlet.ResourceRequest;
 import javax.portlet.StateAwareResponse;
 import javax.portlet.faces.Bridge;
-import javax.portlet.faces.BridgeDefaultViewNotSpecifiedException;
 import javax.portlet.faces.BridgeException;
-import javax.portlet.faces.BridgeUninitializedException;
 import javax.portlet.faces.event.EventNavigationResult;
 
 import org.jboss.portletbridge.bridge.config.BridgeConfig;
@@ -103,15 +101,15 @@ public class Jsf20ControllerImpl implements BridgeController {
     /**
      * @see org.jboss.portletbridge.bridge.controller.BridgeController#processPortletAction(org.jboss.portletbridge.bridge.context.BridgeContext)
      */
-    public void processPortletAction(BridgeContext bridgeContext) throws BridgeException,
-            BridgeDefaultViewNotSpecifiedException, BridgeUninitializedException {
+    public void processPortletAction(BridgeContext bridgeContext) throws BridgeException {
 
         FacesContext facesContext = null;
         Lifecycle facesLifecycle = null;
         PublicParameterPhaseListener ppPhaseListener = null;
 
         // Remove any lingering BridgeRequestScopes. Not required by spec, but prevents issues
-        bridgeContext.getBridgeRequestScopeManager().removeRequestScope(bridgeContext, bridgeContext.getFacesViewId(true));
+        bridgeContext.getBridgeRequestScopeManager().removeRequestScope(bridgeContext,
+            bridgeContext.getFacesViewId(true));
 
         try {
             facesLifecycle = getFacesLifecycle();
@@ -141,8 +139,7 @@ public class Jsf20ControllerImpl implements BridgeController {
     /**
      * @see org.jboss.portletbridge.bridge.controller.BridgeController#handlePortletEvent(org.jboss.portletbridge.bridge.context.BridgeContext)
      */
-    public void handlePortletEvent(BridgeContext bridgeContext) throws BridgeException, BridgeDefaultViewNotSpecifiedException,
-            BridgeUninitializedException {
+    public void handlePortletEvent(BridgeContext bridgeContext) throws BridgeException {
 
         FacesContext facesContext = null;
         Lifecycle facesLifecycle = null;
@@ -151,15 +148,15 @@ public class Jsf20ControllerImpl implements BridgeController {
 
         // Carry forward current render parameters
         ((EventResponse) bridgeContext.getPortletResponse()).setRenderParameters((EventRequest) bridgeContext
-                .getPortletRequest());
+            .getPortletRequest());
 
         // As per spec 5.2.5
         if (null == bridgeConfig.getEventHandler()) {
             bridgeConfig.getLogger().log(
-                    Level.ERROR,
-                    "The EventHandler is null for " + bridgeConfig.getPortletConfig().getPortletName()
-                            + ". Ensure your portlet.xml settings are correct and that you have implemented the "
-                            + "BridgeEventHandler in your application.  The event has not been processed.");
+                Level.ERROR,
+                "The EventHandler is null for " + bridgeConfig.getPortletConfig().getPortletName()
+                    + ". Ensure your portlet.xml settings are correct and that you have implemented the "
+                    + "BridgeEventHandler in your application.  The event has not been processed.");
             return;
         }
 
@@ -178,7 +175,7 @@ public class Jsf20ControllerImpl implements BridgeController {
             facesLifecycle.execute(facesContext);
 
             EventNavigationResult eventResult = bridgeConfig.getEventHandler().handleEvent(facesContext,
-                    ((EventRequest) bridgeContext.getPortletRequest()).getEvent());
+                ((EventRequest) bridgeContext.getPortletRequest()).getEvent());
 
             if (facesContext.getResponseComplete()) {
                 // Redirected during event handling
@@ -188,7 +185,7 @@ public class Jsf20ControllerImpl implements BridgeController {
 
             if (null != eventResult) {
                 facesContext.getApplication().getNavigationHandler()
-                        .handleNavigation(facesContext, eventResult.getFromAction(), eventResult.getOutcome());
+                    .handleNavigation(facesContext, eventResult.getFromAction(), eventResult.getOutcome());
 
                 if (facesContext.getResponseComplete()) {
                     // Redirected due to navigation rule
@@ -224,8 +221,7 @@ public class Jsf20ControllerImpl implements BridgeController {
     /**
      * @see org.jboss.portletbridge.bridge.controller.BridgeController#renderPortletHead(org.jboss.portletbridge.bridge.context.BridgeContext)
      */
-    public void renderPortletHead(BridgeContext bridgeContext) throws BridgeException, BridgeDefaultViewNotSpecifiedException,
-            BridgeUninitializedException {
+    public void renderPortletHead(BridgeContext bridgeContext) throws BridgeException {
         // TODO Add support for processing Head
         bridgeConfig.getLogger().log(Level.INFO, "Jsf20ControllerImpl.renderPortletHead called, but no action taken");
     }
@@ -233,8 +229,7 @@ public class Jsf20ControllerImpl implements BridgeController {
     /**
      * @see org.jboss.portletbridge.bridge.controller.BridgeController#renderPortletBody(org.jboss.portletbridge.bridge.context.BridgeContext)
      */
-    public void renderPortletBody(BridgeContext bridgeContext) throws BridgeException, BridgeDefaultViewNotSpecifiedException,
-            BridgeUninitializedException {
+    public void renderPortletBody(BridgeContext bridgeContext) throws BridgeException {
 
         FacesContext facesContext = null;
         Lifecycle facesLifecycle = null;
@@ -257,7 +252,7 @@ public class Jsf20ControllerImpl implements BridgeController {
             }
 
             if (facesContext.getExternalContext().getRequestParameterValuesMap()
-                    .containsKey(ResponseStateManager.VIEW_STATE_PARAM)) {
+                .containsKey(ResponseStateManager.VIEW_STATE_PARAM)) {
                 facesContext.getExternalContext().getRequestMap().put(Bridge.IS_POSTBACK_ATTRIBUTE, Boolean.TRUE);
             }
 
@@ -292,9 +287,9 @@ public class Jsf20ControllerImpl implements BridgeController {
     /**
      * @see org.jboss.portletbridge.bridge.controller.BridgeController#renderResource(org.jboss.portletbridge.bridge.context.BridgeContext)
      */
-    public void renderResource(BridgeContext bridgeContext) throws BridgeException, BridgeDefaultViewNotSpecifiedException,
-            BridgeUninitializedException {
-        if (ResourceHandler.RESOURCE_IDENTIFIER.equals(((ResourceRequest) bridgeContext.getPortletRequest()).getResourceID())) {
+    public void renderResource(BridgeContext bridgeContext) throws BridgeException {
+        if (ResourceHandler.RESOURCE_IDENTIFIER.equals(((ResourceRequest) bridgeContext.getPortletRequest())
+            .getResourceID())) {
             FacesContext facesContext = null;
             Lifecycle facesLifecycle = null;
 
@@ -340,7 +335,7 @@ public class Jsf20ControllerImpl implements BridgeController {
 
         // Process Public Parameter changes
         processOutgoingParameters(facesContext, bridgeContext.getPortletRequest(),
-                (StateAwareResponse) bridgeContext.getPortletResponse());
+            (StateAwareResponse) bridgeContext.getPortletResponse());
 
         if (bridgeContext.getPreserveBridgeRequestScope()) {
             scope = bridgeContext.getBridgeScope();
@@ -356,7 +351,8 @@ public class Jsf20ControllerImpl implements BridgeController {
 
             scope.putAll(facesContext.getExternalContext().getRequestMap());
 
-            ((StateAwareResponse) bridgeContext.getPortletResponse()).setRenderParameter(REQUEST_SCOPE_ID, scope.getId());
+            ((StateAwareResponse) bridgeContext.getPortletResponse()).setRenderParameter(REQUEST_SCOPE_ID,
+                scope.getId());
         }
         return scope;
     }
@@ -513,11 +509,10 @@ public class Jsf20ControllerImpl implements BridgeController {
 
     private boolean isFacesResource(ResourceRequest portletRequest) {
         return portletRequest.getParameter(Bridge.FACES_VIEW_ID_PARAMETER) != null
-                || portletRequest.getParameter(Bridge.FACES_VIEW_PATH_PARAMETER) != null;
+            || portletRequest.getParameter(Bridge.FACES_VIEW_PATH_PARAMETER) != null;
     }
 
-    protected void renderFacesResource(BridgeContext bridgeContext) throws BridgeException,
-            BridgeDefaultViewNotSpecifiedException, BridgeUninitializedException {
+    protected void renderFacesResource(BridgeContext bridgeContext) throws BridgeException {
         FacesContext facesContext = null;
         Lifecycle facesLifecycle = null;
         PublicParameterPhaseListener ppPhaseListener = null;
@@ -602,7 +597,7 @@ public class Jsf20ControllerImpl implements BridgeController {
 
     protected FacesContext getFacesContext(BridgeContext bridgeContext, Lifecycle facesLifecycle) throws FacesException {
         FacesContext facesContext = getFacesContextFactory().getFacesContext(bridgeContext.getPortletContext(),
-                bridgeContext.getPortletRequest(), bridgeContext.getPortletResponse(), facesLifecycle);
+            bridgeContext.getPortletRequest(), bridgeContext.getPortletResponse(), facesLifecycle);
 
         // Fire Post Construct FacesContext system event
         fireFacesSystemEvent(bridgeContext, BridgePostConstructFacesContextSystemEvent.class);
@@ -619,7 +614,8 @@ public class Jsf20ControllerImpl implements BridgeController {
     }
 
     protected Lifecycle getFacesLifecycle() throws FacesException {
-        LifecycleFactory lifecycleFactory = (LifecycleFactory) FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
+        LifecycleFactory lifecycleFactory = (LifecycleFactory) FactoryFinder
+            .getFactory(FactoryFinder.LIFECYCLE_FACTORY);
         return lifecycleFactory.getLifecycle(bridgeConfig.getLifecycleId());
     }
 
@@ -649,14 +645,14 @@ public class Jsf20ControllerImpl implements BridgeController {
     }
 
     protected void processOutgoingParameters(FacesContext facesContext, PortletRequest request,
-            final StateAwareResponse response) {
+        final StateAwareResponse response) {
         Map<String, String> publicParameterMapping = bridgeConfig.getPublicRenderParameterMappings();
         Enumeration<String> parameterNames = bridgeConfig.getPortletConfig().getPublicRenderParameterNames();
 
         if (null != publicParameterMapping && publicParameterMapping.size() > 0 && parameterNames.hasMoreElements()) {
             ParameterFunction outgoingFunction = new ParameterFunction() {
-                public boolean processParameter(ELContext elContext, Map<String, String[]> publicParameters, String name,
-                        ValueExpression valueExpression) {
+                public boolean processParameter(ELContext elContext, Map<String, String[]> publicParameters,
+                    String name, ValueExpression valueExpression) {
                     boolean valueChanged = false;
                     String modelValue = (String) valueExpression.getValue(elContext);
                     if (null != modelValue) {
@@ -676,7 +672,7 @@ public class Jsf20ControllerImpl implements BridgeController {
             };
 
             PublicParameterUtil.processPublicParameters(facesContext, request, publicParameterMapping, parameterNames,
-                    outgoingFunction, bridgeConfig.getPortletConfig().getPortletName());
+                outgoingFunction, bridgeConfig.getPortletConfig().getPortletName());
 
         }
     }

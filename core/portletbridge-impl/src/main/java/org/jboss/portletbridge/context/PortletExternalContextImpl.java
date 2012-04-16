@@ -54,9 +54,9 @@ import org.jboss.portletbridge.bridge.logger.BridgeLogger;
 import org.jboss.portletbridge.bridge.logger.BridgeLogger.Level;
 
 /**
- * Version of the {@link ExternalContext} for a Portlet request. {@link FacesContextFactory} will create instance of this class
- * for a portal <code>action</code> phase.
- * 
+ * Version of the {@link ExternalContext} for a Portlet request. {@link FacesContextFactory} will create instance of
+ * this class for a portal <code>action</code> phase.
+ *
  * @author asmirnov
  */
 public abstract class PortletExternalContextImpl extends AbstractExternalContext {
@@ -379,7 +379,7 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
             PortletSession portletSession = getRequest().getPortletSession(false);
             if (null != portletSession) {
                 String historyViewId = (String) portletSession.getAttribute(Bridge.VIEWID_HISTORY + "."
-                        + getRequest().getPortletMode().toString());
+                    + getRequest().getPortletMode().toString());
                 if (null != historyViewId) {
                     try {
                         PortalActionURL viewIdUrl = new PortalActionURL(historyViewId);
@@ -563,7 +563,8 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
     }
 
     /**
-     * @param hasNavigationRedirect the hasNavigationRedirect to set
+     * @param hasNavigationRedirect
+     *            the hasNavigationRedirect to set
      */
     void setHasNavigationRedirect(boolean hasNavigationRedirect) {
         this.hasNavigationRedirect = hasNavigationRedirect;

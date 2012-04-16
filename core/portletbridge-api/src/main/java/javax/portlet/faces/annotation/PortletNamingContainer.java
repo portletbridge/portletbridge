@@ -29,10 +29,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * The PortletNamingContainer annotation is used on a class as a signal that instances of this class implement the Portlet
- * NamingContainer behavior. I.e. its a <code>UIViewRoot</code> which overrides and implements
- * <code>getContainerClientId()</code> ensuring that the returned Id contains in part a portlet Id that is unique with respect
- * to the consuming application (portal). This id is acquired by calling <code>ExternalContext.encodeNamespace()</code>.
+ * The PortletNamingContainer annotation is used on a class as a signal that instances of this class implement the
+ * Portlet NamingContainer behavior. I.e. its a <code>UIViewRoot</code> which overrides and implements
+ * <code>getContainerClientId()</code> ensuring that the returned Id contains in part a portlet Id that is unique with
+ * respect to the consuming application (portal). This id is acquired by calling
+ * <code>ExternalContext.encodeNamespace()</code>.
  */
 
 @Documented

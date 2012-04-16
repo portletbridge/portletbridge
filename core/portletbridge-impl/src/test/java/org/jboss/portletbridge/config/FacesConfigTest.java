@@ -28,13 +28,13 @@ import junit.framework.TestCase;
 
 /**
  * @author asmirnov
- * 
+ *
  */
 public class FacesConfigTest extends TestCase {
 
     /**
      * Test method for {@link org.jboss.portletbridge.config.FacesConfig#parse(java.io.InputStream)}.
-     * 
+     *
      * @throws ParsingException
      */
     public void testParseInputStream() throws Exception {
@@ -48,7 +48,7 @@ public class FacesConfigTest extends TestCase {
 
     /**
      * Test method for {@link org.jboss.portletbridge.config.FacesConfig#parse(java.io.InputStream)}.
-     * 
+     *
      * @throws ParsingException
      */
     public void testPublicParameters() throws Exception {

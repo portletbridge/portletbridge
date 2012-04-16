@@ -26,7 +26,7 @@
 
  * Copyright 1999-2004 The Apache Software Foundation.
 
- * 
+ *
 
  * Licensed under the Apache License, Version 2.0 (the "License");
 
@@ -34,11 +34,11 @@
 
  * You may obtain a copy of the License at
 
- * 
+ *
 
  *      http://www.apache.org/licenses/LICENSE-2.0
 
- * 
+ *
 
  * Unless required by applicable law or agreed to in writing, software
 
@@ -67,14 +67,14 @@ import javax.servlet.http.Cookie;
 import org.jboss.portletbridge.context.flash.FlashContextFactory;
 
 /**
- * 
+ *
  * @author shura
- * 
- * 
- * 
- * 
- * 
- * 
+ *
+ *
+ *
+ *
+ *
+ *
  */
 public abstract class AbstractExternalContext extends ExternalContext {
 
@@ -122,14 +122,15 @@ public abstract class AbstractExternalContext extends ExternalContext {
     }
 
     /**
-     * 
+     *
      * @param context
      * @param request
      * @param response
-     * @param defaultContext -
-     * 
-     *        default implementation of <code>ExternalFacesContext</code>.
-     * 
+     * @param defaultContext
+     *            -
+     *
+     *            default implementation of <code>ExternalFacesContext</code>.
+     *
      */
     public AbstractExternalContext(Object context, Object request, Object response) {
         super();
@@ -153,11 +154,11 @@ public abstract class AbstractExternalContext extends ExternalContext {
     }
 
     /*
-     * 
+     *
      * (non-Javadoc)
-     * 
-     * 
-     * 
+     *
+     *
+     *
      * @see javax.faces.context.ExternalContext#dispatch(java.lang.String)
      */
     public Map<String, Object> getApplicationMap() {
@@ -194,7 +195,7 @@ public abstract class AbstractExternalContext extends ExternalContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.context.ExternalContext#getAuthType()
      */
     public Object getContext() {
@@ -203,7 +204,7 @@ public abstract class AbstractExternalContext extends ExternalContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.context.ExternalContext#getInitParameter(java.lang.String)
      */
     @Override
@@ -229,14 +230,14 @@ public abstract class AbstractExternalContext extends ExternalContext {
 
     /**
      * Hoock method for initialization parameters.
-     * 
+     *
      * @return
      */
     protected abstract Enumeration<String> getInitParametersNames();
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.context.ExternalContext#getRequest()
      */
     public Object getRequest() {
@@ -245,7 +246,7 @@ public abstract class AbstractExternalContext extends ExternalContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.context.ExternalContext#setRequest(java.lang.Object)
      */
     public void setRequest(Object request) {
@@ -264,11 +265,11 @@ public abstract class AbstractExternalContext extends ExternalContext {
     }
 
     /*
-     * 
+     *
      * (non-Javadoc)
-     * 
-     * 
-     * 
+     *
+     *
+     *
      * @see javax.faces.context.ExternalContext#getRequestHeaderMap()
      */
     public Map<String, String> getRequestHeaderMap() {
@@ -377,7 +378,7 @@ public abstract class AbstractExternalContext extends ExternalContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.context.ExternalContext#getRequestParameterNames()
      */
     public Iterator<String> getRequestParameterNames() {
@@ -385,11 +386,11 @@ public abstract class AbstractExternalContext extends ExternalContext {
     }
 
     /*
-     * 
+     *
      * (non-Javadoc)
-     * 
-     * 
-     * 
+     *
+     *
+     *
      * @see javax.faces.context.ExternalContext#getRequestParameterValuesMap()
      */
     public Map<String, String[]> getRequestParameterValuesMap() {
@@ -415,11 +416,11 @@ public abstract class AbstractExternalContext extends ExternalContext {
     protected abstract String[] getRequestParameterValues(String name);
 
     /*
-     * 
+     *
      * (non-Javadoc)
-     * 
-     * 
-     * 
+     *
+     *
+     *
      * @see javax.faces.context.ExternalContext#getResponse()
      */
     @Override
@@ -432,11 +433,11 @@ public abstract class AbstractExternalContext extends ExternalContext {
     }
 
     /*
-     * 
+     *
      * (non-Javadoc)
-     * 
-     * 
-     * 
+     *
+     *
+     *
      * @see javax.faces.context.ExternalContext#getSessionMap()
      */
     public Map<String, Object> getSessionMap() {

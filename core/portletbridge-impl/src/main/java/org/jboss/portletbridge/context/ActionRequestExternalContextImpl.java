@@ -42,7 +42,7 @@ import javax.portlet.faces.Bridge;
 
 /**
  * @author asmirnov
- * 
+ *
  */
 public class ActionRequestExternalContextImpl extends PortletExternalContextImpl {
 
@@ -135,7 +135,7 @@ public class ActionRequestExternalContextImpl extends PortletExternalContextImpl
         }
         PortalActionURL actionURL = new PortalActionURL(url);
         if (url.startsWith("#") || (!actionURL.isInContext(getRequestContextPath()))
-                || "true".equalsIgnoreCase(actionURL.getParameter(Bridge.DIRECT_LINK))) {
+            || "true".equalsIgnoreCase(actionURL.getParameter(Bridge.DIRECT_LINK))) {
             getResponse().sendRedirect(url);
         } else {
             internalRedirect(actionURL);

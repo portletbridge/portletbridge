@@ -41,14 +41,15 @@ import org.jboss.portletbridge.bridge.logger.BridgeLogger.Level;
 /**
  * Manages a set of BridgeRequestScopes based on its policies. Clients interact with the manager to create and remove
  * BridgeRequestScopes, and to lookup one by its key.
- * 
+ *
  * @author kenfinnigan
  */
 public class BridgeRequestScopeManagerImpl implements BridgeRequestScopeManager {
 
     private static final int DEFAULT_MAX_MANAGED_REQUEST_SCOPES = 100;
 
-    private static final BridgeLogger logger = BridgeLoggerFactoryImpl.getLogger(BridgeRequestScopeManagerImpl.class.getName());
+    private static final BridgeLogger logger = BridgeLoggerFactoryImpl.getLogger(BridgeRequestScopeManagerImpl.class
+        .getName());
 
     private BridgeRequestScopeFactory scopeFactory;
 
@@ -56,8 +57,10 @@ public class BridgeRequestScopeManagerImpl implements BridgeRequestScopeManager 
     private Map<String, String> scopeIdMap;
 
     public BridgeRequestScopeManagerImpl(BridgeConfig bridgeConfig) {
-        this.scopeFactory = (BridgeRequestScopeFactory) BridgeFactoryFinder.getFactoryInstance(BridgeRequestScopeFactory.class);
-        this.bridgeRequestScopeCache = createBridgeRequestScopeCache(bridgeConfig.getPortletConfig().getPortletContext());
+        this.scopeFactory = (BridgeRequestScopeFactory) BridgeFactoryFinder
+            .getFactoryInstance(BridgeRequestScopeFactory.class);
+        this.bridgeRequestScopeCache = createBridgeRequestScopeCache(bridgeConfig.getPortletConfig()
+            .getPortletContext());
         this.scopeIdMap = new HashMap<String, String>(getCacheMax(bridgeConfig.getPortletConfig().getPortletContext()));
     }
 
@@ -65,13 +68,13 @@ public class BridgeRequestScopeManagerImpl implements BridgeRequestScopeManager 
      * @see org.jboss.portletbridge.bridge.scope.BridgeRequestScopeManager#createRequestScope(org.jboss.portletbridge.bridge.context.BridgeContext,
      *      java.lang.String, java.lang.String, java.lang.String, java.lang.String)
      */
-    public BridgeRequestScope createRequestScope(BridgeContext ctx, String portletName, String sessionId, String viewId,
-            String portletMode) {
+    public BridgeRequestScope createRequestScope(BridgeContext ctx, String portletName, String sessionId,
+        String viewId, String portletMode) {
         BridgeRequestScope scope = scopeFactory.getBridgeRequestScope(portletName, sessionId, viewId, portletMode);
         this.bridgeRequestScopeCache.put(scope.getId(), scope);
         this.scopeIdMap.put(
-                BridgeRequestScopeUtil.generateBridgeRequestScopeIdPrefix(portletName, sessionId, viewId, portletMode),
-                scope.getId());
+            BridgeRequestScopeUtil.generateBridgeRequestScopeIdPrefix(portletName, sessionId, viewId, portletMode),
+            scope.getId());
         return scope;
     }
 
@@ -80,8 +83,9 @@ public class BridgeRequestScopeManagerImpl implements BridgeRequestScopeManager 
      *      java.lang.String)
      */
     public BridgeRequestScope createRequestScope(BridgeContext ctx, String viewId) {
-        return createRequestScope(ctx, ctx.getBridgeConfig().getPortletConfig().getPortletName(), ctx.getPortletRequest()
-                .getPortletSession(true).getId(), viewId, ctx.getPortletRequest().getPortletMode().toString());
+        return createRequestScope(ctx, ctx.getBridgeConfig().getPortletConfig().getPortletName(), ctx
+            .getPortletRequest().getPortletSession(true).getId(), viewId, ctx.getPortletRequest().getPortletMode()
+            .toString());
     }
 
     /**
@@ -97,9 +101,9 @@ public class BridgeRequestScopeManagerImpl implements BridgeRequestScopeManager 
      *      java.lang.String, java.lang.String, java.lang.String, java.lang.String)
      */
     public BridgeRequestScope getRequestScope(BridgeContext ctx, String portletName, String sessionId, String viewId,
-            String portletMode) {
-        String idPrefix = BridgeRequestScopeUtil
-                .generateBridgeRequestScopeIdPrefix(portletName, sessionId, viewId, portletMode);
+        String portletMode) {
+        String idPrefix = BridgeRequestScopeUtil.generateBridgeRequestScopeIdPrefix(portletName, sessionId, viewId,
+            portletMode);
         String scopeKey = this.scopeIdMap.get(idPrefix);
         BridgeRequestScope scope = null;
         if (null != scopeKey) {
@@ -117,7 +121,7 @@ public class BridgeRequestScopeManagerImpl implements BridgeRequestScopeManager 
      */
     public BridgeRequestScope getRequestScope(BridgeContext ctx, String viewId, String portletMode) {
         return getRequestScope(ctx, ctx.getBridgeConfig().getPortletConfig().getPortletName(), ctx.getPortletRequest()
-                .getPortletSession(true).getId(), viewId, portletMode);
+            .getPortletSession(true).getId(), viewId, portletMode);
     }
 
     /**
@@ -136,9 +140,9 @@ public class BridgeRequestScopeManagerImpl implements BridgeRequestScopeManager 
     }
 
     /**
-     * Per JSR-329 6.8.2, removal of the {@link BridgeRequestScope} from being cached results in clear() being called on the
-     * scope, which in turn calls preDestroy on Objects.
-     * 
+     * Per JSR-329 6.8.2, removal of the {@link BridgeRequestScope} from being cached results in clear() being called on
+     * the scope, which in turn calls preDestroy on Objects.
+     *
      * @see org.jboss.portletbridge.bridge.scope.BridgeRequestScopeManager#removeRequestScopeById(org.jboss.portletbridge.bridge.context.BridgeContext,
      *      java.lang.String)
      */
@@ -160,10 +164,10 @@ public class BridgeRequestScopeManagerImpl implements BridgeRequestScopeManager 
      * @see org.jboss.portletbridge.bridge.scope.BridgeRequestScopeManager#removeRequestScope(org.jboss.portletbridge.bridge.context.BridgeContext,
      *      java.lang.String, java.lang.String, java.lang.String, java.lang.String)
      */
-    public BridgeRequestScope removeRequestScope(BridgeContext ctx, String portletName, String sessionId, String viewId,
-            String portletMode) {
-        String idPrefix = BridgeRequestScopeUtil
-                .generateBridgeRequestScopeIdPrefix(portletName, sessionId, viewId, portletMode);
+    public BridgeRequestScope removeRequestScope(BridgeContext ctx, String portletName, String sessionId,
+        String viewId, String portletMode) {
+        String idPrefix = BridgeRequestScopeUtil.generateBridgeRequestScopeIdPrefix(portletName, sessionId, viewId,
+            portletMode);
         String scopeKey = this.scopeIdMap.get(idPrefix);
         BridgeRequestScope scope = null;
         if (null != scopeKey) {
@@ -180,8 +184,8 @@ public class BridgeRequestScopeManagerImpl implements BridgeRequestScopeManager 
      *      java.lang.String, java.lang.String)
      */
     public BridgeRequestScope removeRequestScope(BridgeContext ctx, String viewId, String portletMode) {
-        return removeRequestScope(ctx, ctx.getBridgeConfig().getPortletConfig().getPortletName(), ctx.getPortletRequest()
-                .getPortletSession(true).getId(), viewId, portletMode);
+        return removeRequestScope(ctx, ctx.getBridgeConfig().getPortletConfig().getPortletName(), ctx
+            .getPortletRequest().getPortletSession(true).getId(), viewId, portletMode);
     }
 
     /**
@@ -254,9 +258,9 @@ public class BridgeRequestScopeManagerImpl implements BridgeRequestScopeManager 
     }
 
     /**
-     * Per JSR-329 3.2, retrieves javax.portlet.faces.MAX_MANAGED_REQUEST_SCOPES portlet init parameter to determine the maximum
-     * number of scopes to maintain. If not present, or invalid value, use the default for this implementation.
-     * 
+     * Per JSR-329 3.2, retrieves javax.portlet.faces.MAX_MANAGED_REQUEST_SCOPES portlet init parameter to determine the
+     * maximum number of scopes to maintain. If not present, or invalid value, use the default for this implementation.
+     *
      * @param portletContext
      * @return Max number of {@link BridgeRequestScope}'s to manage
      */
@@ -267,7 +271,8 @@ public class BridgeRequestScopeManagerImpl implements BridgeRequestScopeManager 
             try {
                 maxManagedScopes = Integer.parseInt(maxManagedScopesInitParam);
             } catch (NumberFormatException e) {
-                logger.log(Level.WARNING, "portlet.xml contains invalid value for " + Bridge.MAX_MANAGED_REQUEST_SCOPES);
+                logger
+                    .log(Level.WARNING, "portlet.xml contains invalid value for " + Bridge.MAX_MANAGED_REQUEST_SCOPES);
             }
         }
         return maxManagedScopes;

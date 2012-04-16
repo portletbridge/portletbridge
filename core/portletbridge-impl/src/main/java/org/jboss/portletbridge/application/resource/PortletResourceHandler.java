@@ -40,7 +40,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author leo
- * 
+ *
  */
 public class PortletResourceHandler extends ResourceHandlerWrapper {
 
@@ -61,7 +61,7 @@ public class PortletResourceHandler extends ResourceHandlerWrapper {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.application.ResourceHandlerWrapper#getWrapped()
      */
     @Override
@@ -146,7 +146,7 @@ public class PortletResourceHandler extends ResourceHandlerWrapper {
 
                 int size = 0;
                 for (int thisRead = resourceChannel.read(buf), totalWritten = 0; thisRead != -1; thisRead = resourceChannel
-                        .read(buf)) {
+                    .read(buf)) {
 
                     buf.rewind();
                     buf.limit(thisRead);

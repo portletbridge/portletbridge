@@ -37,12 +37,12 @@ import java.util.regex.Pattern;
 
 /**
  * @author asmirnov
- * 
+ *
  */
 public class PortalActionURL {
 
     private static final Pattern urlPattern = Pattern
-            .compile("^(\\w*:)?(//[\\w\\._-]+[^/:])?((?:\\:)(\\d+))?([^?]*)?((?:\\?)(.*))?$");
+        .compile("^(\\w*:)?(//[\\w\\._-]+[^/:])?((?:\\:)(\\d+))?([^?]*)?((?:\\?)(.*))?$");
 
     private static final String NULL = "";
 
@@ -54,7 +54,7 @@ public class PortalActionURL {
 
     /**
      * The authority part of this URL.
-     * 
+     *
      * @serial
      */
     private String authority;
@@ -116,7 +116,7 @@ public class PortalActionURL {
 
     /**
      * Clone constructor
-     * 
+     *
      * @param src
      */
     public PortalActionURL(PortalActionURL src) {
@@ -243,7 +243,8 @@ public class PortalActionURL {
     }
 
     public boolean isInContext(String context) {
-        return host == null && protocol == null && port == -1 && (path.startsWith(context + "/") || (!path.startsWith("/")));
+        return host == null && protocol == null && port == -1
+            && (path.startsWith(context + "/") || (!path.startsWith("/")));
     }
 
     @Override

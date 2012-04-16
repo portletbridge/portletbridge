@@ -185,7 +185,8 @@ public class FacesConfigHandler extends DefaultHandler {
         }
 
         @Override
-        protected ContentHandler getNextHandler(String uri, String localName, Attributes attributes) throws ParsingException {
+        protected ContentHandler getNextHandler(String uri, String localName, Attributes attributes)
+            throws ParsingException {
             if (BRIDGE_CONFIG_FACTORY.equals(localName) && BRIDGE_NS.equals(uri)) {
                 return new BridgeFactoryHandler(this, BridgeConfigFactory.class);
             } else if (BRIDGE_CONTEXT_FACTORY.equals(localName) && BRIDGE_NS.equals(uri)) {
@@ -200,7 +201,7 @@ public class FacesConfigHandler extends DefaultHandler {
                 return new BridgeFactoryHandler(this, BridgeRequestScopeManagerFactory.class);
             } else {
                 throw new ParsingException("Unexpected element: " + localName + " within " + FACTORY_EXTENSION_ELEMENT
-                        + " element");
+                    + " element");
             }
         }
 
@@ -242,12 +243,13 @@ public class FacesConfigHandler extends DefaultHandler {
         }
 
         @Override
-        protected ContentHandler getNextHandler(String uri, String localName, Attributes attributes) throws ParsingException {
+        protected ContentHandler getNextHandler(String uri, String localName, Attributes attributes)
+            throws ParsingException {
             if (PUBLIC_PARAMETER_MAPPING.equals(localName) && BRIDGE_NS.equals(uri)) {
                 return new ParameterMappingHandler(this);
             } else {
                 throw new ParsingException("Unexpected element: " + localName + " within " + PUBLIC_PARAMETER_MAPPINGS
-                        + " element");
+                    + " element");
             }
         }
 
@@ -263,7 +265,8 @@ public class FacesConfigHandler extends DefaultHandler {
         }
 
         @Override
-        protected ContentHandler getNextHandler(String uri, String localName, Attributes attributes) throws SAXException {
+        protected ContentHandler getNextHandler(String uri, String localName, Attributes attributes)
+            throws SAXException {
             ContentHandler nextHandler = null;
             if (PARAMETER_ELEMENT.equals(localName)) {
                 nextHandler = new StringContentHandler(getReader(), this, parameterName);
@@ -271,7 +274,7 @@ public class FacesConfigHandler extends DefaultHandler {
                 nextHandler = new StringContentHandler(getReader(), this, modelEl);
             } else {
                 throw new ParsingException("Unexpected element: " + localName + " within " + PUBLIC_PARAMETER_MAPPING
-                        + " element");
+                    + " element");
             }
             return nextHandler;
         }
@@ -281,8 +284,8 @@ public class FacesConfigHandler extends DefaultHandler {
             if (parameterName.length() > 0 && modelEl.length() > 0) {
                 parameterMapping.put(parameterName.toString(), modelEl.toString());
             } else {
-                throw new ParsingException(PUBLIC_PARAMETER_MAPPING + " did not contain both " + PARAMETER_ELEMENT + " and "
-                        + MODEL_EL_ELEMENT);
+                throw new ParsingException(PUBLIC_PARAMETER_MAPPING + " did not contain both " + PARAMETER_ELEMENT
+                    + " and " + MODEL_EL_ELEMENT);
             }
         }
     }
@@ -297,15 +300,16 @@ public class FacesConfigHandler extends DefaultHandler {
         }
 
         @Override
-        protected ContentHandler getNextHandler(String uri, String localName, Attributes attributes) throws SAXException {
+        protected ContentHandler getNextHandler(String uri, String localName, Attributes attributes)
+            throws SAXException {
             ContentHandler nextHandler = null;
             if (RENDER_RESPONSE_WRAPPER_CLASS.equals(localName)) {
                 nextHandler = new StringContentHandler(getReader(), this, renderResponseWrapperClass);
             } else if (RESOURCE_RESPONSE_WRAPPER_CLASS.equals(localName)) {
                 nextHandler = new StringContentHandler(getReader(), this, resourceResponseWrapperClass);
             } else {
-                throw new ParsingException("Unexpected element: " + localName + " within " + WRITE_BEHIND_RESPONSE_WRAPPERS
-                        + " element");
+                throw new ParsingException("Unexpected element: " + localName + " within "
+                    + WRITE_BEHIND_RESPONSE_WRAPPERS + " element");
             }
             return nextHandler;
         }

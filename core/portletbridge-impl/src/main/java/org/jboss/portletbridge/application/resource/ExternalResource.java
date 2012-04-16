@@ -31,7 +31,7 @@ import javax.faces.context.FacesContext;
 
 /**
  * @author leo
- * 
+ *
  */
 public class ExternalResource extends Resource {
 
@@ -43,7 +43,7 @@ public class ExternalResource extends Resource {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.application.Resource#getInputStream()
      */
     @Override
@@ -54,7 +54,7 @@ public class ExternalResource extends Resource {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.application.Resource#getRequestPath()
      */
     @Override
@@ -64,7 +64,7 @@ public class ExternalResource extends Resource {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.application.Resource#getResponseHeaders()
      */
     @Override
@@ -75,7 +75,7 @@ public class ExternalResource extends Resource {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.application.Resource#getURL()
      */
     @Override
@@ -86,7 +86,7 @@ public class ExternalResource extends Resource {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.application.Resource#userAgentNeedsUpdate(javax.faces.context.FacesContext)
      */
     @Override

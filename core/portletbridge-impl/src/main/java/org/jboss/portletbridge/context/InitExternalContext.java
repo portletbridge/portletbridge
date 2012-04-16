@@ -36,9 +36,9 @@ import javax.portlet.PortletContext;
 
 /**
  * Stub {@link ExternalContext} implementation. The only context operations are implemented.
- * 
+ *
  * @author asmirnov
- * 
+ *
  */
 public class InitExternalContext extends AbstractExternalContext {
 
@@ -53,15 +53,14 @@ public class InitExternalContext extends AbstractExternalContext {
 
     /*
      * (non-Javadoc)
-     * 
-     * @see
-     * org.jboss.portletbridge.context.AbstractExternalContext#createResourceUrl(org.jboss.portletbridge.context.PortalActionURL
-     * )
+     *
+     * @see org.jboss.portletbridge.context.AbstractExternalContext#createResourceUrl(org.jboss.portletbridge.context.
+     * PortalActionURL )
      */
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.jboss.portletbridge.context.AbstractExternalContext#enumerateRequestParameterNames()
      */
     @Override
@@ -72,7 +71,7 @@ public class InitExternalContext extends AbstractExternalContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.jboss.portletbridge.context.AbstractExternalContext#getContextAttribute(java.lang.String)
      */
     @Override
@@ -82,7 +81,7 @@ public class InitExternalContext extends AbstractExternalContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.jboss.portletbridge.context.AbstractExternalContext#getContextAttributeNames()
      */
     @Override
@@ -92,7 +91,7 @@ public class InitExternalContext extends AbstractExternalContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.jboss.portletbridge.context.AbstractExternalContext#getInitParametersNames()
      */
     @Override
@@ -102,7 +101,7 @@ public class InitExternalContext extends AbstractExternalContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.jboss.portletbridge.context.AbstractExternalContext#getNamespace()
      */
     @Override
@@ -113,7 +112,7 @@ public class InitExternalContext extends AbstractExternalContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.jboss.portletbridge.context.AbstractExternalContext#getRequestAttribute(java.lang.String)
      */
     @Override
@@ -124,7 +123,7 @@ public class InitExternalContext extends AbstractExternalContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.jboss.portletbridge.context.AbstractExternalContext#getRequestAttributeNames()
      */
     @Override
@@ -135,7 +134,7 @@ public class InitExternalContext extends AbstractExternalContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.jboss.portletbridge.context.AbstractExternalContext#getRequestHeader(java.lang.String)
      */
     @Override
@@ -146,7 +145,7 @@ public class InitExternalContext extends AbstractExternalContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.jboss.portletbridge.context.AbstractExternalContext#getRequestHeaderNames()
      */
     @Override
@@ -157,7 +156,7 @@ public class InitExternalContext extends AbstractExternalContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.jboss.portletbridge.context.AbstractExternalContext#getRequestHeaderValues(java.lang.String)
      */
     @Override
@@ -168,7 +167,7 @@ public class InitExternalContext extends AbstractExternalContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.jboss.portletbridge.context.AbstractExternalContext#getRequestParameter(java.lang.String)
      */
     @Override
@@ -179,7 +178,7 @@ public class InitExternalContext extends AbstractExternalContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.jboss.portletbridge.context.AbstractExternalContext#getRequestParameterValues(java.lang.String)
      */
     @Override
@@ -190,7 +189,7 @@ public class InitExternalContext extends AbstractExternalContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.jboss.portletbridge.context.AbstractExternalContext#getSessionAttribute(java.lang.String)
      */
     @Override
@@ -201,7 +200,7 @@ public class InitExternalContext extends AbstractExternalContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.jboss.portletbridge.context.AbstractExternalContext#getSessionAttributeNames()
      */
     @Override
@@ -212,7 +211,7 @@ public class InitExternalContext extends AbstractExternalContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.jboss.portletbridge.context.AbstractExternalContext#removeContextAttribute(java.lang.String)
      */
     @Override
@@ -222,7 +221,7 @@ public class InitExternalContext extends AbstractExternalContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.jboss.portletbridge.context.AbstractExternalContext#removeRequestAttribute(java.lang.String)
      */
     @Override
@@ -233,7 +232,7 @@ public class InitExternalContext extends AbstractExternalContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.jboss.portletbridge.context.AbstractExternalContext#removeSessionAttribute(java.lang.String)
      */
     @Override
@@ -244,8 +243,9 @@ public class InitExternalContext extends AbstractExternalContext {
 
     /*
      * (non-Javadoc)
-     * 
-     * @see org.jboss.portletbridge.context.AbstractExternalContext#setContextAttribute(java.lang.String, java.lang.Object)
+     *
+     * @see org.jboss.portletbridge.context.AbstractExternalContext#setContextAttribute(java.lang.String,
+     * java.lang.Object)
      */
     @Override
     protected void setContextAttribute(String name, Object value) {
@@ -255,8 +255,9 @@ public class InitExternalContext extends AbstractExternalContext {
 
     /*
      * (non-Javadoc)
-     * 
-     * @see org.jboss.portletbridge.context.AbstractExternalContext#setRequestAttribute(java.lang.String, java.lang.Object)
+     *
+     * @see org.jboss.portletbridge.context.AbstractExternalContext#setRequestAttribute(java.lang.String,
+     * java.lang.Object)
      */
     @Override
     protected void setRequestAttribute(String name, Object value) {
@@ -266,8 +267,9 @@ public class InitExternalContext extends AbstractExternalContext {
 
     /*
      * (non-Javadoc)
-     * 
-     * @see org.jboss.portletbridge.context.AbstractExternalContext#setSessionAttribute(java.lang.String, java.lang.Object)
+     *
+     * @see org.jboss.portletbridge.context.AbstractExternalContext#setSessionAttribute(java.lang.String,
+     * java.lang.Object)
      */
     @Override
     protected void setSessionAttribute(String name, Object value) {
@@ -277,7 +279,7 @@ public class InitExternalContext extends AbstractExternalContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.context.ExternalContext#dispatch(java.lang.String)
      */
     @Override
@@ -288,7 +290,7 @@ public class InitExternalContext extends AbstractExternalContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.context.ExternalContext#getAuthType()
      */
     @Override
@@ -299,7 +301,7 @@ public class InitExternalContext extends AbstractExternalContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.context.ExternalContext#getInitParameter(java.lang.String)
      */
     @Override
@@ -310,7 +312,7 @@ public class InitExternalContext extends AbstractExternalContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.context.ExternalContext#getRemoteUser()
      */
     @Override
@@ -321,7 +323,7 @@ public class InitExternalContext extends AbstractExternalContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.context.ExternalContext#getRequestContextPath()
      */
     @Override
@@ -332,7 +334,7 @@ public class InitExternalContext extends AbstractExternalContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.context.ExternalContext#getRequestLocale()
      */
     @Override
@@ -343,7 +345,7 @@ public class InitExternalContext extends AbstractExternalContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.context.ExternalContext#getRequestLocales()
      */
     @Override
@@ -354,7 +356,7 @@ public class InitExternalContext extends AbstractExternalContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.context.ExternalContext#getRequestPathInfo()
      */
     @Override
@@ -365,7 +367,7 @@ public class InitExternalContext extends AbstractExternalContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.context.ExternalContext#getRequestServletPath()
      */
     @Override
@@ -376,7 +378,7 @@ public class InitExternalContext extends AbstractExternalContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.context.ExternalContext#getResource(java.lang.String)
      */
     @Override
@@ -386,7 +388,7 @@ public class InitExternalContext extends AbstractExternalContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.context.ExternalContext#getResourceAsStream(java.lang.String)
      */
     @Override
@@ -396,7 +398,7 @@ public class InitExternalContext extends AbstractExternalContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.context.ExternalContext#getResourcePaths(java.lang.String)
      */
     @Override
@@ -406,7 +408,7 @@ public class InitExternalContext extends AbstractExternalContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.context.ExternalContext#getSession(boolean)
      */
     @Override
@@ -417,7 +419,7 @@ public class InitExternalContext extends AbstractExternalContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.context.ExternalContext#getUserPrincipal()
      */
     @Override
@@ -428,7 +430,7 @@ public class InitExternalContext extends AbstractExternalContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.context.ExternalContext#isUserInRole(java.lang.String)
      */
     @Override
@@ -439,7 +441,7 @@ public class InitExternalContext extends AbstractExternalContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.context.ExternalContext#log(java.lang.String)
      */
     @Override
@@ -449,7 +451,7 @@ public class InitExternalContext extends AbstractExternalContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.context.ExternalContext#log(java.lang.String, java.lang.Throwable)
      */
     @Override
@@ -459,7 +461,7 @@ public class InitExternalContext extends AbstractExternalContext {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.context.ExternalContext#redirect(java.lang.String)
      */
     @Override

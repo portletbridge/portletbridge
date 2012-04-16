@@ -29,13 +29,13 @@ import javax.portlet.PortletException;
 
 /**
  * @author asmirnov
- * 
+ *
  */
 public class OldTestsForPortlet extends GenericPortletTestBase {
 
     /**
      * Test method for {@link javax.portlet.faces.GenericFacesPortlet#destroy()} .
-     * 
+     *
      * @throws PortletException
      * @throws IOException
      */
@@ -44,8 +44,9 @@ public class OldTestsForPortlet extends GenericPortletTestBase {
 
     /**
      * Test method for
-     * {@link javax.portlet.faces.GenericFacesPortlet#doDispatch(javax.portlet.RenderRequest, javax.portlet.RenderResponse)} .
-     * 
+     * {@link javax.portlet.faces.GenericFacesPortlet#doDispatch(javax.portlet.RenderRequest, javax.portlet.RenderResponse)}
+     * .
+     *
      * @throws PortletException
      * @throws IOException
      */
@@ -61,8 +62,9 @@ public class OldTestsForPortlet extends GenericPortletTestBase {
 
     /**
      * Test method for
-     * {@link javax.portlet.faces.GenericFacesPortlet#doDispatch(javax.portlet.RenderRequest, javax.portlet.RenderResponse)} .
-     * 
+     * {@link javax.portlet.faces.GenericFacesPortlet#doDispatch(javax.portlet.RenderRequest, javax.portlet.RenderResponse)}
+     * .
+     *
      * @throws PortletException
      * @throws IOException
      */
@@ -79,8 +81,9 @@ public class OldTestsForPortlet extends GenericPortletTestBase {
 
     /**
      * Test method for
-     * {@link javax.portlet.faces.GenericFacesPortlet#doDispatch(javax.portlet.RenderRequest, javax.portlet.RenderResponse)} .
-     * 
+     * {@link javax.portlet.faces.GenericFacesPortlet#doDispatch(javax.portlet.RenderRequest, javax.portlet.RenderResponse)}
+     * .
+     *
      * @throws PortletException
      * @throws IOException
      */
@@ -97,8 +100,9 @@ public class OldTestsForPortlet extends GenericPortletTestBase {
 
     /**
      * Test method for
-     * {@link javax.portlet.faces.GenericFacesPortlet#doEdit(javax.portlet.RenderRequest, javax.portlet.RenderResponse)} .
-     * 
+     * {@link javax.portlet.faces.GenericFacesPortlet#doEdit(javax.portlet.RenderRequest, javax.portlet.RenderResponse)}
+     * .
+     *
      * @throws IOException
      * @throws PortletException
      */
@@ -115,7 +119,8 @@ public class OldTestsForPortlet extends GenericPortletTestBase {
 
     /**
      * Test method for
-     * {@link javax.portlet.faces.GenericFacesPortlet#doHelp(javax.portlet.RenderRequest, javax.portlet.RenderResponse)} .
+     * {@link javax.portlet.faces.GenericFacesPortlet#doHelp(javax.portlet.RenderRequest, javax.portlet.RenderResponse)}
+     * .
      */
     public void testDoHelpRenderRequestRenderResponse() {
         // fail("Not yet implemented");
@@ -123,8 +128,9 @@ public class OldTestsForPortlet extends GenericPortletTestBase {
 
     /**
      * Test method for
-     * {@link javax.portlet.faces.GenericFacesPortlet#doView(javax.portlet.RenderRequest, javax.portlet.RenderResponse)} .
-     * 
+     * {@link javax.portlet.faces.GenericFacesPortlet#doView(javax.portlet.RenderRequest, javax.portlet.RenderResponse)}
+     * .
+     *
      * @throws PortletException
      * @throws IOException
      */
@@ -144,7 +150,7 @@ public class OldTestsForPortlet extends GenericPortletTestBase {
      * Test method for
      * {@link javax.portlet.faces.GenericFacesPortlet#processAction(javax.portlet.ActionRequest, javax.portlet.ActionResponse)}
      * .
-     * 
+     *
      * @throws PortletException
      * @throws IOException
      */
@@ -178,7 +184,7 @@ public class OldTestsForPortlet extends GenericPortletTestBase {
 
     /**
      * Test method for {@link javax.portlet.faces.GenericFacesPortlet#getBridgeClassName()}.
-     * 
+     *
      * @throws PortletException
      */
     public void testGetBridgeClassName() throws PortletException {
@@ -194,7 +200,7 @@ public class OldTestsForPortlet extends GenericPortletTestBase {
 
     /**
      * Test method for {@link javax.portlet.faces.GenericFacesPortlet#getBridgeClassName()}.
-     * 
+     *
      * @throws PortletException
      */
     public void testGetBridgeClassName1() throws PortletException {
@@ -213,7 +219,7 @@ public class OldTestsForPortlet extends GenericPortletTestBase {
 
     /**
      * Test method for {@link javax.portlet.faces.GenericFacesPortlet#getBridgeClassName()}.
-     * 
+     *
      * @throws PortletException
      */
     public void testGetBridgeClassName2() throws PortletException {
@@ -249,7 +255,7 @@ public class OldTestsForPortlet extends GenericPortletTestBase {
      * Test method for
      * {@link javax.portlet.faces.GenericFacesPortlet#getDefaultViewIdMap(javax.portlet.PortletRequest, javax.portlet.PortletMode)}
      * .
-     * 
+     *
      * @throws PortletException
      */
     public void testGetDefaultViewIdMap() throws PortletException {
@@ -275,7 +281,7 @@ public class OldTestsForPortlet extends GenericPortletTestBase {
 
     /**
      * Test method for {@link javax.portlet.faces.GenericFacesPortlet#getFacesBridge()}.
-     * 
+     *
      * @throws PortletException
      */
     public void testGetFacesPortletBridge() throws PortletException {

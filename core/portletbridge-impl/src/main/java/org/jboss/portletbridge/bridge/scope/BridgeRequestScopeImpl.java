@@ -34,20 +34,19 @@ import javax.portlet.faces.annotation.BridgePreDestroy;
 import org.jboss.portletbridge.bridge.factory.BridgeLoggerFactoryImpl;
 import org.jboss.portletbridge.bridge.logger.BridgeLogger;
 import org.jboss.portletbridge.bridge.logger.BridgeLogger.Level;
-import org.jboss.portletbridge.bridge.scope.BridgeRequestScope;
-import org.jboss.portletbridge.bridge.scope.BridgeRequestScopeUtil;
 
 /**
  * This class keeps all request attributes that are required to be stored between portlet requests. These parameters are
  * described in the chapter 5.1.2 "Managing Lifecycle State".
- * 
+ *
  * @author asmirnov, kenfinnigan
  */
 public class BridgeRequestScopeImpl extends ConcurrentHashMap<String, Object> implements BridgeRequestScope {
 
     private static final long serialVersionUID = -5796085561862187555L;
 
-    private static final BridgeLogger logger = BridgeLoggerFactoryImpl.getLogger(BridgeRequestScopeImpl.class.getName());
+    private static final BridgeLogger logger = BridgeLoggerFactoryImpl
+        .getLogger(BridgeRequestScopeImpl.class.getName());
 
     private static final int DEFAULT_INITIAL_CAPACITY = 16;
     private static final float DEFAULT_LOAD_FACTOR = .75f;
@@ -65,19 +64,20 @@ public class BridgeRequestScopeImpl extends ConcurrentHashMap<String, Object> im
         initScope(portletName, sessionId, viewId, portletMode);
     }
 
-    public BridgeRequestScopeImpl(String portletName, String sessionId, String viewId, String portletMode, int initialCapacity) {
+    public BridgeRequestScopeImpl(String portletName, String sessionId, String viewId, String portletMode,
+        int initialCapacity) {
         super(initialCapacity, DEFAULT_LOAD_FACTOR, DEFAULT_CONCURRENCY_LEVEL);
         initScope(portletName, sessionId, viewId, portletMode);
     }
 
-    public BridgeRequestScopeImpl(String portletName, String sessionId, String viewId, String portletMode, int initialCapacity,
-            float loadFactor, int concurrencyLevel) {
+    public BridgeRequestScopeImpl(String portletName, String sessionId, String viewId, String portletMode,
+        int initialCapacity, float loadFactor, int concurrencyLevel) {
         super(initialCapacity, loadFactor, concurrencyLevel);
         initScope(portletName, sessionId, viewId, portletMode);
     }
 
     public BridgeRequestScopeImpl(String portletName, String sessionId, String viewId, String portletMode,
-            Map<String, Object> requestScopeDataMap) {
+        Map<String, Object> requestScopeDataMap) {
         super(DEFAULT_INITIAL_CAPACITY, DEFAULT_LOAD_FACTOR, DEFAULT_CONCURRENCY_LEVEL);
         initScope(portletName, sessionId, viewId, portletMode);
         putAll(requestScopeDataMap);
@@ -93,8 +93,9 @@ public class BridgeRequestScopeImpl extends ConcurrentHashMap<String, Object> im
     public String getId() {
         if (null == this.uniqRequestScopeId) {
             long timeInMillis = Calendar.getInstance().getTimeInMillis();
-            this.uniqRequestScopeId = new StringBuffer(BridgeRequestScopeUtil.generateBridgeRequestScopeIdPrefix(portletName,
-                    sessionId, viewId, portletMode)).append(':').append(Long.toString(timeInMillis)).toString();
+            this.uniqRequestScopeId = new StringBuffer(BridgeRequestScopeUtil.generateBridgeRequestScopeIdPrefix(
+                portletName, sessionId, viewId, portletMode)).append(':').append(Long.toString(timeInMillis))
+                .toString();
         }
         return this.uniqRequestScopeId;
     }
@@ -196,10 +197,11 @@ public class BridgeRequestScopeImpl extends ConcurrentHashMap<String, Object> im
     }
 
     /**
-     * Per JSR-329 6.8.2, when terminating the Bridge Request Scope, any managed attributes with public, no-arg, void return
-     * methods annotated with BridgePreDestroy need to be called.
-     * 
-     * @param obj Object requiring call to PreDestroy annotated methods
+     * Per JSR-329 6.8.2, when terminating the Bridge Request Scope, any managed attributes with public, no-arg, void
+     * return methods annotated with BridgePreDestroy need to be called.
+     *
+     * @param obj
+     *            Object requiring call to PreDestroy annotated methods
      * @return Original Object
      */
     private Object callPreDestroy(Object obj) {
@@ -227,7 +229,7 @@ public class BridgeRequestScopeImpl extends ConcurrentHashMap<String, Object> im
                         method.invoke(obj, (Object) null);
                     } catch (Exception e) {
                         logger.log(Level.ERROR, "Error invoking @PreDestroy method: " + method.getName() + " on: "
-                                + obj.getClass().getName(), e);
+                            + obj.getClass().getName(), e);
                     }
                 }
             }

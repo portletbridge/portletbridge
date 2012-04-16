@@ -39,17 +39,19 @@ public class PortletApplicationImpl extends ApplicationWrapper {
     }
 
     /**
-     * Create a new UIComponent subclass, using the mappings defined by previous calls to the addComponent method of this class.
+     * Create a new UIComponent subclass, using the mappings defined by previous calls to the addComponent method of
+     * this class.
      * <p>
-     * 
-     * @throws FacesException if there is no mapping defined for the specified componentType, or if an instance of the specified
-     *         type could not be created for any reason.
+     *
+     * @throws FacesException
+     *             if there is no mapping defined for the specified componentType, or if an instance of the specified
+     *             type could not be created for any reason.
      */
     @Override
     public javax.faces.component.UIComponent createComponent(String componentType) throws FacesException {
         UIComponent component = wrappedApplication.createComponent(componentType);
         if (BridgeUtil.isPortletRequest() && component instanceof UIViewRoot
-                && UIViewRoot.class.getAnnotation(PortletNamingContainer.class) == null) {
+            && UIViewRoot.class.getAnnotation(PortletNamingContainer.class) == null) {
             // replace with our own UIViewRoot
             UIViewRoot root = (UIViewRoot) component;
             UIViewRoot portletRoot = new PortletNamingContainerUIViewRoot();

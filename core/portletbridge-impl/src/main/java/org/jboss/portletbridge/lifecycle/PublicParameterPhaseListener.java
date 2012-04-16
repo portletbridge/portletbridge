@@ -39,8 +39,8 @@ import org.jboss.portletbridge.util.ParameterFunction;
 import org.jboss.portletbridge.util.PublicParameterUtil;
 
 /**
- * 
- * 
+ *
+ *
  * @author kenfinnigan
  */
 public class PublicParameterPhaseListener implements PhaseListener {
@@ -70,7 +70,8 @@ public class PublicParameterPhaseListener implements PhaseListener {
         }
 
         if (event.getPhaseId().equals(PhaseId.RESTORE_VIEW)) {
-            // Process Incoming Public Parameter Mappings for all Portlet Phases, as per Spec 5.2.4, 5.2.5, 5.2.6, and 5.2.7.
+            // Process Incoming Public Parameter Mappings for all Portlet Phases, as per Spec 5.2.4, 5.2.5, 5.2.6, and
+            // 5.2.7.
             processIncomingParameters(context, portletRequest);
 
             if (BridgeUtil.getPortletRequestPhase().equals(Bridge.PortletPhase.EVENT_PHASE)) {
@@ -103,8 +104,8 @@ public class PublicParameterPhaseListener implements PhaseListener {
         if (null != publicParameterMapping && publicParameterMapping.size() > 0 && parameterNames.hasMoreElements()) {
 
             ParameterFunction incomingFunction = new ParameterFunction() {
-                public boolean processParameter(ELContext elContext, Map<String, String[]> publicParameters, String name,
-                        ValueExpression valueExpression) {
+                public boolean processParameter(ELContext elContext, Map<String, String[]> publicParameters,
+                    String name, ValueExpression valueExpression) {
                     boolean valueChanged = false;
                     Object oldValue = valueExpression.getValue(elContext);
                     if (publicParameters.containsKey(name)) {
@@ -124,7 +125,8 @@ public class PublicParameterPhaseListener implements PhaseListener {
             };
 
             boolean valueChanged = PublicParameterUtil.processPublicParameters(facesContext, portletRequest,
-                    publicParameterMapping, parameterNames, incomingFunction, bridgeConfig.getPortletConfig().getPortletName());
+                publicParameterMapping, parameterNames, incomingFunction, bridgeConfig.getPortletConfig()
+                    .getPortletName());
 
             if (valueChanged && null != bridgeConfig.getPublicRenderParameterHandler()) {
                 bridgeConfig.getPublicRenderParameterHandler().processUpdates(facesContext);

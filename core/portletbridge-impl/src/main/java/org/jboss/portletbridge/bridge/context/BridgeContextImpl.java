@@ -85,7 +85,7 @@ public class BridgeContextImpl extends BridgeContext implements ELContextListene
         // Add as ELContextListener to the Faces App so we can add the
         // portletConfig to any newly created contexts.
         ((ApplicationFactory) FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY)).getApplication()
-                .addELContextListener(this);
+            .addELContextListener(this);
     }
 
     /**
@@ -97,7 +97,7 @@ public class BridgeContextImpl extends BridgeContext implements ELContextListene
 
         // Remove as ELContextListener from the Faces App
         ((ApplicationFactory) FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY)).getApplication()
-                .removeELContextListener(this);
+            .removeELContextListener(this);
     }
 
     /**
@@ -339,7 +339,8 @@ public class BridgeContextImpl extends BridgeContext implements ELContextListene
     }
 
     /**
-     * @see org.jboss.portletbridge.bridge.context.BridgeContext#setViewHistory(java.lang.String, java.lang.String, boolean)
+     * @see org.jboss.portletbridge.bridge.context.BridgeContext#setViewHistory(java.lang.String, java.lang.String,
+     *      boolean)
      */
     @Override
     public void setViewHistory(String mode, String viewId, boolean preserveRenderParams) {
@@ -360,7 +361,8 @@ public class BridgeContextImpl extends BridgeContext implements ELContextListene
                 Map<String, String[]> renderParams = null;
 
                 if (null != facesContext) {
-                    renderParams = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterValuesMap();
+                    renderParams = FacesContext.getCurrentInstance().getExternalContext()
+                        .getRequestParameterValuesMap();
                 } else {
                     renderParams = getPortletRequest().getPrivateParameterMap();
                 }
@@ -369,7 +371,7 @@ public class BridgeContextImpl extends BridgeContext implements ELContextListene
                     Set<Map.Entry<String, String[]>> keys = renderParams.entrySet();
                     for (Entry<String, String[]> entry : keys) {
                         if (!entry.getKey().equals(bridgeConfig.getViewIdRenderParameterName())
-                                && !entry.getKey().equals(ResponseStateManager.VIEW_STATE_PARAM)) {
+                            && !entry.getKey().equals(ResponseStateManager.VIEW_STATE_PARAM)) {
                             for (String value : entry.getValue()) {
                                 historyViewId.addParameter(entry.getKey(), value);
                             }
@@ -380,7 +382,8 @@ public class BridgeContextImpl extends BridgeContext implements ELContextListene
 
             String queryString = historyViewId.getQueryString();
             String historyViewPath = historyViewId.getPath() + (queryString != null ? "?" + queryString : "");
-            getPortletRequest().getPortletSession(true).setAttribute(Bridge.VIEWID_HISTORY + "." + mode, historyViewPath);
+            getPortletRequest().getPortletSession(true).setAttribute(Bridge.VIEWID_HISTORY + "." + mode,
+                historyViewPath);
         }
     }
 
@@ -391,7 +394,7 @@ public class BridgeContextImpl extends BridgeContext implements ELContextListene
     public String getViewHistory(String mode) {
         StringBuffer key = new StringBuffer(100);
         return (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
-                .get(key.append(Bridge.VIEWID_HISTORY).append('.').append(mode).toString());
+            .get(key.append(Bridge.VIEWID_HISTORY).append('.').append(mode).toString());
     }
 
     /**
@@ -449,7 +452,8 @@ public class BridgeContextImpl extends BridgeContext implements ELContextListene
     @Override
     public BridgeRequestScopeManager getBridgeRequestScopeManager() {
         PortletSession session = getPortletRequest().getPortletSession(true);
-        BridgeRequestScopeManager scopeManager = (BridgeRequestScopeManager) session.getAttribute(REQUEST_SCOPE_MANAGER);
+        BridgeRequestScopeManager scopeManager = (BridgeRequestScopeManager) session
+            .getAttribute(REQUEST_SCOPE_MANAGER);
 
         if (null == scopeManager) {
             scopeManager = createBridgeRequestScopeManager();
@@ -459,18 +463,18 @@ public class BridgeContextImpl extends BridgeContext implements ELContextListene
     }
 
     private synchronized BridgeRequestScopeManager createBridgeRequestScopeManager() {
-        BridgeRequestScopeManager scopeManager = (BridgeRequestScopeManager) getPortletRequest().getPortletSession(true)
-                .getAttribute(REQUEST_SCOPE_MANAGER);
+        BridgeRequestScopeManager scopeManager = (BridgeRequestScopeManager) getPortletRequest()
+            .getPortletSession(true).getAttribute(REQUEST_SCOPE_MANAGER);
 
         if (null == scopeManager) {
             getPortletRequest().getPortletSession(true).setAttribute(
-                    REQUEST_SCOPE_MANAGER,
-                    ((BridgeRequestScopeManagerFactory) BridgeFactoryFinder
-                            .getFactoryInstance(BridgeRequestScopeManagerFactory.class))
-                            .getBridgeRequestScopeManager(getBridgeConfig()));
+                REQUEST_SCOPE_MANAGER,
+                ((BridgeRequestScopeManagerFactory) BridgeFactoryFinder
+                    .getFactoryInstance(BridgeRequestScopeManagerFactory.class))
+                    .getBridgeRequestScopeManager(getBridgeConfig()));
 
             scopeManager = (BridgeRequestScopeManager) getPortletRequest().getPortletSession(true).getAttribute(
-                    REQUEST_SCOPE_MANAGER);
+                REQUEST_SCOPE_MANAGER);
         }
 
         return scopeManager;
@@ -513,7 +517,8 @@ public class BridgeContextImpl extends BridgeContext implements ELContextListene
      * @see org.jboss.portletbridge.bridge.context.BridgeContext#getDefaultFacesViewIdForRequest(boolean)
      */
     @Override
-    public String getDefaultFacesViewIdForRequest(boolean excludeQueryString) throws BridgeDefaultViewNotSpecifiedException {
+    public String getDefaultFacesViewIdForRequest(boolean excludeQueryString)
+        throws BridgeDefaultViewNotSpecifiedException {
         PortletRequest request = null;
         FacesContext facesContext = FacesContext.getCurrentInstance();
 
@@ -525,7 +530,7 @@ public class BridgeContextImpl extends BridgeContext implements ELContextListene
             request = getPortletRequest();
             if (null == request) {
                 throw new BridgeNotAFacesRequestException(
-                        "No PortletRequest present in Faces.getExternalContext() or BridgeContext.getPortletRequest()");
+                    "No PortletRequest present in Faces.getExternalContext() or BridgeContext.getPortletRequest()");
             }
         }
 
@@ -533,7 +538,7 @@ public class BridgeContextImpl extends BridgeContext implements ELContextListene
 
         if (null == viewId) {
             throw new BridgeDefaultViewNotSpecifiedException("No Default View specified for portlet: "
-                    + getBridgeConfig().getPortletConfig().getPortletName());
+                + getBridgeConfig().getPortletConfig().getPortletName());
         }
 
         if (excludeQueryString) {
@@ -675,7 +680,7 @@ public class BridgeContextImpl extends BridgeContext implements ELContextListene
     }
 
     protected String getViewId(PortletRequest request, boolean excludeQueryString)
-            throws BridgeDefaultViewNotSpecifiedException, BridgeInvalidViewPathException {
+        throws BridgeDefaultViewNotSpecifiedException, BridgeInvalidViewPathException {
 
         String requestedMode = request.getPortletMode().toString();
 

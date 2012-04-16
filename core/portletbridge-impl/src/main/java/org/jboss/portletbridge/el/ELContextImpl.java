@@ -34,9 +34,72 @@ import javax.portlet.PortletConfig;
 
 /**
  * @author asmirnov
- * 
+ *
  */
 public class ELContextImpl extends ELContext {
+
+    private ELResolver resolver;
+
+    private VariableMapper variableMapper = new VariableMapperImpl();
+
+    private FunctionMapper functionMapper = new FunctionMapperImpl();
+
+    private PortletConfig portletConfig;
+    private boolean facesResolved = false;
+
+    public ELContextImpl(ELResolver resolver) {
+        this.resolver = resolver;
+    }
+
+    /**
+     * @return the functionMapper
+     */
+    public FunctionMapper getFunctionMapper() {
+        return this.functionMapper;
+    }
+
+    /**
+     * @param functionMapper
+     *            the functionMapper to set
+     */
+    public void setFunctionMapper(FunctionMapper functionMapper) {
+        this.functionMapper = functionMapper;
+    }
+
+    /**
+     * @return the variableMapper
+     */
+    public VariableMapper getVariableMapper() {
+        return this.variableMapper;
+    }
+
+    /**
+     * @param variableMapper
+     *            the variableMapper to set
+     */
+    public void setVariableMapper(VariableMapper variableMapper) {
+        this.variableMapper = variableMapper;
+    }
+
+    public ELResolver getELResolver() {
+        return this.resolver;
+    }
+
+    public PortletConfig getPortletConfig() {
+        return portletConfig;
+    }
+
+    public void setPortletConfig(PortletConfig config) {
+        portletConfig = config;
+    }
+
+    public boolean isFacesResolved() {
+        return facesResolved;
+    }
+
+    public void setFacesResolved(boolean facesResolved) {
+        this.facesResolved = facesResolved;
+    }
 
     public static final class FunctionMapperImpl extends FunctionMapper {
         /**
@@ -63,66 +126,5 @@ public class ELContextImpl extends ELContext {
         public ValueExpression setVariable(String name, ValueExpression variable) {
             return (ValueExpression) this.variables.put(name, variable);
         }
-    }
-
-    private ELResolver resolver;
-
-    private VariableMapper variableMapper = new VariableMapperImpl();
-
-    private FunctionMapper functionMapper = new FunctionMapperImpl();
-
-    private PortletConfig portletConfig;
-    private boolean facesResolved = false;
-
-    public ELContextImpl(ELResolver resolver) {
-        this.resolver = resolver;
-    }
-
-    /**
-     * @return the functionMapper
-     */
-    public FunctionMapper getFunctionMapper() {
-        return this.functionMapper;
-    }
-
-    /**
-     * @param functionMapper the functionMapper to set
-     */
-    public void setFunctionMapper(FunctionMapper functionMapper) {
-        this.functionMapper = functionMapper;
-    }
-
-    /**
-     * @return the variableMapper
-     */
-    public VariableMapper getVariableMapper() {
-        return this.variableMapper;
-    }
-
-    /**
-     * @param variableMapper the variableMapper to set
-     */
-    public void setVariableMapper(VariableMapper variableMapper) {
-        this.variableMapper = variableMapper;
-    }
-
-    public ELResolver getELResolver() {
-        return this.resolver;
-    }
-
-    public PortletConfig getPortletConfig() {
-        return portletConfig;
-    }
-
-    public void setPortletConfig(PortletConfig config) {
-        portletConfig = config;
-    }
-
-    public boolean isFacesResolved() {
-        return facesResolved;
-    }
-
-    public void setFacesResolved(boolean facesResolved) {
-        this.facesResolved = facesResolved;
     }
 }

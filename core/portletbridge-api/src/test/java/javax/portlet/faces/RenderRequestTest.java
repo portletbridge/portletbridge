@@ -52,8 +52,9 @@ public class RenderRequestTest extends GenericPortletTestBase {
 
     /**
      * Test method for
-     * {@link javax.portlet.faces.GenericFacesPortlet#doDispatch(javax.portlet.RenderRequest, javax.portlet.RenderResponse)} .
-     * 
+     * {@link javax.portlet.faces.GenericFacesPortlet#doDispatch(javax.portlet.RenderRequest, javax.portlet.RenderResponse)}
+     * .
+     *
      * @throws PortletException
      * @throws IOException
      */

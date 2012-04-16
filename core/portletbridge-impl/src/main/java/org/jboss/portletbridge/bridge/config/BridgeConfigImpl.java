@@ -39,10 +39,10 @@ import org.jboss.portletbridge.bridge.factory.BridgeLoggerFactory;
 import org.jboss.portletbridge.bridge.logger.BridgeLogger;
 
 /**
- * Represents values that a Portlet can configure for a given Bridge instance. Per the spec, this information is passed to the
- * Bridge via {@link PortletContext} attributes. As part of the init() method the Bridge will store all these values into a
- * BridgeConfig for use by all parts of the Bridge.
- * 
+ * Represents values that a Portlet can configure for a given Bridge instance. Per the spec, this information is passed
+ * to the Bridge via {@link PortletContext} attributes. As part of the init() method the Bridge will store all these
+ * values into a BridgeConfig for use by all parts of the Bridge.
+ *
  * @author kenfinnigan
  */
 public class BridgeConfigImpl implements BridgeConfig {
@@ -165,7 +165,7 @@ public class BridgeConfigImpl implements BridgeConfig {
     public BridgeLogger getLogger() {
         if (null == logger) {
             setLogger(((BridgeLoggerFactory) BridgeFactoryFinder.getFactoryInstance(BridgeLoggerFactory.class))
-                    .getBridgeLogger(this));
+                .getBridgeLogger(this));
         }
         return logger;
     }
@@ -346,7 +346,7 @@ public class BridgeConfigImpl implements BridgeConfig {
      */
     public String getDefaultRenderKitId() {
         return (String) portletConfig.getPortletContext().getAttribute(
-                Bridge.BRIDGE_PACKAGE_PREFIX + portletConfig.getPortletName() + "." + Bridge.DEFAULT_RENDERKIT_ID);
+            Bridge.BRIDGE_PACKAGE_PREFIX + portletConfig.getPortletName() + "." + Bridge.DEFAULT_RENDERKIT_ID);
     }
 
 }

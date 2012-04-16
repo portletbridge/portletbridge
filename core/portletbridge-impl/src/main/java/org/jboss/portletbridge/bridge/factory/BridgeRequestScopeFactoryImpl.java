@@ -38,8 +38,8 @@ public class BridgeRequestScopeFactoryImpl extends BridgeRequestScopeFactory {
      *      java.lang.String, java.lang.String, java.lang.String)
      */
     @Override
-    public BridgeRequestScope getBridgeRequestScope(String portletName, String sessionId, String viewId, String portletMode)
-            throws FacesException {
+    public BridgeRequestScope getBridgeRequestScope(String portletName, String sessionId, String viewId,
+        String portletMode) throws FacesException {
         return new BridgeRequestScopeImpl(portletName, sessionId, viewId, portletMode);
     }
 
@@ -48,8 +48,8 @@ public class BridgeRequestScopeFactoryImpl extends BridgeRequestScopeFactory {
      *      java.lang.String, java.lang.String, java.lang.String, int)
      */
     @Override
-    public BridgeRequestScope getBridgeRequestScope(String portletName, String sessionId, String viewId, String portletMode,
-            int initialCapacity) throws FacesException {
+    public BridgeRequestScope getBridgeRequestScope(String portletName, String sessionId, String viewId,
+        String portletMode, int initialCapacity) throws FacesException {
         return new BridgeRequestScopeImpl(portletName, sessionId, viewId, portletMode, initialCapacity);
     }
 
@@ -58,10 +58,10 @@ public class BridgeRequestScopeFactoryImpl extends BridgeRequestScopeFactory {
      *      java.lang.String, java.lang.String, java.lang.String, int, float, int)
      */
     @Override
-    public BridgeRequestScope getBridgeRequestScope(String portletName, String sessionId, String viewId, String portletMode,
-            int initialCapacity, float loadFactor, int concurrencyLevel) throws FacesException {
+    public BridgeRequestScope getBridgeRequestScope(String portletName, String sessionId, String viewId,
+        String portletMode, int initialCapacity, float loadFactor, int concurrencyLevel) throws FacesException {
         return new BridgeRequestScopeImpl(portletName, sessionId, viewId, portletMode, initialCapacity, loadFactor,
-                concurrencyLevel);
+            concurrencyLevel);
     }
 
     /**
@@ -69,8 +69,8 @@ public class BridgeRequestScopeFactoryImpl extends BridgeRequestScopeFactory {
      *      java.lang.String, java.lang.String, java.lang.String, java.util.Map)
      */
     @Override
-    public BridgeRequestScope getBridgeRequestScope(String portletName, String sessionId, String viewId, String portletMode,
-            Map<String, Object> requestScopeDataMap) throws FacesException {
+    public BridgeRequestScope getBridgeRequestScope(String portletName, String sessionId, String viewId,
+        String portletMode, Map<String, Object> requestScopeDataMap) throws FacesException {
         return new BridgeRequestScopeImpl(portletName, sessionId, viewId, portletMode, requestScopeDataMap);
     }
 

@@ -55,67 +55,69 @@ import javax.portlet.ResourceResponse;
 import javax.portlet.WindowState;
 
 /**
- * The <code>GenericFacesPortlet</code> is provided to simplify development of a portlet that in whole or part relies on the
- * Faces bridge to process requests. If all requests are to be handled by the bridge, <code>GenericFacesPortlet</code> is a
- * turnkey implementation. Developers do not need to subclass it. However, if there are some situations where the portlet
- * doesn't require bridge services then <code>GenericFacesPortlet</code> can be subclassed and overriden.
+ * The <code>GenericFacesPortlet</code> is provided to simplify development of a portlet that in whole or part relies on
+ * the Faces bridge to process requests. If all requests are to be handled by the bridge,
+ * <code>GenericFacesPortlet</code> is a turnkey implementation. Developers do not need to subclass it. However, if
+ * there are some situations where the portlet doesn't require bridge services then <code>GenericFacesPortlet</code> can
+ * be subclassed and overriden.
  * <p>
- * Since <code>GenericFacesPortlet</code> subclasses <code>GenericPortlet</code> care is taken to all subclasses to override
- * naturally. For example, though <code>doDispatch()</code> is overriden, requests are only dispatched to the bridge from here
- * if the <code>PortletMode</code> isn't <code>VIEW</code>, <code>EDIT</code>, or <code>HELP</code>.
+ * Since <code>GenericFacesPortlet</code> subclasses <code>GenericPortlet</code> care is taken to all subclasses to
+ * override naturally. For example, though <code>doDispatch()</code> is overriden, requests are only dispatched to the
+ * bridge from here if the <code>PortletMode</code> isn't <code>VIEW</code>, <code>EDIT</code>, or <code>HELP</code>.
  * <p>
  * The <code>GenericFacesPortlet</code> recognizes the following portlet initialization parameters:
  * <ul>
- * <li><code>javax.portlet.faces.defaultViewId.[<i>mode</i>]</code>: specifies on a per mode basis the default viewId the Bridge
- * executes when not already encoded in the incoming request. A value must be defined for each <code>PortletMode</code> the
- * <code>Bridge</code> is expected to process.</li>
+ * <li><code>javax.portlet.faces.defaultViewId.[<i>mode</i>]</code>: specifies on a per mode basis the default viewId
+ * the Bridge executes when not already encoded in the incoming request. A value must be defined for each
+ * <code>PortletMode</code> the <code>Bridge</code> is expected to process.</li>
  * <li><code>javax.portlet.faces.excludedRequestAttributes</code>: specifies on a per portlet basis the set of request
- * attributes the bridge is to exclude from its request scope. The value of this parameter is a comma delimited list of either
- * fully qualified attribute names or a partial attribute name of the form <i>packageName.*</i>. In this later case all
- * attributes exactly prefixed by <i>packageName</i> are excluded, non recursive.</li>
+ * attributes the bridge is to exclude from its request scope. The value of this parameter is a comma delimited list of
+ * either fully qualified attribute names or a partial attribute name of the form <i>packageName.*</i>. In this later
+ * case all attributes exactly prefixed by <i>packageName</i> are excluded, non recursive.</li>
  * <li><code>javax.portlet.faces.preserveActionParams</code>: specifies on a per portlet basis whether the bridge should
  * preserve parameters received in an action request and restore them for use during subsequent renders.</li>
- * <li><code>javax.portlet.faces.defaultContentType</code>: specifies on a per mode basis the content type the bridge should set
- * for all render requests it processes.</li>
- * <li><code>javax.portlet.faces.defaultCharacterSetEncoding</code>: specifies on a per mode basis the default character set
- * encoding the bridge should set for all render requests it processes</li>
+ * <li><code>javax.portlet.faces.defaultContentType</code>: specifies on a per mode basis the content type the bridge
+ * should set for all render requests it processes.</li>
+ * <li><code>javax.portlet.faces.defaultCharacterSetEncoding</code>: specifies on a per mode basis the default character
+ * set encoding the bridge should set for all render requests it processes</li>
  * </ul>
- * The <code>GenericFacesPortlet</code> recognizes the following application (<code>PortletContext</code>) initialization
- * parameters:
+ * The <code>GenericFacesPortlet</code> recognizes the following application (<code>PortletContext</code>)
+ * initialization parameters:
  * <ul>
- * <li><code>javax.portlet.faces.BridgeImplClass</code>: specifies the <code>Bridge</code>implementation class used by this
- * portlet. Typically this initialization parameter isn't set as the <code>GenericFacesPortlet</code> defaults to finding the
- * class name from the bridge configuration. However if more then one bridge is configured in the environment such per
- * application configuration is necessary to force a specific bridge to be used.</li>
+ * <li><code>javax.portlet.faces.BridgeImplClass</code>: specifies the <code>Bridge</code>implementation class used by
+ * this portlet. Typically this initialization parameter isn't set as the <code>GenericFacesPortlet</code> defaults to
+ * finding the class name from the bridge configuration. However if more then one bridge is configured in the
+ * environment such per application configuration is necessary to force a specific bridge to be used.</li>
  * </ul>
  */
 public class GenericFacesPortlet extends GenericPortlet {
 
     /**
-     * Application (PortletContext) init parameter that names the bridge class used by this application. Typically not used
-     * unless more then 1 bridge is configured in an environment as its more usual to rely on the self detection.
+     * Application (PortletContext) init parameter that names the bridge class used by this application. Typically not
+     * used unless more then 1 bridge is configured in an environment as its more usual to rely on the self detection.
      */
     public static final String BRIDGE_CLASS = Bridge.BRIDGE_PACKAGE_PREFIX + "BridgeClassName";
 
     /**
-     * Portlet init parameter that defines the default ViewId that should be used when the request doesn't otherwise convery the
-     * target. There must be one initialization parameter for each supported mode. Each parameter is named
+     * Portlet init parameter that defines the default ViewId that should be used when the request doesn't otherwise
+     * convery the target. There must be one initialization parameter for each supported mode. Each parameter is named
      * DEFAULT_VIEWID.<i>mode</i>, where <i>mode</i> is the name of the corresponding <code>PortletMode</code>
      */
     public static final String DEFAULT_VIEWID = Bridge.BRIDGE_PACKAGE_PREFIX + "defaultViewId";
 
     /**
-     * Portlet init parameter that defines the render response ContentType the bridge sets prior to rendering. If not set the
-     * bridge uses the request's preferred content type.
+     * Portlet init parameter that defines the render response ContentType the bridge sets prior to rendering. If not
+     * set the bridge uses the request's preferred content type.
      */
     public static final String DEFAULT_CONTENT_TYPE = Bridge.BRIDGE_PACKAGE_PREFIX + "defaultContentType";
 
     /**
      * Portlet init parameter that defines the render response CharacterSetEncoding the bridge sets prior to rendering.
-     * Typcially only set when the jsp outputs an encoding other then the portlet container's and the portlet container supports
-     * response encoding transformation.
+     * Typcially only set when the jsp outputs an encoding other then the portlet container's and the portlet container
+     * supports response encoding transformation.
      */
-    public static final String DEFAULT_CHARACTERSET_ENCODING = Bridge.BRIDGE_PACKAGE_PREFIX + "defaultCharacterSetEncoding";
+    public static final String DEFAULT_CHARACTERSET_ENCODING = Bridge.BRIDGE_PACKAGE_PREFIX
+        + "defaultCharacterSetEncoding";
 
     /**
      * Portlet init parameter containing the setting for whether the GenericFacesPortlet overrides event processing by
@@ -149,7 +151,8 @@ public class GenericFacesPortlet extends GenericPortlet {
     @Override
     public void init(PortletConfig config) throws PortletException {
         if (initialized) {
-            throw new PortletException("GenericFacesPortlet for portlet " + config.getPortletName() + " already initialized");
+            throw new PortletException("GenericFacesPortlet for portlet " + config.getPortletName()
+                + " already initialized");
         }
         if (log.isLoggable(Level.INFO)) {
             log.info("Init GenericFacesPortlet for portlet " + config.getPortletName());
@@ -181,7 +184,8 @@ public class GenericFacesPortlet extends GenericPortlet {
                 if (i > EXTENDED_ATTR_PREFIX_LENGTH + 2) {
                     String attribute = name.substring(i);
                     String preffix = name.substring(EXTENDED_ATTR_PREFIX_LENGTH, i + 1);
-                    String extensionAttributeName = Bridge.EXTENDED_PORTLET_ATTR_PREFIX + preffix + portletName + attribute;
+                    String extensionAttributeName = Bridge.EXTENDED_PORTLET_ATTR_PREFIX + preffix + portletName
+                        + attribute;
                     portletContext.setAttribute(extensionAttributeName, config.getInitParameter(name).trim());
                 }
             }
@@ -193,26 +197,26 @@ public class GenericFacesPortlet extends GenericPortlet {
     }
 
     /**
-     * 4.2.7 getExcludedRequestAttributes() As a portlet lifecycle allows multiple (re)renders to occur following an action, the
-     * bridge manages an extended notion of a request scope to ensure that such rerenders produces identical results.
-     * Specifically, portlet scoped request attributes are saved/restored by the bridge across such rerenders [5.1.2]. However,
-     * sometimes a portlet request scoped attribute truly must be removed when the request scope ends. The bridge uses multiple
-     * mechanisms for determining which attributes are marked for exclusion from its managed scope. The portlet can directly
-     * instruct the bridge to exclude attributes on a per portlet basis by setting a PorletContext attribute [3.2]. This
-     * attribute's value is a List containing the excluded attribute names.
-     * 
-     * The GenericFacesPortlet sets this attribute based on the result of calling getExcludedRequestAttributes() in its init()
-     * method. The default (GenericFacesPortlet) implementation for getExcludedRequestAttributes() returns a List constructed by
-     * parsing the comma delimited String value from the corresponding portlet initialization parameter,
-     * javax.portlet.faces.excludedRequestAttributes. If this initialization parameter isn't present null is returned which
-     * causes the GenericFacesPortlet to not set the corresponding PortletContext attribute.
-     * 
+     * 4.2.7 getExcludedRequestAttributes() As a portlet lifecycle allows multiple (re)renders to occur following an
+     * action, the bridge manages an extended notion of a request scope to ensure that such rerenders produces identical
+     * results. Specifically, portlet scoped request attributes are saved/restored by the bridge across such rerenders
+     * [5.1.2]. However, sometimes a portlet request scoped attribute truly must be removed when the request scope ends.
+     * The bridge uses multiple mechanisms for determining which attributes are marked for exclusion from its managed
+     * scope. The portlet can directly instruct the bridge to exclude attributes on a per portlet basis by setting a
+     * PorletContext attribute [3.2]. This attribute's value is a List containing the excluded attribute names.
+     *
+     * The GenericFacesPortlet sets this attribute based on the result of calling getExcludedRequestAttributes() in its
+     * init() method. The default (GenericFacesPortlet) implementation for getExcludedRequestAttributes() returns a List
+     * constructed by parsing the comma delimited String value from the corresponding portlet initialization parameter,
+     * javax.portlet.faces.excludedRequestAttributes. If this initialization parameter isn't present null is returned
+     * which causes the GenericFacesPortlet to not set the corresponding PortletContext attribute.
+     *
      * @return
      */
     public List<String> getExcludedRequestAttributes() {
         List<String> attrsList = null;
         String excludedAttrs = getPortletConfig().getInitParameter(
-                Bridge.BRIDGE_PACKAGE_PREFIX + Bridge.EXCLUDED_REQUEST_ATTRIBUTES);
+            Bridge.BRIDGE_PACKAGE_PREFIX + Bridge.EXCLUDED_REQUEST_ATTRIBUTES);
         if (null != excludedAttrs) {
             String[] atrs = excludedAttrs.split(",");
             attrsList = new ArrayList<String>(atrs.length);
@@ -224,18 +228,19 @@ public class GenericFacesPortlet extends GenericPortlet {
     }
 
     /**
-     * 4.2.8 getPreserveActionParameters() By default the bridge doesn't preserve action parameters into subsequent renders.
-     * This can be overridden on a per portlet basis by passing a value of true in the appropriate PortletContext attribute
-     * [3.2]. To determine the setting for this attributes for this particular portlet, the GenericFacesPortlet calls
-     * getPreserveActionParameters() in its init() method. The default (GenericFacesPortlet) implementation returns the Boolean
-     * value corresponding to the String value represented in the portlet initialization parameter,
-     * javax.portlet.faces.preserveActionParams. If this initialization parameter doesn't exist, Boolean.FALSE is returned.
-     * 
+     * 4.2.8 getPreserveActionParameters() By default the bridge doesn't preserve action parameters into subsequent
+     * renders. This can be overridden on a per portlet basis by passing a value of true in the appropriate
+     * PortletContext attribute [3.2]. To determine the setting for this attributes for this particular portlet, the
+     * GenericFacesPortlet calls getPreserveActionParameters() in its init() method. The default (GenericFacesPortlet)
+     * implementation returns the Boolean value corresponding to the String value represented in the portlet
+     * initialization parameter, javax.portlet.faces.preserveActionParams. If this initialization parameter doesn't
+     * exist, Boolean.FALSE is returned.
+     *
      * @return preserve or not action attributes.
      */
     public Boolean isPreserveActionParameters() {
         String preserveActionParams = getPortletConfig().getInitParameter(
-                Bridge.BRIDGE_PACKAGE_PREFIX + Bridge.PRESERVE_ACTION_PARAMS);
+            Bridge.BRIDGE_PACKAGE_PREFIX + Bridge.PRESERVE_ACTION_PARAMS);
         if (null == preserveActionParams) {
             return false;
         }
@@ -244,21 +249,22 @@ public class GenericFacesPortlet extends GenericPortlet {
     }
 
     /**
-     * Returns a String defining the default render kit id the bridge should ensure for this portlet. If non-null, this value is
-     * used to override any default render kit id set on an app wide basis in the faces-config.xml. This default implementation
-     * reads the values from the portlet init_param javax.portlet.faces.defaultRenderKitId. If not present, null is returned.
-     * 
-     * @return a boolean indicating whether or not the bridge should preserve all the action parameters in the subsequent
-     *         renders that occur in the same scope.
+     * Returns a String defining the default render kit id the bridge should ensure for this portlet. If non-null, this
+     * value is used to override any default render kit id set on an app wide basis in the faces-config.xml. This
+     * default implementation reads the values from the portlet init_param javax.portlet.faces.defaultRenderKitId. If
+     * not present, null is returned.
+     *
+     * @return a boolean indicating whether or not the bridge should preserve all the action parameters in the
+     *         subsequent renders that occur in the same scope.
      */
     public String getDefaultRenderKitId() {
         return getPortletConfig().getInitParameter(Bridge.BRIDGE_PACKAGE_PREFIX + Bridge.DEFAULT_RENDERKIT_ID);
     }
 
     /**
-     * Returns the value of the portlet initialization parameter javax.portlet.faces.autoDispatchEvents if non-null or true,
-     * otherwise.
-     * 
+     * Returns the value of the portlet initialization parameter javax.portlet.faces.autoDispatchEvents if non-null or
+     * true, otherwise.
+     *
      * @return boolean indicating whether to auto-dispatch all events to the bridge or not.
      */
     public Boolean isAutoDispatchEvents() {
@@ -271,12 +277,12 @@ public class GenericFacesPortlet extends GenericPortlet {
     }
 
     /**
-     * 
+     *
      * @return an instance of BridgeEventHandler or null if there is none.
      */
     public BridgeEventHandler getBridgeEventHandler() {
         String eventHandlerClassName = getPortletConfig().getInitParameter(
-                Bridge.BRIDGE_PACKAGE_PREFIX + Bridge.BRIDGE_EVENT_HANDLER);
+            Bridge.BRIDGE_PACKAGE_PREFIX + Bridge.BRIDGE_EVENT_HANDLER);
         if (null != eventHandlerClassName) {
             try {
                 return createInstanceByClassName(eventHandlerClassName.trim());
@@ -292,7 +298,7 @@ public class GenericFacesPortlet extends GenericPortlet {
      */
     public BridgePublicRenderParameterHandler getBridgePublicRenderParameterHandler() {
         String renderParameterHandlerClassName = getPortletConfig().getInitParameter(
-                Bridge.BRIDGE_PACKAGE_PREFIX + Bridge.BRIDGE_PUBLIC_RENDER_PARAMETER_HANDLER);
+            Bridge.BRIDGE_PACKAGE_PREFIX + Bridge.BRIDGE_PUBLIC_RENDER_PARAMETER_HANDLER);
         if (null != renderParameterHandlerClassName) {
             try {
                 return createInstanceByClassName(renderParameterHandlerClassName);
@@ -305,7 +311,7 @@ public class GenericFacesPortlet extends GenericPortlet {
 
     /**
      * JSR 301 API method
-     * 
+     *
      * @return
      */
     public String getBridgeClassName() throws PortletException {
@@ -321,7 +327,7 @@ public class GenericFacesPortlet extends GenericPortlet {
 
     /**
      * JSR 301 API method
-     * 
+     *
      * @return
      */
     public Map<String, String> getDefaultViewIdMap() {
@@ -337,7 +343,7 @@ public class GenericFacesPortlet extends GenericPortlet {
 
     /**
      * Get current {@link Bridge} instance. Bridge will be created and initialized on first request only.
-     * 
+     *
      * @return the facesPortletBridge
      * @throws PortletException
      */
@@ -365,7 +371,7 @@ public class GenericFacesPortlet extends GenericPortlet {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.portlet.GenericPortlet#destroy()
      */
     public void destroy() {
@@ -386,8 +392,8 @@ public class GenericFacesPortlet extends GenericPortlet {
     }
 
     /**
-     * If mode is VIEW, EDIT, or HELP -- defer to the doView, doEdit, doHelp so subclasses can override. Otherwise handle mode
-     * here if there is a defaultViewId mapping for it.
+     * If mode is VIEW, EDIT, or HELP -- defer to the doView, doEdit, doHelp so subclasses can override. Otherwise
+     * handle mode here if there is a defaultViewId mapping for it.
      */
     @Override
     protected void doDispatch(RenderRequest request, RenderResponse response) throws PortletException, IOException {
@@ -425,7 +431,7 @@ public class GenericFacesPortlet extends GenericPortlet {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.portlet.GenericPortlet#processAction(javax.portlet.ActionRequest, javax.portlet.ActionResponse)
      */
     public void processAction(ActionRequest request, ActionResponse response) throws PortletException, IOException {
@@ -480,7 +486,7 @@ public class GenericFacesPortlet extends GenericPortlet {
 
     /**
      * Internal method to redirect all render methods to the {@link Bridge} instance.
-     * 
+     *
      * @param request
      * @param response
      * @throws PortletException
@@ -516,7 +522,7 @@ public class GenericFacesPortlet extends GenericPortlet {
 
     /**
      * Setup request parameters as required by 3.4
-     * 
+     *
      * @param request
      * @param response
      * @throws PortletException
@@ -531,7 +537,7 @@ public class GenericFacesPortlet extends GenericPortlet {
     }
 
     /**
-     * 
+     *
      * @param request
      * @param response
      * @return path to process request by 'include' content instead of Bridge.
@@ -542,7 +548,7 @@ public class GenericFacesPortlet extends GenericPortlet {
 
     /**
      * Internal method to set application-scope parameter namespaced by portlet name.
-     * 
+     *
      * @param name
      * @param value
      */
@@ -605,7 +611,8 @@ public class GenericFacesPortlet extends GenericPortlet {
                         try {
                             stream.close();
                         } catch (IOException e) {
-                            log.log(Level.SEVERE, "Error to close input stream for a resource " + BRIDGE_SERVICE_CLASSPATH, e);
+                            log.log(Level.SEVERE, "Error to close input stream for a resource "
+                                + BRIDGE_SERVICE_CLASSPATH, e);
                         }
 
                     }

@@ -23,10 +23,11 @@ package javax.portlet.faces.event;
 
 /**
  * An <code>EventNavigationResult</code> is the type of object that can be returned from a
- * <code>BrdigeEventHandler.handleEvent</code> call. When it is returned (non-null) it conveys the Faces navigation information
- * to the bridge that it needs to utilize the Faces <code>NavigationHandler</code> to evaluate the navigation according to the
- * configured rules. The <code>fromAction</code> corresponds to the <code>fromAction</code> string in the faces-config.xml
- * navigation rule. The <code>outcome</code> corresponds to the <code>outcome</code> string in the navigation rule.
+ * <code>BrdigeEventHandler.handleEvent</code> call. When it is returned (non-null) it conveys the Faces navigation
+ * information to the bridge that it needs to utilize the Faces <code>NavigationHandler</code> to evaluate the
+ * navigation according to the configured rules. The <code>fromAction</code> corresponds to the <code>fromAction</code>
+ * string in the faces-config.xml navigation rule. The <code>outcome</code> corresponds to the <code>outcome</code>
+ * string in the navigation rule.
  */
 public class EventNavigationResult {
     private String fromAction;
@@ -45,9 +46,9 @@ public class EventNavigationResult {
     }
 
     /**
-     * Gets the fromAction stored in this object. The <code>fromAction</code> corresponds to the <code>fromAction</code> string
-     * in the faces-config.xml navigation rule.
-     * 
+     * Gets the fromAction stored in this object. The <code>fromAction</code> corresponds to the <code>fromAction</code>
+     * string in the faces-config.xml navigation rule.
+     *
      * @return <code>String</code> containing the fromAction
      */
     public String getFromAction() {
@@ -55,19 +56,20 @@ public class EventNavigationResult {
     }
 
     /**
-     * Sets the fromAction for this object. The <code>fromAction</code> corresponds to the <code>fromAction</code> string in the
-     * faces-config.xml navigation rule.
-     * 
-     * @param action new fromAction
+     * Sets the fromAction for this object. The <code>fromAction</code> corresponds to the <code>fromAction</code>
+     * string in the faces-config.xml navigation rule.
+     *
+     * @param action
+     *            new fromAction
      */
     public void setFromAction(String fromAction) {
         this.fromAction = fromAction;
     }
 
     /**
-     * Gets the outcome stored in this object. The <code>outcome</code> corresponds to the <code>outcome</code> string in the
-     * faces-config.xml navigation rule.
-     * 
+     * Gets the outcome stored in this object. The <code>outcome</code> corresponds to the <code>outcome</code> string
+     * in the faces-config.xml navigation rule.
+     *
      * @return <code>String</code> containing the fromAction
      */
     public String getOutcome() {
@@ -75,10 +77,11 @@ public class EventNavigationResult {
     }
 
     /**
-     * Sets the fromAction for this object. The <code>fromAction</code> corresponds to the <code>fromAction</code> string in the
-     * faces-config.xml navigation rule.
-     * 
-     * @param outcome new outcome
+     * Sets the fromAction for this object. The <code>fromAction</code> corresponds to the <code>fromAction</code>
+     * string in the faces-config.xml navigation rule.
+     *
+     * @param outcome
+     *            new outcome
      */
     public void setOutcome(String outcome) {
         this.outcome = outcome;
@@ -86,7 +89,7 @@ public class EventNavigationResult {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -100,7 +103,7 @@ public class EventNavigationResult {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override

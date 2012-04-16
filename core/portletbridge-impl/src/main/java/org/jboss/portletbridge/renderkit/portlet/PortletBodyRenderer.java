@@ -47,10 +47,10 @@ import org.jboss.portletbridge.bridge.logger.BridgeLogger.Level;
 import org.jboss.portletbridge.bridge.logger.JULLoggerImpl;
 
 /**
- * This class is a JSF renderer that is designed for use with the h:head component tag. Portlets are forbidden from rendering
- * the <head>...</head> section, which is what is done by the JSF implementation's version of this renderer. This renderer
- * avoids rendering the <head>...</head> section and instead delegates that responsibility to the portal.
- * 
+ * This class is a JSF renderer that is designed for use with the h:head component tag. Portlets are forbidden from
+ * rendering the <head>...</head> section, which is what is done by the JSF implementation's version of this renderer.
+ * This renderer avoids rendering the <head>...</head> section and instead delegates that responsibility to the portal.
+ *
  * @author Neil Griffin
  */
 public class PortletBodyRenderer extends Renderer {
@@ -61,15 +61,15 @@ public class PortletBodyRenderer extends Renderer {
     private static final String ATTR_STYLE_CLASS = "styleClass";
     private static final String ELEMENT_DIV = "div";
     private static final String[] BODY_PASS_THRU_ATTRIBUTES = new String[] { "onclick", "ondblclick", "onkeydown",
-            "onkeypress", "onkeyup", "onload", "onmousedown", "onmousemove", "onmouseout", "onmouseover", "onmouseup",
-            "onunload", "styleClass", "title" };
+        "onkeypress", "onkeyup", "onload", "onmousedown", "onmousemove", "onmouseout", "onmouseover", "onmouseup",
+        "onunload", "styleClass", "title" };
     private static final String STYLE_CLASS_PORTLET_BODY = "portletfaces-bridge-body";
     private static final String TARGET_BODY = "body";
 
     /**
      * It is forbidden for a portlet to render the &amp;&lt;body&amp;&gt; element, so instead, render a
      * &amp;&lt;div&amp;&gt;element.
-     * 
+     *
      * @see Renderer#encodeBegin(FacesContext, UIComponent)
      */
     @Override

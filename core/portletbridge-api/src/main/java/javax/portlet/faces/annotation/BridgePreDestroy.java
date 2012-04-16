@@ -28,14 +28,15 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * The PreDestroy annotation is used on methods as a callback notification to signal that the instance is in the process of
- * being removed by the bridge from the bridge request scope. This method complements one using
- * <code>javax.annotation.PreDestroy</code> to allow the object to release resources that it has been holding. It exists because
- * the existing <code>javax.annotation.PreDestroy</code> method must be ignored as it is called by the container even though the
- * bridge continues to manage the object in its request scope. The method on which the PreDestroy annotation is applied MUST
- * fulfill all of the following criteria - The method MUST NOT have any parameters - The return type of the method MUST be void.
- * - The method MUST NOT throw a checked exception. - The method on which PreDestroy is applied MUST be public. - The method
- * MUST NOT be static. - The method MAY be final. - If the method throws an unchecked exception it is ignored.
+ * The PreDestroy annotation is used on methods as a callback notification to signal that the instance is in the process
+ * of being removed by the bridge from the bridge request scope. This method complements one using
+ * <code>javax.annotation.PreDestroy</code> to allow the object to release resources that it has been holding. It exists
+ * because the existing <code>javax.annotation.PreDestroy</code> method must be ignored as it is called by the container
+ * even though the bridge continues to manage the object in its request scope. The method on which the PreDestroy
+ * annotation is applied MUST fulfill all of the following criteria - The method MUST NOT have any parameters - The
+ * return type of the method MUST be void. - The method MUST NOT throw a checked exception. - The method on which
+ * PreDestroy is applied MUST be public. - The method MUST NOT be static. - The method MAY be final. - If the method
+ * throws an unchecked exception it is ignored.
  */
 
 @Documented

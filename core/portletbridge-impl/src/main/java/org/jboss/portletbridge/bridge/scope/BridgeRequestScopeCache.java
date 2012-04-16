@@ -21,12 +21,11 @@
  */
 package org.jboss.portletbridge.bridge.scope;
 
-import org.jboss.portletbridge.bridge.scope.BridgeRequestScope;
 import org.jboss.portletbridge.util.LRUMap;
 
 /**
  * Least Recently Used (LRU) Cache of {@link BridgeRequestScope} objects in Bridge.
- * 
+ *
  * @author kenfinnigan
  */
 public class BridgeRequestScopeCache extends LRUMap<String, BridgeRequestScope> {

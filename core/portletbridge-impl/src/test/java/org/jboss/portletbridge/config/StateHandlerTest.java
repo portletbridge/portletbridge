@@ -32,7 +32,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * @author asmirnov
- * 
+ *
  */
 public class StateHandlerTest extends TestCase {
 
@@ -44,7 +44,7 @@ public class StateHandlerTest extends TestCase {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see junit.framework.TestCase#setUp()
      */
     protected void setUp() throws Exception {
@@ -54,7 +54,7 @@ public class StateHandlerTest extends TestCase {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see junit.framework.TestCase#tearDown()
      */
     protected void tearDown() throws Exception {
@@ -64,7 +64,8 @@ public class StateHandlerTest extends TestCase {
     public void testReturnBack() throws Exception {
         ContentHandler parentHandler = new DefaultHandler() {
             @Override
-            public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException {
+            public void startElement(String uri, String localName, String name, Attributes attributes)
+                throws SAXException {
                 throw new SAXException();
             }
 

@@ -34,7 +34,7 @@ import junit.framework.TestCase;
 
 /**
  * @author asmirnov
- * 
+ *
  */
 public class WebXMLTest extends TestCase {
 

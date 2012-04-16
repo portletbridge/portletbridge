@@ -58,32 +58,36 @@ public class PortletExternalContextFactoryImpl extends ExternalContextFactory {
         ExternalContext externalContext;
 
         Object portletPhase = request instanceof PortletRequest ? ((PortletRequest) request)
-                .getAttribute(Bridge.PORTLET_LIFECYCLE_PHASE) : null;
+            .getAttribute(Bridge.PORTLET_LIFECYCLE_PHASE) : null;
 
         if (null != portletPhase) {
             if (Bridge.PortletPhase.ACTION_PHASE.equals(portletPhase) && (context instanceof PortletContext)
-                    && (request instanceof ActionRequest) && (response instanceof ActionResponse)) {
-                externalContext = new ActionRequestExternalContextImpl((PortletContext) context, (ActionRequest) request,
-                        (ActionResponse) response);
-                logger.log(Level.DEBUG, "Portal request - create portal version of the ExternalContext for action request");
+                && (request instanceof ActionRequest) && (response instanceof ActionResponse)) {
+                externalContext = new ActionRequestExternalContextImpl((PortletContext) context,
+                    (ActionRequest) request, (ActionResponse) response);
+                logger.log(Level.DEBUG,
+                    "Portal request - create portal version of the ExternalContext for action request");
             } else if (Bridge.PortletPhase.RENDER_PHASE.equals(portletPhase) && (context instanceof PortletContext)
-                    && (request instanceof RenderRequest) && (response instanceof RenderResponse)) {
-                externalContext = new RenderPortletExternalContextImpl((PortletContext) context, (RenderRequest) request,
-                        (RenderResponse) response);
-                logger.log(Level.DEBUG, "Portal request - create portal version of the ExternalContext for render response");
+                && (request instanceof RenderRequest) && (response instanceof RenderResponse)) {
+                externalContext = new RenderPortletExternalContextImpl((PortletContext) context,
+                    (RenderRequest) request, (RenderResponse) response);
+                logger.log(Level.DEBUG,
+                    "Portal request - create portal version of the ExternalContext for render response");
             } else if (Bridge.PortletPhase.RESOURCE_PHASE.equals(portletPhase) && (context instanceof PortletContext)
-                    && (request instanceof ResourceRequest) && (response instanceof ResourceResponse)) {
-                externalContext = new ResourceRequestExternalContextImpl((PortletContext) context, (ResourceRequest) request,
-                        (ResourceResponse) response);
-                logger.log(Level.DEBUG, "Portal request - create portal version of the ExternalContext for resource response");
+                && (request instanceof ResourceRequest) && (response instanceof ResourceResponse)) {
+                externalContext = new ResourceRequestExternalContextImpl((PortletContext) context,
+                    (ResourceRequest) request, (ResourceResponse) response);
+                logger.log(Level.DEBUG,
+                    "Portal request - create portal version of the ExternalContext for resource response");
             } else if (Bridge.PortletPhase.EVENT_PHASE.equals(portletPhase) && (context instanceof PortletContext)
-                    && (request instanceof EventRequest) && (response instanceof EventResponse)) {
+                && (request instanceof EventRequest) && (response instanceof EventResponse)) {
                 externalContext = new EventRequestExternalContextImpl((PortletContext) context, (EventRequest) request,
-                        (EventResponse) response);
-                logger.log(Level.DEBUG, "Portal request - create portal version of the ExternalContext for event request");
+                    (EventResponse) response);
+                logger.log(Level.DEBUG,
+                    "Portal request - create portal version of the ExternalContext for event request");
             } else {
                 throw new FacesException("Invalid objects passed to getExternalContext() for portlet phase "
-                        + portletPhase.toString());
+                    + portletPhase.toString());
             }
         } else {
             externalContext = getWrapped().getExternalContext(context, request, response);

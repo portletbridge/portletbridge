@@ -23,9 +23,9 @@ package org.jboss.portletbridge.context;
 
 /**
  * Abstract base class for all attributes/sessions/cookies maps in external contexts.
- * 
+ *
  * @author asmirnov
- * 
+ *
  */
 public abstract class ContextAttributesMap<V> extends ContextMap<String, V> {
 

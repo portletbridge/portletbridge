@@ -43,7 +43,7 @@ import javax.portlet.faces.Bridge;
 
 /**
  * @author asmirnov
- * 
+ *
  */
 public abstract class MimeExternalContextImpl extends PortletExternalContextImpl {
 

@@ -8,31 +8,128 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.jboss.portletbridge</groupId>
     <version>3.0.0-SNAPSHOT</version>
-    <artifactId>parent</artifactId>
+    <artifactId>portletbridge-parent</artifactId>
+    <packaging>pom</packaging>
     <name>
       JBoss JSF2 Portlet Bridge for a portlet environment, root pom
     </name>
     <properties>
         <jsf.version>2.1.5</jsf.version>
     </properties>
-    <packaging>pom</packaging>
     <url>http://www.jboss.org/portletbridge/</url>
+
     <scm>
         <connection>scm:git:git://github.com/jbossportletbridge/jbossportletbridge.git</connection>
         <developerConnection>scm:git:git://github.com/jbossportletbridge/jbossportletbridge.git</developerConnection>
         <url>https://github.com/jbossportletbridge/jbossportletbridge</url>
     </scm>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>2.9.1</version>
+                    <configuration>
+                        <configLocation>code-style/checkstyle.xml</configLocation>
+                        <logViolationsToConsole>true</logViolationsToConsole>
+                        <violationSeverity>error</violationSeverity>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>checkstyle-report</id>
+                            <phase>compile</phase>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.jboss.portletbridge</groupId>
+                            <artifactId>portletbridge-build-resources</artifactId>
+                            <version>${project.version}</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+
+               <!-- So m2e doesn't throw errors for features it doesn't support in the 
+                POM -->
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>org.apache.maven.plugins</groupId>
+                                        <artifactId>maven-checkstyle-plugin</artifactId>
+                                        <versionRange>[1.0.0,)</versionRange>
+                                        <goals>
+                                            <goal>check</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <execute />
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+            <!-- Enforce Maven Environment -->
+            <plugin>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>enforce-maven-environment</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <rules>
+                        <requireMavenVersion>
+                            <version>[3.0.0,)</version>
+                        </requireMavenVersion>
+                        <requireJavaVersion>
+                            <version>1.6.0</version> <!-- Must be JDK6 -->
+                        </requireJavaVersion>
+                        <requireProperty>
+                            <property>env.JAVA_HOME</property>
+                            <message>"JAVA_HOME needs to be set to compile"</message>
+                        </requireProperty>
+                    </rules>
+                </configuration>
+            </plugin>
+
+            <!-- m2e Config -->
+            <plugin>
+                <groupId>org.eclipse.m2e</groupId>
+                <artifactId>lifecycle-mapping</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>org.jboss.portletbridge</groupId>
                 <artifactId>portletbridge-api</artifactId>
-                <version>3.0.0-SNAPSHOT</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.portletbridge</groupId>
                 <artifactId>portletbridge-impl</artifactId>
-                <version>3.0.0-SNAPSHOT</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.faces</groupId>
@@ -92,7 +189,9 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
     <modules>
+        <module>build-resources</module>
         <module>core</module>
         <module>tests</module>
         <module>examples</module>

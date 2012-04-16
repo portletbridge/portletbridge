@@ -34,7 +34,7 @@ public class BridgeLoggerFactoryImpl extends BridgeLoggerFactory {
 
     public static BridgeLogger getLogger(String className) {
         return ((BridgeLoggerFactory) BridgeFactoryFinder.getFactoryInstance(BridgeLoggerFactory.class))
-                .getBridgeLogger(className);
+            .getBridgeLogger(className);
     }
 
     /**

@@ -26,10 +26,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * This class provides a {@link java.util.Map} style interface for managing a Least Recently Used (LRU) cache. Note that it
- * extends {@link LinkedHashMap} which is not synchronized. Therefore instances of this class should be wrapped by calling
- * {@link Collections#synchronizedMap(java.util.Map)}.
- * 
+ * This class provides a {@link java.util.Map} style interface for managing a Least Recently Used (LRU) cache. Note that
+ * it extends {@link LinkedHashMap} which is not synchronized. Therefore instances of this class should be wrapped by
+ * calling {@link Collections#synchronizedMap(java.util.Map)}.
+ *
  * @author Waldemar Kłaczyński, kenfinnigan
  */
 public class LRUMap<K, V> extends LinkedHashMap<K, V> {

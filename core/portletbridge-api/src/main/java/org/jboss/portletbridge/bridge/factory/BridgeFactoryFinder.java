@@ -37,10 +37,15 @@ import org.jboss.portletbridge.bridge.logger.BridgeLogger;
 
 public final class BridgeFactoryFinder {
 
-    private static final Logger logger = Logger.getLogger(BridgeFactoryFinder.class.getName(), BridgeLogger.LOGGING_BUNDLE);
+    private static final Logger logger = Logger.getLogger(BridgeFactoryFinder.class.getName(),
+        BridgeLogger.LOGGING_BUNDLE);
     private static Map<Class<?>, List<String>> factoryDefinitions = new HashMap<Class<?>, List<String>>(6);
     private static Map<Class<?>, BridgeFactory<?>> factoryInstances = new HashMap<Class<?>, BridgeFactory<?>>(6);
     private static ReentrantReadWriteLock lock = new ReentrantReadWriteLock(true);
+
+    private BridgeFactoryFinder() {
+        //Prevent instantiation
+    }
 
     public static void addFactoryDefinition(Class<? extends BridgeFactory<?>> type, String factoryImplClassName) {
         lock.writeLock().lock();
@@ -117,7 +122,7 @@ public final class BridgeFactoryFinder {
     }
 
     private static BridgeFactory<?> getImplGivenPreviousImpl(ClassLoader classLoader, String implName,
-            Class<? extends BridgeFactory<?>> type, BridgeFactory<?> previousImpl) {
+        Class<? extends BridgeFactory<?>> type, BridgeFactory<?> previousImpl) {
 
         Class<? extends BridgeFactory<?>> implClass = null;
 
@@ -140,7 +145,7 @@ public final class BridgeFactoryFinder {
             throw new BridgeException("Bridge Factory class " + implName + " not found");
         } catch (NoSuchMethodException e) {
             throw new BridgeException("Bridge Factory " + implName
-                    + " has neither BridgeFactory() nor BridgeFactory(BridgeFactory) constructor");
+                + " has neither BridgeFactory() nor BridgeFactory(BridgeFactory) constructor");
         } catch (IllegalArgumentException e) {
             throw new BridgeException("Illegal argument for Bridge Factory " + implName + " constructor", e);
         } catch (InstantiationException e) {

@@ -34,7 +34,7 @@ import org.jboss.portletbridge.context.PortletExternalContextImpl;
 
 /**
  * @author leo
- * 
+ *
  */
 public class PortletResource extends ResourceWrapper {
 
@@ -47,7 +47,7 @@ public class PortletResource extends ResourceWrapper {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.application.ResourceWrapper#getWrapped()
      */
     @Override
@@ -83,7 +83,7 @@ public class PortletResource extends ResourceWrapper {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.faces.application.Resource#getRequestPath()
      */
     @Override

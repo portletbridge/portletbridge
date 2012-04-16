@@ -34,7 +34,7 @@ import javax.portlet.PortletContext;
 
 /**
  * @author asmirnov
- * 
+ *
  */
 public class EventRequestExternalContextImpl extends PortletExternalContextImpl {
 

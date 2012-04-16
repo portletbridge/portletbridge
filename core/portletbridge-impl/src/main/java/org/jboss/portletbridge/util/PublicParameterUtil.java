@@ -35,9 +35,13 @@ import javax.portlet.PortletRequest;
  */
 public class PublicParameterUtil {
 
+    private PublicParameterUtil() {
+        // Prevent instantiation
+    }
+
     public static boolean processPublicParameters(FacesContext facesContext, PortletRequest request,
-            Map<String, String> publicParameterMapping, Enumeration<String> parameterNames, ParameterFunction function,
-            String portletName) {
+        Map<String, String> publicParameterMapping, Enumeration<String> parameterNames, ParameterFunction function,
+        String portletName) {
 
         boolean valueChanged = false;
         ExpressionFactory expressionFactory = facesContext.getApplication().getExpressionFactory();
@@ -59,9 +63,10 @@ public class PublicParameterUtil {
             }
             if (null != mappingEl) {
                 // Found a mapping for the parameter, process it.
-                ValueExpression valueExpression = expressionFactory.createValueExpression(elContext, mappingEl, Object.class);
+                ValueExpression valueExpression = expressionFactory.createValueExpression(elContext, mappingEl,
+                    Object.class);
                 valueChanged = function.processParameter(elContext, publicParameters, name, valueExpression) ? true
-                        : valueChanged;
+                    : valueChanged;
             }
         }
         return valueChanged;

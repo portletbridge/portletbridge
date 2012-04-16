@@ -21,33 +21,26 @@
  */
 package org.jboss.portletbridge.bridge.controller;
 
-import javax.portlet.faces.BridgeDefaultViewNotSpecifiedException;
 import javax.portlet.faces.BridgeException;
-import javax.portlet.faces.BridgeUninitializedException;
 
 import org.jboss.portletbridge.bridge.config.BridgeConfig;
 import org.jboss.portletbridge.bridge.context.BridgeContext;
 
 public interface BridgeController {
-    public static final String IGNORE_BRIDGE_SCOPE = "org.jboss.portletbridge.ignoreBridgeScope";
+    String IGNORE_BRIDGE_SCOPE = "org.jboss.portletbridge.ignoreBridgeScope";
 
-    public void init(BridgeConfig config) throws BridgeException;
+    void init(BridgeConfig config) throws BridgeException;
 
-    public void destroy();
+    void destroy();
 
-    public void processPortletAction(BridgeContext ctx) throws BridgeException, BridgeDefaultViewNotSpecifiedException,
-            BridgeUninitializedException;
+    void processPortletAction(BridgeContext ctx) throws BridgeException;
 
-    public void handlePortletEvent(BridgeContext ctx) throws BridgeException, BridgeDefaultViewNotSpecifiedException,
-            BridgeUninitializedException;
+    void handlePortletEvent(BridgeContext ctx) throws BridgeException;
 
-    public void renderPortletHead(BridgeContext ctx) throws BridgeException, BridgeDefaultViewNotSpecifiedException,
-            BridgeUninitializedException;
+    void renderPortletHead(BridgeContext ctx) throws BridgeException;
 
-    public void renderPortletBody(BridgeContext ctx) throws BridgeException, BridgeDefaultViewNotSpecifiedException,
-            BridgeUninitializedException;
+    void renderPortletBody(BridgeContext ctx) throws BridgeException;
 
-    public void renderResource(BridgeContext ctx) throws BridgeException, BridgeDefaultViewNotSpecifiedException,
-            BridgeUninitializedException;
+    void renderResource(BridgeContext ctx) throws BridgeException;
 
 }

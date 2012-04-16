@@ -24,8 +24,8 @@ package javax.portlet.faces;
 import javax.faces.FacesException;
 
 /**
- * Generic exception thrown when the bridge encounters an unexpected error. The message returned in this exeception should
- * contain the details of the specific problem.
+ * Generic exception thrown when the bridge encounters an unexpected error. The message returned in this exeception
+ * should contain the details of the specific problem.
  */
 public class BridgeException extends FacesException {
 

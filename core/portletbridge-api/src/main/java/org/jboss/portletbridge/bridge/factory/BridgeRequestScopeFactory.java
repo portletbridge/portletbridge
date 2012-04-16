@@ -34,16 +34,16 @@ import org.jboss.portletbridge.bridge.scope.BridgeRequestScope;
 public abstract class BridgeRequestScopeFactory extends BridgeFactory<BridgeRequestScopeFactory> {
 
     public abstract BridgeRequestScope getBridgeRequestScope(String portletName, String sessionId, String viewId,
-            String portletMode) throws FacesException;
+        String portletMode) throws FacesException;
 
     public abstract BridgeRequestScope getBridgeRequestScope(String portletName, String sessionId, String viewId,
-            String portletMode, int initialCapacity) throws FacesException;
+        String portletMode, int initialCapacity) throws FacesException;
 
     public abstract BridgeRequestScope getBridgeRequestScope(String portletName, String sessionId, String viewId,
-            String portletMode, int initialCapacity, float loadFactor, int concurrencyLevel) throws FacesException;
+        String portletMode, int initialCapacity, float loadFactor, int concurrencyLevel) throws FacesException;
 
     public abstract BridgeRequestScope getBridgeRequestScope(String portletName, String sessionId, String viewId,
-            String portletMode, Map<String, Object> requestScopeDataMap) throws FacesException;
+        String portletMode, Map<String, Object> requestScopeDataMap) throws FacesException;
 
     public BridgeRequestScopeFactory getWrapped() {
         return null;

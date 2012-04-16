@@ -29,6 +29,10 @@ import javax.faces.context.Flash;
  */
 public class FlashContextFactory {
 
+    private FlashContextFactory() {
+        // Prevent instantiation
+    }
+
     public static Flash getFlashForBridge(ExternalContext extContext) {
         // TODO Support retrieval of Mojarra Flash?
         return new PortletFlashDefault();

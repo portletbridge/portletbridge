@@ -53,7 +53,8 @@ import org.xml.sax.XMLReader;
  */
 public final class FacesConfigProcessor implements SystemEventListener {
 
-    private static final Logger logger = Logger.getLogger(FacesConfigProcessor.class.getName(), BridgeLogger.LOGGING_BUNDLE);
+    private static final Logger logger = Logger.getLogger(FacesConfigProcessor.class.getName(),
+        BridgeLogger.LOGGING_BUNDLE);
 
     private static SAXParserFactory saxFactory = SAXParserFactory.newInstance();
 
@@ -142,7 +143,7 @@ public final class FacesConfigProcessor implements SystemEventListener {
     protected void parseDefault() throws ParsingException {
         // Parse default faces config.
         InputStream inputStream = FacesContext.getCurrentInstance().getExternalContext()
-                .getResourceAsStream(FACES_CONFIG_WEB_PATH);
+            .getResourceAsStream(FACES_CONFIG_WEB_PATH);
         if (null != inputStream) {
             try {
                 parse(inputStream, ParsingLocation.DEFAULT);
@@ -151,7 +152,7 @@ public final class FacesConfigProcessor implements SystemEventListener {
                     inputStream.close();
                 } catch (IOException e) {
                     logger.log(java.util.logging.Level.WARNING, "Can't close input stream for web resource "
-                            + FACES_CONFIG_WEB_PATH, e);
+                        + FACES_CONFIG_WEB_PATH, e);
                 }
             }
         }
@@ -173,7 +174,7 @@ public final class FacesConfigProcessor implements SystemEventListener {
                             inputStream.close();
                         } catch (IOException e) {
                             logger.log(java.util.logging.Level.WARNING, "Can't close input stream for web resource "
-                                    + facesConfigPath, e);
+                                + facesConfigPath, e);
                         }
                     }
                 }
