@@ -16,7 +16,7 @@
    </prerequisites>
 
    <properties>
-      <jsf.version>2.0.3-b03</jsf.version>
+      <jsf.version>2.1.5</jsf.version>
    </properties>
 
    <licenses>
