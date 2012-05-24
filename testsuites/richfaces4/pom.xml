@@ -18,7 +18,7 @@
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-      <version>r08</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.jboss.portletbridge.integration</groupId>
@@ -31,6 +31,7 @@
     <dependency>
       <groupId>org.jboss.portletbridge</groupId>
       <artifactId>portletbridge-api</artifactId>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.jboss.portletbridge</groupId>

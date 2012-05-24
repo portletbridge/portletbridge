@@ -21,66 +21,92 @@
  */
 package org.jboss.portletbridge.test;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.net.URL;
 
-import org.hamcrest.Matchers;
 import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.arquillian.container.test.api.RunAsClient;
+import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
+import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import com.gargoylesoftware.htmlunit.html.HtmlElement;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 //@RunWith(Arquillian.class)
-public class A4jCommandLinkTest extends PortalTestBase {
+public class A4jCommandLinkTest {
 
     public static final String NEW_VALUE = "New Value";
 
     @Deployment()
     public static WebArchive createDeployment() {
-        return TestDeployment.createDeployment().addAsWebResource("output.xhtml", "output.xhtml")
-            .addAsWebResource("a4jLink.xhtml", "home.xhtml")
-            .addAsWebInfResource("WEB-INF/jboss-deployment-structure.xml", "jboss-deployment-structure.xml");
+        return TestDeployment
+                .createDeployment()
+                .addAsWebResource("a4jLink.xhtml", "home.xhtml")
+                .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css")
+                .addAsLibraries(
+                        DependencyResolvers.use(MavenDependencyResolver.class).loadEffectivePom("pom.xml")
+                                .artifacts("org.richfaces.core:richfaces-core-impl").resolveAsFiles())
+                .addAsLibraries(
+                        DependencyResolvers.use(MavenDependencyResolver.class).loadEffectivePom("pom.xml")
+                                .artifacts("org.richfaces.ui:richfaces-components-api").resolveAsFiles())
+                .addAsLibraries(
+                        DependencyResolvers.use(MavenDependencyResolver.class).loadEffectivePom("pom.xml")
+                                .artifacts("org.richfaces.ui:richfaces-components-ui").resolveAsFiles())
+                .addAsWebInfResource("WEB-INF/jboss-deployment-structure.xml", "jboss-deployment-structure.xml");
     }
+
+    protected static final By OUTPUT_FIELD = By.id("output");
+    protected static final By INPUT_FIELD = By.xpath("//input[@type='text']");
+    protected static final By SUBMIT_BUTTON = By.xpath("//a");
 
     @ArquillianResource
     @PortalURL
     URL portalURL;
 
+    @Drone
+    WebDriver driver;
+
     //@Test
+    @RunAsClient
     public void renderFormPortlet() throws Exception {
-        HtmlPage portalPage = getPortalPage(portalURL.toExternalForm());
+        driver.get(portalURL.toString());
 
-        verifyOutput(portalPage, Bean.HELLO_JSF_PORTLET);
-        verifyInput(portalPage, Bean.HELLO_JSF_PORTLET);
+        assertTrue("output text should contain: " + Bean.HELLO_JSF_PORTLET,
+                ExpectedConditions.textToBePresentInElement(OUTPUT_FIELD, Bean.HELLO_JSF_PORTLET).apply(driver));
 
-        HtmlElement submit = getFirstChildById(portalPage, "submit");
-        assertThat(submit.asText(), containsString("Ok"));
+        assertTrue("input text should contain: " + Bean.HELLO_JSF_PORTLET,
+                ExpectedConditions.textToBePresentInElementValue(INPUT_FIELD, Bean.HELLO_JSF_PORTLET).apply(driver));
 
-        Iterable<HtmlElement> links = portalPage.getElementsByTagName("script");
-        assertThat(links,
-            Matchers.<HtmlElement> hasItem(TestDeployment.htmlAttributeMatcher("src", containsString("richfaces"))));
+        assertTrue("Submit button text should be 'Ok'", driver.findElement(SUBMIT_BUTTON).getText().equals("Ok"));
     }
 
     // @Test
     public void testSubmitAndRemainOnPage() throws Exception {
-        HtmlPage portalPage = getPortalPage(portalURL.toExternalForm());
-        HtmlPage responsePage = submitForm(portalPage, NEW_VALUE);
-        assertSame(portalPage, responsePage);
-        verifyInput(responsePage, NEW_VALUE);
-        verifyOutput(responsePage, NEW_VALUE);
+        driver.get(portalURL.toString());
+        driver.findElement(INPUT_FIELD).sendKeys(NEW_VALUE);
+        driver.findElement(SUBMIT_BUTTON).click();
+
+        assertTrue("output text should contain: " + NEW_VALUE,
+                ExpectedConditions.textToBePresentInElement(OUTPUT_FIELD, NEW_VALUE).apply(driver));
+
+        assertTrue("input text should contain: " + NEW_VALUE,
+                ExpectedConditions.textToBePresentInElementValue(INPUT_FIELD, NEW_VALUE).apply(driver));
+
         // Re-render page
-        HtmlPage reRenderPage = getPortalPage(portalURL.toExternalForm());
-        verifyInput(reRenderPage, NEW_VALUE);
-        verifyOutput(reRenderPage, NEW_VALUE);
+        driver.get(portalURL.toString());
+        assertTrue("output text should contain: " + NEW_VALUE,
+                ExpectedConditions.textToBePresentInElement(OUTPUT_FIELD, NEW_VALUE).apply(driver));
+
+        assertTrue("input text should contain: " + NEW_VALUE,
+                ExpectedConditions.textToBePresentInElementValue(INPUT_FIELD, NEW_VALUE).apply(driver));
     }
 
 }

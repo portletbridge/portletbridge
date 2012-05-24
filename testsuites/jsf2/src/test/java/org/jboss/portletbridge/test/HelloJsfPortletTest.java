@@ -21,46 +21,50 @@
  */
 package org.jboss.portletbridge.test;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.net.URL;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
+import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import com.gargoylesoftware.htmlunit.html.HtmlElement;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 @RunWith(Arquillian.class)
-public class HelloJsfPortletTest extends PortalTestBase {
+public class HelloJsfPortletTest {
 
     @Deployment()
     public static WebArchive createDeployment() {
         return TestDeployment.createDeployment().addAsWebResource("output.xhtml", "home.xhtml")
-            .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css")
-            .addAsWebInfResource("WEB-INF/jboss-deployment-structure.xml", "jboss-deployment-structure.xml");
+                .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css")
+                .addAsWebInfResource("WEB-INF/jboss-deployment-structure.xml", "jboss-deployment-structure.xml");
     }
+
+    protected static final By OUTPUT_FIELD = By.id("output");
 
     @ArquillianResource
     @PortalURL
     URL portalURL;
 
+    @Drone
+    WebDriver driver;
+
     @Test
     @RunAsClient
     public void renderFacesPortlet() throws Exception {
-        HtmlPage body = getPortalPage(portalURL.toExternalForm());
-        HtmlElement element = body.getElementById("output");
-        assertNotNull("Check what page contains output element", element);
-        Assert.assertThat("Verify that the portlet was deployed and returns the expected result", element.asText(),
-            containsString(Bean.HELLO_JSF_PORTLET));
+        driver.get(portalURL.toString());
+        assertNotNull("Check that page contains output element", driver.findElement(OUTPUT_FIELD));
+        assertTrue("Portlet should return: " + Bean.HELLO_JSF_PORTLET,
+                ExpectedConditions.textToBePresentInElement(OUTPUT_FIELD, Bean.HELLO_JSF_PORTLET).apply(driver));
     }
 
 }

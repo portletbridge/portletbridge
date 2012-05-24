@@ -21,61 +21,80 @@
  */
 package org.jboss.portletbridge.test;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.net.URL;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
+import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.gargoylesoftware.htmlunit.html.HtmlSubmitInput;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 @RunWith(Arquillian.class)
-public class JsfFormSubmitTest extends PortalTestBase {
+public class JsfFormSubmitTest {
 
     public static final String NEW_VALUE = "New Value";
 
     @Deployment()
     public static WebArchive createDeployment() {
-        return TestDeployment.createDeployment().addAsWebResource("output.xhtml", "output.xhtml")
-            .addAsWebResource("form.xhtml", "home.xhtml")
-            .addAsWebInfResource("WEB-INF/jboss-deployment-structure.xml", "jboss-deployment-structure.xml");
+        return TestDeployment.createDeployment()
+                .addAsWebResource("form.xhtml", "home.xhtml")
+                .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css")
+                .addAsWebInfResource("WEB-INF/jboss-deployment-structure.xml", "jboss-deployment-structure.xml");
     }
+
+    protected static final By OUTPUT_FIELD = By.id("output");
+    protected static final By INPUT_FIELD = By.xpath("//input[@type='text']");
+    protected static final By SUBMIT_BUTTON = By.xpath("//input[@type='submit']");
 
     @ArquillianResource
     @PortalURL
     URL portalURL;
 
+    @Drone
+    WebDriver driver;
+
     @Test
     @RunAsClient
     public void renderFormPortlet() throws Exception {
-        HtmlPage portalPage = getPortalPage(portalURL.toExternalForm());
+        driver.get(portalURL.toString());
 
-        verifyOutput(portalPage, Bean.HELLO_JSF_PORTLET);
-        verifyInput(portalPage, Bean.HELLO_JSF_PORTLET);
+        assertTrue("output text should contain: " + Bean.HELLO_JSF_PORTLET,
+                ExpectedConditions.textToBePresentInElement(OUTPUT_FIELD, Bean.HELLO_JSF_PORTLET).apply(driver));
 
-        HtmlSubmitInput submit = getSubmit(portalPage);
-        assertThat(submit.getValueAttribute(), containsString("Ok"));
+        assertTrue("input text should contain: " + Bean.HELLO_JSF_PORTLET,
+                ExpectedConditions.textToBePresentInElementValue(INPUT_FIELD, Bean.HELLO_JSF_PORTLET).apply(driver));
+
+        assertTrue("Submit button value should be 'Ok'", driver.findElement(SUBMIT_BUTTON).getAttribute("value").equals("Ok"));
     }
 
     // @Test
     public void testSubmitAndRemainOnPage() throws Exception {
-        HtmlPage portalPage = getPortalPage(portalURL.toExternalForm());
-        HtmlPage responsePage = submitForm(portalPage, NEW_VALUE);
-        verifyInput(responsePage, NEW_VALUE);
-        verifyOutput(responsePage, NEW_VALUE);
+        driver.get(portalURL.toString());
+        driver.findElement(INPUT_FIELD).sendKeys(NEW_VALUE);
+        driver.findElement(SUBMIT_BUTTON).click();
+
+        assertTrue("output text should contain: " + NEW_VALUE,
+                ExpectedConditions.textToBePresentInElement(OUTPUT_FIELD, NEW_VALUE).apply(driver));
+
+        assertTrue("input text should contain: " + NEW_VALUE,
+                ExpectedConditions.textToBePresentInElementValue(INPUT_FIELD, NEW_VALUE).apply(driver));
+
         // Re-render page
-        HtmlPage reRenderPage = getPortalPage(portalURL.toExternalForm());
-        verifyInput(reRenderPage, NEW_VALUE);
-        verifyOutput(reRenderPage, NEW_VALUE);
+        driver.get(portalURL.toString());
+        assertTrue("output text should contain: " + NEW_VALUE,
+                ExpectedConditions.textToBePresentInElement(OUTPUT_FIELD, NEW_VALUE).apply(driver));
+
+        assertTrue("input text should contain: " + NEW_VALUE,
+                ExpectedConditions.textToBePresentInElementValue(INPUT_FIELD, NEW_VALUE).apply(driver));
     }
 
 }
