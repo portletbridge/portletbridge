@@ -244,7 +244,7 @@ public class Jsf20ControllerImpl implements BridgeController {
 
             // Restore scope if present and mode not changed
             if (null != scope) {
-                if (scope.getPortletMode().equals(bridgeContext.getPortletRequest().getPortletMode())) {
+                if (scope.getPortletMode().equals(bridgeContext.getPortletRequest().getPortletMode().toString())) {
                     restoreScopeData(bridgeContext, facesContext, scope);
                 } else {
                     clearBridgeRequestScope(bridgeContext);

@@ -48,6 +48,7 @@ public class AjaxSubmitTest {
     @Deployment()
     public static WebArchive createDeployment() {
         return TestDeployment.createDeployment().addAsWebResource("ajax.xhtml", "home.xhtml")
+                .addClass(Bean.class)
                 .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css")
                 .addAsWebInfResource("WEB-INF/jboss-deployment-structure.xml", "jboss-deployment-structure.xml");
     }

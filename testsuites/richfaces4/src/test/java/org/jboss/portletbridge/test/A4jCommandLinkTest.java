@@ -49,6 +49,7 @@ public class A4jCommandLinkTest {
     public static WebArchive createDeployment() {
         return TestDeployment
                 .createDeployment()
+                .addClass(Bean.class)
                 .addAsWebResource("a4jLink.xhtml", "home.xhtml")
                 .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css")
                 .addAsLibraries(

@@ -31,7 +31,6 @@ public class TestDeployment {
     public static WebArchive createDeployment() {
         return ShrinkWrap
             .create(WebArchive.class)
-            .addClass(Bean.class)
             .addAsLibraries(
                 DependencyResolvers.use(MavenDependencyResolver.class).loadEffectivePom("pom.xml")
                     .artifacts("org.jboss.portletbridge:portletbridge-api").resolveAsFiles())
