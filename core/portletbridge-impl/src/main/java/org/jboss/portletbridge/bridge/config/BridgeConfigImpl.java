@@ -39,9 +39,9 @@ import org.jboss.portletbridge.bridge.factory.BridgeLoggerFactory;
 import org.jboss.portletbridge.bridge.logger.BridgeLogger;
 
 /**
- * Represents values that a Portlet can configure for a given Bridge instance. Per the spec, this information is passed
- * to the Bridge via {@link PortletContext} attributes. As part of the init() method the Bridge will store all these
- * values into a BridgeConfig for use by all parts of the Bridge.
+ * Represents values that a Portlet can configure for a given Bridge instance. Per the spec, this information is passed to the
+ * Bridge via {@link PortletContext} attributes. As part of the init() method the Bridge will store all these values into a
+ * BridgeConfig for use by all parts of the Bridge.
  *
  * @author kenfinnigan
  */
@@ -52,6 +52,7 @@ public class BridgeConfigImpl implements BridgeConfig {
 
     private PortletConfig portletConfig;
     private Map<String, String> defaultViewMappings;
+    private Map<Class<? extends Throwable>, String> errorViewMappings;
     private List<String> facesServletMappings;
     private BridgeLogger logger;
     private BridgeEventHandler eventHandler;
@@ -125,6 +126,26 @@ public class BridgeConfigImpl implements BridgeConfig {
     }
 
     /**
+     * @see org.jboss.portletbridge.bridge.config.BridgeConfig#setFacesErrorViewMappings(java.util.Map)
+     */
+    public void setFacesErrorViewMappings(Map<Class<? extends Throwable>, String> errorViewMappings) {
+        this.errorViewMappings = null;
+        if (null != errorViewMappings) {
+            this.errorViewMappings = new ConcurrentHashMap<Class<? extends Throwable>, String>(errorViewMappings);
+        }
+    }
+
+    /**
+     * @see org.jboss.portletbridge.bridge.config.BridgeConfig#getFacesErrorViewMappings()
+     */
+    public Map<Class<? extends Throwable>, String> getFacesErrorViewMappings() {
+        if (null == errorViewMappings) {
+            errorViewMappings = new ConcurrentHashMap<Class<? extends Throwable>, String>();
+        }
+        return errorViewMappings;
+    }
+
+    /**
      * @see org.jboss.portletbridge.bridge.config.BridgeConfig#setViewIdRenderParameterName(java.lang.String)
      */
     public void setViewIdRenderParameterName(String name) {
@@ -165,7 +186,7 @@ public class BridgeConfigImpl implements BridgeConfig {
     public BridgeLogger getLogger() {
         if (null == logger) {
             setLogger(((BridgeLoggerFactory) BridgeFactoryFinder.getFactoryInstance(BridgeLoggerFactory.class))
-                .getBridgeLogger(this));
+                    .getBridgeLogger(this));
         }
         return logger;
     }
@@ -346,7 +367,7 @@ public class BridgeConfigImpl implements BridgeConfig {
      */
     public String getDefaultRenderKitId() {
         return (String) portletConfig.getPortletContext().getAttribute(
-            Bridge.BRIDGE_PACKAGE_PREFIX + portletConfig.getPortletName() + "." + Bridge.DEFAULT_RENDERKIT_ID);
+                Bridge.BRIDGE_PACKAGE_PREFIX + portletConfig.getPortletName() + "." + Bridge.DEFAULT_RENDERKIT_ID);
     }
 
 }

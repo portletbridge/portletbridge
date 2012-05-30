@@ -25,7 +25,7 @@ public interface BridgeLogger {
     String LOGGING_BUNDLE = "org.jboss.portletbridge.LogMessages";
     String LOGGING_ENABLED_PORTLET_INIT_PARAM = "org.jboss.portletbridge.loggingEnabled";
 
-    enum Level {
+    public enum Level {
         DEBUG, INFO, WARNING, ERROR
     }
 

@@ -98,7 +98,22 @@ public interface BridgeConfig {
      */
      List<String> getFacesServletMappings();
 
-    /**
+     /**
+      * Sets the <code>Map</code> of <code>Exception</code> classes to Faces views (information taken from web.xml).
+      *
+      * @param errorViewMappings
+      *           the various exception to jsf view mappings for errors
+      */
+     void setFacesErrorViewMappings(Map<Class<? extends Throwable>, String> errorViewMappings);
+
+     /**
+      * Gets the <code>Map</code> of <code>Exception</code> classes to Faces views (information taken from web.xml).
+      *
+      * @return the various exception to jsf view mappings for errors
+      */
+     Map<Class<? extends Throwable>, String> getFacesErrorViewMappings();
+
+     /**
      * Sets the name of the parameter used by the bridge to encode the target viewId.
      *
      * @param name

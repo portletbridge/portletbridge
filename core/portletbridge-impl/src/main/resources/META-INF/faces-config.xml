@@ -21,6 +21,7 @@
         </system-event-listener>
     </application>
     <factory>
+        <exception-handler-factory>org.jboss.portletbridge.context.exception.PortletExceptionHandlerFactoryImpl</exception-handler-factory>
         <external-context-factory>org.jboss.portletbridge.context.PortletExternalContextFactoryImpl</external-context-factory>
         <partial-view-context-factory>org.jboss.portletbridge.context.PortletPartialViewContextFactoryImpl</partial-view-context-factory>
         <factory-extension>

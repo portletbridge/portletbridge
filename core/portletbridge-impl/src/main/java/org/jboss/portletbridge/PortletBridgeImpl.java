@@ -158,6 +158,8 @@ public class PortletBridgeImpl implements Bridge {
         WebXmlProcessor webXmlProc = new WebXmlProcessor(portletConfig.getPortletContext());
         // Retrieve Faces Servlet Mapping
         bridgeConfig.setFacesServletMappings(webXmlProc.getFacesServlet().getMappings());
+        // Retrieve Error Page Mapping
+        bridgeConfig.setFacesErrorViewMappings(webXmlProc.getErrorViews());
 
         // Retrieve faces-config.xml settings
         // Excluded Request Attributes from Faces Config
