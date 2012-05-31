@@ -26,7 +26,7 @@
         <version.junit>4.10</version.junit>
         <version.arquillian>1.0.0.Final</version.arquillian>
         <version.shrinkwrap.resolver>2.0.0-alpha-1</version.shrinkwrap.resolver>
-        <version.arquillian.graphene>2.0.0-SNAPSHOT</version.arquillian.graphene>
+        <version.arquillian.graphene>2.0.0.Alpha1</version.arquillian.graphene>
         <version.arquillian.extension.portal>1.0.0.Alpha1</version.arquillian.extension.portal>
         <version.gatein.portal.testing>1.0.0.Alpha1</version.gatein.portal.testing>
         <version.pluto.portal.testing>1.0.0.Alpha1</version.pluto.portal.testing>
