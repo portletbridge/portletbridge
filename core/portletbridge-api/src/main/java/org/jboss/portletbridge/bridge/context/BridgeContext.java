@@ -156,14 +156,14 @@ public abstract class BridgeContext {
      *
      * @param preserve
      */
-    public abstract void setPreserveBridgeRequestScope(boolean preserve);
+    public abstract void setBridgeRequestScopePreserved(boolean preserve);
 
     /**
      * @return the <code>boolean</code> indicating whether the controller should preserve the bridge request scope or
      *         not. <code>true</code> means the request scope should be preserved. <code>false</code> means the request
      *         scope should not be preserved. The default is <code>true</code>
      */
-    public abstract boolean getPreserveBridgeRequestScope();
+    public abstract boolean isBridgeRequestScopePreserved();
 
     /**
      * Faces stores the current view state in a hidden field in the response. When this is resupplied as part of the

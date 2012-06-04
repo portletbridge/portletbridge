@@ -3,4 +3,5 @@
 .classpath
 target
 .faces-config.xml.jsfdia
+.factorypath
 

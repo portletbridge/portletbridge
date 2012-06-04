@@ -331,7 +331,7 @@ public class Jsf20ControllerImpl implements BridgeController {
         processOutgoingParameters(facesContext, bridgeContext.getPortletRequest(),
                 (StateAwareResponse) bridgeContext.getPortletResponse());
 
-        if (bridgeContext.getPreserveBridgeRequestScope()) {
+        if (bridgeContext.isBridgeRequestScopePreserved()) {
             scope = bridgeContext.getBridgeScope();
             if (null == scope) {
                 // Action starts new lifecycle

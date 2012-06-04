@@ -69,7 +69,7 @@ public class BridgeContextImpl extends BridgeContext implements ELContextListene
     private BridgeConfig bridgeConfig;
     private PortletPhase portletPhase;
     private Map<String, Object> attributes;
-    private boolean preserveBridgeRequestScope = true;
+    private boolean bridgeRequestScopePreserved = true;
     private String savedViewStateParam;
     private String navigationQueryString;
     private String renderRedirectQueryString;
@@ -200,19 +200,19 @@ public class BridgeContextImpl extends BridgeContext implements ELContextListene
     }
 
     /**
-     * @see org.jboss.portletbridge.bridge.context.BridgeContext#setPreserveBridgeRequestScope(boolean)
+     * @see org.jboss.portletbridge.bridge.context.BridgeContext#setBridgeRequestScopePreserved(boolean)
      */
     @Override
-    public void setPreserveBridgeRequestScope(boolean preserve) {
-        preserveBridgeRequestScope = preserve;
+    public void setBridgeRequestScopePreserved(boolean preserve) {
+        bridgeRequestScopePreserved = preserve;
     }
 
     /**
-     * @see org.jboss.portletbridge.bridge.context.BridgeContext#getPreserveBridgeRequestScope()
+     * @see org.jboss.portletbridge.bridge.context.BridgeContext#isBridgeRequestScopePreserved()
      */
     @Override
-    public boolean getPreserveBridgeRequestScope() {
-        return preserveBridgeRequestScope;
+    public boolean isBridgeRequestScopePreserved() {
+        return bridgeRequestScopePreserved;
     }
 
     /**
