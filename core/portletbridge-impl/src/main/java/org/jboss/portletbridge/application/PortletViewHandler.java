@@ -22,23 +22,16 @@
 package org.jboss.portletbridge.application;
 
 import java.io.IOException;
-import java.io.Writer;
 import java.net.MalformedURLException;
 import java.util.Iterator;
 import java.util.Locale;
 
 import javax.faces.FacesException;
-import javax.faces.FactoryFinder;
-import javax.faces.application.StateManager;
 import javax.faces.application.ViewHandler;
 import javax.faces.application.ViewHandlerWrapper;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.faces.context.ResponseWriter;
-import javax.faces.render.RenderKit;
-import javax.faces.render.RenderKitFactory;
-import javax.portlet.MimeResponse;
 import javax.portlet.PortletResponse;
 import javax.portlet.faces.Bridge;
 import javax.portlet.faces.BridgeUtil;
@@ -58,8 +51,6 @@ import org.jboss.portletbridge.context.PortalActionURL;
 public class PortletViewHandler extends ViewHandlerWrapper {
 
     private static final BridgeLogger logger = new JULLoggerImpl(PortletViewHandler.class.getName());
-
-    private static final String SAVESTATE_FIELD_MARKER = "~org.jboss.portletbridge.saveStateFieldMarker~";
 
     ViewHandler parent;
 
@@ -135,17 +126,6 @@ public class PortletViewHandler extends ViewHandlerWrapper {
         return root;
     }
 
-    @Override
-    public void writeState(FacesContext context) throws IOException {
-        StringBuilderWriter stringBuilderWriter = StringBuilderWriter.getInstance();
-        if (null != stringBuilderWriter) {
-            stringBuilderWriter.stateWrited();
-            context.getResponseWriter().write(SAVESTATE_FIELD_MARKER);
-        } else {
-            super.writeState(context);
-        }
-    }
-
     public String getActionURL(FacesContext context, String url) {
         if (!BridgeUtil.isPortletRequest()) {
             return super.getActionURL(context, url);
@@ -213,7 +193,7 @@ public class PortletViewHandler extends ViewHandlerWrapper {
         String renderPolicyParam = externalContext.getInitParameter(Bridge.RENDER_POLICY);
 
         Bridge.BridgeRenderPolicy renderPolicy;
-        if (renderPolicyParam == null) {
+        if (null == renderPolicyParam) {
             renderPolicy = Bridge.BridgeRenderPolicy.DEFAULT;
         } else {
             renderPolicy = Bridge.BridgeRenderPolicy.valueOf(renderPolicyParam);
@@ -258,199 +238,13 @@ public class PortletViewHandler extends ViewHandlerWrapper {
 
     }
 
-    // TODO Replace with VDL overriden classes?
     private void doRenderView(FacesContext context, UIViewRoot viewToRender) throws IOException {
-        ExternalContext externalContext = context.getExternalContext();
-        MimeResponse renderResponse = (MimeResponse) externalContext.getResponse();
-
-        try {
-
-            // set request attribute indicating we can deal with content
-            // that is supposed to be delayed until after JSF tree is ouput.
-            externalContext.getRequestMap().put(Bridge.RENDER_CONTENT_AFTER_VIEW, Boolean.TRUE);
-            // executePageToBuildView() creates
-            // ViewHandlerResponseWrapper
-            // to handle error page and text that exists after the <f:view> tag
-            // among other things which have lots of servlet dependencies -
-            // we're skipping this for now for portletbridge
-            // extContext.dispatch(viewToRender.getViewId());
-
-            if (executePageToBuildView(context, viewToRender)) {
-                renderResponse.flushBuffer();
-                return;
-            }
-
-        } catch (IOException e) {
-            throw new FacesException(e);
-        }
-
-        // set up the ResponseWriter
-        RenderKitFactory renderFactory = (RenderKitFactory) FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
-        RenderKit renderKit = renderFactory.getRenderKit(context, viewToRender.getRenderKitId());
-
-        ResponseWriter oldWriter = context.getResponseWriter();
-        StringBuilderWriter strWriter = new StringBuilderWriter(context, renderResponse.getWriter(), 4096);
-        try {
-            ResponseWriter newWriter;
-            if (null != oldWriter) {
-                newWriter = oldWriter.cloneWithWriter(strWriter);
-            } else {
-                newWriter = renderKit.createResponseWriter(strWriter, null, renderResponse.getCharacterEncoding());
-            }
-            context.setResponseWriter(newWriter);
-
-            newWriter.startDocument();
-            viewToRender.encodeAll(context);
-            newWriter.endDocument();
-
-            // replace markers in the body content and write it to response.
-
-            strWriter.flushToWriter();
-
-        } finally {
-            strWriter.release();
-        }
-        if (null != oldWriter) {
-            context.setResponseWriter(oldWriter);
-        }
-
-        renderResponse.flushBuffer();
-    }
-
-    /**
-     * Execute the target view. If the HTTP status code range is not 2xx, then return true to indicate the response
-     * should be immediately flushed by the caller so that conditions such as 404 are properly handled.
-     *
-     * @param context
-     *            the <code>FacesContext</code> for the current request
-     * @param viewToExecute
-     *            the view to build
-     * @return <code>true</code> if the response should be immediately flushed to the client, otherwise
-     *         <code>false</code>
-     * @throws IOException
-     *             if an error occurs executing the page
-     */
-    private boolean executePageToBuildView(FacesContext context, UIViewRoot viewToExecute) throws IOException {
-        String requestURI = viewToExecute.getViewId();
-
-        ExternalContext extContext = context.getExternalContext();
-
-        extContext.dispatch(requestURI);
-        return false;
+        getViewDeclarationLanguage(context, viewToRender.getViewId()).renderView(context, viewToRender);
     }
 
     @Override
     public ViewHandler getWrapped() {
         return parent;
-    }
-
-    private static final class StringBuilderWriter extends Writer {
-
-        private static final ThreadLocal<StringBuilderWriter> instance = new ThreadLocal<StringBuilderWriter>();
-        private final StringBuilder mBuilder;
-        private final FacesContext context;
-        private final Writer responseWriter;
-        private boolean stateWrited = false;
-        private static final int SAVESTATE_MARK_LEN = SAVESTATE_FIELD_MARKER.length();
-
-        public StringBuilderWriter(FacesContext context, Writer responseWriter, int initialCapacity) {
-            if (initialCapacity < 0) {
-                throw new IllegalArgumentException();
-            }
-            mBuilder = new StringBuilder(initialCapacity);
-            this.context = context;
-            this.responseWriter = responseWriter;
-            instance.set(this);
-        }
-
-        public void release() {
-            instance.remove();
-        }
-
-        public void stateWrited() {
-            this.stateWrited = true;
-
-        }
-
-        public static StringBuilderWriter getInstance() {
-            return instance.get();
-        }
-
-        @Override
-        public void write(char[] cbuf, int off, int len) throws IOException {
-            if (off < 0 || off > cbuf.length || len < 0 || off + len > cbuf.length || off + len < 0) {
-                throw new IndexOutOfBoundsException();
-            } else if (len == 0) {
-                return;
-            }
-            if (stateWrited) {
-                mBuilder.append(cbuf, off, len);
-            } else {
-                responseWriter.write(cbuf, off, len);
-            }
-        }
-
-        @Override
-        public void flush() throws IOException {
-        }
-
-        @Override
-        public void close() throws IOException {
-        }
-
-        /**
-         * Write a string.
-         *
-         * @param str
-         *            String to be written
-         */
-        @Override
-        public void write(String str) throws IOException {
-            if (stateWrited) {
-                mBuilder.append(str);
-            } else {
-                responseWriter.write(str);
-            }
-        }
-
-        @Override
-        public void write(String str, int off, int len) throws IOException {
-            if (stateWrited) {
-                mBuilder.append(str, off, off + len);
-            } else {
-                responseWriter.write(str, off, len);
-            }
-        }
-
-        @SuppressWarnings("unused")
-        public StringBuilder getBuffer() {
-            return mBuilder;
-        }
-
-        @Override
-        public String toString() {
-            return mBuilder.toString();
-        }
-
-        public void flushToWriter() throws IOException {
-            // TODO: Buffer?
-            if (stateWrited) {
-                StateManager stateManager = context.getApplication().getStateManager();
-                ResponseWriter oldResponseWriter = context.getResponseWriter();
-                context.setResponseWriter(oldResponseWriter.cloneWithWriter(responseWriter));
-                Object stateToWrite = stateManager.saveView(context);
-                int pos = 0;
-                int tildeIdx = mBuilder.indexOf(SAVESTATE_FIELD_MARKER);
-                while (tildeIdx >= 0) {
-                    responseWriter.write(mBuilder.substring(pos, tildeIdx));
-                    stateManager.writeState(context, stateToWrite);
-                    pos = tildeIdx + SAVESTATE_MARK_LEN;
-                    tildeIdx = mBuilder.indexOf(SAVESTATE_FIELD_MARKER, pos);
-                }
-                responseWriter.write(mBuilder.substring(pos));
-                context.setResponseWriter(oldResponseWriter);
-            }
-        }
     }
 
 }

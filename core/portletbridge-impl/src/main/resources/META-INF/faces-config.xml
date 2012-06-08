@@ -12,17 +12,14 @@
         <view-handler>org.jboss.portletbridge.application.PortletViewHandler</view-handler>
         <resource-handler>org.jboss.portletbridge.application.resource.PortletResourceHandler</resource-handler>
         <system-event-listener>
-            <system-event-listener-class>
-                org.jboss.portletbridge.config.FacesConfigProcessor
-            </system-event-listener-class>
-            <system-event-class>
-                javax.faces.event.PostConstructApplicationEvent
-            </system-event-class>                     
+            <system-event-listener-class>org.jboss.portletbridge.config.FacesConfigProcessor</system-event-listener-class>
+            <system-event-class>javax.faces.event.PostConstructApplicationEvent</system-event-class>
         </system-event-listener>
     </application>
     <factory>
         <exception-handler-factory>org.jboss.portletbridge.context.exception.PortletExceptionHandlerFactoryImpl</exception-handler-factory>
         <external-context-factory>org.jboss.portletbridge.context.PortletExternalContextFactoryImpl</external-context-factory>
+        <view-declaration-language-factory>org.jboss.portletbridge.application.view.PortletVdlFactoryImpl</view-declaration-language-factory>
         <partial-view-context-factory>org.jboss.portletbridge.context.PortletPartialViewContextFactoryImpl</partial-view-context-factory>
         <factory-extension>
             <bridge:bridge-config-factory>org.jboss.portletbridge.bridge.factory.BridgeConfigFactoryImpl
@@ -45,15 +42,13 @@
     </component>
     <render-kit>
         <renderer>
-            <description>Overrides the BodyRenderer
-            that comes with the JSF implementation</description>
+            <description>Overrides the BodyRenderer that comes with the JSF implementation</description>
             <component-family>javax.faces.Output</component-family>
             <renderer-type>javax.faces.Body</renderer-type>
             <renderer-class>org.jboss.portletbridge.renderkit.portlet.PortletBodyRenderer</renderer-class>
         </renderer>
         <renderer>
-            <description>Overrides the HeadRenderer
-            that comes with the JSF implementation</description>
+            <description>Overrides the HeadRenderer that comes with the JSF implementation</description>
             <component-family>javax.faces.Output</component-family>
             <renderer-type>javax.faces.Head</renderer-type>
             <renderer-class>org.jboss.portletbridge.renderkit.portlet.PortletHeadRenderer</renderer-class>
