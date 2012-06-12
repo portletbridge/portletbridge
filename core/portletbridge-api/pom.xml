@@ -27,8 +27,8 @@
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                         </manifest>
                         <manifestEntries>
-                            <Specification-Version>1.2.02</Specification-Version>
-                            <Specification-Title>Portlet 2.0 Bridge for JavaServer Faces 1.2</Specification-Title>
+                            <Specification-Version>1.0</Specification-Version>
+                            <Specification-Title>Portlet 2.0 Bridge for JavaServer Faces 2.0</Specification-Title>
                         </manifestEntries>
                     </archive>
                 </configuration>
