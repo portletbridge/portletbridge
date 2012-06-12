@@ -219,11 +219,6 @@ public class ActionRequestExternalContextImpl extends PortletExternalContextImpl
     }
 
     @Override
-    public void setResponseStatus(int statusCode) {
-        // TODO - set error code for render phase.
-    }
-
-    @Override
     public int getResponseBufferSize() {
         return 0;
     }

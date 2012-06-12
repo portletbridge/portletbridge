@@ -72,9 +72,8 @@ public class ResourceRequestExternalContextImpl extends MimeExternalContextImpl 
             throw new NullPointerException("Path to redirect is null");
         }
         PortalActionURL actionURL = new PortalActionURL(url);
-        if ((!actionURL.isInContext(getRequestContextPath()) && null == actionURL
-            .getParameter(Bridge.FACES_VIEW_ID_PARAMETER))
-            || "true".equalsIgnoreCase(actionURL.getParameter(Bridge.DIRECT_LINK))) {
+        if ((!actionURL.isInContext(getRequestContextPath()) && null == actionURL.getParameter(Bridge.FACES_VIEW_ID_PARAMETER))
+                || "true".equalsIgnoreCase(actionURL.getParameter(Bridge.DIRECT_LINK))) {
             dispatch(actionURL.getPath());
         } else {
             internalRedirect(actionURL);
@@ -124,11 +123,16 @@ public class ResourceRequestExternalContextImpl extends MimeExternalContextImpl 
         }
     }
 
+    @Override
+    public void setResponseStatus(int statusCode) {
+        ResourceResponse resourceResponse = (ResourceResponse) getResponse();
+        resourceResponse.setProperty(ResourceResponse.HTTP_STATUS_CODE, Integer.toString(statusCode));
+    }
+
     /**
      * ceate a parameter map out of the multi part request. Fix related to PBR-170
      *
-     * @param multipartRequest
-     *            the multipart request
+     * @param multipartRequest the multipart request
      * @return value map of the parameters
      */
     @SuppressWarnings("unchecked")

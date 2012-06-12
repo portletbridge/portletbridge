@@ -93,11 +93,6 @@ public class EventRequestExternalContextImpl extends PortletExternalContextImpl 
     }
 
     @Override
-    public void setResponseStatus(int statusCode) {
-
-    }
-
-    @Override
     public String getRequestCharacterEncoding() {
         return null;
     }
