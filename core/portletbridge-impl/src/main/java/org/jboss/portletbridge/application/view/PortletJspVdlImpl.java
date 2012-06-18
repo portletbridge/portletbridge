@@ -46,7 +46,7 @@ import org.jboss.portletbridge.bridge.context.BridgeContext;
  * @author <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
  */
 public class PortletJspVdlImpl extends VdlWrapper {
-    private static final String SAVESTATE_FIELD_MARKER = "~org.jboss.portletbridge.saveStateFieldMarker~";
+    private static final String RI_SAVE_STATE_MARKER = "~com.sun.faces.saveStateFieldMarker~";
 
     private ViewDeclarationLanguage wrappedVDL;
 
@@ -171,8 +171,7 @@ public class PortletJspVdlImpl extends VdlWrapper {
         private final StringBuilder mBuilder;
         private final FacesContext facesContext;
         private final Writer responseWriter;
-        private boolean stateWrited = false;
-        private static final int SAVESTATE_MARK_LEN = SAVESTATE_FIELD_MARKER.length();
+        private static final int SAVESTATE_MARK_LEN = RI_SAVE_STATE_MARKER.length();
 
         public StringBuilderWriter(FacesContext context, Writer responseWriter, int initialCapacity) {
             if (initialCapacity < 0) {
@@ -188,11 +187,6 @@ public class PortletJspVdlImpl extends VdlWrapper {
             instance.remove();
         }
 
-        public void stateWrited() {
-            this.stateWrited = true;
-
-        }
-
         public static StringBuilderWriter getInstance() {
             return instance.get();
         }
@@ -204,11 +198,7 @@ public class PortletJspVdlImpl extends VdlWrapper {
             } else if (len == 0) {
                 return;
             }
-            if (stateWrited) {
-                mBuilder.append(cbuf, off, len);
-            } else {
-                responseWriter.write(cbuf, off, len);
-            }
+            mBuilder.append(cbuf, off, len);
         }
 
         @Override
@@ -226,20 +216,12 @@ public class PortletJspVdlImpl extends VdlWrapper {
          */
         @Override
         public void write(String str) throws IOException {
-            if (stateWrited) {
-                mBuilder.append(str);
-            } else {
-                responseWriter.write(str);
-            }
+            mBuilder.append(str);
         }
 
         @Override
         public void write(String str, int off, int len) throws IOException {
-            if (stateWrited) {
-                mBuilder.append(str, off, off + len);
-            } else {
-                responseWriter.write(str, off, len);
-            }
+            mBuilder.append(str, off, off + len);
         }
 
         public StringBuilder getBuffer() {
@@ -253,22 +235,30 @@ public class PortletJspVdlImpl extends VdlWrapper {
 
         public void flushToWriter() throws IOException {
             // TODO: Buffer?
-            if (stateWrited) {
-                StateManager stateManager = facesContext.getApplication().getStateManager();
-                ResponseWriter oldResponseWriter = facesContext.getResponseWriter();
-                facesContext.setResponseWriter(oldResponseWriter.cloneWithWriter(responseWriter));
-                Object stateToWrite = stateManager.saveView(facesContext);
+            StateManager stateManager = facesContext.getApplication().getStateManager();
+            ResponseWriter oldResponseWriter = facesContext.getResponseWriter();
+            facesContext.setResponseWriter(oldResponseWriter.cloneWithWriter(responseWriter));
+            Object stateToWrite = stateManager.saveView(facesContext);
+
+            int stateStart = findStateMarker();
+            if (stateStart != -1) {
                 int pos = 0;
-                int tildeIdx = mBuilder.indexOf(SAVESTATE_FIELD_MARKER);
-                while (tildeIdx >= 0) {
-                    responseWriter.write(mBuilder.substring(pos, tildeIdx));
+                while (stateStart >= 0) {
+                    responseWriter.write(mBuilder.substring(pos, stateStart));
                     stateManager.writeState(facesContext, stateToWrite);
-                    pos = tildeIdx + SAVESTATE_MARK_LEN;
-                    tildeIdx = mBuilder.indexOf(SAVESTATE_FIELD_MARKER, pos);
+                    pos = stateStart + SAVESTATE_MARK_LEN;
+                    stateStart = mBuilder.indexOf(RI_SAVE_STATE_MARKER, pos);
                 }
                 responseWriter.write(mBuilder.substring(pos));
-                facesContext.setResponseWriter(oldResponseWriter);
+            } else {
+                responseWriter.write(mBuilder.toString());
             }
+
+            facesContext.setResponseWriter(oldResponseWriter);
+        }
+
+        private int findStateMarker() {
+            return mBuilder.indexOf(RI_SAVE_STATE_MARKER);
         }
     }
 }
