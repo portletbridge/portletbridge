@@ -47,6 +47,7 @@ import org.jboss.portletbridge.bridge.context.BridgeContext;
  */
 public class PortletJspVdlImpl extends VdlWrapper {
     private static final String RI_SAVE_STATE_MARKER = "~com.sun.faces.saveStateFieldMarker~";
+    private static final String AFTER_VIEW_CONTENT = PortletJspVdlImpl.class + ".AFTER_VIEW_CONTENT";
 
     private ViewDeclarationLanguage wrappedVDL;
 
@@ -96,17 +97,32 @@ public class PortletJspVdlImpl extends VdlWrapper {
                 wrapped = writeBehindResponseWrapperClass.newInstance();
                 if (inRender && wrapped instanceof RenderResponse || inResource && wrapped instanceof ResourceResponse) {
                     externalContext.setResponse(wrapped);
+                } else {
+                    wrapped = null;
                 }
             } catch (Exception e) {
                 externalContext.log("Instantiation of BridgeWriteBehindResponse failed", e);
             }
         }
 
+        externalContext.getRequestMap().put(Bridge.RENDER_CONTENT_AFTER_VIEW, Boolean.TRUE);
+
         externalContext.dispatch(viewToRender.getViewId());
 
         if (null != wrapped) {
             externalContext.setResponse(response);
-            wrapped.flushMarkupToWrappedResponse();
+
+            Object obj = externalContext.getRequestMap().get(Bridge.AFTER_VIEW_CONTENT);
+
+            if (null == obj && wrapped.hasFacesWriteBehindMarkup()) {
+                obj = wrapped.isChars() ? wrapped.getChars() : wrapped.getBytes();
+            }
+
+            if (null != obj) {
+                externalContext.getRequestMap().put(AFTER_VIEW_CONTENT, obj);
+            } else {
+                wrapped.flushMarkupToWrappedResponse();
+            }
         }
     }
 
@@ -119,8 +135,6 @@ public class PortletJspVdlImpl extends VdlWrapper {
 
         ExternalContext externalContext = facesContext.getExternalContext();
         MimeResponse renderResponse = (MimeResponse) externalContext.getResponse();
-
-        externalContext.getRequestMap().put(Bridge.RENDER_CONTENT_AFTER_VIEW, Boolean.TRUE);
 
         RenderKitFactory renderFactory = (RenderKitFactory) FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
         RenderKit renderKit = renderFactory.getRenderKit(facesContext, viewToRender.getRenderKitId());
@@ -152,8 +166,7 @@ public class PortletJspVdlImpl extends VdlWrapper {
 
         renderResponse.flushBuffer();
 
-        externalContext.getRequestMap().remove(Bridge.RENDER_CONTENT_AFTER_VIEW);
-        Object afterViewContent = facesContext.getExternalContext().getRequestMap().get(Bridge.AFTER_VIEW_CONTENT);
+        Object afterViewContent = externalContext.getRequestMap().get(Bridge.AFTER_VIEW_CONTENT);
         if (null != afterViewContent) {
             if (afterViewContent instanceof char[]) {
                 facesContext.getResponseWriter().write((char[]) afterViewContent);
@@ -161,6 +174,18 @@ public class PortletJspVdlImpl extends VdlWrapper {
                 facesContext.getResponseWriter().write(new String((byte[]) afterViewContent));
             } else {
                 externalContext.log("Invalid type for " + Bridge.AFTER_VIEW_CONTENT + " : " + afterViewContent.getClass());
+            }
+        } else {
+            Object storedAfterViewContent = externalContext.getRequestMap().remove(AFTER_VIEW_CONTENT);
+            if (null != storedAfterViewContent) {
+                if (storedAfterViewContent instanceof char[]) {
+                    facesContext.getResponseWriter().write((char[]) storedAfterViewContent);
+                } else if (storedAfterViewContent instanceof byte[]) {
+                    facesContext.getResponseWriter().write(new String((byte[]) storedAfterViewContent));
+                } else {
+                    externalContext.log("Invalid type for " + Bridge.AFTER_VIEW_CONTENT + " : "
+                            + storedAfterViewContent.getClass());
+                }
             }
         }
     }
