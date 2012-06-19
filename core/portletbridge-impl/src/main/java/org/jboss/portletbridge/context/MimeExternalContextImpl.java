@@ -43,7 +43,6 @@ import javax.portlet.faces.Bridge;
 
 /**
  * @author asmirnov
- *
  */
 public abstract class MimeExternalContextImpl extends PortletExternalContextImpl {
 
@@ -75,36 +74,15 @@ public abstract class MimeExternalContextImpl extends PortletExternalContextImpl
         String viewId = getViewIdFromUrl(url);
         MimeResponse renderResponse = getResponse();
         PortletURL portletURL = renderResponse.createActionURL();
-        portletURL.setParameter(Bridge.FACES_VIEW_ID_PARAMETER, viewId);
-        // portletURL.setParameter(AbstractExternalContext.NAMESPACE_PARAMETER,
-        // renderResponse.getNamespace());
+        if (null != viewId) {
+            portletURL.setParameter(Bridge.FACES_VIEW_ID_PARAMETER, viewId);
+        }
+
+        setPortletUrlParameters(url, portletURL);
+
         for (String key : url.getParameters().keySet()) {
             String value = url.getParameter(key);
-            if (Bridge.PORTLET_MODE_PARAMETER.equals(key)) {
-                PortletMode mode = new PortletMode(value);
-                try {
-                    portletURL.setPortletMode(mode);
-                } catch (PortletModeException e) {
-                    // only valid modes supported.
-                }
-            } else if (Bridge.PORTLET_WINDOWSTATE_PARAMETER.equals(key)) {
-                try {
-                    WindowState state = new WindowState(value);
-                    portletURL.setWindowState(state);
-                } catch (WindowStateException e) {
-                    // only valid modes supported.
-                }
-
-            } else if (Bridge.PORTLET_SECURE_PARAMETER.equals(key)) {
-                try {
-                    portletURL.setSecure(Boolean.getBoolean(value));
-                } catch (PortletSecurityException e) {
-                    // Just ignore it.
-                }
-
-            } else {
-                portletURL.setParameter(key, value);
-            }
+            portletURL.setParameter(key, value);
         }
         return portletURL.toString();
     }
@@ -123,17 +101,20 @@ public abstract class MimeExternalContextImpl extends PortletExternalContextImpl
     protected String createRenderUrl(PortalActionURL portalUrl, Map<String, List<String>> parameters) {
         MimeResponse renderResponse = getResponse();
         PortletURL renderURL = renderResponse.createRenderURL();
-        setBaseUrlParameters(portalUrl, renderURL);
+        setPortletUrlParameters(portalUrl, renderURL);
         renderURL.setParameters(portalUrl.getParameters());
         for (String paramName : parameters.keySet()) {
             renderURL.setParameter(paramName, parameters.get(paramName).toArray(STRINGS));
         }
-        renderURL.setParameter(Bridge.FACES_VIEW_ID_PARAMETER, getViewIdFromUrl(portalUrl));
+        String viewId = getViewIdFromUrl(portalUrl);
+        if (null != viewId) {
+            renderURL.setParameter(Bridge.FACES_VIEW_ID_PARAMETER, viewId);
+        }
         return renderURL.toString();
     }
 
     protected void setPortletUrlParameters(PortalActionURL portalUrl, PortletURL portletURL) {
-        String modeParameter = portalUrl.getParameter(Bridge.PORTLET_MODE_PARAMETER);
+        String modeParameter = portalUrl.removeParameter(Bridge.PORTLET_MODE_PARAMETER);
         if (null != modeParameter) {
             try {
                 PortletMode mode = new PortletMode(modeParameter);
@@ -143,7 +124,7 @@ public abstract class MimeExternalContextImpl extends PortletExternalContextImpl
             }
 
         }
-        String windowParameter = portalUrl.getParameter(Bridge.PORTLET_WINDOWSTATE_PARAMETER);
+        String windowParameter = portalUrl.removeParameter(Bridge.PORTLET_WINDOWSTATE_PARAMETER);
         if (null != windowParameter) {
             try {
                 WindowState state = new WindowState(windowParameter);

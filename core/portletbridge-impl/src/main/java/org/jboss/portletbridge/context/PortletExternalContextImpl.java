@@ -27,6 +27,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
@@ -52,10 +53,11 @@ import javax.portlet.faces.BridgeDefaultViewNotSpecifiedException;
 import org.jboss.portletbridge.bridge.context.BridgeContext;
 import org.jboss.portletbridge.bridge.logger.BridgeLogger;
 import org.jboss.portletbridge.bridge.logger.BridgeLogger.Level;
+import org.jboss.portletbridge.context.map.EnumerationIterator;
 
 /**
- * Version of the {@link ExternalContext} for a Portlet request. {@link FacesContextFactory} will create instance of
- * this class for a portal <code>action</code> phase.
+ * Version of the {@link ExternalContext} for a Portlet request. {@link FacesContextFactory} will create instance of this class
+ * for a portal <code>action</code> phase.
  *
  * @author asmirnov
  */
@@ -379,7 +381,7 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
             PortletSession portletSession = getRequest().getPortletSession(false);
             if (null != portletSession) {
                 String historyViewId = (String) portletSession.getAttribute(Bridge.VIEWID_HISTORY + "."
-                    + getRequest().getPortletMode().toString());
+                        + getRequest().getPortletMode().toString());
                 if (null != historyViewId) {
                     try {
                         PortalActionURL viewIdUrl = new PortalActionURL(historyViewId);
@@ -563,8 +565,7 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
     }
 
     /**
-     * @param hasNavigationRedirect
-     *            the hasNavigationRedirect to set
+     * @param hasNavigationRedirect the hasNavigationRedirect to set
      */
     void setHasNavigationRedirect(boolean hasNavigationRedirect) {
         this.hasNavigationRedirect = hasNavigationRedirect;
@@ -576,7 +577,19 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
             return null;
         }
         String actionUrl = url;
-        if (!actionUrl.startsWith("#")) {
+        if (actionUrl.startsWith("portlet:")) {
+            try {
+                if (actionUrl.startsWith("portlet:action")) {
+                    actionUrl = createActionUrl(new PortalActionURL(url));
+                } else if (actionUrl.startsWith("portlet:render")) {
+                    actionUrl = createRenderUrl(new PortalActionURL(url), Collections.<String, List<String>> emptyMap());
+                } else {
+                    actionUrl = createResourceUrl(new PortalActionURL(url));
+                }
+            } catch (MalformedURLException e) {
+                log("Unable to create PortalActionURL from: " + url, e);
+            }
+        } else if (!actionUrl.startsWith("#")) {
             try {
                 PortalActionURL portalUrl = new PortalActionURL(url);
                 boolean inContext = isInContext(portalUrl);
@@ -618,16 +631,21 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
         try {
             PortalActionURL portalUrl = new PortalActionURL(url);
             // JSR-301 chapter 6.1.3.1 requirements:
-            // 1) opaque URL
             String path = portalUrl.getPath();
-            if (null != portalUrl.getProtocol() && !path.startsWith("/")) {
+            if (null != portalUrl.getProtocol() && "portlet:".equalsIgnoreCase(portalUrl.getProtocol())) {
+                // Portlet Scheme URL
+                portalUrl.removeParameter(Bridge.VIEW_LINK);
+                encodeBackLink(portalUrl);
+                return encodeActionURL(portalUrl.toString());
+            } else if (null != portalUrl.getProtocol() && !path.startsWith("/")) {
+                // Opaque URL
                 return url;
             } else if (!isInContext(portalUrl)) {
-                // 2) hierarchial url outside context.
+                // Hierarchial url outside context.
                 encodeBackLink(portalUrl);
                 return encodeURL(portalUrl.toString());
             } else if ("true".equalsIgnoreCase(portalUrl.getParameter(Bridge.VIEW_LINK))) {
-                // 3) hierarchical and targets a resource that is within this application
+                // Hierarchical and targets a resource that is within this application
                 portalUrl.removeParameter(Bridge.VIEW_LINK);
                 encodeBackLink(portalUrl);
                 // 1. view link. TODO - would it better to create renderURL ?
@@ -640,7 +658,6 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
                 if (path.startsWith("/")) {
                     // absolute path, remove context path from ID.
                     portalUrl.setPath(path.substring(getRequestContextPath().length()));
-
                 } else {
                     // resolve relative URL aganist current view.
                     FacesContext facesContext = FacesContext.getCurrentInstance();

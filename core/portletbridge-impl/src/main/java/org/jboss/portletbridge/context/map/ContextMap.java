@@ -18,7 +18,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
  */
-package org.jboss.portletbridge.context;
+package org.jboss.portletbridge.context.map;
 
 import java.util.AbstractMap;
 import java.util.AbstractSet;
@@ -29,17 +29,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- *
  * @author shura
- *
- *
- *
- *         Base class for All maps in <code>ExternalContextCocoonImpl</code> get from
- *
- *         Sun Jsf-ri
- *
- *
- *
  */
 abstract class ContextMap<K, V> extends AbstractMap<K, V> {
 
@@ -47,12 +37,7 @@ abstract class ContextMap<K, V> extends AbstractMap<K, V> {
 
     private transient volatile Set<Entry<K, V>> entrySet;
 
-    /*
-     *
-     * (non-Javadoc)
-     *
-     *
-     *
+    /**
      * @see java.util.Map#entrySet()
      */
     public Set<Entry<K, V>> entrySet() {
@@ -116,17 +101,9 @@ abstract class ContextMap<K, V> extends AbstractMap<K, V> {
     }
 
     /**
-     *
-     *
-     *
-     * Template metod - all maps in ExternalFacesContext creates Set from
-     *
-     * parameters <code>Enumeration</code>
-     *
-     *
+     * Template method - all maps in ExternalFacesContext creates Set from parameters <code>Enumeration</code>
      *
      * @return enumeration for current map.
-     *
      */
     protected abstract Enumeration<K> getEnumeration();
 
@@ -134,13 +111,6 @@ abstract class ContextMap<K, V> extends AbstractMap<K, V> {
     public void clear() {
         throw new UnsupportedOperationException();
     }
-
-    // public void putAll(Map t) {
-    // for (Iterator entries = t.entrySet().iterator(); entries.hasNext();) {
-    // Map.Entry entry = (Entry) entries.next();
-    // put(entry.getKey(),entry.getValue());
-    // }
-    // }
 
     // Supported by maps if overridden
     public V remove(Object key) {

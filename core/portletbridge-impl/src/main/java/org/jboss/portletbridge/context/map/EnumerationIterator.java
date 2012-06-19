@@ -19,12 +19,12 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.portletbridge.context;
+package org.jboss.portletbridge.context.map;
 
 import java.util.Enumeration;
 import java.util.Iterator;
 
-class EnumerationIterator<T> implements Iterator<T> {
+public class EnumerationIterator<T> implements Iterator<T> {
     @SuppressWarnings("unchecked")
     public EnumerationIterator(Enumeration<?> enumeration) {
         this.enumeration = (Enumeration<T>) enumeration;

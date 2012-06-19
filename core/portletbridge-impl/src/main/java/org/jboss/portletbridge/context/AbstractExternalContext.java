@@ -65,6 +65,8 @@ import javax.portlet.PortletResponse;
 import javax.servlet.http.Cookie;
 
 import org.jboss.portletbridge.context.flash.FlashContextFactory;
+import org.jboss.portletbridge.context.map.ContextAttributesMap;
+import org.jboss.portletbridge.context.map.EnumerationIterator;
 
 /**
  *

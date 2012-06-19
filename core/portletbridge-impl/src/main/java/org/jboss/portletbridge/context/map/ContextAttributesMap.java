@@ -19,13 +19,13 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.portletbridge.context;
+package org.jboss.portletbridge.context.map;
+
 
 /**
  * Abstract base class for all attributes/sessions/cookies maps in external contexts.
  *
  * @author asmirnov
- *
  */
 public abstract class ContextAttributesMap<V> extends ContextMap<String, V> {
 

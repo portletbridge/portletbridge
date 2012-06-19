@@ -52,7 +52,7 @@ import javax.portlet.faces.Bridge;
 import javax.portlet.faces.BridgeUtil;
 import javax.portlet.faces.preference.Preference;
 
-import org.jboss.portletbridge.context.PortletApplicationScopeSessionMap;
+import org.jboss.portletbridge.context.map.PortletApplicationScopeSessionMap;
 import org.jboss.portletbridge.preference.PreferenceImpl;
 
 public class PortletELResolver extends ELResolver {
