@@ -321,7 +321,7 @@ public class Jsf20ControllerImpl implements BridgeController {
             if (viewUrl.indexOf('?') > 0) {
                 viewUrl += "&" + queryString.substring(1);
             } else {
-                viewUrl = viewUrl.concat(queryString);
+                viewUrl = viewUrl.concat("?").concat(queryString);
             }
         }
 
