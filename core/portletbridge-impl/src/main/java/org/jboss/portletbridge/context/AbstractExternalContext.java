@@ -69,14 +69,7 @@ import org.jboss.portletbridge.context.map.ContextAttributesMap;
 import org.jboss.portletbridge.context.map.EnumerationIterator;
 
 /**
- *
  * @author shura
- *
- *
- *
- *
- *
- *
  */
 public abstract class AbstractExternalContext extends ExternalContext {
 
@@ -155,12 +148,7 @@ public abstract class AbstractExternalContext extends ExternalContext {
         return getNamespace() + name;
     }
 
-    /*
-     *
-     * (non-Javadoc)
-     *
-     *
-     *
+    /**
      * @see javax.faces.context.ExternalContext#dispatch(java.lang.String)
      */
     public Map<String, Object> getApplicationMap() {
@@ -195,18 +183,14 @@ public abstract class AbstractExternalContext extends ExternalContext {
 
     protected abstract Enumeration<String> getContextAttributeNames();
 
-    /*
-     * (non-Javadoc)
-     *
+    /**
      * @see javax.faces.context.ExternalContext#getAuthType()
      */
     public Object getContext() {
         return this.context;
     }
 
-    /*
-     * (non-Javadoc)
-     *
+    /**
      * @see javax.faces.context.ExternalContext#getInitParameter(java.lang.String)
      */
     @Override
