@@ -3,9 +3,9 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
     <name>JBossPortletBridge</name>
     <ordering>
-        <after>
+        <before>
             <others />
-        </after>
+        </before>
     </ordering>
     <application>
         <el-resolver>org.jboss.portletbridge.el.PortletELResolver</el-resolver>
@@ -17,6 +17,7 @@
         </system-event-listener>
     </application>
     <factory>
+        <application-factory>org.jboss.portletbridge.application.PortletApplicationFactoryImpl</application-factory>
         <exception-handler-factory>org.jboss.portletbridge.context.exception.PortletExceptionHandlerFactoryImpl</exception-handler-factory>
         <external-context-factory>org.jboss.portletbridge.context.PortletExternalContextFactoryImpl</external-context-factory>
         <view-declaration-language-factory>org.jboss.portletbridge.application.view.PortletVdlFactoryImpl</view-declaration-language-factory>
