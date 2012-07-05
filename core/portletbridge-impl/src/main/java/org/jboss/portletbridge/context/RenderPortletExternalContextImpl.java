@@ -23,9 +23,6 @@ package org.jboss.portletbridge.context;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.Map;
 
 import javax.portlet.PortletContext;
 import javax.portlet.RenderRequest;
@@ -38,11 +35,8 @@ import javax.portlet.faces.Bridge;
  */
 public class RenderPortletExternalContextImpl extends MimeExternalContextImpl {
 
-    private Map<String, String[]> _requestParameters;
-
     public RenderPortletExternalContextImpl(PortletContext context, RenderRequest request, RenderResponse response) {
         super(context, request, response);
-        _requestParameters = request.getParameterMap();
     }
 
     @Override
@@ -76,11 +70,6 @@ public class RenderPortletExternalContextImpl extends MimeExternalContextImpl {
     }
 
     @Override
-    public Map<String, String[]> getRequestParameterValuesMap() {
-        return _requestParameters;
-    }
-
-    @Override
     public RenderRequest getRequest() {
         return (RenderRequest) super.getRequest();
     }
@@ -97,26 +86,6 @@ public class RenderPortletExternalContextImpl extends MimeExternalContextImpl {
             return super.getRequestParameter(name);
         }
         return retObj[0];
-    }
-
-    @Override
-    protected Enumeration<String> enumerateRequestParameterNames() {
-        Map<String, String[]> requestParameters = _requestParameters;
-        if (null != requestParameters) {
-            return Collections.enumeration(requestParameters.keySet());
-        } else {
-            return super.enumerateRequestParameterNames();
-        }
-    }
-
-    @Override
-    protected String[] getRequestParameterValues(String name) {
-        Map<String, String[]> requestParameters = _requestParameters;
-        if (null != requestParameters) {
-            return requestParameters.get(name);
-        } else {
-            return super.getRequestParameterValues(name);
-        }
     }
 
     @Override

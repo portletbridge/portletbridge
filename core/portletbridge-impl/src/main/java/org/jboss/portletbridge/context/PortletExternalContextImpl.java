@@ -193,11 +193,6 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
         return getRequest().getAttributeNames();
     }
 
-    @Override
-    public Map<String, String[]> getRequestParameterValuesMap() {
-        return getRequest().getParameterMap();
-    }
-
     protected String[] getRequestParameterValues(String name) {
         String[] temp = getRequest().getParameterValues(name);
         if (null == temp || temp.length == 0) {
