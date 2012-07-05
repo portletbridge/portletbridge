@@ -124,7 +124,7 @@ public class Jsf20ControllerImpl implements BridgeController {
         } catch (Exception e) {
             throwBridgeException(e);
         } finally {
-            if (null != facesLifecycle) {
+            if (null != facesLifecycle && null != ppPhaseListener) {
                 facesLifecycle.removePhaseListener(ppPhaseListener);
             }
 
@@ -205,7 +205,7 @@ public class Jsf20ControllerImpl implements BridgeController {
                 }
             }
 
-            if (null != facesLifecycle) {
+            if (null != facesLifecycle && null != ppPhaseListener) {
                 facesLifecycle.removePhaseListener(ppPhaseListener);
             }
 
@@ -270,8 +270,12 @@ public class Jsf20ControllerImpl implements BridgeController {
             throwBridgeException(e);
         } finally {
             if (null != facesLifecycle) {
-                facesLifecycle.removePhaseListener(ppPhaseListener);
-                facesLifecycle.removePhaseListener(portalPhaseListener);
+                if (null != ppPhaseListener) {
+                    facesLifecycle.removePhaseListener(ppPhaseListener);
+                }
+                if (null != portalPhaseListener) {
+                    facesLifecycle.removePhaseListener(portalPhaseListener);
+                }
             }
 
             if (null != facesContext) {
