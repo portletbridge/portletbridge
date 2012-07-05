@@ -94,7 +94,7 @@ public class RenderPortletExternalContextImpl extends MimeExternalContextImpl {
     protected String getRequestParameter(String name) {
         String[] retObj = getRequestParameterValues(name);
         if (retObj == null) {
-            return null;
+            return super.getRequestParameter(name);
         }
         return retObj[0];
     }
@@ -105,7 +105,7 @@ public class RenderPortletExternalContextImpl extends MimeExternalContextImpl {
         if (null != requestParameters) {
             return Collections.enumeration(requestParameters.keySet());
         } else {
-            return Collections.enumeration(Collections.<String> emptyList());
+            return super.enumerateRequestParameterNames();
         }
     }
 
@@ -115,7 +115,7 @@ public class RenderPortletExternalContextImpl extends MimeExternalContextImpl {
         if (null != requestParameters) {
             return requestParameters.get(name);
         } else {
-            return null;
+            return super.getRequestParameterValues(name);
         }
     }
 

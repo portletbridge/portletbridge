@@ -24,15 +24,18 @@ package org.jboss.portletbridge.context;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.faces.FacesException;
@@ -41,6 +44,7 @@ import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.context.FacesContextFactory;
+import javax.faces.render.ResponseStateManager;
 import javax.portlet.PortletContext;
 import javax.portlet.PortletException;
 import javax.portlet.PortletRequest;
@@ -77,6 +81,7 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
     private String servletMappingPrefix;
     private String viewId;
     private boolean hasNavigationRedirect = false;
+    private Map<String, String[]> extraRequestParameters = new HashMap<String, String[]>();
     protected BridgeContext bridgeContext;
 
     public PortletExternalContextImpl(PortletContext context, PortletRequest request, PortletResponse response) {
@@ -85,6 +90,11 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
         bridgeContext = BridgeContext.getCurrentInstance();
         if (null == bridgeContext) {
             throw new FacesException("No BridgeContext instance found");
+        }
+
+        String defaultRenderKitId = bridgeContext.getBridgeConfig().getDefaultRenderKitId();
+        if (null != defaultRenderKitId && null == request.getParameter(ResponseStateManager.RENDER_KIT_ID_PARAM)) {
+            extraRequestParameters.put(ResponseStateManager.RENDER_KIT_ID_PARAM, new String[] { defaultRenderKitId });
         }
     }
 
@@ -147,7 +157,14 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
     }
 
     protected Enumeration<String> enumerateRequestParameterNames() {
-        return getRequest().getParameterNames();
+        List<String> names = new ArrayList<String>();
+        Enumeration<String> paramNames = getRequest().getParameterNames();
+        while (paramNames.hasMoreElements()) {
+            String name = (String) paramNames.nextElement();
+            names.add(name);
+        }
+        names.addAll(extraRequestParameters.keySet());
+        return Collections.enumeration(names);
     }
 
     protected Object getContextAttribute(String name) {
@@ -182,7 +199,11 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
     }
 
     protected String[] getRequestParameterValues(String name) {
-        return getRequest().getParameterValues(name);
+        String[] temp = getRequest().getParameterValues(name);
+        if (null == temp || temp.length == 0) {
+            temp = extraRequestParameters.get(name);
+        }
+        return temp;
     }
 
     protected String getRequestHeader(String name) {
@@ -217,7 +238,14 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
     }
 
     protected String getRequestParameter(String name) {
-        return getRequest().getParameter(name);
+        String temp = getRequest().getParameter(name);
+        if (null == temp) {
+            String[] tempArray = extraRequestParameters.get(name);
+            if (null != tempArray && tempArray.length > 0) {
+                temp = extraRequestParameters.get(name)[0];
+            }
+        }
+        return temp;
     }
 
     protected Object getSessionAttribute(String name) {
@@ -487,7 +515,6 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
                 viewId = viewId.substring(getRequestContextPath().length());
             }
             viewId = bridgeContext.getFacesViewIdFromPath(viewId);
-
         }
         return viewId;
     }
@@ -654,12 +681,16 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
                 // For resources in the portletbridge application context add
                 // namespace as URL parameter, to restore portletbridge session.
                 // Remove context path from resource ID.
-                // TODO detect jsf view reference, even for omited "viewLink" parameter.
+
+                portalUrl.removeParameter(Bridge.VIEW_LINK);
+
                 if (path.startsWith("/")) {
-                    // absolute path, remove context path from ID.
-                    portalUrl.setPath(path.substring(getRequestContextPath().length()));
+                    if (null == portalUrl.getParameter(Bridge.NONFACES_TARGET_PATH_PARAMETER)) {
+                        // absolute path, remove context path from ID.
+                        portalUrl.setPath(path.substring(getRequestContextPath().length()));
+                    }
                 } else {
-                    // resolve relative URL aganist current view.
+                    // resolve relative URL against current view.
                     FacesContext facesContext = FacesContext.getCurrentInstance();
                     UIViewRoot viewRoot = facesContext.getViewRoot();
                     if (null != viewRoot && null != viewRoot.getViewId() && viewRoot.getViewId().length() > 0) {
@@ -675,7 +706,18 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
                         portalUrl.setPath('/' + path);
                     }
                 }
-                url = createResourceUrl(portalUrl);
+                portalUrl.setPath(URI.create(portalUrl.getPath()).normalize().getPath());
+
+                String facesViewId = getViewIdFromUrl(portalUrl);
+                if (null != portalUrl.getParameter(Bridge.IN_PROTOCOL_RESOURCE_LINK)) {
+                    url = createResourceUrl(portalUrl);
+                } else if (null != facesViewId) {
+                    portalUrl.setParameter(Bridge.FACES_VIEW_ID_PARAMETER, facesViewId);
+                    url = createResourceUrl(portalUrl);
+                } else {
+                    portalUrl.setPath(getRequestContextPath() + portalUrl.getPath());
+                    url = encodeURL(portalUrl.toString());
+                }
             }
         } catch (MalformedURLException e) {
             throw new FacesException(e);
@@ -707,7 +749,19 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
 
     @Override
     public String encodeRedirectURL(String baseUrl, Map<String, List<String>> parameters) {
-        return super.encodeRedirectURL(baseUrl, parameters);
+        try {
+            PortalActionURL portalUrl = new PortalActionURL(baseUrl);
+            if (null != parameters && !parameters.isEmpty()) {
+                for (Entry<String, List<String>> entry : parameters.entrySet()) {
+                    for (String value : entry.getValue()) {
+                        portalUrl.addParameter(entry.getKey(), value);
+                    }
+                }
+            }
+            return encodeURL(portalUrl.toString());
+        } catch (MalformedURLException e) {
+            throw new FacesException(e);
+        }
     }
 
     protected boolean isInContext(PortalActionURL portalUrl) {
