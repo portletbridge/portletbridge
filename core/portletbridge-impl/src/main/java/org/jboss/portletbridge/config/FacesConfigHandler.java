@@ -48,7 +48,6 @@ import org.xml.sax.helpers.DefaultHandler;
 public class FacesConfigHandler extends DefaultHandler {
 
     private static final String JEE_NS = "http://java.sun.com/xml/ns/javaee";
-    private static final String BRIDGE_NS = "http://jboss.org/xml/ns/bridge/bridge-extension";
     private static final String APPLICATION_ELEMENT = "application";
     private static final String APP_EXTENSION_ELEMENT = "application-extension";
     private static final String FACTORY_ELEMENT = "factory";
@@ -150,11 +149,11 @@ public class FacesConfigHandler extends DefaultHandler {
 
         @Override
         protected ContentHandler getNextHandler(String uri, String localName, Attributes attributes) {
-            if (EXCLUDED_ATTRIBUTES_ELEMENT.equals(localName) && BRIDGE_NS.equals(uri)) {
+            if (EXCLUDED_ATTRIBUTES_ELEMENT.equals(localName)) {
                 return new ExcludedAttributesHandler(this);
-            } else if (PUBLIC_PARAMETER_MAPPINGS.equals(localName) && BRIDGE_NS.equals(uri)) {
+            } else if (PUBLIC_PARAMETER_MAPPINGS.equals(localName)) {
                 return new ParameterMappingsHandler(this);
-            } else if (WRITE_BEHIND_RESPONSE_WRAPPERS.equals(localName) && BRIDGE_NS.equals(uri)) {
+            } else if (WRITE_BEHIND_RESPONSE_WRAPPERS.equals(localName)) {
                 return new WriteBehindResponseWrappersHandler(this);
             } else {
                 return null;
@@ -187,17 +186,17 @@ public class FacesConfigHandler extends DefaultHandler {
         @Override
         protected ContentHandler getNextHandler(String uri, String localName, Attributes attributes)
             throws ParsingException {
-            if (BRIDGE_CONFIG_FACTORY.equals(localName) && BRIDGE_NS.equals(uri)) {
+            if (BRIDGE_CONFIG_FACTORY.equals(localName)) {
                 return new BridgeFactoryHandler(this, BridgeConfigFactory.class);
-            } else if (BRIDGE_CONTEXT_FACTORY.equals(localName) && BRIDGE_NS.equals(uri)) {
+            } else if (BRIDGE_CONTEXT_FACTORY.equals(localName)) {
                 return new BridgeFactoryHandler(this, BridgeContextFactory.class);
-            } else if (BRIDGE_CONTROLLER_FACTORY.equals(localName) && BRIDGE_NS.equals(uri)) {
+            } else if (BRIDGE_CONTROLLER_FACTORY.equals(localName)) {
                 return new BridgeFactoryHandler(this, BridgeControllerFactory.class);
-            } else if (BRIDGE_LOGGER_FACTORY.equals(localName) && BRIDGE_NS.equals(uri)) {
+            } else if (BRIDGE_LOGGER_FACTORY.equals(localName)) {
                 return new BridgeFactoryHandler(this, BridgeLoggerFactory.class);
-            } else if (BRIDGE_REQUEST_SCOPE_FACTORY.equals(localName) && BRIDGE_NS.equals(uri)) {
+            } else if (BRIDGE_REQUEST_SCOPE_FACTORY.equals(localName)) {
                 return new BridgeFactoryHandler(this, BridgeRequestScopeFactory.class);
-            } else if (BRIDGE_REQUEST_SCOPE_MANAGER_FACTORY.equals(localName) && BRIDGE_NS.equals(uri)) {
+            } else if (BRIDGE_REQUEST_SCOPE_MANAGER_FACTORY.equals(localName)) {
                 return new BridgeFactoryHandler(this, BridgeRequestScopeManagerFactory.class);
             } else {
                 throw new ParsingException("Unexpected element: " + localName + " within " + FACTORY_EXTENSION_ELEMENT
@@ -215,7 +214,7 @@ public class FacesConfigHandler extends DefaultHandler {
 
         @Override
         protected ContentHandler getNextHandler(String uri, String localName, Attributes attributes) {
-            if (EXCLUDED_ATTRIBUTE_ELEMENT.equals(localName) && BRIDGE_NS.equals(uri)) {
+            if (EXCLUDED_ATTRIBUTE_ELEMENT.equals(localName)) {
                 return new ExcludedAttributeHandler(this);
             } else {
                 return null;
@@ -245,7 +244,7 @@ public class FacesConfigHandler extends DefaultHandler {
         @Override
         protected ContentHandler getNextHandler(String uri, String localName, Attributes attributes)
             throws ParsingException {
-            if (PUBLIC_PARAMETER_MAPPING.equals(localName) && BRIDGE_NS.equals(uri)) {
+            if (PUBLIC_PARAMETER_MAPPING.equals(localName)) {
                 return new ParameterMappingHandler(this);
             } else {
                 throw new ParsingException("Unexpected element: " + localName + " within " + PUBLIC_PARAMETER_MAPPINGS
