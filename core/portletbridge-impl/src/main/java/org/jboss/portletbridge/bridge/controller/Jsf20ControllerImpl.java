@@ -63,6 +63,7 @@ import org.jboss.portletbridge.bridge.event.BridgePreReleaseFacesContextSystemEv
 import org.jboss.portletbridge.bridge.logger.BridgeLogger.Level;
 import org.jboss.portletbridge.bridge.scope.BridgeRequestScope;
 import org.jboss.portletbridge.bridge.scope.BridgeRequestScopeManager;
+import org.jboss.portletbridge.context.AbstractExternalContext;
 import org.jboss.portletbridge.lifecycle.PortalPhaseListener;
 import org.jboss.portletbridge.lifecycle.PublicParameterPhaseListener;
 import org.jboss.portletbridge.util.BeanWrapper;
@@ -344,6 +345,15 @@ public class Jsf20ControllerImpl implements BridgeController {
 
             saveFacesView(scope, facesContext);
             saveMessages(facesContext);
+
+            if (Bridge.PortletPhase.ACTION_PHASE == bridgeContext.getPortletRequestPhase()) {
+                // Save View State Param
+                String viewState = facesContext.getExternalContext().getRequestParameterMap().get(
+                        ResponseStateManager.VIEW_STATE_PARAM);
+
+                scope.put(AbstractExternalContext.FACES_VIEW_STATE, viewState);
+            }
+
             saveBeans(bridgeContext, facesContext);
             saveRequestParameters(bridgeContext, facesContext);
 

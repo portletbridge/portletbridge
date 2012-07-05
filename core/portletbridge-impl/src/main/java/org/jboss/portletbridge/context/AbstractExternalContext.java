@@ -83,6 +83,8 @@ public abstract class AbstractExternalContext extends ExternalContext {
     public static final String INITIAL_REQUEST_ATTRIBUTES_NAMES = "org.jboss.portletbridge.REQUEST_PARAMETERS";
     public static final Object RENDER_POLICY_ATTRIBUTE = "org.jboss.portletbridge.RENDER_POLICY";
     public static final String PORTAL_USER_PRINCIPAL = "org.jboss.portletbridge.USER_PRINCIPAL";
+    public static final String FACES_VIEW_STATE = "org.jboss.portletbridge.faces.ViewState";
+
     // TODO - optimization.
     private Map<String, Object> applicationMap;
 

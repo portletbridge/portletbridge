@@ -57,6 +57,7 @@ import javax.portlet.faces.BridgeDefaultViewNotSpecifiedException;
 import org.jboss.portletbridge.bridge.context.BridgeContext;
 import org.jboss.portletbridge.bridge.logger.BridgeLogger;
 import org.jboss.portletbridge.bridge.logger.BridgeLogger.Level;
+import org.jboss.portletbridge.bridge.scope.BridgeRequestScope;
 import org.jboss.portletbridge.context.map.EnumerationIterator;
 
 /**
@@ -95,6 +96,17 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
         String defaultRenderKitId = bridgeContext.getBridgeConfig().getDefaultRenderKitId();
         if (null != defaultRenderKitId && null == request.getParameter(ResponseStateManager.RENDER_KIT_ID_PARAM)) {
             extraRequestParameters.put(ResponseStateManager.RENDER_KIT_ID_PARAM, new String[] { defaultRenderKitId });
+        }
+
+        String viewStateParam = request.getParameter(ResponseStateManager.VIEW_STATE_PARAM);
+        if (null == viewStateParam) {
+            BridgeRequestScope scope = bridgeContext.getBridgeScope();
+            if (null != scope) {
+                viewStateParam = (String) scope.get(FACES_VIEW_STATE);
+                if (null != viewStateParam) {
+                    extraRequestParameters.put(ResponseStateManager.VIEW_STATE_PARAM, new String[] { viewStateParam });
+                }
+            }
         }
     }
 
