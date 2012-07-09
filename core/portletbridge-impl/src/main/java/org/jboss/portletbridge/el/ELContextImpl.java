@@ -31,10 +31,10 @@ import javax.el.FunctionMapper;
 import javax.el.ValueExpression;
 import javax.el.VariableMapper;
 import javax.portlet.PortletConfig;
+import javax.portlet.faces.preference.Preference;
 
 /**
  * @author asmirnov
- *
  */
 public class ELContextImpl extends ELContext {
 
@@ -45,6 +45,8 @@ public class ELContextImpl extends ELContext {
     private FunctionMapper functionMapper = new FunctionMapperImpl();
 
     private PortletConfig portletConfig;
+    private Map<String, Object> httpSessionMap;
+    private Map<String, Preference> mutablePortletPreferencesMap;
     private boolean facesResolved = false;
 
     public ELContextImpl(ELResolver resolver) {
@@ -91,6 +93,22 @@ public class ELContextImpl extends ELContext {
 
     public void setPortletConfig(PortletConfig config) {
         portletConfig = config;
+    }
+
+    public Map<String, Object> getHttpSessionMap() {
+        return httpSessionMap;
+    }
+
+    public void setHttpSessionMap(Map<String, Object> httpSessionMap) {
+        this.httpSessionMap = httpSessionMap;
+    }
+
+    public Map<String, Preference> getMutablePortletPreferencesMap() {
+        return mutablePortletPreferencesMap;
+    }
+
+    public void setMutablePortletPreferencesMap(Map<String, Preference> mutablePortletPreferencesMap) {
+        this.mutablePortletPreferencesMap = mutablePortletPreferencesMap;
     }
 
     public boolean isFacesResolved() {

@@ -89,7 +89,6 @@ public class Jsf20ControllerImpl implements BridgeController {
      */
     public void init(BridgeConfig config) throws BridgeException {
         bridgeConfig = config;
-        // TODO ELContextListener??
     }
 
     /**

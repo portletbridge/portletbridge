@@ -82,7 +82,7 @@ public class PortletELResolver extends ELResolver {
     // vendor specific
     public static final String AJAX_CONTEXT = "ajaxContext";
 
-    private Map<String, Object> mAppScopeSessionMap = null;
+    private Map<String, Object> appScopeSessionMap = null;
 
     public PortletELResolver() {
     }
@@ -91,96 +91,147 @@ public class PortletELResolver extends ELResolver {
     public Object getValue(ELContext context, Object base, Object property) throws ELException {
         // variable resolution is a special case of property resolution
         // where the base is null.
-        if (!BridgeUtil.isPortletRequest() || base != null) {
+        if (!BridgeUtil.isPortletRequest() || null != base) {
             return null;
         }
-        if (property == null) {
+
+        if (null == property) {
             throw new PropertyNotFoundException("Null property");
         }
 
-        FacesContext facesContext = (FacesContext) context.getContext(FacesContext.class);
-        ExternalContext extCtx = facesContext.getExternalContext();
+        if (null == context) {
+            throw new NullPointerException("PortletELResolver.getValue was passed a null ELContext");
+        }
 
-        // only process if running in a portlet request
-        // Bridge.PortletPhase phase =
-        // (Bridge.PortletPhase)
-        // FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get(Bridge.PORTLET_LIFECYCLE_PHASE);
-        // if (phase == null) {
-        // return null;
-        // }
+        ELContextImpl portletELContext = (ELContextImpl) context.getContext(ELContextImpl.class);
 
-        if (PORTLET_CONFIG.equals(property)) {
-            context.setPropertyResolved(true);
-            return context.getContext(PortletConfig.class);
-        } else if (ACTION_REQUEST.equals(property)
-            && (BridgeUtil.getPortletRequestPhase() == Bridge.PortletPhase.ACTION_PHASE)) {
-            context.setPropertyResolved(true);
-            return extCtx.getRequest();
-        } else if (ACTION_RESPONSE.equals(property)
-            && (BridgeUtil.getPortletRequestPhase() == Bridge.PortletPhase.ACTION_PHASE)) {
-            context.setPropertyResolved(true);
-            return extCtx.getResponse();
-        } else if (RENDER_REQUEST.equals(property)
-            && (BridgeUtil.getPortletRequestPhase() == Bridge.PortletPhase.RENDER_PHASE)) {
-            context.setPropertyResolved(true);
-            return extCtx.getRequest();
-        } else if (RENDER_RESPONSE.equals(property)
-            && (BridgeUtil.getPortletRequestPhase() == Bridge.PortletPhase.RENDER_PHASE)) {
-            context.setPropertyResolved(true);
-            return extCtx.getResponse();
-        } else if (EVENT_REQUEST.equals(property)
-            && (BridgeUtil.getPortletRequestPhase() == Bridge.PortletPhase.EVENT_PHASE)) {
-            context.setPropertyResolved(true);
-            return extCtx.getRequest();
-        } else if (EVENT_RESPONSE.equals(property)
-            && (BridgeUtil.getPortletRequestPhase() == Bridge.PortletPhase.EVENT_PHASE)) {
-            context.setPropertyResolved(true);
-            return extCtx.getResponse();
-        } else if (RESOURCE_REQUEST.equals(property)
-            && (BridgeUtil.getPortletRequestPhase() == Bridge.PortletPhase.RESOURCE_PHASE)) {
-            context.setPropertyResolved(true);
-            return extCtx.getRequest();
-        } else if (RESOURCE_RESPONSE.equals(property)
-            && (BridgeUtil.getPortletRequestPhase() == Bridge.PortletPhase.RESOURCE_PHASE)) {
-            context.setPropertyResolved(true);
-            return extCtx.getResponse();
-        } else if (SESSION_APPLICATION_SCOPE.equals(property) || HTTP_SESSION_SCOPE.equals(property)) {
-            context.setPropertyResolved(true);
-            if (mAppScopeSessionMap == null) {
-                Object request = extCtx.getRequest();
-                // Object portletLifecycleAttr = extCtx.getRequestMap().get(Bridge.PORTLET_LIFECYCLE_PHASE);
-                if (BridgeUtil.isPortletRequest()) {
-                    mAppScopeSessionMap = new PortletApplicationScopeSessionMap((PortletRequest) request);
+        if (null == portletELContext) {
+            return null;
+        }
+
+        if (portletELContext.isFacesResolved()) {
+            return getValueWithFacesResolution(context, portletELContext, base, property);
+        } else {
+            return getValueWithJSPResolution(context, portletELContext, base, property);
+        }
+    }
+
+    private Object getValueWithJSPResolution(ELContext context, ELContextImpl portletELContext, Object base, Object property) {
+        if (property instanceof String) {
+            FacesContext facesContext = (FacesContext) context.getContext(FacesContext.class);
+            ExternalContext externalContext = facesContext.getExternalContext();
+
+            try {
+                if (HTTP_SESSION_SCOPE.equals(property)) {
+                    context.setPropertyResolved(true);
+                    return getHttpSessionMap(externalContext, portletELContext);
+                } else if (MUTABLE_PORTLET_PREFERENCES_VALUES.equals(property)) {
+                    context.setPropertyResolved(true);
+                    return getMutablePortletPreferencesValues(externalContext, portletELContext);
+                } else {
+                    return null;
+                }
+            } catch (IllegalArgumentException e) {
+                // Faces defers to the implicit object resolver when evaluating
+                // in a JSP context. Alas, this means that Faces doesn't resolve
+                // session scoped ManagedBeans in a JSP context if the managed bean
+                // is already created rather it defers to the JSP Implicit resolver
+                // which accesses the http session not the protlet session. I.e.
+                // though the managed bean resolver sees that the session scoped bean
+                // exists it can't be retrieved because its in the portlet session
+                // not the http session.
+                // So its up to us to see if the bean is in the session
+                if (externalContext.getSessionMap().containsKey(property)) {
+                    context.setPropertyResolved(true);
+                    return externalContext.getSessionMap().get(property);
+                } else {
+                    return null;
                 }
             }
-            return mAppScopeSessionMap;
+        } else {
+            return null;
+        }
+    }
+
+    private Object getValueWithFacesResolution(ELContext context, ELContextImpl portletELContext, Object base, Object property) {
+        FacesContext facesContext = (FacesContext) context.getContext(FacesContext.class);
+        ExternalContext externalContext = facesContext.getExternalContext();
+
+        if (PORTLET_CONFIG.equals(property)) {
+            PortletConfig config = portletELContext.getPortletConfig();
+            if (null != config) {
+                context.setPropertyResolved(true);
+                return config;
+            } else {
+                throw new ELException(
+                        "EL Resolve failed: can't resolve portletConfig because its not set on this Faces EL Resolver.");
+            }
+        } else if (ACTION_REQUEST.equals(property) && (BridgeUtil.getPortletRequestPhase() == Bridge.PortletPhase.ACTION_PHASE)) {
+            context.setPropertyResolved(true);
+            return externalContext.getRequest();
+        } else if (ACTION_RESPONSE.equals(property)
+                && (BridgeUtil.getPortletRequestPhase() == Bridge.PortletPhase.ACTION_PHASE)) {
+            context.setPropertyResolved(true);
+            return externalContext.getResponse();
+        } else if (RENDER_REQUEST.equals(property) && (BridgeUtil.getPortletRequestPhase() == Bridge.PortletPhase.RENDER_PHASE)) {
+            context.setPropertyResolved(true);
+            return externalContext.getRequest();
+        } else if (RENDER_RESPONSE.equals(property)
+                && (BridgeUtil.getPortletRequestPhase() == Bridge.PortletPhase.RENDER_PHASE)) {
+            context.setPropertyResolved(true);
+            return externalContext.getResponse();
+        } else if (EVENT_REQUEST.equals(property) && (BridgeUtil.getPortletRequestPhase() == Bridge.PortletPhase.EVENT_PHASE)) {
+            context.setPropertyResolved(true);
+            return externalContext.getRequest();
+        } else if (EVENT_RESPONSE.equals(property) && (BridgeUtil.getPortletRequestPhase() == Bridge.PortletPhase.EVENT_PHASE)) {
+            context.setPropertyResolved(true);
+            return externalContext.getResponse();
+        } else if (RESOURCE_REQUEST.equals(property)
+                && (BridgeUtil.getPortletRequestPhase() == Bridge.PortletPhase.RESOURCE_PHASE)) {
+            context.setPropertyResolved(true);
+            return externalContext.getRequest();
+        } else if (RESOURCE_RESPONSE.equals(property)
+                && (BridgeUtil.getPortletRequestPhase() == Bridge.PortletPhase.RESOURCE_PHASE)) {
+            context.setPropertyResolved(true);
+            return externalContext.getResponse();
+        } else if (SESSION_APPLICATION_SCOPE.equals(property) || HTTP_SESSION_SCOPE.equals(property)) {
+            context.setPropertyResolved(true);
+            if (null == appScopeSessionMap) {
+                Object request = externalContext.getRequest();
+                if (BridgeUtil.isPortletRequest()) {
+                    appScopeSessionMap = new PortletApplicationScopeSessionMap((PortletRequest) request);
+                }
+            }
+            return appScopeSessionMap;
         } else if (SESSION_PORTLET_SCOPE.equals(property) || PORTLET_SESSION_SCOPE.equals(property)) {
             context.setPropertyResolved(true);
-            return extCtx.getSessionMap();
+            return externalContext.getSessionMap();
         } else if (PORTLET_SESSION.equals(property)) {
             context.setPropertyResolved(true);
-            return extCtx.getSession(false);
+            return externalContext.getSession(false);
         } else if (PORTLET_PREFERENCE_VALUE.equals(property)) {
             context.setPropertyResolved(true);
             return getPreferencesValueMap(facesContext);
         } else if (PORTLET_PREFERENCES.equals(property)) {
             context.setPropertyResolved(true);
-            return ((PortletRequest) extCtx.getRequest()).getPreferences();
+            return ((PortletRequest) externalContext.getRequest()).getPreferences();
         } else if (MUTABLE_PORTLET_PREFERENCES_VALUES.equals(property)) {
             context.setPropertyResolved(true);
-            return getPreferenceMap(((PortletRequest) extCtx.getRequest()).getPreferences());
+            return getPreferenceMap(((PortletRequest) externalContext.getRequest()).getPreferences());
+        } else if (PORTLET_PREFERENCES_VALUES.equals(property)) {
+            context.setPropertyResolved(true);
+            return ((PortletRequest) externalContext.getRequest()).getPreferences().getMap();
         } else {
             return null;
         }
-        // }
     }
 
     @Override
     public void setValue(ELContext context, Object base, Object property, Object val) throws ELException {
-        if (base != null) {
+        if (null != base) {
             return;
         }
-        if (property == null) {
+        if (null == property) {
             throw new PropertyNotFoundException("Null property");
         }
 
@@ -188,10 +239,10 @@ public class PortletELResolver extends ELResolver {
 
     @Override
     public boolean isReadOnly(ELContext context, Object base, Object property) throws ELException {
-        if (base != null) {
+        if (null != base) {
             return false;
         }
-        if (property == null) {
+        if (null == property) {
             throw new PropertyNotFoundException("Null property");
         }
 
@@ -200,10 +251,10 @@ public class PortletELResolver extends ELResolver {
 
     @Override
     public Class<?> getType(ELContext context, Object base, Object property) throws ELException {
-        if (base != null) {
+        if (null != base) {
             return null;
         }
-        if (property == null) {
+        if (null == property) {
             throw new PropertyNotFoundException("Null property");
         }
 
@@ -212,73 +263,66 @@ public class PortletELResolver extends ELResolver {
 
     @Override
     public Iterator<FeatureDescriptor> getFeatureDescriptors(ELContext context, Object base) {
-        if (base != null) {
+        if (null != base) {
             return null;
         }
         ArrayList<FeatureDescriptor> list = new ArrayList<FeatureDescriptor>(20);
 
         list.add(getFeatureDescriptor("actionRequest", "actionRequest", "actionRequest", false, false, true,
-            ActionRequest.class, Boolean.TRUE));
+                ActionRequest.class, Boolean.TRUE));
         list.add(getFeatureDescriptor("actionResponse", "actionResponse", "actionResponse", false, false, true,
-            ActionResponse.class, Boolean.TRUE));
-        list.add(getFeatureDescriptor("eventRequest", "eventRequest", "eventRequest", false, false, true,
-            EventRequest.class, Boolean.TRUE));
+                ActionResponse.class, Boolean.TRUE));
+        list.add(getFeatureDescriptor("eventRequest", "eventRequest", "eventRequest", false, false, true, EventRequest.class,
+                Boolean.TRUE));
         list.add(getFeatureDescriptor("eventResponse", "eventResponse", "eventResponse", false, false, true,
-            EventResponse.class, Boolean.TRUE));
+                EventResponse.class, Boolean.TRUE));
         list.add(getFeatureDescriptor("httpSessionScope", "httpSessionScope", "httpSessionScope", false, false, true,
-            Map.class, Boolean.TRUE));
-        list.add(getFeatureDescriptor("mutablePortletPreferences", "mutablePortletPreferences",
-            "mutablePortletPreferences", false, false, true, Map.class, Boolean.TRUE));
+                Map.class, Boolean.TRUE));
+        list.add(getFeatureDescriptor("mutablePortletPreferences", "mutablePortletPreferences", "mutablePortletPreferences",
+                false, false, true, Map.class, Boolean.TRUE));
         list.add(getFeatureDescriptor("portletConfig", "portletConfig", "portletConfig", false, false, true,
-            PortletConfig.class, Boolean.TRUE));
-        list.add(getFeatureDescriptor("portletPreferences", "portletPreferences", "portletPreferences", false, false,
-            true, PortletPreferences.class, Boolean.TRUE));
-        list.add(getFeatureDescriptor("portletPreferencesValues", "portletPreferencesValues",
-            "portletPreferencesValues", false, false, true, Map.class, Boolean.TRUE));
+                PortletConfig.class, Boolean.TRUE));
+        list.add(getFeatureDescriptor("portletPreferences", "portletPreferences", "portletPreferences", false, false, true,
+                PortletPreferences.class, Boolean.TRUE));
+        list.add(getFeatureDescriptor("portletPreferencesValues", "portletPreferencesValues", "portletPreferencesValues",
+                false, false, true, Map.class, Boolean.TRUE));
         list.add(getFeatureDescriptor("portletSession", "portletSession", "portletSession", false, false, true,
-            PortletSession.class, Boolean.TRUE));
-        list.add(getFeatureDescriptor("portletSessionScope", "portletSessionScope", "portletSessionScope", false,
-            false, true, Map.class, Boolean.TRUE));
+                PortletSession.class, Boolean.TRUE));
+        list.add(getFeatureDescriptor("portletSessionScope", "portletSessionScope", "portletSessionScope", false, false, true,
+                Map.class, Boolean.TRUE));
         list.add(getFeatureDescriptor("renderRequest", "renderRequest", "renderRequest", false, false, true,
-            RenderRequest.class, Boolean.TRUE));
+                RenderRequest.class, Boolean.TRUE));
         list.add(getFeatureDescriptor("renderResponse", "renderResponse", "renderResponse", false, false, true,
-            RenderResponse.class, Boolean.TRUE));
+                RenderResponse.class, Boolean.TRUE));
         list.add(getFeatureDescriptor("resourceRequest", "resourceRequest", "resourceRequest", false, false, true,
-            ResourceRequest.class, Boolean.TRUE));
+                ResourceRequest.class, Boolean.TRUE));
         list.add(getFeatureDescriptor("resourceResponse", "resourceResponse", "resourceResponse", false, false, true,
-            ResourceResponse.class, Boolean.TRUE));
+                ResourceResponse.class, Boolean.TRUE));
 
-        // list.add(getFeatureDescriptor("portletConfig", "portletConfig", "portletConfig", false, false,
-        // true, Object.class, Boolean.TRUE));
+        list.add(getFeatureDescriptor("sessionApplicationScope", "sessionApplicationScope", "sessionApplicationScope", false,
+                false, true, Map.class, Boolean.TRUE));
+        list.add(getFeatureDescriptor("sessionPortletScope", "sessionPortletScope", "sessionPortletScope", false, false, true,
+                Map.class, Boolean.TRUE));
+        list.add(getFeatureDescriptor("portletPreferenceValue", "portletPreferenceValue", "portletPreferenceValue", false,
+                false, true, Map.class, Boolean.TRUE));
+        list.add(getFeatureDescriptor("portletPreferenceValues", "portletPreferenceValues", "portletPreferenceValues", false,
+                false, true, Map.class, Boolean.TRUE));
 
-        // list.add(getFeatureDescriptor("httpSessionScope", "httpSessionScope",
-        // "httpSessionScope", false, false, true, Map.class,
-        // Boolean.TRUE));
-        list.add(getFeatureDescriptor("sessionApplicationScope", "sessionApplicationScope", "sessionApplicationScope",
-            false, false, true, Map.class, Boolean.TRUE));
-        list.add(getFeatureDescriptor("sessionPortletScope", "sessionPortletScope", "sessionPortletScope", false,
-            false, true, Map.class, Boolean.TRUE));
-        list.add(getFeatureDescriptor("portletPreferenceValue", "portletPreferenceValue", "portletPreferenceValue",
-            false, false, true, Map.class, Boolean.TRUE));
-        list.add(getFeatureDescriptor("portletPreferenceValues", "portletPreferenceValues", "portletPreferenceValues",
-            false, false, true, Map.class, Boolean.TRUE));
-
-        list.add(getFeatureDescriptor("ajaxContext", "ajaxContext", "ajaxContext", false, false, true, Map.class,
-            Boolean.TRUE));
+        list.add(getFeatureDescriptor("ajaxContext", "ajaxContext", "ajaxContext", false, false, true, Map.class, Boolean.TRUE));
         return list.iterator();
 
     }
 
     @Override
     public Class<?> getCommonPropertyType(ELContext context, Object base) {
-        if (base != null) {
+        if (null != base) {
             return null;
         }
         return String.class;
     }
 
     private FeatureDescriptor getFeatureDescriptor(String name, String displayName, String desc, boolean expert,
-        boolean hidden, boolean preferred, Object type, Boolean designTime) {
+            boolean hidden, boolean preferred, Object type, Boolean designTime) {
 
         FeatureDescriptor fd = new FeatureDescriptor();
         fd.setName(name);
@@ -295,9 +339,9 @@ public class PortletELResolver extends ELResolver {
     private Map<String, String> getPreferencesValueMap(FacesContext context) {
         Map<String, String> m = new HashMap<String, String>();
         Map<String, String[]> preferencesValuesMap = ((PortletRequest) context.getExternalContext().getRequest())
-            .getPreferences().getMap();
+                .getPreferences().getMap();
         for (Iterator<Entry<String, String[]>> entryIterator = preferencesValuesMap.entrySet().iterator(); entryIterator
-            .hasNext();) {
+                .hasNext();) {
             Map.Entry<String, String[]> entry = (Map.Entry<String, String[]>) entryIterator.next();
             String[] preferenceValues = (String[]) entry.getValue();
             if (null != preferenceValues && preferenceValues.length > 0) {
@@ -310,7 +354,6 @@ public class PortletELResolver extends ELResolver {
     }
 
     private Map<String, Preference> getPreferenceMap(PortletPreferences prefs) {
-
         Map<String, Preference> m;
 
         // construct a Map of PreferenceImpl objects for each preference
@@ -329,14 +372,22 @@ public class PortletELResolver extends ELResolver {
         return m;
     }
 
-    public static boolean isPortletRequest() {
-        Map<String, Object> map = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
-        Bridge.PortletPhase phase = (Bridge.PortletPhase) map.get(Bridge.PORTLET_LIFECYCLE_PHASE);
-        if (phase != null) {
-            return true;
-        } else {
-            return false;
+    private Map<String, Object> getHttpSessionMap(ExternalContext externalContext, ELContextImpl portletELContext) {
+        Map<String, Object> sessionMap = portletELContext.getHttpSessionMap();
+        if (null == sessionMap) {
+            sessionMap = new PortletApplicationScopeSessionMap((PortletRequest) externalContext.getRequest());
+            portletELContext.setHttpSessionMap(sessionMap);
         }
+        return sessionMap;
+    }
+
+    private Map getMutablePortletPreferencesValues(ExternalContext externalContext, ELContextImpl portletELContext) {
+        Map<String, Preference> preferencesValuesMap = portletELContext.getMutablePortletPreferencesMap();
+        if (null == preferencesValuesMap) {
+            preferencesValuesMap = getPreferenceMap(((PortletRequest) externalContext.getRequest()).getPreferences());
+            portletELContext.setMutablePortletPreferencesMap(preferencesValuesMap);
+        }
+        return preferencesValuesMap;
     }
 
 }
