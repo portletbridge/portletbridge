@@ -160,6 +160,12 @@ public class PortletJspVdlImpl extends VdlWrapper {
             strWriter.release();
         }
 
+        BridgeContext bridgeContext = BridgeContext.getCurrentInstance();
+        if (bridgeContext.hasRenderRedirect()) {
+            bridgeContext.setRenderRedirectAfterDispatch(true);
+            return;
+        }
+
         if (null != oldWriter) {
             facesContext.setResponseWriter(oldWriter);
         }

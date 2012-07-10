@@ -23,6 +23,7 @@ package org.jboss.portletbridge.context;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -45,6 +46,7 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.context.FacesContextFactory;
 import javax.faces.render.ResponseStateManager;
+import javax.portlet.BaseURL;
 import javax.portlet.PortletContext;
 import javax.portlet.PortletException;
 import javax.portlet.PortletRequest;
@@ -73,6 +75,7 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
     public static final String ACTION_URL_DO_NOTHITG = "/JBossPortletBridge/actionUrl/do/nothing";
     public static final String RESOURCE_URL_DO_NOTHITG = "/JBossPortletBridge/resourceUrl/do/nothing";
     public static final String PARTIAL_URL_DO_NOTHITG = "/JBossPortletBridge/resourceUrl/do/nothing";
+    public static final String WSRP_REWRITE = "wsrp_rewrite?";
 
     private String namespace;
     private String servletPath = null;
@@ -82,8 +85,13 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
     private String servletMappingPrefix;
     private String viewId;
     private boolean hasNavigationRedirect = false;
+    protected final Map<String, Map<String, String[]>> encodedActionUrlParameters = new HashMap<String, Map<String, String[]>>();
     private Map<String, String[]> extraRequestParameters = new HashMap<String, String[]>();
     protected BridgeContext bridgeContext;
+
+    enum Scheme {
+        action, render, resource
+    }
 
     public PortletExternalContextImpl(PortletContext context, PortletRequest request, PortletResponse response) {
         super(context, request, response);
@@ -484,11 +492,12 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
         // Detect ViewId from URL and create new view for them.
         String viewId = actionURL.getParameter(Bridge.FACES_VIEW_ID_PARAMETER);
         if (null != viewId) {
+            bridgeContext.setRenderRedirect(true);
+            bridgeContext.setRedirectViewId(viewId);
             Map<String, String[]> requestParameters = actionURL.getParameters();
             if (requestParameters.size() > 0) {
                 bridgeContext.setRenderRedirectQueryString(actionURL.getQueryString());
             }
-
         }
     }
 
@@ -534,18 +543,16 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
         if (null == dispatcher) {
             throw new IllegalStateException("Dispatcher for render request is not created");
         }
-        // Bridge has had to set this attribute so Faces RI will skip servlet dependent
-        // code when mapping from request paths to viewIds -- however we need to remove it
-        // as it screws up the dispatch
-        // Object oldPath = getRequestMap().remove(SERVLET_PATH_ATTRIBUTE);
+
         try {
-            dispatcher.forward(getRequest(), getResponse());
+            boolean hasRenderRedirectedAfterForward = bridgeContext.hasRenderRedirectAfterDispatch();
+            if (!hasRenderRedirectedAfterForward) {
+                dispatcher.forward(getRequest(), getResponse());
+            } else {
+                dispatcher.include(getRequest(), getResponse());
+            }
         } catch (PortletException e) {
             throw new FacesException(e);
-        } finally {
-            // if(null !=oldPath){
-            // getRequestMap().put(SERVLET_PATH_ATTRIBUTE, oldPath);
-            // }
         }
     }
 
@@ -610,32 +617,96 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
             getLogger().log(Level.WARNING, "Unable to encode ActionURL for url=[null]");
             return null;
         }
-        String actionUrl = url;
-        if (actionUrl.startsWith("portlet:")) {
+        String actionUrl = null;
+        Map<String, String[]> actionParameters;
+
+        if (url.startsWith("#")) {
+            actionParameters = Collections.emptyMap();
+        } else if (url.startsWith(PortletExternalContextImpl.WSRP_REWRITE)) {
+            actionParameters = Collections.emptyMap();
+        } else {
             try {
-                if (actionUrl.startsWith("portlet:action")) {
-                    actionUrl = createActionUrl(new PortalActionURL(url));
-                } else if (actionUrl.startsWith("portlet:render")) {
-                    actionUrl = createRenderUrl(new PortalActionURL(url), Collections.<String, List<String>> emptyMap());
+                boolean escapedUrl = isStrictEscaped(url);
+                PortalActionURL portalUrl = new PortalActionURL(escapedUrl ? unescapeUrl(url) : url);
+                if (!isInContext(portalUrl)) {
+                    if ("portlet:".equals(portalUrl.getProtocol())) {
+                        /*
+                         * * The scheme "portlet:" indicates that the target of this action is the portlet itself. Though
+                         * generally used to generate links to nonFaces views in this portlet it can also be used to generate
+                         * action or render links to a Faces view (including the current view). The scheme is followed by either
+                         * the keyword action, render or resource. render indicates a portlet renderURL should be encoded[6.8].
+                         * action indicates a portlet actionURL should be encoded[6.9]. resource indicates a portlet resourceURL
+                         * should be encoded[6.102]. Following this url type indicator is an optional query string. Parameter
+                         * value pairs in the query string are the parameters that are to be encoded into the portletURL.
+                         */
+                        try {
+                            Scheme scheme = Scheme.valueOf(portalUrl.getPath());
+                            actionUrl = createPortletUrl(scheme, portalUrl, escapedUrl);
+                        } catch (IllegalArgumentException e) {
+                            actionUrl = url;
+                        }
+                    } else {
+                        String directLink = portalUrl.getParameter(Bridge.DIRECT_LINK);
+                        if (null != directLink && !Boolean.parseBoolean(directLink)) {
+                            portalUrl.removeParameter(Bridge.DIRECT_LINK);
+                        }/*
+                          * if the inputURL is an absolute path external to this portlet application[6.5] return the inputURL
+                          * unchanged.
+                          */
+                        actionUrl = escapeUrl(escapedUrl, portalUrl.toString());
+                    }
                 } else {
-                    actionUrl = createResourceUrl(new PortalActionURL(url));
+                    String directLink = portalUrl.getParameter(Bridge.DIRECT_LINK);
+                    if (null != directLink) {
+                        /*
+                         * If the inputURL contains the parameter javax.portlet.faces.DirectLink (with a value of "true") return
+                         * an absolute path derived from the inputURL. Don't remove the DirectLink parameter if it exists[6.6].
+                         * If the inputURL contains the parameter javax.portlet.faces.DirectLink and its value is false then
+                         * remove the javax.portlet.faces.DirectLink parameter and its value from the query string and continue
+                         * processing (using the next step concerning determining the target of the URL)[6.7].
+                         */
+                        if (Boolean.parseBoolean(directLink)) {
+                            // make absolute url
+                            PortletRequest request = getRequest();
+                            portalUrl.setProtocol(request.getScheme() + ":");
+                            portalUrl.setHost("//" + request.getServerName());
+                            portalUrl.setPort(request.getServerPort());
+                            String directUrl = portalUrl.toString();
+                            return escapeUrl(escapedUrl, directUrl);
+                        } else {
+                            portalUrl.removeParameter(Bridge.DIRECT_LINK);
+                        }
+                    }
+
+                    if (!isInContext(portalUrl)) {
+                        /*
+                         * if the inputURL is an absolute path external to this portlet application[6.5] return the inputURL
+                         * unchanged.
+                         */
+                        actionUrl = escapeUrl(escapedUrl, portalUrl.toString());
+                    } else {
+                        String pathInContext = calculatePathInContext(portalUrl);
+                        if (isFacesPath(pathInContext)) {
+                            portalUrl.setParameter(Bridge.FACES_VIEW_ID_PARAMETER,
+                                    bridgeContext.getFacesViewIdFromPath(pathInContext));
+                            actionUrl = createActionUrl(portalUrl, escapedUrl);
+                        } else {
+                            // TODO cleanup
+                            portalUrl.setParameter(Bridge.NONFACES_TARGET_PATH_PARAMETER, pathInContext);
+                            pathInContext = calculatePathInContext(portalUrl);
+                            portalUrl.setParameter(Bridge.NONFACES_TARGET_PATH_PARAMETER, pathInContext);
+                            actionUrl = createRenderUrl(portalUrl, escapedUrl, Collections.<String, List<String>> emptyMap());
+                        }
+                    }
                 }
+                actionParameters = portalUrl.getParameters();
             } catch (MalformedURLException e) {
-                log("Unable to create PortalActionURL from: " + url, e);
-            }
-        } else if (!actionUrl.startsWith("#")) {
-            try {
-                PortalActionURL portalUrl = new PortalActionURL(url);
-                boolean inContext = isInContext(portalUrl);
-                if (inContext) {
-                    actionUrl = createActionUrl(portalUrl);
-                } else {
-                    return encodeURL(portalUrl.toString());
-                }
-            } catch (MalformedURLException e) {
-                throw new FacesException(e);
+                actionUrl = url;
+                actionParameters = Collections.emptyMap();
             }
         }
+        // Store url parameters to reuse in redirect()
+        encodedActionUrlParameters.put(actionUrl, actionParameters);
         return actionUrl;
     }
 
@@ -663,6 +734,7 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
 
     public String encodeResourceURL(String url) {
         try {
+            boolean escapedUrl = isStrictEscaped(url);
             PortalActionURL portalUrl = new PortalActionURL(url);
             // JSR-301 chapter 6.1.3.1 requirements:
             String path = portalUrl.getPath();
@@ -717,10 +789,10 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
 
                 String facesViewId = getViewIdFromUrl(portalUrl);
                 if (null != portalUrl.getParameter(Bridge.IN_PROTOCOL_RESOURCE_LINK)) {
-                    url = createResourceUrl(portalUrl);
+                    url = createResourceUrl(portalUrl, escapedUrl);
                 } else if (null != facesViewId) {
                     portalUrl.setParameter(Bridge.FACES_VIEW_ID_PARAMETER, facesViewId);
-                    url = createResourceUrl(portalUrl);
+                    url = createResourceUrl(portalUrl, escapedUrl);
                 } else {
                     portalUrl.setPath(getRequestContextPath() + portalUrl.getPath());
                     url = encodeURL(portalUrl.toString());
@@ -743,7 +815,7 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
                 PortalActionURL portalUrl = new PortalActionURL(baseUrl);
                 boolean inContext = isInContext(portalUrl);
                 if (inContext) {
-                    actionUrl = createRenderUrl(portalUrl, parameters);
+                    actionUrl = createRenderUrl(portalUrl, isStrictEscaped(baseUrl), parameters);
                 } else {
                     return encodeURL(portalUrl.toString());
                 }
@@ -771,6 +843,27 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
         }
     }
 
+    protected String unescapeUrl(String actionUrl) {
+        // TODO - unescape query string only
+        return actionUrl.replaceAll("\\&amp\\;", "&");
+    }
+
+    protected boolean isStrictEscaped(String url) {
+        int queryStart = url.indexOf('?');
+        if (queryStart < 0) {
+            return false;
+        } else {
+            return url.indexOf("&amp;", queryStart) > 0;
+        }
+    }
+
+    protected String escapeUrl(boolean escapedUrl, String directUrl) {
+        if (escapedUrl) {
+            directUrl = directUrl.replaceAll("\\&", "&amp;");
+        }
+        return directUrl;
+    }
+
     protected boolean isInContext(PortalActionURL portalUrl) {
         String directLink = portalUrl.getParameter(Bridge.DIRECT_LINK);
         if (null != directLink) {
@@ -780,6 +873,92 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
             }
         }
         return portalUrl.isInContext(getRequestContextPath());
+    }
+
+    protected boolean isFacesPath(String pathInContext) {
+        if (null != getServletMappingPrefix()) {
+            return pathInContext.startsWith(getServletMappingPrefix());
+        } else if (null != getServletMappingSuffix()) {
+            return pathInContext.endsWith(getServletMappingSuffix());
+        }
+        // No Faces preffix/suffix defined, all request came to JSF
+        return true;
+    }
+
+    protected String calculatePathInContext(PortalActionURL portalURL) {
+        String inContextPath;
+        String path = portalURL.getPath();
+        if (path.startsWith("/")) {
+            // absolute path, remove context path from ID.
+            // TCK compliance - return the full nonfaces view prepended with context path
+            if (portalURL.getParameter(Bridge.NONFACES_TARGET_PATH_PARAMETER) != null) {
+                return path;
+            }
+            inContextPath = path.substring(getRequestContextPath().length());
+            // return path;
+        } else {
+            // resolve relative URL aganist current view.
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            UIViewRoot viewRoot = facesContext.getViewRoot();
+            if (null != viewRoot && null != viewRoot.getViewId() && viewRoot.getViewId().length() > 0) {
+                String viewId = viewRoot.getViewId();
+                int indexOfSlash = viewId.lastIndexOf('/');
+                if (indexOfSlash >= 0) {
+                    inContextPath = viewId.substring(0, indexOfSlash + 1) + path;
+                } else {
+                    inContextPath = '/' + path;
+                }
+            } else {
+                // No clue where we are
+                inContextPath = '/' + path;
+            }
+        }
+        inContextPath = URI.create(inContextPath).normalize().getPath();
+        return inContextPath;
+    }
+
+    protected String createPortletUrl(Scheme protocol, PortalActionURL portalUrl, boolean escape) {
+        /*
+         * # The scheme is followed by either the keyword action, render or resource. render indicates a portlet renderURL
+         * should be encoded[6.8]. action indicates a portlet actionURL should be encoded[6.9]. resource indicates a portlet
+         * resourceURL should be encoded[6.102]. # Following this url type indicator is an optional query string. Parameter
+         * value pairs in the query string are the parameters that are to be encoded into the portletURL.
+         *
+         * To generate a link to a Faces view, encode the view as the value of either the _jsfBridgeViewId or _jsfBridgeViewPath
+         * parameter (depending on whether you are encoding the viewId or the viewPath). Targets of such references are run in
+         * new empty scopes. An exception is made when the target is the current view and either of the above parameters is
+         * included in the query string with a value of _jsfBridgeCurrentView. In this case the url is encoded with the current
+         * render parameters and hence retains access to its state/scope. In all cases the bridge removes the above parameter(s)
+         * from the query string before generating the encoded url.
+         *
+         * For a resource url, a Faces view is only encoded if one of the _jsfBridgeViewId or _jsfBridgeViewPath parameters is
+         * included in the query string, otherwise a nonFaces resource url is generated. The _jsfBridgeCurrentView value is used
+         * as a shortcut to indicate the resource targets the current view.
+         */
+        processJsfViewParameter(portalUrl, Bridge.FACES_VIEW_ID_PARAMETER);
+        processJsfViewParameter(portalUrl, Bridge.FACES_VIEW_PATH_PARAMETER);
+        switch (protocol) {
+            case action:
+                return createActionUrl(portalUrl, escape);
+            case resource:
+                return createResourceUrl(portalUrl, escape);
+            case render:
+                return createRenderUrl(portalUrl, escape, Collections.<String, List<String>> emptyMap());
+            default:
+                return portalUrl.toString();
+        }
+    }
+
+    protected void processJsfViewParameter(PortalActionURL portalUrl, String facesViewParameter) {
+        if (portalUrl.hasParameter(facesViewParameter)) {
+            if (Bridge.FACES_USE_CURRENT_VIEW_PARAMETER.equals(portalUrl.getParameter(Bridge.FACES_VIEW_ID_PARAMETER))) {
+                portalUrl.removeParameter(Bridge.FACES_VIEW_ID_PARAMETER);
+                if (this instanceof RenderPortletExternalContextImpl) {
+                    portalUrl.getParameters().putAll(getRequest().getPrivateParameterMap());
+                    portalUrl.getParameters().putAll(getRequest().getPublicParameterMap());
+                }
+            }
+        }
     }
 
     protected void encodeBackLink(PortalActionURL portalUrl) {
@@ -796,16 +975,26 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
         }
     }
 
+    protected String encodePortletUrl(BaseURL portletURL, boolean escape) {
+        StringWriter out = new StringWriter();
+        try {
+            portletURL.write(out, escape);
+            return out.toString();
+        } catch (IOException e) {
+            throw new FacesException(e);
+        }
+    }
+
     protected BridgeLogger getLogger() {
         return bridgeContext.getBridgeConfig().getLogger();
     }
 
-    protected abstract String createRenderUrl(PortalActionURL portalUrl, Map<String, List<String>> parameters);
+    protected abstract String createRenderUrl(PortalActionURL portalUrl, boolean escape, Map<String, List<String>> parameters);
 
-    protected abstract String createResourceUrl(PortalActionURL portalUrl);
+    protected abstract String createResourceUrl(PortalActionURL portalUrl, boolean escape);
 
     protected abstract String createPartialActionUrl(PortalActionURL portalUrl);
 
-    protected abstract String createActionUrl(PortalActionURL url);
+    protected abstract String createActionUrl(PortalActionURL url, boolean escape);
 
 }

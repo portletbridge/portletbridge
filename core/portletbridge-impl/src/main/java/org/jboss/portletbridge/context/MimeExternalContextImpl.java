@@ -70,7 +70,7 @@ public abstract class MimeExternalContextImpl extends PortletExternalContextImpl
     }
 
     @Override
-    protected String createActionUrl(PortalActionURL url) {
+    protected String createActionUrl(PortalActionURL url, boolean escape) {
         String viewId = getViewIdFromUrl(url);
         MimeResponse renderResponse = getResponse();
         PortletURL portletURL = renderResponse.createActionURL();
@@ -84,21 +84,29 @@ public abstract class MimeExternalContextImpl extends PortletExternalContextImpl
             String value = url.getParameter(key);
             portletURL.setParameter(key, value);
         }
-        return portletURL.toString();
+        return encodePortletUrl(portletURL, escape);
     }
 
     @Override
-    protected String createResourceUrl(PortalActionURL portalUrl) {
+    protected String createResourceUrl(PortalActionURL portalUrl, boolean escape) {
         MimeResponse renderResponse = getResponse();
         ResourceURL resourceURL = renderResponse.createResourceURL();
         setBaseUrlParameters(portalUrl, resourceURL);
-        resourceURL.setResourceID(portalUrl.getPath());
+        String path = portalUrl.getPath();
+        if (null != path
+                && path.length() > 0
+                && !portalUrl.hasParameter(Bridge.FACES_VIEW_ID_PARAMETER)
+                && !portalUrl.hasParameter(Bridge.FACES_VIEW_PATH_PARAMETER)
+                && !portalUrl
+                        .hasParameter(Bridge.NONFACES_TARGET_PATH_PARAMETER)) {
+            resourceURL.setResourceID(path);
+        }
         resourceURL.setParameters(portalUrl.getParameters());
-        return resourceURL.toString();
+        return encodePortletUrl(resourceURL, escape);
     }
 
     @Override
-    protected String createRenderUrl(PortalActionURL portalUrl, Map<String, List<String>> parameters) {
+    protected String createRenderUrl(PortalActionURL portalUrl, boolean escape, Map<String, List<String>> parameters) {
         MimeResponse renderResponse = getResponse();
         PortletURL renderURL = renderResponse.createRenderURL();
         setPortletUrlParameters(portalUrl, renderURL);
@@ -110,7 +118,7 @@ public abstract class MimeExternalContextImpl extends PortletExternalContextImpl
         if (null != viewId) {
             renderURL.setParameter(Bridge.FACES_VIEW_ID_PARAMETER, viewId);
         }
-        return renderURL.toString();
+        return encodePortletUrl(renderURL, escape);
     }
 
     protected void setPortletUrlParameters(PortalActionURL portalUrl, PortletURL portletURL) {

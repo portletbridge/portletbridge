@@ -28,9 +28,11 @@ import java.io.Writer;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.context.FacesContext;
 import javax.portlet.EventRequest;
 import javax.portlet.EventResponse;
 import javax.portlet.PortletContext;
+import javax.portlet.faces.Bridge;
 
 /**
  * @author asmirnov
@@ -48,23 +50,57 @@ public class EventRequestExternalContextImpl extends PortletExternalContextImpl 
     }
 
     @Override
-    protected String createActionUrl(PortalActionURL url) {
+    protected String createActionUrl(PortalActionURL url, boolean escape) {
         return ACTION_URL_DO_NOTHITG;
     }
 
     @Override
-    protected String createRenderUrl(PortalActionURL portalUrl, Map<String, List<String>> parameters) {
+    protected String createRenderUrl(PortalActionURL portalUrl, boolean escape, Map<String, List<String>> parameters) {
         return ACTION_URL_DO_NOTHITG;
     }
 
     @Override
-    protected String createResourceUrl(PortalActionURL portalUrl) {
+    protected String createResourceUrl(PortalActionURL portalUrl, boolean escape) {
         return RESOURCE_URL_DO_NOTHITG;
     }
 
     @Override
     public void redirect(String url) throws IOException {
-        // TODO Auto-generated method stub
+        if (null == url) {
+            throw new NullPointerException("Path to redirect is null");
+        }
+        PortalActionURL actionURL = new PortalActionURL(url);
+
+        Map<String, String[]> urlParams = null;
+        if (null != encodedActionUrlParameters) {
+            urlParams = encodedActionUrlParameters.get(url);
+        }
+
+        if (null != urlParams) {
+            PortalUrlQueryString queryString = new PortalUrlQueryString(null);
+            queryString.setParameters(urlParams);
+
+            Map<String, String[]> publicParamMap = getRequest().getPublicParameterMap();
+            if (null != publicParamMap && !publicParamMap.isEmpty()) {
+                for (Map.Entry<String, String[]> entry : publicParamMap.entrySet()) {
+                    String key = entry.getKey();
+
+                    if (!queryString.hasParameter(key)) {
+                        for (String param : entry.getValue()) {
+                            queryString.addParameter(key, param);
+                        }
+                    }
+                }
+            }
+
+            bridgeContext.setRenderRedirectQueryString(queryString.toString());
+        } else if (url.startsWith("#") || (!actionURL.isInContext(getRequestContextPath()))
+                || "true".equalsIgnoreCase(actionURL.getParameter(Bridge.DIRECT_LINK))) {
+            // Do Nothing
+        } else {
+            redirect(encodeActionURL(url));
+        }
+        FacesContext.getCurrentInstance().responseComplete();
     }
 
     @Override

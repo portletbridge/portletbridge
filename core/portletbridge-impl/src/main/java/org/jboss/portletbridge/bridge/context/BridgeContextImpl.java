@@ -73,6 +73,7 @@ public class BridgeContextImpl extends BridgeContext implements ELContextListene
     private String savedViewStateParam;
     private String navigationQueryString;
     private String renderRedirectQueryString;
+    private String redirectViewId;
     private boolean renderRedirect = false;
     private boolean renderRedirectOcurredAfterDispatch = false;
     private List<String> preExistingRequestAttributeNames;
@@ -262,6 +263,17 @@ public class BridgeContextImpl extends BridgeContext implements ELContextListene
     @Override
     public String getRenderRedirectQueryString() {
         return renderRedirectQueryString;
+    }
+
+    @Override
+    public String getRedirectViewId() {
+        return redirectViewId;
+    }
+
+    @Override
+    public void setRedirectViewId(String viewId) {
+        redirectViewId = viewId;
+        setRenderRedirect(true);
     }
 
     /**

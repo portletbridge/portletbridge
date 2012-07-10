@@ -211,7 +211,7 @@ public abstract class BridgeContext {
 
     /**
      * The bridge allows viewIds in the faces-config.xml to contain queryStrings. As the <code>NavigationHandler</code>
-     * resolves such navigation and create the asscoiated view and Faces itself doesn't expect these query strings, the
+     * resolves such navigation and create the associated view and Faces itself doesn't expect these query strings, the
      * bridge needs to extract this query string and stash its value for later retrieval/use by the controller which
      * encodes these extra parameters as part of its action response.
      *
@@ -245,6 +245,18 @@ public abstract class BridgeContext {
      * @return prevously set query string (exclusive of the ?) portion of the render redirect url
      */
     public abstract String getRenderRedirectQueryString();
+
+    /**
+     *
+     * @param viewId
+     */
+    public abstract void setRedirectViewId(String viewId);
+
+    /**
+     *
+     * @return prevously set redirect view id
+     */
+    public abstract String getRedirectViewId();
 
     /**
      * Sets whether a render redirect has occurred in this request. Generally this is set automatically by

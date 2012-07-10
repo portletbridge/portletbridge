@@ -109,18 +109,6 @@ public class PortletFacesContextFactoryImpl extends FacesContextFactory {
         public void release() {
             elContext = null;
 
-            ExternalContext extContext = getWrapped().getExternalContext();
-            Map<String, Object> requestAttrs = extContext.getRequestMap();
-
-            List<String> preExistingAttrs = BridgeContext.getCurrentInstance().getPreFacesRequestAttrNames();
-            if (null != preExistingAttrs) {
-                for (String key : requestAttrs.keySet()) {
-                    if (preExistingAttrs.contains(key)) {
-                        requestAttrs.remove(key);
-                    }
-                }
-            }
-
             super.release();
         }
 

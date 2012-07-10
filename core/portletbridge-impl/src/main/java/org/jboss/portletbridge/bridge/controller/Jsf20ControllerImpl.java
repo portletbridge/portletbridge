@@ -79,6 +79,8 @@ public class Jsf20ControllerImpl implements BridgeController {
     private FacesContextFactory facesContextFactory = null;
 
     public static final String VIEW_ROOT = "org.jboss.portletbridge.viewRoot";
+    protected static final String RENDER_REDIRECT_VIEW_PARAMS = "org.jboss.portletbridge.renderRedirectViewParams";
+    protected static final String RENDER_REDIRECT_PUBLIC_PARAM_MAP = "org.jboss.portletbridge.renderRedirectPublicParamMap";
     private static final String FACES_MESSAGES_WRAPPER = "org.jboss.portletbridge.facesMessagesHolder";
     private static final String MANAGED_BEANS_WRAPPER = "org.jboss.portletbridge.managedBeansHolder";
     private static final String REQUEST_PARAMETERS = "org.jboss.portletbridge.requestParameters";
@@ -230,8 +232,6 @@ public class Jsf20ControllerImpl implements BridgeController {
 
         FacesContext facesContext = null;
         Lifecycle facesLifecycle = null;
-        PublicParameterPhaseListener ppPhaseListener = null;
-        PortalPhaseListener portalPhaseListener = null;
 
         BridgeRequestScope scope = getBridgeRequestScope(bridgeContext);
 
@@ -253,31 +253,10 @@ public class Jsf20ControllerImpl implements BridgeController {
                 facesContext.getExternalContext().getRequestMap().put(Bridge.IS_POSTBACK_ATTRIBUTE, Boolean.TRUE);
             }
 
-            ppPhaseListener = new PublicParameterPhaseListener(bridgeConfig, bridgeContext.getPortletRequest());
-            portalPhaseListener = new PortalPhaseListener();
-            facesLifecycle.addPhaseListener(ppPhaseListener);
-            facesLifecycle.addPhaseListener(portalPhaseListener);
-
-            facesLifecycle.execute(facesContext);
-
-            if (!bridgeContext.hasRenderRedirect()) {
-                if (!facesContext.getResponseComplete()) {
-                    facesLifecycle.render(facesContext);
-                }
-            }
-
+            renderFaces(bridgeContext, facesContext, facesLifecycle, scope, null);
         } catch (Exception e) {
             throwBridgeException(e);
         } finally {
-            if (null != facesLifecycle) {
-                if (null != ppPhaseListener) {
-                    facesLifecycle.removePhaseListener(ppPhaseListener);
-                }
-                if (null != portalPhaseListener) {
-                    facesLifecycle.removePhaseListener(portalPhaseListener);
-                }
-            }
-
             if (null != facesContext) {
                 releaseFacesContext(bridgeContext, facesContext);
             }
@@ -347,8 +326,8 @@ public class Jsf20ControllerImpl implements BridgeController {
 
             if (Bridge.PortletPhase.ACTION_PHASE == bridgeContext.getPortletRequestPhase()) {
                 // Save View State Param
-                String viewState = facesContext.getExternalContext().getRequestParameterMap().get(
-                        ResponseStateManager.VIEW_STATE_PARAM);
+                String viewState = facesContext.getExternalContext().getRequestParameterMap()
+                        .get(ResponseStateManager.VIEW_STATE_PARAM);
 
                 scope.put(AbstractExternalContext.FACES_VIEW_STATE, viewState);
             }
@@ -371,6 +350,84 @@ public class Jsf20ControllerImpl implements BridgeController {
         scope.setExcludedEntries(bridgeConfig.getExcludedRequestAttributes());
         scope.addExcludedEntries(bridgeContext.getPreFacesRequestAttrNames());
         return scope;
+    }
+
+    protected void renderFaces(BridgeContext bridgeContext, FacesContext facesContext, Lifecycle facesLifecycle,
+            BridgeRequestScope scope, String redirectViewId) throws BridgeException, NullPointerException {
+        PublicParameterPhaseListener ppPhaseListener = null;
+        PortalPhaseListener portalPhaseListener = null;
+
+        if (!bridgeContext.hasRenderRedirect()) {
+            try {
+                ppPhaseListener = new PublicParameterPhaseListener(bridgeConfig, bridgeContext.getPortletRequest());
+                portalPhaseListener = new PortalPhaseListener();
+                facesLifecycle.addPhaseListener(ppPhaseListener);
+                facesLifecycle.addPhaseListener(portalPhaseListener);
+
+                facesLifecycle.execute(facesContext);
+            } finally {
+                if (null != facesLifecycle) {
+                    if (null != ppPhaseListener) {
+                        facesLifecycle.removePhaseListener(ppPhaseListener);
+                    }
+                    if (null != portalPhaseListener) {
+                        facesLifecycle.removePhaseListener(portalPhaseListener);
+                    }
+                }
+            }
+
+            if (!facesContext.getResponseComplete()) {
+                facesLifecycle.render(facesContext);
+            }
+        }
+
+        if (bridgeContext.hasRenderRedirect()) {
+            redirectViewId = bridgeContext.getRedirectViewId();
+            renderRedirect(bridgeContext, facesContext, facesLifecycle, scope, redirectViewId);
+            facesContext = FacesContext.getCurrentInstance();
+        } else {
+            encodeMarkupResponse(bridgeContext, facesContext, scope);
+        }
+    }
+
+    protected void renderRedirect(BridgeContext bridgeContext, FacesContext facesContext, Lifecycle facesLifecycle,
+            BridgeRequestScope scope, String redirectViewId) {
+        bridgeContext.setRedirectViewId(redirectViewId);
+
+        releaseFacesContext(bridgeContext, facesContext);
+
+        bridgeContext.setRenderRedirect(false);
+
+        if (null != scope) {
+            bridgeContext.getBridgeRequestScopeManager().removeRequestScope(bridgeContext, scope);
+        }
+
+        facesContext = getFacesContext(bridgeContext, facesLifecycle);
+
+        ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
+        UIViewRoot uiViewRoot = viewHandler.createView(facesContext, redirectViewId);
+        facesContext.setViewRoot(uiViewRoot);
+
+        renderFaces(bridgeContext, facesContext, facesLifecycle, null, null);
+
+        facesContext = FacesContext.getCurrentInstance();
+    }
+
+    protected void encodeMarkupResponse(BridgeContext bridgeContext, FacesContext facesContext, BridgeRequestScope scope) {
+        if (null == scope) {
+            if (Bridge.PortletPhase.RENDER_PHASE == bridgeContext.getPortletRequestPhase()) {
+                return;
+            } else {
+                scope = newBridgeRequestScope(bridgeContext);
+            }
+        }
+
+        saveFacesView(scope, facesContext);
+
+        if (Bridge.PortletPhase.RESOURCE_PHASE == bridgeContext.getPortletRequestPhase()) {
+            saveMessages(facesContext);
+            scope.putAll(facesContext.getExternalContext().getRequestMap());
+        }
     }
 
     protected void restoreScopeData(BridgeContext bridgeContext, FacesContext facesContext, BridgeRequestScope scope) {

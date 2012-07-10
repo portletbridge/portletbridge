@@ -26,10 +26,12 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.faces.context.FacesContext;
+import javax.faces.context.PartialResponseWriter;
+import javax.faces.context.ResponseWriter;
 import javax.portlet.PortletContext;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
-import javax.portlet.faces.Bridge;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -71,12 +73,30 @@ public class ResourceRequestExternalContextImpl extends MimeExternalContextImpl 
         if (null == url || url.length() < 0) {
             throw new NullPointerException("Path to redirect is null");
         }
-        PortalActionURL actionURL = new PortalActionURL(url);
-        if ((!actionURL.isInContext(getRequestContextPath()) && null == actionURL.getParameter(Bridge.FACES_VIEW_ID_PARAMETER))
-                || "true".equalsIgnoreCase(actionURL.getParameter(Bridge.DIRECT_LINK))) {
-            dispatch(actionURL.getPath());
+
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+
+        if (facesContext.getPartialViewContext().isPartialRequest()) {
+            ResourceResponse resourceResponse = getResponse();
+            resourceResponse.setContentType("text/xml");
+            resourceResponse.setCharacterEncoding("UTF-8");
+
+            PartialResponseWriter partialResponseWriter;
+            ResponseWriter responseWriter = facesContext.getResponseWriter();
+
+            if (responseWriter instanceof PartialResponseWriter) {
+                partialResponseWriter = (PartialResponseWriter) responseWriter;
+            } else {
+                partialResponseWriter = facesContext.getPartialViewContext().getPartialResponseWriter();
+            }
+
+            partialResponseWriter.startDocument();
+            partialResponseWriter.redirect(url);
+            partialResponseWriter.endDocument();
+            facesContext.responseComplete();
         } else {
-            internalRedirect(actionURL);
+            throw new UnsupportedEncodingException(
+                    "Can only redirect during RESOURCE_PHASE if a JSF partial/Ajax request has been triggered");
         }
     }
 

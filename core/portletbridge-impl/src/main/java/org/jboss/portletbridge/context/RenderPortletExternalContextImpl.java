@@ -23,11 +23,16 @@ package org.jboss.portletbridge.context;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.Map;
 
+import javax.faces.context.FacesContext;
 import javax.portlet.PortletContext;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.faces.Bridge;
+
+import org.jboss.portletbridge.bridge.config.BridgeConfig;
 
 /**
  * @author asmirnov
@@ -55,17 +60,49 @@ public class RenderPortletExternalContextImpl extends MimeExternalContextImpl {
             throw new NullPointerException("Path to redirect is null");
         }
         PortalActionURL actionURL = new PortalActionURL(url);
-        if ((!actionURL.isInContext(getRequestContextPath()) && null == actionURL
-            .getParameter(Bridge.FACES_VIEW_ID_PARAMETER))
-            || "true".equalsIgnoreCase(actionURL.getParameter(Bridge.DIRECT_LINK))) {
-            // dispatch(url);
+        Map<String, String[]> urlParams = null;
+        if (null != encodedActionUrlParameters) {
+            urlParams = encodedActionUrlParameters.get(url);
+        }
 
-            // throw new IllegalStateException(
-            // "Redirect to new url not at action phase");
+        if (null != urlParams) {
+            if (null == urlParams.get(bridgeContext.getBridgeConfig().getViewIdRenderParameterName())) {
+                throw new IllegalStateException("Can't redirect to Non Faces target: " + url + " during Render.");
+            }
+
+            PortalUrlQueryString queryString = new PortalUrlQueryString(null);
+            queryString.setParameters(urlParams);
+
+            Map<String, String[]> publicParamMap = getRequest().getPublicParameterMap();
+            if (null != publicParamMap && !publicParamMap.isEmpty()) {
+                for (Map.Entry<String, String[]> entry : publicParamMap.entrySet()) {
+                    String key = entry.getKey();
+
+                    if (!queryString.hasParameter(key)) {
+                        for (String param : entry.getValue()) {
+                            queryString.addParameter(key, param);
+                        }
+                    }
+                }
+            }
+
+            bridgeContext.setRedirectViewId(urlParams.get(bridgeContext.getBridgeConfig().getViewIdRenderParameterName())[0]);
+            bridgeContext.setRenderRedirectQueryString(queryString.toString());
+            FacesContext.getCurrentInstance().responseComplete();
+        } else if (url.startsWith("#") || (!actionURL.isInContext(getRequestContextPath()))
+                || "true".equalsIgnoreCase(actionURL.getParameter(Bridge.DIRECT_LINK))) {
+            // Do Nothing
         } else {
-            // HACK - if page is in the context, just treat it as navigation
-            // case
-            internalRedirect(actionURL);
+            BridgeConfig bridgeConfig = bridgeContext.getBridgeConfig();
+            String viewIdRenderParameterName = bridgeConfig.getViewIdRenderParameterName();
+            String viewIdRenderParameterValue = actionURL.getParameter(viewIdRenderParameterName);
+
+            if (null != viewIdRenderParameterValue) {
+                viewIdRenderParameterValue = URLDecoder.decode(viewIdRenderParameterValue, "UTF-8");
+                bridgeContext.setRedirectViewId(viewIdRenderParameterValue);
+            } else {
+                redirect(encodeActionURL(url));
+            }
         }
     }
 

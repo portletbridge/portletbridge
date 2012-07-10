@@ -77,7 +77,7 @@ public class ActionRequestExternalContextImpl extends PortletExternalContextImpl
      * @return
      */
     @Override
-    protected String createActionUrl(PortalActionURL actionUrl) {
+    protected String createActionUrl(PortalActionURL actionUrl, boolean escape) {
         String viewIdFromUrl = bridgeContext.getFacesViewIdFromPath(actionUrl.getPath());
         actionUrl.setParameter(bridgeContext.getBridgeConfig().getViewIdRenderParameterName(), viewIdFromUrl);
 
@@ -111,21 +111,21 @@ public class ActionRequestExternalContextImpl extends PortletExternalContextImpl
                 stateResponse.setRenderParameter(key, value);
             }
         }
-        return actionUrl.toString();
+        return escapeUrl(escape, actionUrl.toString());
     }
 
     @Override
     protected String createPartialActionUrl(PortalActionURL portalUrl) {
-        return createActionUrl(portalUrl);
+        return createActionUrl(portalUrl, isStrictEscaped(portalUrl.toString()));
     }
 
     @Override
-    protected String createRenderUrl(PortalActionURL portalUrl, Map<String, List<String>> parameters) {
+    protected String createRenderUrl(PortalActionURL portalUrl, boolean escape, Map<String, List<String>> parameters) {
         return ACTION_URL_DO_NOTHITG;
     }
 
     @Override
-    protected String createResourceUrl(PortalActionURL portalUrl) {
+    protected String createResourceUrl(PortalActionURL portalUrl, boolean escape) {
         return RESOURCE_URL_DO_NOTHITG;
     }
 
@@ -133,12 +133,36 @@ public class ActionRequestExternalContextImpl extends PortletExternalContextImpl
         if (null == url || url.length() < 0) {
             throw new NullPointerException("Path to redirect is null");
         }
+
         PortalActionURL actionURL = new PortalActionURL(url);
-        if (url.startsWith("#") || (!actionURL.isInContext(getRequestContextPath()))
+        Map<String, String[]> urlParams = null;
+        if (null != encodedActionUrlParameters) {
+            urlParams = encodedActionUrlParameters.get(url);
+        }
+
+        if (null != urlParams) {
+            PortalUrlQueryString queryString = new PortalUrlQueryString(null);
+            queryString.setParameters(urlParams);
+
+            Map<String, String[]> publicParamMap = getRequest().getPublicParameterMap();
+            if (null != publicParamMap && !publicParamMap.isEmpty()) {
+                for (Map.Entry<String, String[]> entry : publicParamMap.entrySet()) {
+                    String key = entry.getKey();
+
+                    if (!queryString.hasParameter(key)) {
+                        for (String param : entry.getValue()) {
+                            queryString.addParameter(key, param);
+                        }
+                    }
+                }
+            }
+
+            bridgeContext.setRenderRedirectQueryString(queryString.toString());
+        } else if (url.startsWith("#") || (!actionURL.isInContext(getRequestContextPath()))
             || "true".equalsIgnoreCase(actionURL.getParameter(Bridge.DIRECT_LINK))) {
             getResponse().sendRedirect(url);
         } else {
-            internalRedirect(actionURL);
+            redirect(encodeActionURL(url));
         }
         FacesContext.getCurrentInstance().responseComplete();
     }

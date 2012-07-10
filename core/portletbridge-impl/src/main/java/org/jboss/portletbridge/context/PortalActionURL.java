@@ -21,30 +21,18 @@
  */
 package org.jboss.portletbridge.context;
 
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * @author asmirnov
- *
  */
 public class PortalActionURL {
 
     private static final Pattern urlPattern = Pattern
         .compile("^(\\w*:)?(//[\\w\\._-]+[^/:])?((?:\\:)(\\d+))?([^?]*)?((?:\\?)(.*))?$");
-
-    private static final String NULL = "";
 
     private String protocol;
 
@@ -69,7 +57,7 @@ public class PortalActionURL {
      */
     private transient String userInfo;
 
-    private Map<String, String[]> parameters;
+    private PortalUrlQueryString queryString;
 
     private int _length;
 
@@ -89,29 +77,7 @@ public class PortalActionURL {
             this.port = Integer.parseInt(portStr);
         }
         this.path = urlMatcher.group(5);
-        setQueryString(urlMatcher.group(7));
-    }
-
-    @SuppressWarnings("deprecation")
-    protected String decodeURL(String par) {
-        try {
-            return URLDecoder.decode(par, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            // UTF-8 is part of the standard encoding. Just in case, return string
-            // decoded by default encoding
-            return URLDecoder.decode(par);
-        }
-    }
-
-    @SuppressWarnings("deprecation")
-    protected String encodeURL(String par) {
-        try {
-            return URLEncoder.encode(par, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            // UTF-8 is part of the standard encoding. Just in case, return string
-            // decoded by default encoding
-            return URLEncoder.encode(par);
-        }
+        this.queryString = new PortalUrlQueryString(urlMatcher.group(7));
     }
 
     /**
@@ -128,7 +94,7 @@ public class PortalActionURL {
         this.host = src.host;
         this.port = src.port;
         this.path = src.path;
-        this.parameters = new LinkedHashMap<String, String[]>(src.parameters);
+        this.queryString = new PortalUrlQueryString(src.getQueryString());
         this.authority = src.authority;
         this.userInfo = src.userInfo;
     }
@@ -179,67 +145,35 @@ public class PortalActionURL {
      * @return the queryString
      */
     public String getQueryString() {
-        // TODO - cache ?
-        if (null != parameters && parameters.size() > 0) {
-            StringBuilder queryString = new StringBuilder();
-            for (Iterator<Entry<String, String[]>> iterator = parameters.entrySet().iterator(); iterator.hasNext();) {
-                Entry<String, String[]> param = iterator.next();
-                String[] values = param.getValue();
-                for (int i = 0; i < values.length; i++) {
-                    queryString.append(encodeURL(param.getKey()));
-                    if (values[i] != NULL) {
-                        queryString.append('=').append(encodeURL(values[i]));
-                    }
-                    if (i < values.length - 1) {
-                        queryString.append('&');
-                    }
-
-                }
-                if (iterator.hasNext()) {
-                    queryString.append('&');
-                }
-            }
+        if (null != queryString) {
             return queryString.toString();
-
         } else {
             return null;
         }
     }
 
+    public boolean hasParameter(String name){
+        return queryString.hasParameter(name);
+    }
+
     public String getParameter(String name) {
-        String[] values = parameters.get(name);
-        if (null != values && values.length > 0) {
-            return values[0];
-        }
-        return null;
+        return queryString.getParameter(name);
     }
 
     public void setParameter(String name, String value) {
-        parameters.put(name, new String[] { value });
+        queryString.setParameter(name, value);
     }
 
     public void addParameter(String name, String value) {
-        String[] values = parameters.get(name);
-        if (null != values && values.length > 0) {
-            List<String> valuesList = new ArrayList<String>(Arrays.asList(values));
-            valuesList.add(value);
-            values = valuesList.toArray(new String[valuesList.size()]);
-        } else {
-            values = new String[] { value };
-        }
-        parameters.put(name, values);
+        queryString.addParameter(name, value);
     }
 
     public String removeParameter(String name) {
-        String[] values = parameters.remove(name);
-        if (null != values && values.length > 0) {
-            return values[0];
-        }
-        return null;
+        return queryString.removeParameter(name);
     }
 
     public int parametersSize() {
-        return parameters.size();
+        return queryString.parametersSize();
     }
 
     public boolean isInContext(String context) {
@@ -268,7 +202,7 @@ public class PortalActionURL {
     }
 
     public Map<String, String[]> getParameters() {
-        return parameters;
+        return queryString.getParameters();
     }
 
     public void setProtocol(String protocol) {
@@ -296,28 +230,11 @@ public class PortalActionURL {
     }
 
     public void setParameters(Map<String, String[]> parameters) {
-        this.parameters = parameters;
+        this.queryString.setParameters(parameters);
     }
 
     public void setQueryString(String queryString) {
-        // Clear parameters map.
-        parameters = new LinkedHashMap<String, String[]>(30);
-        if (null != queryString && queryString.length() > 0) {
-            // PBR-290 - Added conversion to & for all encoded ampersands
-            queryString = queryString.replace("&amp;", "&");
-            String[] queryParams = queryString.split("&");
-            for (int i = 0; i < queryParams.length; i++) {
-                String par = queryParams[i];
-                int eqIndex = par.indexOf('=');
-                if (eqIndex >= 0) {
-                    String value = par.substring(eqIndex + 1);
-                    String name = par.substring(0, eqIndex);
-                    addParameter(decodeURL(name), decodeURL(value));
-                } else {
-                    addParameter(par, NULL);
-                }
-            }
-        }
+        this.queryString = new PortalUrlQueryString(queryString);
     }
 
 }
