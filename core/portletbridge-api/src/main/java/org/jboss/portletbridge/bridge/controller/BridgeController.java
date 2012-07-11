@@ -28,6 +28,8 @@ import org.jboss.portletbridge.bridge.context.BridgeContext;
 
 public interface BridgeController {
     String IGNORE_BRIDGE_SCOPE = "org.jboss.portletbridge.ignoreBridgeScope";
+    String VIEW_ROOT = "org.jboss.portletbridge.viewRoot";
+    String ACTION_PARAMETERS = "org.jboss.portletbridge.actionParameters";
 
     void init(BridgeConfig config) throws BridgeException;
 

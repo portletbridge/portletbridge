@@ -59,6 +59,7 @@ import javax.portlet.faces.Bridge;
 import javax.portlet.faces.BridgeDefaultViewNotSpecifiedException;
 
 import org.jboss.portletbridge.bridge.context.BridgeContext;
+import org.jboss.portletbridge.bridge.controller.BridgeController;
 import org.jboss.portletbridge.bridge.logger.BridgeLogger;
 import org.jboss.portletbridge.bridge.logger.BridgeLogger.Level;
 import org.jboss.portletbridge.bridge.scope.BridgeRequestScope;
@@ -113,14 +114,24 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
             extraRequestParameters.put(ResponseStateManager.RENDER_KIT_ID_PARAM, new String[] { defaultRenderKitId });
         }
 
+        BridgeRequestScope scope = bridgeContext.getBridgeScope();
+
         String viewStateParam = request.getParameter(ResponseStateManager.VIEW_STATE_PARAM);
         if (null == viewStateParam) {
-            BridgeRequestScope scope = bridgeContext.getBridgeScope();
             if (null != scope) {
                 viewStateParam = (String) scope.get(FACES_VIEW_STATE);
                 if (null != viewStateParam) {
                     extraRequestParameters.put(ResponseStateManager.VIEW_STATE_PARAM, new String[] { viewStateParam });
                 }
+            }
+        }
+
+        if (null != scope) {
+            // Restore Action Parameters
+            @SuppressWarnings("unchecked")
+            Map<String, String[]> params = (Map<String, String[]>) scope.get(BridgeController.ACTION_PARAMETERS);
+            if (null != params && params.size() > 0) {
+                extraRequestParameters.putAll(params);
             }
         }
     }

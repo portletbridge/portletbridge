@@ -78,12 +78,10 @@ public class Jsf20ControllerImpl implements BridgeController {
     private BridgeConfig bridgeConfig = null;
     private FacesContextFactory facesContextFactory = null;
 
-    public static final String VIEW_ROOT = "org.jboss.portletbridge.viewRoot";
     protected static final String RENDER_REDIRECT_VIEW_PARAMS = "org.jboss.portletbridge.renderRedirectViewParams";
     protected static final String RENDER_REDIRECT_PUBLIC_PARAM_MAP = "org.jboss.portletbridge.renderRedirectPublicParamMap";
     private static final String FACES_MESSAGES_WRAPPER = "org.jboss.portletbridge.facesMessagesHolder";
     private static final String MANAGED_BEANS_WRAPPER = "org.jboss.portletbridge.managedBeansHolder";
-    private static final String REQUEST_PARAMETERS = "org.jboss.portletbridge.requestParameters";
     private static final String REQUEST_SCOPE_ID = "__pbrReqScopeId";
 
     /**
@@ -330,10 +328,10 @@ public class Jsf20ControllerImpl implements BridgeController {
                         .get(ResponseStateManager.VIEW_STATE_PARAM);
 
                 scope.put(AbstractExternalContext.FACES_VIEW_STATE, viewState);
+                saveActionParams(bridgeContext, facesContext);
             }
 
             saveBeans(bridgeContext, facesContext);
-            saveRequestParameters(bridgeContext, facesContext);
 
             scope.putAll(facesContext.getExternalContext().getRequestMap());
 
@@ -438,7 +436,6 @@ public class Jsf20ControllerImpl implements BridgeController {
         restoreFacesViewFromScope(facesContext, scope);
         restoreMessages(facesContext, scope);
         restoreBeans(bridgeContext, scope);
-        restoreRequestParameters(bridgeContext, scope);
 
         Set<Map.Entry<String, Object>> keys = scope.entrySet();
         for (Entry<String, Object> entry : keys) {
@@ -475,21 +472,6 @@ public class Jsf20ControllerImpl implements BridgeController {
             PortletRequest request = bridgeContext.getPortletRequest();
             for (String name : beanWrapper.getBeanNames()) {
                 request.setAttribute(name, beanWrapper.getBean(name));
-            }
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    protected void restoreRequestParameters(BridgeContext bridgeContext, BridgeRequestScope scope) {
-        Map<String, String[]> params = (Map<String, String[]>) scope.remove(REQUEST_PARAMETERS);
-
-        if (null != params) {
-            PortletRequest request = bridgeContext.getPortletRequest();
-            for (Map.Entry<String, String[]> entry : params.entrySet()) {
-                if (null == request.getAttribute(entry.getKey())) {
-                    // Per spec 5.1.2, only restore action parameters that are not present on incoming request
-                    request.setAttribute(entry.getKey(), entry.getValue());
-                }
             }
         }
     }
@@ -551,22 +533,15 @@ public class Jsf20ControllerImpl implements BridgeController {
         }
     }
 
-    protected void saveRequestParameters(BridgeContext bridgeContext, FacesContext facesContext) {
+    protected void saveActionParams(BridgeContext bridgeContext, FacesContext facesContext) {
         ExternalContext externalContext = facesContext.getExternalContext();
 
         if (bridgeConfig.hasPreserveActionParameters()) {
             BridgeRequestScope scope = bridgeContext.getBridgeScope();
-            Map<String, String[]> params = new HashMap<String, String[]>();
+            Map<String, String[]> params = new HashMap<String, String[]>(externalContext.getRequestParameterValuesMap());
+            params.remove(ResponseStateManager.VIEW_STATE_PARAM);
 
-            for (Map.Entry<String, String[]> entry : externalContext.getRequestParameterValuesMap().entrySet()) {
-                String paramName = entry.getKey();
-                String[] value = entry.getValue();
-                if (!scope.isExcluded(paramName, value)) {
-                    params.put(paramName, value);
-                }
-            }
-
-            externalContext.getRequestMap().put(REQUEST_PARAMETERS, params);
+            scope.put(ACTION_PARAMETERS, params);
         }
     }
 
