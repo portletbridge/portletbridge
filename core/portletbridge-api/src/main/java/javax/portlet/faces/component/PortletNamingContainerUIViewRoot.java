@@ -28,6 +28,7 @@ import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.portlet.faces.Bridge;
+import javax.portlet.faces.BridgeUtil;
 import javax.portlet.faces.annotation.PortletNamingContainer;
 
 /**
@@ -46,33 +47,19 @@ public class PortletNamingContainerUIViewRoot extends UIViewRoot implements Seri
         super();
     }
 
-    /**
-     * Static method that implements NamingContainer semantics. Ensures that the returned identifier contains the consumer
-     * (portal) provided unique portlet id. This ensures that those components in this NamingContainer generate ids which will
-     * not collide in the consumer page.
-     * <p>
-     * This method is provided for existing <code>UIViewRoot</code> implementations that prefer not to subclass
-     * <code>PortletNamingContainerUIViewRoot</code>
-     */
-    private String convertClientId(FacesContext context, String additionalId) {
-        ExternalContext ec = context.getExternalContext();
-        String namespace = ec.encodeNamespace("");
+    @Override
+    public void setId(String id) {
+        if (BridgeUtil.isPortletRequest()) {
+            if (null == id) {
+                id = createUniqueId();
+            }
 
-        if (null == additionalId) {
-            additionalId = createUniqueId();
-        }
-
-        /*
-         * In servlet world encodeNamespace does nothing -- so if we get back what we sent in then do not return the
-         * NamingContainer Id
-         * The PREFIX was added for LifeRay compatibility
-         */
-        if (!additionalId.startsWith(NAMESPACE_PREFIX)) {
-            if (namespace.length() > 0) {
-                return NAMESPACE_PREFIX + namespace + additionalId;
+            if (!id.startsWith(NAMESPACE_PREFIX)) {
+                ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+                id = NAMESPACE_PREFIX + ec.encodeNamespace("") + "_" + id;
             }
         }
-        return additionalId;
+        super.setId(id);
     }
 
     /**
@@ -84,9 +71,9 @@ public class PortletNamingContainerUIViewRoot extends UIViewRoot implements Seri
     public String getContainerClientId(FacesContext context) {
         ExternalContext externalContext = context.getExternalContext();
         if (externalContext.getRequestMap().containsKey(Bridge.PORTLET_LIFECYCLE_PHASE)) {
-            String rootId = getId();
+            String rootId = this.getId();
             if (null == rootId || !rootId.startsWith(NAMESPACE_PREFIX)) {
-                setId(convertClientId(context, rootId));
+                setId(this.getId());
             }
             return super.getContainerClientId(context);
         } else {
