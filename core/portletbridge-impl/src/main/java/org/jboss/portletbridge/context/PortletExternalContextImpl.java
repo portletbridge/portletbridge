@@ -48,6 +48,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.FacesContextFactory;
 import javax.faces.render.ResponseStateManager;
 import javax.portlet.BaseURL;
+import javax.portlet.ClientDataRequest;
 import javax.portlet.PortletContext;
 import javax.portlet.PortletException;
 import javax.portlet.PortletRequest;
@@ -89,6 +90,11 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
     protected final Map<String, Map<String, String[]>> encodedActionUrlParameters = new HashMap<String, Map<String, String[]>>();
     private Map<String, String[]> extraRequestParameters = new HashMap<String, String[]>();
     protected BridgeContext bridgeContext;
+
+    protected String acceptHeader;
+    protected String acceptLangHeader;
+    protected String contentType;
+    protected String contentLength;
 
     enum Scheme {
         action, render, resource
@@ -228,7 +234,107 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
         return temp;
     }
 
+    protected void constructAcceptLanguageHeader() {
+        Enumeration<Locale> locales = getRequest().getLocales();
+        StringBuilder acceptLangHeader = new StringBuilder(64);
+
+        boolean found = false;
+        while (locales.hasMoreElements()) {
+            Locale locale = locales.nextElement();
+            if (locale != null) {
+                if (found) {
+                    acceptLangHeader.append(',');
+                } else {
+                    found = true;
+                }
+
+                String temp = locale.getLanguage();
+                if (temp.length() > 0) {
+                    acceptLangHeader.append(temp);
+                    temp = locale.getCountry();
+                    if (temp.length() > 0) {
+                        acceptLangHeader.append('-');
+                        acceptLangHeader.append(temp);
+                    }
+                }
+            }
+        }
+
+        this.acceptLangHeader = found ? acceptLangHeader.toString() : null;
+    }
+
+    protected void constructAcceptHeader() {
+        Enumeration<String> contentTypes = getRequest().getResponseContentTypes();
+        StringBuilder acceptHeader = new StringBuilder(64);
+
+        boolean found = false;
+        while (contentTypes.hasMoreElements()) {
+            String type = contentTypes.nextElement();
+            if (type != null) {
+                if (found) {
+                    acceptHeader.append(',');
+                } else {
+                    found = true;
+                }
+
+                acceptHeader.append(type);
+            }
+        }
+
+        this.acceptHeader = found ? acceptHeader.toString() : null;
+    }
+
+    protected void constructContentType() {
+        StringBuilder contentTypeBuilder = new StringBuilder(64);
+
+        String contentType = ((ClientDataRequest) getRequest()).getContentType();
+        String charset = ((ClientDataRequest) getRequest()).getCharacterEncoding();
+
+        if (null != contentType) {
+            if (null != charset) {
+                int index = contentType.indexOf(";");
+                if (index < 0) {
+                    contentTypeBuilder.append(contentType);
+                } else {
+                    contentTypeBuilder.append(contentType, 0, index);
+                }
+                contentTypeBuilder.append("; charset=");
+                contentTypeBuilder.append(charset);
+
+                this.contentType = contentTypeBuilder.toString();
+            }
+        }
+        this.contentType = null;
+    }
+
+    protected void constructContentLength() {
+        int contentLength = ((ClientDataRequest) getRequest()).getContentLength();
+
+        if (contentLength != -1) {
+            this.contentLength = String.valueOf(contentLength);
+        }
+    }
+
     protected String getRequestHeader(String name) {
+        if ("ACCEPT".equalsIgnoreCase(name)) {
+            if (null == acceptHeader) {
+                constructAcceptHeader();
+            }
+            return acceptHeader;
+        }
+        if ("ACCEPT-LANGUAGE".equalsIgnoreCase(name)) {
+            if (null == acceptLangHeader) {
+                constructAcceptLanguageHeader();
+            }
+            return acceptLangHeader;
+        }
+        if ("CONTENT-TYPE".equalsIgnoreCase(name)) {
+            return null;
+        }
+        if ("CONTENT-LENGTH".equalsIgnoreCase(name)) {
+            return null;
+        }
+
         String headerValue = getRequest().getProperty(name);
         if (null == headerValue) {
             // HACK - GateIn converts all request header names to the lower case.
@@ -238,10 +344,37 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
     }
 
     protected Enumeration<String> getRequestHeaderNames() {
-        return getRequest().getPropertyNames();
+        List<String> names = new ArrayList<String>();
+        Enumeration<String> propNames = getRequest().getPropertyNames();
+        while (propNames.hasMoreElements()) {
+            String name = (String) propNames.nextElement();
+            names.add(name);
+        }
+        names.add("ACCEPT");
+        names.add("ACCEPT-LANGUAGE");
+        return Collections.enumeration(names);
     }
 
     protected String[] getRequestHeaderValues(String name) {
+        if ("ACCEPT".equalsIgnoreCase(name)) {
+            if (null == acceptHeader) {
+                constructAcceptHeader();
+            }
+            return new String[] { acceptHeader };
+        }
+        if ("ACCEPT-LANGUAGE".equalsIgnoreCase(name)) {
+            if (null == acceptLangHeader) {
+                constructAcceptLanguageHeader();
+            }
+            return new String[] { acceptLangHeader };
+        }
+        if ("CONTENT-TYPE".equalsIgnoreCase(name)) {
+            return null;
+        }
+        if ("CONTENT-LENGTH".equalsIgnoreCase(name)) {
+            return null;
+        }
+
         Enumeration<String> properties = getRequest().getProperties(name);
         if (!properties.hasMoreElements()) {
             // HACK - GateIn converts all request header names to the lower case.

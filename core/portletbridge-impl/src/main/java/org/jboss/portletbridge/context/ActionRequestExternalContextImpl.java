@@ -25,6 +25,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -192,6 +195,52 @@ public class ActionRequestExternalContextImpl extends PortletExternalContextImpl
     @Override
     public String getRequestCharacterEncoding() {
         return getRequest().getCharacterEncoding();
+    }
+
+    protected String getRequestHeader(String name) {
+        if ("CONTENT-TYPE".equalsIgnoreCase(name)) {
+            if (null == contentType) {
+                constructContentType();
+            }
+            return contentType;
+        }
+        if ("CONTENT-LENGTH".equalsIgnoreCase(name)) {
+            if (null == contentLength) {
+                constructContentLength();
+            }
+            return contentLength;
+        }
+
+        return super.getRequestHeader(name);
+    }
+
+    protected Enumeration<String> getRequestHeaderNames() {
+        List<String> names = new ArrayList<String>();
+        Enumeration<String> propNames = super.getRequestHeaderNames();
+        while (propNames.hasMoreElements()) {
+            String name = (String) propNames.nextElement();
+            names.add(name);
+        }
+        names.add("CONTENT-TYPE");
+        names.add("CONTENT-LENGTH");
+        return Collections.enumeration(names);
+    }
+
+    protected String[] getRequestHeaderValues(String name) {
+        if ("CONTENT-TYPE".equalsIgnoreCase(name)) {
+            if (null == contentType) {
+                constructContentType();
+            }
+            return new String[] { contentType };
+        }
+        if ("CONTENT-LENGTH".equalsIgnoreCase(name)) {
+            if (null == contentLength) {
+                constructContentLength();
+            }
+            return new String[] { contentLength };
+        }
+
+        return super.getRequestHeaderValues(name);
     }
 
     @Override
