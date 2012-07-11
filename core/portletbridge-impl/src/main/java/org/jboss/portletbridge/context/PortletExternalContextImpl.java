@@ -136,6 +136,21 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
     }
 
     @Override
+    public void setRequest(Object request) {
+        super.setRequest(request);
+
+        if (null != viewId) {
+            calculateViewId();
+        }
+    }
+
+    @Override
+    public void redirect(String url) throws IOException {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
     public String getResponseCharacterEncoding() {
         throw new IllegalStateException(
                 "PortletExternalContextImpl.getResponseCharacterEncoding(): Response must be a MimeResponse");
@@ -523,14 +538,14 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
     }
 
     public String getRequestPathInfo() {
-        if (null == pathInfo) {
+        if (null == viewId) {
             calculateViewId();
         }
         return pathInfo;
     }
 
     public String getRequestServletPath() {
-        if (null == servletPath) {
+        if (null == viewId) {
             calculateViewId();
         }
         return servletPath;
@@ -560,28 +575,13 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
         String newViewId = bridgeContext.getFacesViewIdFromRequest(false);
 
         if (null == newViewId) {
-            // Try to get viewId from stored session attribute
-            PortletSession portletSession = getRequest().getPortletSession(false);
-            if (null != portletSession) {
-                String historyViewId = (String) portletSession.getAttribute(Bridge.VIEWID_HISTORY + "."
-                        + getRequest().getPortletMode().toString());
-                if (null != historyViewId) {
-                    try {
-                        PortalActionURL viewIdUrl = new PortalActionURL(historyViewId);
-                        newViewId = viewIdUrl.getPath();
-                    } catch (MalformedURLException e) {
-                        // Ignore it.
-                    }
-                }
-            }
+            newViewId = bridgeContext.getDefaultFacesViewIdForRequest(false);
 
             if (null == newViewId) {
-                newViewId = bridgeContext.getDefaultFacesViewIdForRequest(false);
-
-                if (null == newViewId) {
-                    throw new BridgeDefaultViewNotSpecifiedException();
-                }
+                throw new BridgeDefaultViewNotSpecifiedException();
             }
+
+            newViewId = processViewParameters(newViewId);
         }
 
         if (null != newViewId && newViewId.equals(viewId)) {
@@ -592,6 +592,21 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
         viewId = newViewId;
 
         calculateServletPath(viewId, bridgeContext.getBridgeConfig().getFacesServletMappings());
+    }
+
+    protected String processViewParameters(String newViewId) {
+        try {
+            PortalActionURL portalUrl = new PortalActionURL(newViewId);
+            if (portalUrl.parametersSize() > 0) {
+                Map<String, String[]> params = portalUrl.getParameters();
+                for (Entry<String, String[]> entry : params.entrySet()) {
+                    extraRequestParameters.put(entry.getKey(), entry.getValue());
+                }
+            }
+        } catch (MalformedURLException e) {
+            // TODO Auto-generated catch block
+        }
+        return newViewId;
     }
 
     protected void calculateServletPath(String viewId, List<String> servletMappings) {
