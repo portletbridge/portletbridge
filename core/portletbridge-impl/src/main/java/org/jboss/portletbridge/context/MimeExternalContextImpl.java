@@ -257,9 +257,4 @@ public abstract class MimeExternalContextImpl extends PortletExternalContextImpl
         return 0;
     }
 
-    @Override
-    public void setRequestCharacterEncoding(String encoding) throws UnsupportedEncodingException {
-
-    }
-
 }

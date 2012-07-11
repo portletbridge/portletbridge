@@ -24,6 +24,7 @@ package org.jboss.portletbridge.context;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -124,13 +125,19 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
     }
 
     @Override
+    public void setRequestCharacterEncoding(String encoding) throws UnsupportedEncodingException {
+        // Do nothing
+    }
+
+    @Override
     public String getResponseCharacterEncoding() {
-        return null;
+        throw new IllegalStateException(
+                "PortletExternalContextImpl.getResponseCharacterEncoding(): Response must be a MimeResponse");
     }
 
     @Override
     public String getResponseContentType() {
-        return null;
+        throw new IllegalStateException("PortletExternalContextImpl.getResponseContentType(): Response must be a MimeResponse");
     }
 
     @Override
@@ -647,12 +654,24 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
                         }
                     } else {
                         String directLink = portalUrl.getParameter(Bridge.DIRECT_LINK);
-                        if (null != directLink && !Boolean.parseBoolean(directLink)) {
-                            portalUrl.removeParameter(Bridge.DIRECT_LINK);
-                        }/*
-                          * if the inputURL is an absolute path external to this portlet application[6.5] return the inputURL
-                          * unchanged.
-                          */
+                        /*
+                         * If the inputURL contains the parameter javax.portlet.faces.DirectLink (with a value of "true") return
+                         * an absolute path derived from the inputURL. Don't remove the DirectLink parameter if it exists[6.6].
+                         * If the inputURL contains the parameter javax.portlet.faces.DirectLink and its value is false then
+                         * remove the javax.portlet.faces.DirectLink parameter and its value from the query string and continue
+                         * processing (using the next step concerning determining the target of the URL)[6.7].
+                         */
+                        if (null != directLink && Boolean.parseBoolean(directLink)) {
+                            // make absolute url
+                            PortletRequest request = getRequest();
+                            portalUrl.setProtocol(request.getScheme() + ":");
+                            portalUrl.setHost("//" + request.getServerName());
+                            portalUrl.setPort(request.getServerPort());
+                        }
+                        /*
+                         * if the inputURL is an absolute path external to this portlet application[6.5] return the inputURL
+                         * unchanged.
+                         */
                         actionUrl = escapeUrl(escapedUrl, portalUrl.toString());
                     }
                 } else {
@@ -673,8 +692,6 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
                             portalUrl.setPort(request.getServerPort());
                             String directUrl = portalUrl.toString();
                             return escapeUrl(escapedUrl, directUrl);
-                        } else {
-                            portalUrl.removeParameter(Bridge.DIRECT_LINK);
                         }
                     }
 
@@ -867,10 +884,10 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
     protected boolean isInContext(PortalActionURL portalUrl) {
         String directLink = portalUrl.getParameter(Bridge.DIRECT_LINK);
         if (null != directLink) {
-            portalUrl.removeParameter(Bridge.DIRECT_LINK);
             if (Boolean.parseBoolean(directLink)) {
                 return false;
             }
+            portalUrl.removeParameter(Bridge.DIRECT_LINK);
         }
         return portalUrl.isInContext(getRequestContextPath());
     }
