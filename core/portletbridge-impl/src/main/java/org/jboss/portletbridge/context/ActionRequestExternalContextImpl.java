@@ -188,7 +188,7 @@ public class ActionRequestExternalContextImpl extends PortletExternalContextImpl
         try {
             getRequest().setCharacterEncoding(encoding);
         } catch (IllegalStateException e) {
-            // TODO: handle exception
+            // No op
         }
     }
 

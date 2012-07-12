@@ -317,20 +317,19 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
         String charset = ((ClientDataRequest) getRequest()).getCharacterEncoding();
 
         if (null != contentType) {
+            int index = contentType.indexOf(";");
+            if (index < 0) {
+                contentTypeBuilder.append(contentType);
+            } else {
+                contentTypeBuilder.append(contentType, 0, index);
+            }
+
             if (null != charset) {
-                int index = contentType.indexOf(";");
-                if (index < 0) {
-                    contentTypeBuilder.append(contentType);
-                } else {
-                    contentTypeBuilder.append(contentType, 0, index);
-                }
                 contentTypeBuilder.append("; charset=");
                 contentTypeBuilder.append(charset);
-
-                this.contentType = contentTypeBuilder.toString();
             }
+            this.contentType = contentTypeBuilder.toString();
         }
-        this.contentType = null;
     }
 
     protected void constructContentLength() {
