@@ -82,8 +82,11 @@ public class BridgeRequestScopeUtil {
             return true;
         }
 
-        return isNamespaceMatch(key, "javax.portlet.") || isNamespaceMatch(key, "javax.faces.")
+        return isNamespaceMatch(key, "javax.portlet.")
+            || isNamespaceMatch(key, "javax.portlet.faces")
+            || isNamespaceMatch(key, "javax.faces.")
             || isNamespaceMatch(key, "javax.servlet.")
+            || isNamespaceMatch(key, "javax.servlet.include.")
             || isNamespaceMatch(key, AbstractExternalContext.INITIAL_REQUEST_ATTRIBUTES_NAMES);
     }
 
@@ -110,7 +113,8 @@ public class BridgeRequestScopeUtil {
 
     public static boolean isNamespaceMatch(String key, String namespace) {
         if (null != key && null != namespace && key.startsWith(namespace)) {
-            return true;
+            key = key.substring(0, key.lastIndexOf('.') + 1);
+            return key.equals(namespace);
         }
         return false;
     }
