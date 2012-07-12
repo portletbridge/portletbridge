@@ -271,25 +271,17 @@ public class PortletJspVdlImpl extends VdlWrapper {
             facesContext.setResponseWriter(oldResponseWriter.cloneWithWriter(responseWriter));
             Object stateToWrite = stateManager.saveView(facesContext);
 
-            int stateStart = findStateMarker();
-            if (stateStart != -1) {
-                int pos = 0;
-                while (stateStart >= 0) {
-                    responseWriter.write(mBuilder.substring(pos, stateStart));
-                    stateManager.writeState(facesContext, stateToWrite);
-                    pos = stateStart + SAVESTATE_MARK_LEN;
-                    stateStart = mBuilder.indexOf(RI_SAVE_STATE_MARKER, pos);
-                }
-                responseWriter.write(mBuilder.substring(pos));
-            } else {
-                responseWriter.write(mBuilder.toString());
+            int stateStart = mBuilder.indexOf(RI_SAVE_STATE_MARKER);
+            int pos = 0;
+            while (stateStart >= 0) {
+                responseWriter.write(mBuilder.substring(pos, stateStart));
+                stateManager.writeState(facesContext, stateToWrite);
+                pos = stateStart + SAVESTATE_MARK_LEN;
+                stateStart = mBuilder.indexOf(RI_SAVE_STATE_MARKER, pos);
             }
+            responseWriter.write(mBuilder.substring(pos));
 
             facesContext.setResponseWriter(oldResponseWriter);
-        }
-
-        private int findStateMarker() {
-            return mBuilder.indexOf(RI_SAVE_STATE_MARKER);
         }
     }
 }
