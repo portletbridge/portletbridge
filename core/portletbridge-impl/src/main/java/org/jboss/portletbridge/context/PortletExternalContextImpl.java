@@ -938,6 +938,7 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
                 // Remove context path from resource ID.
 
                 portalUrl.removeParameter(Bridge.VIEW_LINK);
+                encodeBackLink(portalUrl);
 
                 if (path.startsWith("/")) {
                     if (null == portalUrl.getParameter(Bridge.NONFACES_TARGET_PATH_PARAMETER)) {
