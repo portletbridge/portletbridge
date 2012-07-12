@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
 public class PortalActionURL {
 
     private static final Pattern urlPattern = Pattern
-        .compile("^(\\w*:)?(//[\\w\\._-]+[^/:])?((?:\\:)(\\d+))?([^?]*)?((?:\\?)(.*))?$");
+        .compile("^(\\w*:)?(//[\\w\\._-]+[^/:?])?((?:\\:)(\\d+))?([^?]*)?((?:\\?)(.*))?$");
 
     private String protocol;
 

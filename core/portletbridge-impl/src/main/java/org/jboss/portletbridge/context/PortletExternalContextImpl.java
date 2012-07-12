@@ -520,6 +520,10 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
         return getResponse().encodeURL(url);
     }
 
+    protected String replaceUrlWhitespace(String url) {
+        return url.replace(" ", "%20");
+    }
+
     public String getAuthType() {
         return getRequest().getAuthType();
     }
@@ -918,20 +922,20 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
                 // Portlet Scheme URL
                 portalUrl.removeParameter(Bridge.VIEW_LINK);
                 encodeBackLink(portalUrl);
-                return encodeActionURL(portalUrl.toString());
-            } else if (null != portalUrl.getProtocol() && !path.startsWith("/")) {
+                return replaceUrlWhitespace(encodeActionURL(portalUrl.toString()));
+            } else if (isOpaqueURL(url)) {
                 // Opaque URL
                 return url;
             } else if (!isInContext(portalUrl)) {
                 // Hierarchial url outside context.
+                portalUrl.removeParameter(Bridge.VIEW_LINK);
                 encodeBackLink(portalUrl);
-                return encodeURL(portalUrl.toString());
+                return replaceUrlWhitespace(encodeURL(portalUrl.toString()).replace("&amp;", "&"));
             } else if ("true".equalsIgnoreCase(portalUrl.getParameter(Bridge.VIEW_LINK))) {
                 // Hierarchical and targets a resource that is within this application
                 portalUrl.removeParameter(Bridge.VIEW_LINK);
                 encodeBackLink(portalUrl);
-                // 1. view link. TODO - would it better to create renderURL ?
-                return encodeActionURL(portalUrl.toString());
+                return replaceUrlWhitespace(encodeActionURL(portalUrl.toString()));
             } else {
                 // For resources in the portletbridge application context add
                 // namespace as URL parameter, to restore portletbridge session.
@@ -1018,6 +1022,42 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
         } catch (MalformedURLException e) {
             throw new FacesException(e);
         }
+    }
+
+    protected boolean isAbsoluteURL(String url) {
+        url = url.toLowerCase();
+        if (url.startsWith("http:") || url.startsWith("https:")) {
+            return true;
+        }
+
+        int i = url.indexOf(":");
+        if (i == -1) {
+            return false;
+        }
+
+        String scheme = url.substring(0, i);
+
+        if (scheme.indexOf(";") != -1) {
+            return false;
+        } else if (scheme.indexOf("/") != -1) {
+            return false;
+        } else if (scheme.indexOf("#") != -1) {
+            return false;
+        } else if (scheme.indexOf("?") != -1) {
+            return false;
+        } else if (scheme.indexOf(" ") != -1) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    protected boolean isOpaqueURL(String url) {
+        if (!isAbsoluteURL(url)) {
+            return false;
+        }
+
+        return (!url.startsWith("portlet:") && (url.indexOf(':') != (url.indexOf('/') - 1)));
     }
 
     protected String unescapeUrl(String actionUrl) {

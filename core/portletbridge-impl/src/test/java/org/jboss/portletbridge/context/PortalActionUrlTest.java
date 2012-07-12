@@ -54,6 +54,15 @@ public class PortalActionUrlTest extends TestCase {
         super.tearDown();
     }
 
+    public void testExternalUrl() throws Exception {
+        PortalActionURL url = new PortalActionURL("http://www.apache.org?a=b");
+        assertEquals("http:", url.getProtocol());
+        assertEquals("//www.apache.org", url.getHost());
+        assertEquals(-1, url.getPort());
+        assertEquals("", url.getPath());
+        assertEquals("a=b", url.getQueryString());
+    }
+
     public void testActionUrl() throws Exception {
         PortalActionURL url = new PortalActionURL("ftp://foo.bar:90/some/path/index.jsf?a=b&cd=ef");
         assertEquals("ftp:", url.getProtocol());
