@@ -406,7 +406,7 @@ public class GenericFacesPortlet extends GenericPortlet {
     protected void doDispatch(RenderRequest request, RenderResponse response) throws PortletException, IOException {
         PortletMode mode = request.getPortletMode();
         if (PortletMode.VIEW.equals(mode) || PortletMode.EDIT.equals(mode) || PortletMode.HELP.equals(mode)) {
-            // Portlet serves tree standard modes as default.
+            // Portlet serves three standard modes as default.
             super.doDispatch(request, response);
         } else {
             // All other dispatched to bridge directly.
@@ -436,9 +436,7 @@ public class GenericFacesPortlet extends GenericPortlet {
         doFacesDispatch(request, response);
     }
 
-    /*
-     * (non-Javadoc)
-     *
+    /**
      * @see javax.portlet.GenericPortlet#processAction(javax.portlet.ActionRequest, javax.portlet.ActionResponse)
      */
     public void processAction(ActionRequest request, ActionResponse response) throws PortletException, IOException {
@@ -448,12 +446,11 @@ public class GenericFacesPortlet extends GenericPortlet {
         String defaultViewId = getDefaultViewIdMap().get(request.getPortletMode().toString());
         String nonFacesTargetPath = getNonFacesTargetPath(request, response);
         if (null == defaultViewId || null != nonFacesTargetPath) {
-            throw new PortletException("Non-faces requests to the GenericFacesPortlet are not supported");
+            throw new PortletException("Non-faces Action requests to the GenericFacesPortlet are not supported");
         }
-        Bridge bridge = getFacesBridge();
+
         try {
-            setupBridgeRequest(request, response);
-            bridge.doFacesRequest(request, response);
+            getFacesBridge(request, response).doFacesRequest(request, response);
         } catch (BridgeException e) {
             throw new PortletException("Error process faces request", e);
         }
@@ -464,10 +461,9 @@ public class GenericFacesPortlet extends GenericPortlet {
         if (log.isLoggable(Level.FINE)) {
             log.fine("Process resource request for portlet " + getPortletName());
         }
-        Bridge bridge = getFacesBridge();
+
         try {
-            setupBridgeRequest(request, response);
-            bridge.doFacesRequest(request, response);
+            getFacesBridge(request, response).doFacesRequest(request, response);
         } catch (BridgeException e) {
             throw new PortletException("Error process faces request", e);
         }
@@ -479,10 +475,9 @@ public class GenericFacesPortlet extends GenericPortlet {
             if (log.isLoggable(Level.FINE)) {
                 log.fine("Process event request for portlet " + getPortletName());
             }
-            Bridge bridge = getFacesBridge();
+
             try {
-                setupBridgeRequest(request, response);
-                bridge.doFacesRequest(request, response);
+                getFacesBridge(request, response).doFacesRequest(request, response);
             } catch (BridgeException e) {
                 throw new PortletException("Error process faces request", e);
             }
@@ -516,10 +511,8 @@ public class GenericFacesPortlet extends GenericPortlet {
         } else {
             String defaultViewId = getDefaultViewIdMap().get(request.getPortletMode().toString());
             if (null != defaultViewId && !request.getWindowState().equals(WindowState.MINIMIZED)) {
-                Bridge bridge = getFacesBridge();
                 try {
-                    setupBridgeRequest(request, response);
-                    bridge.doFacesRequest(request, response);
+                    getFacesBridge(request, response).doFacesRequest(request, response);
                 } catch (BridgeException e) {
                     throw new PortletException("Error process faces request", e);
                 }
