@@ -103,6 +103,14 @@ public class PortletJspVdlImpl extends VdlWrapper {
             } catch (Exception e) {
                 externalContext.log("Instantiation of BridgeWriteBehindResponse failed", e);
             }
+        } else {
+            // Use our wrappers
+            if (Bridge.PortletPhase.RENDER_PHASE == BridgeUtil.getPortletRequestPhase()) {
+                wrapped = new BufferedRenderResponseWrapper((RenderResponse)response);
+            } else {
+                wrapped = new BufferedResourceResponseWrapper((ResourceResponse)response);
+            }
+            externalContext.setResponse(wrapped);
         }
 
         externalContext.getRequestMap().put(Bridge.RENDER_CONTENT_AFTER_VIEW, Boolean.TRUE);
