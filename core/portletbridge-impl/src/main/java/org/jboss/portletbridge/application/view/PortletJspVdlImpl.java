@@ -106,9 +106,9 @@ public class PortletJspVdlImpl extends VdlWrapper {
         } else {
             // Use our wrappers
             if (Bridge.PortletPhase.RENDER_PHASE == BridgeUtil.getPortletRequestPhase()) {
-                wrapped = new BufferedRenderResponseWrapper((RenderResponse)response);
+                wrapped = new BufferedRenderResponseWrapper((RenderResponse) response);
             } else {
-                wrapped = new BufferedResourceResponseWrapper((ResourceResponse)response);
+                wrapped = new BufferedResourceResponseWrapper((ResourceResponse) response);
             }
             externalContext.setResponse(wrapped);
         }
@@ -120,7 +120,7 @@ public class PortletJspVdlImpl extends VdlWrapper {
         if (null != wrapped) {
             externalContext.setResponse(response);
 
-            Object obj = externalContext.getRequestMap().get(Bridge.AFTER_VIEW_CONTENT);
+            Object obj = externalContext.getRequestMap().remove(Bridge.AFTER_VIEW_CONTENT);
 
             if (null == obj && wrapped.hasFacesWriteBehindMarkup()) {
                 obj = wrapped.isChars() ? wrapped.getChars() : wrapped.getBytes();
@@ -183,25 +183,15 @@ public class PortletJspVdlImpl extends VdlWrapper {
         Object afterViewContent = externalContext.getRequestMap().get(Bridge.AFTER_VIEW_CONTENT);
         if (null != afterViewContent) {
             if (afterViewContent instanceof char[]) {
-                facesContext.getResponseWriter().write((char[]) afterViewContent);
+                externalContext.getResponseOutputWriter().write((char[]) afterViewContent);
             } else if (afterViewContent instanceof byte[]) {
-                facesContext.getResponseWriter().write(new String((byte[]) afterViewContent));
+                externalContext.getResponseOutputWriter().write(
+                        new String((byte[]) afterViewContent, externalContext.getResponseCharacterEncoding()));
             } else {
                 externalContext.log("Invalid type for " + Bridge.AFTER_VIEW_CONTENT + " : " + afterViewContent.getClass());
             }
-        } else {
-            Object storedAfterViewContent = externalContext.getRequestMap().remove(AFTER_VIEW_CONTENT);
-            if (null != storedAfterViewContent) {
-                if (storedAfterViewContent instanceof char[]) {
-                    facesContext.getResponseWriter().write((char[]) storedAfterViewContent);
-                } else if (storedAfterViewContent instanceof byte[]) {
-                    facesContext.getResponseWriter().write(new String((byte[]) storedAfterViewContent));
-                } else {
-                    externalContext.log("Invalid type for " + Bridge.AFTER_VIEW_CONTENT + " : "
-                            + storedAfterViewContent.getClass());
-                }
-            }
         }
+        facesContext.getResponseWriter().flush();
     }
 
     private static final class StringBuilderWriter extends Writer {
@@ -248,11 +238,6 @@ public class PortletJspVdlImpl extends VdlWrapper {
         public void close() throws IOException {
         }
 
-        /**
-         * Write a string.
-         *
-         * @param str String to be written
-         */
         @Override
         public void write(String str) throws IOException {
             mBuilder.append(str);
