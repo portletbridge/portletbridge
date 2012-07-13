@@ -231,7 +231,7 @@ public class PortletBridgeImpl implements Bridge {
 
         try {
             initRequest(request, response, PortletPhase.EVENT_PHASE);
-            BridgeContext bridgeContext = getBridgeContext(request, response, PortletPhase.ACTION_PHASE);
+            BridgeContext bridgeContext = getBridgeContext(request, response, PortletPhase.EVENT_PHASE);
 
             bridgeController.handlePortletEvent(bridgeContext);
         } finally {
@@ -269,7 +269,7 @@ public class PortletBridgeImpl implements Bridge {
 
         try {
             initRequest(request, response, PortletPhase.RESOURCE_PHASE);
-            BridgeContext bridgeContext = getBridgeContext(request, response, PortletPhase.RENDER_PHASE);
+            BridgeContext bridgeContext = getBridgeContext(request, response, PortletPhase.RESOURCE_PHASE);
 
             bridgeController.renderResource(bridgeContext);
         } finally {
