@@ -667,7 +667,16 @@ public class Jsf20ControllerImpl implements BridgeController {
     }
 
     protected BridgeRequestScope getBridgeRequestScope(BridgeContext bridgeContext) {
-        BridgeRequestScope scope = bridgeContext.getBridgeScope();
+        BridgeRequestScope scope = null;
+        if (Bridge.PortletPhase.RENDER_PHASE == bridgeContext.getPortletRequestPhase()) {
+            String bridgeRequestScopeId = bridgeContext.getPortletRequest().getParameter(REQUEST_SCOPE_ID);
+            if (null != bridgeRequestScopeId) {
+                scope = bridgeContext.getBridgeRequestScopeManager().getRequestScopeById(bridgeContext, bridgeRequestScopeId);
+            }
+        }
+        if (null == scope) {
+            scope = bridgeContext.getBridgeScope();
+        }
         // TODO Add something to ignore it if a setting is true? ie. http://jira.portletfaces.org/browse/BRIDGE-219
         return scope;
     }

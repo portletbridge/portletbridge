@@ -373,7 +373,9 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
         Enumeration<String> propNames = getRequest().getPropertyNames();
         while (propNames.hasMoreElements()) {
             String name = (String) propNames.nextElement();
-            names.add(name);
+            if (!"CONTENT-TYPE".equalsIgnoreCase(name) && !"CONTENT-LENGTH".equalsIgnoreCase(name)) {
+                names.add(name);
+            }
         }
         names.add("ACCEPT");
         names.add("ACCEPT-LANGUAGE");
