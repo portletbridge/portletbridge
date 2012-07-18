@@ -178,17 +178,13 @@ public class Jsf20ControllerImpl implements BridgeController {
             if (facesContext.getResponseComplete()) {
                 // Redirected during event handling
                 removeScope = true;
-                return;
-            }
-
-            if (null != eventResult) {
+            } else if (null != eventResult) {
                 facesContext.getApplication().getNavigationHandler()
                         .handleNavigation(facesContext, eventResult.getFromAction(), eventResult.getOutcome());
 
                 if (facesContext.getResponseComplete()) {
                     // Redirected due to navigation rule
                     removeScope = true;
-                    return;
                 }
             }
 

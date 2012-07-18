@@ -28,7 +28,10 @@ import java.io.Writer;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.application.ViewHandler;
+import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
+import javax.faces.context.PartialViewContext;
 import javax.portlet.EventRequest;
 import javax.portlet.EventResponse;
 import javax.portlet.PortletContext;
@@ -94,6 +97,23 @@ public class EventRequestExternalContextImpl extends PortletExternalContextImpl 
             }
 
             bridgeContext.setRenderRedirectQueryString(queryString.toString());
+
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            String currentViewId = facesContext.getViewRoot().getViewId();
+            String newViewId = queryString.getParameter(Bridge.FACES_VIEW_ID_PARAMETER);
+            if (!currentViewId.equals(newViewId)) {
+                // Create new View
+                ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
+                UIViewRoot newViewRoot = viewHandler.createView(facesContext, newViewId);
+                facesContext.setViewRoot(newViewRoot);
+
+                // Update the PartialViewContext.
+                PartialViewContext partialViewContext = facesContext.getPartialViewContext();
+
+                if (!partialViewContext.isRenderAll()) {
+                    partialViewContext.setRenderAll(true);
+                }
+            }
         } else if (url.startsWith("#") || (!actionURL.isInContext(getRequestContextPath()))
                 || "true".equalsIgnoreCase(actionURL.getParameter(Bridge.DIRECT_LINK))) {
             // Do Nothing
