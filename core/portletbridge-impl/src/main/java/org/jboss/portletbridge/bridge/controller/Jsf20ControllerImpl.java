@@ -549,31 +549,17 @@ public class Jsf20ControllerImpl implements BridgeController {
     protected void renderFacesResource(BridgeContext bridgeContext) throws BridgeException {
         FacesContext facesContext = null;
         Lifecycle facesLifecycle = null;
-        PublicParameterPhaseListener ppPhaseListener = null;
-        PortalPhaseListener portalPhaseListener = null;
+
+        BridgeRequestScope scope = getBridgeRequestScope(bridgeContext);
 
         try {
             facesLifecycle = getFacesLifecycle();
             facesContext = getFacesContext(bridgeContext, facesLifecycle);
 
-            ppPhaseListener = new PublicParameterPhaseListener(bridgeConfig, bridgeContext.getPortletRequest());
-            portalPhaseListener = new PortalPhaseListener();
-            facesLifecycle.addPhaseListener(ppPhaseListener);
-            facesLifecycle.addPhaseListener(portalPhaseListener);
-
-            facesLifecycle.execute(facesContext);
-
-            if (!facesContext.getResponseComplete()) {
-                facesLifecycle.render(facesContext);
-            }
+            renderFaces(bridgeContext, facesContext, facesLifecycle, scope, null);
         } catch (Exception e) {
             throwBridgeException(e);
         } finally {
-            if (null != facesLifecycle) {
-                facesLifecycle.removePhaseListener(ppPhaseListener);
-                facesLifecycle.removePhaseListener(portalPhaseListener);
-            }
-
             if (null != facesContext) {
                 releaseFacesContext(bridgeContext, facesContext);
             }
