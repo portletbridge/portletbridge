@@ -27,6 +27,7 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.faces.application.ViewHandler;
 import javax.faces.component.UIViewRoot;
@@ -35,6 +36,11 @@ import javax.faces.context.PartialViewContext;
 import javax.portlet.EventRequest;
 import javax.portlet.EventResponse;
 import javax.portlet.PortletContext;
+import javax.portlet.PortletMode;
+import javax.portlet.PortletModeException;
+import javax.portlet.StateAwareResponse;
+import javax.portlet.WindowState;
+import javax.portlet.WindowStateException;
 import javax.portlet.faces.Bridge;
 
 /**
@@ -54,7 +60,40 @@ public class EventRequestExternalContextImpl extends PortletExternalContextImpl 
 
     @Override
     protected String createActionUrl(PortalActionURL url, boolean escape) {
-        return ACTION_URL_DO_NOTHITG;
+        String viewIdFromUrl = bridgeContext.getFacesViewIdFromPath(url.getPath());
+        url.setParameter(bridgeContext.getBridgeConfig().getViewIdRenderParameterName(), viewIdFromUrl);
+
+        StateAwareResponse stateResponse = (StateAwareResponse) getResponse();
+
+        for (Entry<String, String[]> parameter : url.getParameters().entrySet()) {
+            String key = parameter.getKey();
+            String[] value = parameter.getValue();
+
+            if (key.equals(Bridge.PORTLET_MODE_PARAMETER)) {
+                if (null != value) {
+                    PortletMode mode = new PortletMode(value[0]);
+                    try {
+                        stateResponse.setPortletMode(mode);
+                    } catch (PortletModeException e) {
+                        // only valid modes supported.
+                    }
+                }
+            } else if (key.equals(Bridge.PORTLET_WINDOWSTATE_PARAMETER)) {
+                if (null != value) {
+                    WindowState state = new WindowState(value[0]);
+                    try {
+                        stateResponse.setWindowState(state);
+                    } catch (WindowStateException e) {
+                        // only valid window states supported.
+                    }
+                }
+            } else if (key.equals(Bridge.PORTLET_SECURE_PARAMETER)) {
+                // ignore
+            } else {
+                stateResponse.setRenderParameter(key, value);
+            }
+        }
+        return escapeUrl(escape, url.toString());
     }
 
     @Override
