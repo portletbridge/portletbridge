@@ -596,7 +596,9 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
             if (null == newViewId) {
                 throw new BridgeDefaultViewNotSpecifiedException();
             }
+        }
 
+        if (null != newViewId) {
             newViewId = processViewParameters(newViewId);
         }
 
