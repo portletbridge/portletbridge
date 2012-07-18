@@ -983,7 +983,7 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
         } catch (MalformedURLException e) {
             throw new FacesException(e);
         }
-        return url.replaceAll("\\&amp\\;", "&");
+        return url;
     }
 
     @Override
