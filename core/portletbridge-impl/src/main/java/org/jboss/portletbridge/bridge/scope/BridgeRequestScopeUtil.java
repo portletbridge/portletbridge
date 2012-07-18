@@ -83,7 +83,7 @@ public class BridgeRequestScopeUtil {
         }
 
         return isNamespaceMatch(key, "javax.portlet.")
-            || isNamespaceMatch(key, "javax.portlet.faces")
+            || isNamespaceMatch(key, "javax.portlet.faces.")
             || isNamespaceMatch(key, "javax.faces.")
             || isNamespaceMatch(key, "javax.servlet.")
             || isNamespaceMatch(key, "javax.servlet.include.")
