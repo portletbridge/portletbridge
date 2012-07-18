@@ -21,6 +21,7 @@
  */
 package org.jboss.portletbridge.bridge.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -47,6 +48,7 @@ import javax.faces.lifecycle.LifecycleFactory;
 import javax.faces.render.ResponseStateManager;
 import javax.portlet.EventRequest;
 import javax.portlet.EventResponse;
+import javax.portlet.PortletException;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletRequestDispatcher;
 import javax.portlet.RenderRequest;
@@ -261,28 +263,30 @@ public class Jsf20ControllerImpl implements BridgeController {
      * @see org.jboss.portletbridge.bridge.controller.BridgeController#renderResource(org.jboss.portletbridge.bridge.context.BridgeContext)
      */
     public void renderResource(BridgeContext bridgeContext) throws BridgeException {
-        if (ResourceHandler.RESOURCE_IDENTIFIER.equals(((ResourceRequest) bridgeContext.getPortletRequest()).getResourceID())) {
-            FacesContext facesContext = null;
-            Lifecycle facesLifecycle = null;
+        FacesContext facesContext = null;
+        Lifecycle facesLifecycle = null;
 
-            try {
-                facesLifecycle = getFacesLifecycle();
-                facesContext = getFacesContext(bridgeContext, facesLifecycle);
-                facesContext.getApplication().getResourceHandler().handleResourceRequest(facesContext);
-            } catch (Exception e) {
-                throwBridgeException(e);
-            } finally {
-                if (null != facesContext) {
-                    releaseFacesContext(bridgeContext, facesContext);
-                }
+        try {
+            facesLifecycle = getFacesLifecycle();
+            facesContext = getFacesContext(bridgeContext, facesLifecycle);
+            ResourceHandler resourceHandler = facesContext.getApplication().getResourceHandler();
+            ResourceRequest resourceRequest = (ResourceRequest) bridgeContext.getPortletRequest();
+            String resourceId = resourceRequest.getResourceID();
+
+            if (resourceHandler.isResourceRequest(facesContext)) {
+                // JSF2 Resource
+                resourceHandler.handleResourceRequest(facesContext);
+            } else if (null != resourceId && !"wsrp".equalsIgnoreCase(resourceId)) {
+                renderNonFacesResource(bridgeContext, resourceId);
+            } else {
+                renderFacesResource(bridgeContext, facesContext, facesLifecycle);
             }
-            return;
-        }
-
-        if (isFacesResource((ResourceRequest) bridgeContext.getPortletRequest())) {
-            renderFacesResource(bridgeContext);
-        } else {
-            renderNonFacesResource(bridgeContext);
+        } catch (Exception e) {
+            throwBridgeException(e);
+        } finally {
+            if (null != facesContext) {
+                releaseFacesContext(bridgeContext, facesContext);
+            }
         }
     }
 
@@ -541,75 +545,53 @@ public class Jsf20ControllerImpl implements BridgeController {
         }
     }
 
-    private boolean isFacesResource(ResourceRequest portletRequest) {
-        return portletRequest.getParameter(Bridge.FACES_VIEW_ID_PARAMETER) != null
-                || portletRequest.getParameter(Bridge.FACES_VIEW_PATH_PARAMETER) != null;
-    }
-
-    protected void renderFacesResource(BridgeContext bridgeContext) throws BridgeException {
-        FacesContext facesContext = null;
-        Lifecycle facesLifecycle = null;
-
+    protected void renderFacesResource(BridgeContext bridgeContext, FacesContext facesContext, Lifecycle facesLifecycle)
+            throws BridgeException {
         BridgeRequestScope scope = getBridgeRequestScope(bridgeContext);
 
-        try {
-            facesLifecycle = getFacesLifecycle();
-            facesContext = getFacesContext(bridgeContext, facesLifecycle);
-
-            renderFaces(bridgeContext, facesContext, facesLifecycle, scope, null);
-        } catch (Exception e) {
-            throwBridgeException(e);
-        } finally {
-            if (null != facesContext) {
-                releaseFacesContext(bridgeContext, facesContext);
-            }
-        }
+        renderFaces(bridgeContext, facesContext, facesLifecycle, scope, null);
     }
 
-    protected void renderNonFacesResource(BridgeContext bridgeContext) throws BridgeException {
-        try {
-            String target = ((ResourceRequest) bridgeContext.getPortletRequest()).getResourceID();
+    protected void renderNonFacesResource(BridgeContext bridgeContext, String resourceId) throws BridgeException,
+            PortletException, IOException {
 
-            if (null != target) {
-                PortletRequestDispatcher dispatcher = bridgeContext.getPortletContext().getRequestDispatcher(target);
-                if (null != dispatcher) {
-                    // TODO Verify this works on GateIn. May need following code:
-                    // String serverInfo = portletContext.getServerInfo();
-                    // if (null != serverInfo
-                    // && (serverInfo
-                    // .startsWith("JBossPortletContainer") || serverInfo
-                    // .startsWith("GateInPortletContainer"))) {
-                    // // HACK - Jboss portal does not handle 'forward'
-                    // // method during resource requests.
-                    // // see
-                    // // https://jira.jboss.org/jira/browse/JBPORTAL-2432
-                    // String mimeType = portletContext
-                    // .getMimeType(target);
-                    // if (null == mimeType) {
-                    // int lastIndexOfSlash = target
-                    // .lastIndexOf('/');
-                    // if (lastIndexOfSlash >= 0) {
-                    // target = target
-                    // .substring(lastIndexOfSlash + 1);
-                    // }
-                    // int indexOfQuestion = target.indexOf('?');
-                    // if (indexOfQuestion >= 0) {
-                    // target = target.substring(0,
-                    // indexOfQuestion);
-                    // }
-                    // mimeType = portletContext
-                    // .getMimeType(target);
-                    // }
-                    // if (null != mimeType) {
-                    // response.setContentType(mimeType);
-                    // }
-                    // dispatcher.include(request, response);
+        if (null != resourceId) {
+            PortletRequestDispatcher dispatcher = bridgeContext.getPortletContext().getRequestDispatcher(resourceId);
+            if (null != dispatcher) {
+                // TODO Verify this works on GateIn. May need following code:
+                // String serverInfo = portletContext.getServerInfo();
+                // if (null != serverInfo
+                // && (serverInfo
+                // .startsWith("JBossPortletContainer") || serverInfo
+                // .startsWith("GateInPortletContainer"))) {
+                // // HACK - Jboss portal does not handle 'forward'
+                // // method during resource requests.
+                // // see
+                // // https://jira.jboss.org/jira/browse/JBPORTAL-2432
+                // String mimeType = portletContext
+                // .getMimeType(target);
+                // if (null == mimeType) {
+                // int lastIndexOfSlash = target
+                // .lastIndexOf('/');
+                // if (lastIndexOfSlash >= 0) {
+                // target = target
+                // .substring(lastIndexOfSlash + 1);
+                // }
+                // int indexOfQuestion = target.indexOf('?');
+                // if (indexOfQuestion >= 0) {
+                // target = target.substring(0,
+                // indexOfQuestion);
+                // }
+                // mimeType = portletContext
+                // .getMimeType(target);
+                // }
+                // if (null != mimeType) {
+                // response.setContentType(mimeType);
+                // }
+                // dispatcher.include(request, response);
 
-                    dispatcher.forward(bridgeContext.getPortletRequest(), bridgeContext.getPortletResponse());
-                }
+                dispatcher.forward(bridgeContext.getPortletRequest(), bridgeContext.getPortletResponse());
             }
-        } catch (Exception e) {
-            throwBridgeException(e);
         }
     }
 
