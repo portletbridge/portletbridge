@@ -792,8 +792,10 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
         Map<String, String[]> actionParameters;
 
         if (url.startsWith("#")) {
+            actionUrl = url;
             actionParameters = Collections.emptyMap();
         } else if (url.startsWith(PortletExternalContextImpl.WSRP_REWRITE)) {
+            actionUrl = url;
             actionParameters = Collections.emptyMap();
         } else {
             try {
