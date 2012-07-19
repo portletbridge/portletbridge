@@ -93,10 +93,12 @@ public class PortletViewHandler extends ViewHandlerWrapper {
         }
 
         viewId = evaluateUrl(facesContext, viewId);
+        String queryString = null;
         try {
             PortalActionURL viewIdUrl = new PortalActionURL(viewId);
             viewId = viewIdUrl.getPath();
             BridgeContext.getCurrentInstance().setNavigationQueryString(viewIdUrl.getQueryString());
+            queryString = viewIdUrl.getQueryString();
         } catch (MalformedURLException e) {
             // Do nothing, it is ordinary view Id
             logger.log(Level.INFO, "Mailformed ViewId url", e);
@@ -111,11 +113,19 @@ public class PortletViewHandler extends ViewHandlerWrapper {
             // PortletApplicationImpl
             // was not called
             UIViewRoot portletRoot = new PortletNamingContainerUIViewRoot();
-            portletRoot.setViewId(root.getViewId());
+            if (null != queryString && queryString.length() > 0) {
+                portletRoot.setViewId(root.getViewId() + "?" + queryString);
+            } else {
+                portletRoot.setViewId(root.getViewId());
+            }
             portletRoot.setLocale(root.getLocale());
             portletRoot.setRenderKitId(root.getRenderKitId());
             portletRoot.setId(root.getId());
             root = portletRoot;
+        } else {
+            if (null != queryString && queryString.length() > 0) {
+                root.setViewId(root.getViewId() + "?" + queryString);
+            }
         }
 
         Object response = facesContext.getExternalContext().getResponse();

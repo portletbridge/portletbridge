@@ -376,6 +376,8 @@ public class Jsf20ControllerImpl implements BridgeController {
 
             if (!facesContext.getResponseComplete()) {
                 facesLifecycle.render(facesContext);
+                bridgeContext.setViewHistory(bridgeContext.getPortletRequest().getPortletMode().toString(), facesContext
+                        .getViewRoot().getViewId(), true);
             }
         }
 
