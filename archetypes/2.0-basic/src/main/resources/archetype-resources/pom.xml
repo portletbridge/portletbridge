@@ -16,7 +16,7 @@
    </prerequisites>
 
    <properties>
-      <jsf.version>2.1.5</jsf.version>
+      <jsf.version>2.1.7</jsf.version>
    </properties>
 
    <licenses>
@@ -32,7 +32,7 @@
 
    <issueManagement>
       <system>JIRA</system>
-      <url>http://jira.jboss.org/jira/browse/portletbridge</url>
+      <url>https://issues.jboss.org/browse/PBR</url>
    </issueManagement>
 
    <developers>
@@ -195,13 +195,13 @@
         <dependency>
             <groupId>org.jboss.portletbridge</groupId>
             <artifactId>portletbridge-api</artifactId>
-            <version>3.0.0-SNAPSHOT</version>
+            <version>3.0.0.CR1</version>
         </dependency>
 
         <dependency>
             <groupId>org.jboss.portletbridge</groupId>
             <artifactId>portletbridge-impl</artifactId>
-            <version>3.0.0-SNAPSHOT</version>
+            <version>3.0.0.CR1</version>
             <scope>runtime</scope>
         </dependency>
 

@@ -24,13 +24,6 @@
 
 
     <!-- JSF -->
-    <!--
-	For Mojarra versions prior to 2.0.3, see https://javaserverfaces.dev.java.net/issues/show_bug.cgi?id=1509
-    <context-param>
-        <param-name>javax.faces.LIFECYCLE_ID</param-name>
-        <param-value>FIX_PORTLET_LIFECYCLE</param-value>
-    </context-param>
-	-->
     <context-param>
         <param-name>javax.faces.DEFAULT_SUFFIX</param-name>
         <param-value>.xhtml</param-value>
