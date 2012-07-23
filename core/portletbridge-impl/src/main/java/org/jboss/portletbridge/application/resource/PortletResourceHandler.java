@@ -35,6 +35,7 @@ import javax.faces.application.ResourceHandler;
 import javax.faces.application.ResourceHandlerWrapper;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.portlet.ResourceRequest;
 import javax.portlet.faces.BridgeUtil;
 import javax.servlet.http.HttpServletResponse;
 
@@ -59,14 +60,27 @@ public class PortletResourceHandler extends ResourceHandlerWrapper {
         this.parent = parent;
     }
 
-    /*
-     * (non-Javadoc)
-     *
+    /**
      * @see javax.faces.application.ResourceHandlerWrapper#getWrapped()
      */
     @Override
     public ResourceHandler getWrapped() {
         return parent;
+    }
+
+    @Override
+    public boolean isResourceRequest(FacesContext facesContext) {
+        ExternalContext extContext = facesContext.getExternalContext();
+        Object request = extContext.getRequest();
+
+        if (request instanceof ResourceRequest) {
+            String resourceIdentifier = ((ResourceRequest)request).getResourceID();
+
+            if (null != resourceIdentifier) {
+                return true;
+            }
+        }
+        return super.isResourceRequest(facesContext);
     }
 
     @Override
