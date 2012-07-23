@@ -10,15 +10,6 @@
         <param-value>ALWAYS_DELEGATE</param-value>
     </context-param>
     <context-param>
-        <param-name>org.ajax4jsf.RESOURCE_URI_PREFIX
-		</param-name>
-        <param-value>rfRes</param-value>
-    </context-param>
-    <context-param>
-        <param-name>org.ajax4jsf.SKIN</param-name>
-        <param-value>blueSky</param-value>
-    </context-param>
-    <context-param>
         <param-name>javax.faces.FACELETS_VIEW_MAPPINGS</param-name>
         <param-value>*.xhtml</param-value>
     </context-param>
@@ -26,14 +17,6 @@
     <context-param>
         <param-name>facelets.DEVELOPMENT</param-name>
         <param-value>false</param-value>
-    </context-param>
-    <context-param>
-        <param-name>org.ajax4jsf.handleViewExpiredOnClient</param-name>
-        <param-value>true</param-value>
-    </context-param>
-    <context-param>
-        <param-name>org.richfaces.CONTROL_SKINNING</param-name>
-        <param-value>extended</param-value>
     </context-param>
 
     <!-- JSF -->

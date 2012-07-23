@@ -4,7 +4,6 @@
 <liferay-portlet-app>
 	<portlet>
 		<portlet-name>jsf2portlet</portlet-name>
-		<icon>/images/duke.gif</icon>
 		<instanceable>true</instanceable>
 		<header-portlet-css>/css/stylesheet.css</header-portlet-css>
 		

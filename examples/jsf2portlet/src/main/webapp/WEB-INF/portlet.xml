@@ -7,7 +7,6 @@
         <portlet-name>jsf2portlet</portlet-name>
 
         <portlet-class>javax.portlet.faces.GenericFacesPortlet</portlet-class>
-        <!-- <portlet-class> JSPPortlet </portlet-class> -->
         <init-param>
             <name>javax.portlet.faces.defaultViewId.view</name>
             <value>/pages/main.xhtml</value>
