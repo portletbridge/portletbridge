@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.jboss.portletbridge.integration</groupId>
     <artifactId>testsuites-parent</artifactId>
-    <version>3.0.0.Final-SNAPSHOT</version>
+    <version>3.0.0.CR1</version>
   </parent>
   <artifactId>richfaces4-testsuite</artifactId>
   <packaging>jar</packaging>
