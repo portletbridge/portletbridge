@@ -22,10 +22,6 @@
         <param-name>javax.faces.FACELETS_VIEW_MAPPINGS</param-name>
         <param-value>*.xhtml</param-value>
     </context-param>
-    <context-param>
-        <param-name>javax.faces.CONFIG_FILES</param-name>
-        <param-value>/WEB-INF/faces-config-portlet.xml</param-value>
-    </context-param>
     <!-- Facelets development mode (disable in production) -->
     <context-param>
         <param-name>facelets.DEVELOPMENT</param-name>
@@ -41,10 +37,6 @@
     </context-param>
 
     <!-- JSF -->
-    <context-param>
-        <param-name>javax.faces.LIFECYCLE_ID</param-name>
-        <param-value>FIX_PORTLET_LIFECYCLE</param-value>
-    </context-param>
     <context-param>
         <param-name>javax.faces.DEFAULT_SUFFIX</param-name>
         <param-value>.xhtml</param-value>
