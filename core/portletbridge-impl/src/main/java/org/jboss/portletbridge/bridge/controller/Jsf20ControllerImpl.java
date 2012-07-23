@@ -327,7 +327,10 @@ public class Jsf20ControllerImpl implements BridgeController {
                 String viewState = facesContext.getExternalContext().getRequestParameterMap()
                         .get(ResponseStateManager.VIEW_STATE_PARAM);
 
-                scope.put(AbstractExternalContext.FACES_VIEW_STATE, viewState);
+                if (null != viewState) {
+                    scope.put(AbstractExternalContext.FACES_VIEW_STATE, viewState);
+                }
+
                 saveActionParams(bridgeContext, facesContext);
             }
 
