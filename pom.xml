@@ -20,7 +20,7 @@
         <version.mojarra2>2.1.7</version.mojarra2>
 
         <!-- RichFaces 4 versions -->
-        <version.richfaces4>4.0.0.Final</version.richfaces4>
+        <version.richfaces4>4.2.2.Final</version.richfaces4>
 
         <!-- Testing versions -->
         <version.junit>4.10</version.junit>
@@ -37,6 +37,7 @@
         <version.plugin.checkstyle>2.9.1</version.plugin.checkstyle>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
     <url>http://www.jboss.org/portletbridge/</url>

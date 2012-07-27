@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <parent>
+        <groupId>org.jboss.portletbridge</groupId>
+        <artifactId>examples</artifactId>
+        <version>3.1.0.Final-SNAPSHOT</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.jboss.portletbridge.examples</groupId>
+    <artifactId>richfaces-showcase-portlet</artifactId>
+
+    <name>JBoss Portlet Bridge RF Showcase Portlet</name>
+
+    <packaging>war</packaging>
+
+    <properties>
+        <org.richfaces.qualifier>jbas71</org.richfaces.qualifier>
+        <version.hibernate.validator>4.2.0.Final</version.hibernate.validator>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.richfaces.examples</groupId>
+            <artifactId>richfaces-showcase</artifactId>
+            <version>${version.richfaces4}</version>
+            <classifier>${org.richfaces.qualifier}</classifier>
+            <type>war</type>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.faces</groupId>
+            <artifactId>jsf-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>${version.hibernate.validator}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.richfaces.ui</groupId>
+            <artifactId>richfaces-components-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.richfaces.ui</groupId>
+            <artifactId>richfaces-components-ui</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.richfaces.core</groupId>
+            <artifactId>richfaces-core-impl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.portletbridge</groupId>
+            <artifactId>portletbridge-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.portletbridge</groupId>
+            <artifactId>portletbridge-impl</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <overlays>
+                        <overlay>
+                            <groupId>org.richfaces.examples</groupId>
+                            <artifactId>richfaces-showcase</artifactId>
+                            <classifier>${org.richfaces.qualifier}</classifier>
+                            <excludes>
+								<!-- Not a cool dude, makes our portlet not work -->
+                                <exclude>WEB-INF/jboss-web.xml</exclude>
+								<!-- Because we want to disable CDI/Weld .. for now. -->
+                                <exclude>WEB-INF/beans.xml</exclude>
+                            </excludes>
+                        </overlay>
+                    </overlays>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
