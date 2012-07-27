@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:rich="http://richfaces.org/rich"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<ui:composition template="/templates/main.xhtml">
+	<ui:define name="body">
+		<h:outputStylesheet>
+			.navigation .rf-tab-hdr-brd,.navigation .rf-tab {
+				display: none;
+			}
+		</h:outputStylesheet>
+		<rich:tabPanel switchType="client" styleClass="navigation" activeItem="#{demoNavigator.currentSample.id}"
+			onbeforeitemchange="return false;">
+			<c:forEach items="#{demoNavigator.currentDemo.samples}" var="s">
+				<rich:tab name="#{s.id}">
+					<!-- ammendonca: replaced JS onheaderclick with h:outputLink as header facet . added style(s) to make it look like the original -->
+					<f:facet name="header" >
+						<h:outputLink styleClass="rf-tab-lbl" style="text-decoration: none;" value="#{facesContext.externalContext.requestContextPath}/richfaces/component-sample.jsf" >
+							<f:param name="javax.portlet.faces.ViewLink" value="true"/>
+							<f:param name="demo" value="#{demoNavigator.currentDemo.id}"/>
+							<f:param name="sample" value="#{s.id}"/>
+							<f:param name="skin" value="#{skinBean.skin}"/>
+							#{s.name}
+						</h:outputLink>
+				   	</f:facet>
+				</rich:tab>
+			</c:forEach>
+		</rich:tabPanel>
+		<fieldset class="example-cnt">
+			<ui:include src="#{demoNavigator.sampleURI}" />
+		</fieldset>
+	</ui:define>
+</ui:composition>
+
+</html>
