@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<ui:composition template="/templates/main.xhtml">
+    <ui:define name="body">
+        <br />
+        <h3><h:outputText value="#{issueController.message}" /></h3>
+        <br />
+        <h1>Issues</h1>
+        <h:form>
+            <h:dataTable value="#{issueManager.all}" var="issue" border="2" cellpadding="1" cellspacing="2">
+            
+                <h:column>
+                    <f:facet name="header">Issue No</f:facet>
+                    #{issue.id}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Status</f:facet>
+                    #{issue.status}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Title</f:facet>
+                    #{issue.title}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Description</f:facet>
+                    #{issue.description}
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Actions</f:facet>
+                    <h:commandLink action="#{issueController.deleteIssue(issue)}" value="Delete" />
+                </h:column>
+            </h:dataTable>
+        </h:form>
+    </ui:define>
+</ui:composition>
+
+</html>

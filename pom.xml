@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
         <groupId>org.jboss</groupId>
@@ -21,6 +22,13 @@
 
         <!-- RichFaces 4 versions -->
         <version.richfaces4>4.2.3.Final</version.richfaces4>
+
+        <!-- Spec versions -->
+        <version.portlet>2.0</version.portlet>
+        <version.servlet>2.5</version.servlet>
+        <version.jsp>2.1</version.jsp>
+        <version.inject>1</version.inject>
+        <version.cdi>1.0-SP4</version.cdi>
 
         <!-- Testing versions -->
         <version.junit>4.10</version.junit>
@@ -84,17 +92,17 @@
             <dependency>
                 <groupId>javax.portlet</groupId>
                 <artifactId>portlet-api</artifactId>
-                <version>2.0</version>
+                <version>${version.portlet}</version>
             </dependency>
             <dependency>
                 <groupId>javax.servlet</groupId>
                 <artifactId>servlet-api</artifactId>
-                <version>2.5</version>
+                <version>${version.servlet}</version>
             </dependency>
             <dependency>
                 <groupId>javax.servlet.jsp</groupId>
                 <artifactId>jsp-api</artifactId>
-                <version>2.1</version>
+                <version>${version.jsp}</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.faces</groupId>
@@ -105,6 +113,16 @@
                 <groupId>com.sun.faces</groupId>
                 <artifactId>jsf-impl</artifactId>
                 <version>${version.mojarra2}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.inject</groupId>
+                <artifactId>javax.inject</artifactId>
+                <version>${version.inject}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.enterprise</groupId>
+                <artifactId>cdi-api</artifactId>
+                <version>${version.cdi}</version>
             </dependency>
 
             <!-- RichFaces 4 dependencies -->

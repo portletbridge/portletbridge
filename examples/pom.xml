@@ -13,5 +13,6 @@
         <module>jsf2portlet</module>
         <module>richfaces-showcase</module>
         <module>richfaces-simple</module>
+        <module>cdi-portlet</module>
     </modules>
 </project>
