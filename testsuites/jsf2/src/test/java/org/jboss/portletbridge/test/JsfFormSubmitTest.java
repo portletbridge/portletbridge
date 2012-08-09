@@ -77,7 +77,8 @@ public class JsfFormSubmitTest {
         assertTrue("Submit button value should be 'Ok'", driver.findElement(SUBMIT_BUTTON).getAttribute("value").equals("Ok"));
     }
 
-    // @Test
+    @Test
+    @RunAsClient
     public void testSubmitAndRemainOnPage() throws Exception {
         driver.get(portalURL.toString());
         driver.findElement(INPUT_FIELD).sendKeys(NEW_VALUE);

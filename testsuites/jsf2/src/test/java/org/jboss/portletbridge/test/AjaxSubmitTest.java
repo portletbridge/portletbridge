@@ -47,8 +47,7 @@ public class AjaxSubmitTest {
 
     @Deployment()
     public static WebArchive createDeployment() {
-        return TestDeployment.createDeployment().addAsWebResource("ajax.xhtml", "home.xhtml")
-                .addClass(Bean.class)
+        return TestDeployment.createDeployment().addAsWebResource("ajax.xhtml", "home.xhtml").addClass(Bean.class)
                 .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css")
                 .addAsWebInfResource("WEB-INF/jboss-deployment-structure.xml", "jboss-deployment-structure.xml");
     }
@@ -83,10 +82,8 @@ public class AjaxSubmitTest {
                 driver.findElement(SUBMIT_BUTTON).getAttribute("onclick").equals(""));
     }
 
-    // @Test
-    // @RunAsClient
-    // TODO This test needs to be modified to set the context param to say we want to keep the BridgeRequestScope after an
-    // action
+    @Test
+    @RunAsClient
     public void testSubmitAndRemainOnPage() throws Exception {
         driver.get(portalURL.toString());
         driver.findElement(INPUT_FIELD).sendKeys(NEW_VALUE);
