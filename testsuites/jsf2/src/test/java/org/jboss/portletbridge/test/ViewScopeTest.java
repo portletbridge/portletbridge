@@ -23,10 +23,10 @@ public class ViewScopeTest {
 
     @Deployment()
     public static WebArchive createDeployment() {
-        return TestDeployment.createDeployment().addAsWebResource("users.xhtml", "home.xhtml")
+        return TestDeployment.createDeploymentWithAll()
+                .addAsWebResource("users.xhtml", "home.xhtml")
                 .addClass(UserList.class)
-                .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css")
-                .addAsWebInfResource("WEB-INF/jboss-deployment-structure.xml", "jboss-deployment-structure.xml");
+                .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css");
     }
 
     protected static final By SECOND_ROW = By.xpath("//tr[2]");

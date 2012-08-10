@@ -24,7 +24,8 @@
 
         <!-- Testing versions -->
         <version.junit>4.10</version.junit>
-        <version.arquillian>1.0.0.Final</version.arquillian>
+        <version.arquillian>1.0.2.Final</version.arquillian>
+        <version.shrinkwrap.descriptor>2.0.0-alpha-4</version.shrinkwrap.descriptor>
         <version.shrinkwrap.resolver>2.0.0-alpha-1</version.shrinkwrap.resolver>
         <version.arquillian.graphene>2.0.0.Alpha1</version.arquillian.graphene>
         <version.arquillian.extension.portal>1.0.0.Alpha1</version.arquillian.extension.portal>
@@ -104,6 +105,13 @@
             </dependency>
 
             <!-- Test dependencies -->
+            <dependency>
+                <groupId>org.jboss.shrinkwrap.descriptors</groupId>
+                <artifactId>shrinkwrap-descriptors-bom</artifactId>
+                <version>${version.shrinkwrap.descriptor}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
             <dependency>
                 <groupId>org.jboss.shrinkwrap.resolver</groupId>
                 <artifactId>shrinkwrap-resolver-bom</artifactId>
@@ -210,7 +218,7 @@
                     </dependencies>
                 </plugin>
 
-        <!-- So m2e doesn't throw errors for features it doesn't support in the POM -->
+                <!-- So m2e doesn't throw errors for features it doesn't support in the POM -->
                 <plugin>
                     <groupId>org.eclipse.m2e</groupId>
                     <artifactId>lifecycle-mapping</artifactId>
@@ -231,6 +239,20 @@
                                         <execute />
                                     </action>
                                 </pluginExecution>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>org.apache.maven.plugins</groupId>
+                                        <artifactId>maven-dependency-plugin</artifactId>
+                                        <versionRange>[1.0.0,)</versionRange>
+                                        <goals>
+                                            <goal>copy-dependencies</goal>
+                                            <goal>unpack</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <execute />
+                                    </action>
+                                </pluginExecution>
                             </pluginExecutions>
                         </lifecycleMappingMetadata>
                     </configuration>
@@ -245,7 +267,7 @@
         </pluginManagement>
 
         <plugins>
-      <!-- Enforce Maven Environment -->
+            <!-- Enforce Maven Environment -->
             <plugin>
                 <artifactId>maven-enforcer-plugin</artifactId>
                 <executions>
@@ -261,9 +283,6 @@
                         <requireMavenVersion>
                             <version>[3.0.0,)</version>
                         </requireMavenVersion>
-                        <requireJavaVersion>
-                            <version>1.6.0</version> <!-- Must be JDK6 -->
-                        </requireJavaVersion>
                         <requireProperty>
                             <property>env.JAVA_HOME</property>
                             <message>"JAVA_HOME needs to be set to compile"</message>
@@ -272,7 +291,7 @@
                 </configuration>
             </plugin>
 
-      <!-- m2e Config -->
+            <!-- m2e Config -->
             <plugin>
                 <groupId>org.eclipse.m2e</groupId>
                 <artifactId>lifecycle-mapping</artifactId>

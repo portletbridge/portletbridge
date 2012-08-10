@@ -35,7 +35,7 @@
             <portlet-mode>HELP</portlet-mode>
         </supports>
         <portlet-info>
-            <title>JSF 2.0 AJAX Portlet</title>
+            <title>JSF 2.0 Portlet</title>
         </portlet-info>
         <container-runtime-option>
             <name>org.gatein.pc.remotable</name>

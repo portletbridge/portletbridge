@@ -37,8 +37,33 @@ public class TestDeployment {
             .addAsLibraries(
                 DependencyResolvers.use(MavenDependencyResolver.class).loadEffectivePom("pom.xml")
                     .artifacts("org.jboss.portletbridge:portletbridge-impl").resolveAsFiles())
-            .addAsWebInfResource("WEB-INF/web.xml", "web.xml").addAsWebInfResource("WEB-INF/faces-config.xml")
-            .addAsWebInfResource("WEB-INF/portlet.xml", "portlet.xml");
+            .addAsWebInfResource("WEB-INF/jboss-deployment-structure.xml", "jboss-deployment-structure.xml");
     }
 
+    public static WebArchive createDeploymentWithAll() {
+        WebArchive archive = createDeployment();
+        addWebXml(archive);
+        addFacesConfig(archive);
+        addPortletXml(archive);
+        return archive;
+    }
+
+    public static WebArchive createDeploymentWithWebXmlAndPortletXml() {
+        WebArchive archive = createDeployment();
+        addWebXml(archive);
+        addPortletXml(archive);
+        return archive;
+    }
+
+    public static WebArchive addWebXml(WebArchive archive) {
+        return archive.addAsWebInfResource("WEB-INF/web.xml", "web.xml");
+    }
+
+    public static WebArchive addFacesConfig(WebArchive archive) {
+        return archive.addAsWebInfResource("WEB-INF/faces-config.xml");
+    }
+
+    public static WebArchive addPortletXml(WebArchive archive) {
+        return archive.addAsWebInfResource("WEB-INF/portlet.xml", "portlet.xml");
+    }
 }

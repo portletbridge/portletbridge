@@ -44,10 +44,10 @@ public class HelloJsfPortletTest {
 
     @Deployment()
     public static WebArchive createDeployment() {
-        return TestDeployment.createDeployment().addAsWebResource("output.xhtml", "home.xhtml")
+        return TestDeployment.createDeploymentWithAll()
+                .addAsWebResource("output.xhtml", "home.xhtml")
                 .addClass(Bean.class)
-                .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css")
-                .addAsWebInfResource("WEB-INF/jboss-deployment-structure.xml", "jboss-deployment-structure.xml");
+                .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css");
     }
 
     protected static final By OUTPUT_FIELD = By.id("output");

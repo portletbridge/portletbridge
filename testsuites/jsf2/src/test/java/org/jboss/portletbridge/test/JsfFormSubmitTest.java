@@ -45,11 +45,10 @@ public class JsfFormSubmitTest {
 
     @Deployment()
     public static WebArchive createDeployment() {
-        return TestDeployment.createDeployment()
+        return TestDeployment.createDeploymentWithAll()
                 .addClass(Bean.class)
                 .addAsWebResource("form.xhtml", "home.xhtml")
-                .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css")
-                .addAsWebInfResource("WEB-INF/jboss-deployment-structure.xml", "jboss-deployment-structure.xml");
+                .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css");
     }
 
     protected static final By OUTPUT_FIELD = By.id("output");

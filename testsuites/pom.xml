@@ -38,6 +38,11 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
+            <groupId>org.jboss.shrinkwrap.descriptors</groupId>
+            <artifactId>shrinkwrap-descriptors-impl-javaee</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>org.jboss.arquillian.extension</groupId>
             <artifactId>arquillian-portal-impl-base</artifactId>
             <scope>compile</scope>

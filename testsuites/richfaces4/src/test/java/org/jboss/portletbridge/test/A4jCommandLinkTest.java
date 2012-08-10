@@ -48,7 +48,7 @@ public class A4jCommandLinkTest {
     @Deployment()
     public static WebArchive createDeployment() {
         return TestDeployment
-                .createDeployment()
+                .createDeploymentWithAll()
                 .addClass(Bean.class)
                 .addAsWebResource("a4jLink.xhtml", "home.xhtml")
                 .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css")
@@ -60,8 +60,7 @@ public class A4jCommandLinkTest {
                                 .artifacts("org.richfaces.ui:richfaces-components-api").resolveAsFiles())
                 .addAsLibraries(
                         DependencyResolvers.use(MavenDependencyResolver.class).loadEffectivePom("pom.xml")
-                                .artifacts("org.richfaces.ui:richfaces-components-ui").resolveAsFiles())
-                .addAsWebInfResource("WEB-INF/jboss-deployment-structure.xml", "jboss-deployment-structure.xml");
+                                .artifacts("org.richfaces.ui:richfaces-components-ui").resolveAsFiles());
     }
 
     protected static final By OUTPUT_FIELD = By.id("output");
