@@ -1,0 +1,18 @@
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:pbr="http://jboss.org/portletbridge"
+      xml:lang="en" lang="en">
+<h:head>
+</h:head>
+
+<h:body>
+    <span id="modeName">Edit</span>
+    <pbr:renderURL var="renderUrl" portletMode="view">
+        <pbr:property name="prop" value="1" />
+        <pbr:property name="prop" value="2" />
+    </pbr:renderURL>
+    <h:outputLink value="#{renderUrl}">Render</h:outputLink>
+</h:body>
+</f:view>
