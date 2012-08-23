@@ -150,6 +150,15 @@ public class ResourceRequestExternalContextImpl extends MimeExternalContextImpl 
         }
     }
 
+    @Override
+    public String encodeNamespace(String name) {
+        // PBR-385 Don't add namespace to org.richfaces.extension otherwise JS is unable to process response
+        if ("org.richfaces.extension".equalsIgnoreCase(name)) {
+            return name;
+        }
+        return super.encodeNamespace(name);
+    }
+
     public ResourceRequest getRequest() {
         return (ResourceRequest) super.getRequest();
     }
