@@ -28,7 +28,6 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.faces.application.Resource;
 import javax.faces.application.ResourceHandler;
@@ -53,10 +52,7 @@ public class PortletResourceHandler extends ResourceHandlerWrapper {
 
     private final ResourceHandler parent;
 
-    private final Map<String, PortletResourceLibrary> libraries;
-
     public PortletResourceHandler(ResourceHandler parent) {
-        this.libraries = new ConcurrentHashMap<String, PortletResourceLibrary>();
         this.parent = parent;
     }
 
@@ -99,15 +95,6 @@ public class PortletResourceHandler extends ResourceHandlerWrapper {
             resource = new PortletResource(resource);
         }
         return resource;
-    }
-
-    @Override
-    public boolean libraryExists(String libraryName) {
-        if (libraries.containsKey(libraryName)) {
-            return true;
-        } else {
-            return super.libraryExists(libraryName);
-        }
     }
 
     @Override

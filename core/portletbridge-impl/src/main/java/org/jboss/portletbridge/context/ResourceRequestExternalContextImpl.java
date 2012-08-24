@@ -26,9 +26,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.faces.context.FacesContext;
 import javax.faces.context.PartialResponseWriter;
@@ -36,7 +34,6 @@ import javax.faces.context.ResponseWriter;
 import javax.portlet.PortletContext;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author asmirnov
@@ -167,68 +164,10 @@ public class ResourceRequestExternalContextImpl extends MimeExternalContextImpl 
         return (ResourceResponse) super.getResponse();
     }
 
-    private HttpServletRequest getMultipartRequest() {
-        return (HttpServletRequest) getRequest().getAttribute("org.ajax4jsf.request.MultipartRequest");
-    }
-
-    @Override
-    protected String getRequestParameter(String name) {
-        HttpServletRequest multipartRequest = getMultipartRequest();
-        if (multipartRequest != null) {
-            return multipartRequest.getParameter(name);
-        } else {
-            return super.getRequestParameter(name);
-        }
-    }
-
-    @Override
-    protected String[] getRequestParameterValues(String name) {
-        HttpServletRequest multipartRequest = getMultipartRequest();
-        if (multipartRequest != null) {
-            return multipartRequest.getParameterValues(name);
-        } else {
-            return super.getRequestParameterValues(name);
-        }
-
-    }
-
-    @Override
-    public Map<String, String[]> getRequestParameterValuesMap() {
-        HttpServletRequest multipartRequest = getMultipartRequest();
-        if (multipartRequest != null) {
-            return createParameterMap(multipartRequest);
-        } else {
-            return super.getRequestParameterValuesMap();
-        }
-    }
-
     @Override
     public void setResponseStatus(int statusCode) {
         ResourceResponse resourceResponse = (ResourceResponse) getResponse();
         resourceResponse.setProperty(ResourceResponse.HTTP_STATUS_CODE, Integer.toString(statusCode));
-    }
-
-    /**
-     * ceate a parameter map out of the multi part request. Fix related to PBR-170
-     *
-     * @param multipartRequest the multipart request
-     * @return value map of the parameters
-     */
-    @SuppressWarnings("unchecked")
-    private Map<String, String[]> createParameterMap(HttpServletRequest multipartRequest) {
-        Map<String, String[]> result = new HashMap<String, String[]>();
-        Map<String, Object> multipartMap = multipartRequest.getParameterMap();
-        for (String name : multipartMap.keySet()) {
-            Object value = multipartMap.get(name);
-            // This can happen because of an error in RF MultipartRequest
-            // Line 666: params.put(name, vp.getValue()); as getValue can return a String
-            if (value instanceof String) {
-                result.put(name, new String[] { (String) value });
-            } else if (value instanceof String[]) {
-                result.put(name, (String[]) value);
-            }
-        }
-        return result;
     }
 
 }
