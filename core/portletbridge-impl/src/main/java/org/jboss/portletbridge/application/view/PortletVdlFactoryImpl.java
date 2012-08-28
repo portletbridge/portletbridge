@@ -120,7 +120,7 @@ public class PortletVdlFactoryImpl extends ViewDeclarationLanguageFactory {
             return null;
         }
 
-        viewMappings.trim();
+        viewMappings = viewMappings.trim();
         if (viewMappings.length() == 0) {
             return null;
         }

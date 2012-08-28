@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.nio.charset.Charset;
 
 /**
  * Class for writing to chain of byte arrays extending OutputStream.
@@ -146,7 +147,7 @@ public class FastBufferOutputStream extends OutputStream {
 
     @Override
     public String toString() {
-        return new String(toByteArray());
+        return new String(toByteArray(), Charset.defaultCharset());
     }
 
     /**

@@ -22,6 +22,7 @@
 package org.jboss.portletbridge.io;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 
 /**
  * A single link in chain of char arrays.
@@ -221,7 +222,7 @@ public class CharBuffer {
      * @return link of chain of byte arrays
      */
     public ByteBuffer toByteBuffer() {
-        byte[] bs = new String(chars, 0, usedSize).getBytes();
+        byte[] bs = new String(chars, 0, usedSize).getBytes(Charset.defaultCharset());
         return new ByteBuffer(bs);
     }
 

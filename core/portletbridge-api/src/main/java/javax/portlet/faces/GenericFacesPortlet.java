@@ -28,6 +28,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -582,7 +583,7 @@ public class GenericFacesPortlet extends GenericPortlet {
                     try {
                         reader = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
                     } catch (UnsupportedEncodingException e) {
-                        reader = new BufferedReader(new InputStreamReader(stream));
+                        reader = new BufferedReader(new InputStreamReader(stream, Charset.defaultCharset()));
                     }
                     // Parse file content. All empty string and comments ignored.
                     while (null == bridgeClassName) {

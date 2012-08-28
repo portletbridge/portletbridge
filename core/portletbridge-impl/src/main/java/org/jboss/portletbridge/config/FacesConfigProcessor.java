@@ -61,6 +61,10 @@ public final class FacesConfigProcessor implements SystemEventListener {
     static {
         saxFactory.setValidating(false);
         saxFactory.setNamespaceAware(true);
+
+        scanned = false;
+        excludedAttributes = new ArrayList<String>();
+        publicParameterMapping = new HashMap<String, String>();
     }
 
     private static final String FACES_CONFIG_CLASS_PATH = "META-INF/faces-config.xml";
@@ -73,9 +77,6 @@ public final class FacesConfigProcessor implements SystemEventListener {
     private static String writeBehindResourceResponseWrapper = null;
 
     public FacesConfigProcessor() {
-        scanned = false;
-        excludedAttributes = new ArrayList<String>();
-        publicParameterMapping = new HashMap<String, String>();
     }
 
     public static List<String> getExcludedAttributes() {
