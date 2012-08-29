@@ -34,7 +34,6 @@ import org.jboss.portletbridge.context.PortletExternalContextImpl;
 
 /**
  * @author leo
- *
  */
 public class PortletResource extends ResourceWrapper {
 
@@ -45,9 +44,7 @@ public class PortletResource extends ResourceWrapper {
         this.wrapped = wrapped;
     }
 
-    /*
-     * (non-Javadoc)
-     *
+    /**
      * @see javax.faces.application.ResourceWrapper#getWrapped()
      */
     @Override
@@ -81,15 +78,15 @@ public class PortletResource extends ResourceWrapper {
         return wrapped.getContentType();
     }
 
-    /*
-     * (non-Javadoc)
-     *
+    /**
      * @see javax.faces.application.Resource#getRequestPath()
      */
     @Override
     public String getRequestPath() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ExternalContext externalContext = facesContext.getExternalContext();
+        String wrappedPath = wrapped.getRequestPath();
+
         if (externalContext.getRequestMap().containsKey(Bridge.PORTLET_LIFECYCLE_PHASE)) {
             if (externalContext.getResponse() instanceof MimeResponse) {
                 MimeResponse mimeResponse = (MimeResponse) externalContext.getResponse();
@@ -109,7 +106,7 @@ public class PortletResource extends ResourceWrapper {
                 return PortletExternalContextImpl.RESOURCE_URL_DO_NOTHITG;
             }
         } else {
-            return super.getRequestPath();
+            return wrappedPath;
         }
     }
 

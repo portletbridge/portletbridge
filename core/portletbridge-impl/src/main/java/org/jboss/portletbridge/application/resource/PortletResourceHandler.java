@@ -81,7 +81,7 @@ public class PortletResourceHandler extends ResourceHandlerWrapper {
 
     @Override
     public Resource createResource(String resourceName, String libraryName) {
-        Resource resource = super.createResource(resourceName, libraryName);
+        Resource resource = getWrapped().createResource(resourceName, libraryName);
         if (!isPortletResource(resource)) {
             resource = new PortletResource(resource);
         }
@@ -90,7 +90,7 @@ public class PortletResourceHandler extends ResourceHandlerWrapper {
 
     @Override
     public Resource createResource(String resourceName, String libraryName, String contentType) {
-        Resource resource = super.createResource(resourceName, libraryName, contentType);
+        Resource resource = getWrapped().createResource(resourceName, libraryName, contentType);
         if (!isPortletResource(resource)) {
             resource = new PortletResource(resource);
         }
