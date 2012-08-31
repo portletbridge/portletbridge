@@ -26,6 +26,7 @@ import javax.faces.event.PhaseEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.event.PhaseListener;
 import javax.portlet.faces.Bridge;
+import javax.portlet.faces.BridgeUtil;
 
 /**
  * @author asmirnov
@@ -38,8 +39,15 @@ public class PortalPhaseListener implements PhaseListener {
      * @see javax.faces.event.PhaseListener#afterPhase(javax.faces.event.PhaseEvent)
      */
     public void afterPhase(PhaseEvent event) {
-        PhaseId phaseId = event.getPhaseId();
         FacesContext context = event.getFacesContext();
+
+        // Only process the Event if it is for the FacesContext that we're currently working with.
+        // Needed as Lifecycle is not thread safe and there is only one for a single web app.
+        if (context != FacesContext.getCurrentInstance() || !BridgeUtil.isPortletRequest()) {
+            return;
+        }
+
+        PhaseId phaseId = event.getPhaseId();
         Object portletPhase = context.getExternalContext().getRequestMap().get(Bridge.PORTLET_LIFECYCLE_PHASE);
 
         if (phaseId.equals(PhaseId.RESTORE_VIEW)) {
@@ -59,7 +67,7 @@ public class PortalPhaseListener implements PhaseListener {
      * @see javax.faces.event.PhaseListener#beforePhase(javax.faces.event.PhaseEvent)
      */
     public void beforePhase(PhaseEvent event) {
-        // DO nothing.
+        // Do nothing.
     }
 
     /**
