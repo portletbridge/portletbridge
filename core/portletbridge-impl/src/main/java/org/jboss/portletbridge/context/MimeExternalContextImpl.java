@@ -23,7 +23,6 @@ package org.jboss.portletbridge.context;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.List;
 import java.util.Map;
@@ -71,12 +70,8 @@ public abstract class MimeExternalContextImpl extends PortletExternalContextImpl
 
     @Override
     protected String createActionUrl(PortalActionURL url, boolean escape) {
-        String viewId = getViewIdFromUrl(url);
         MimeResponse renderResponse = getResponse();
         PortletURL portletURL = renderResponse.createActionURL();
-        if (null != viewId) {
-            portletURL.setParameter(Bridge.FACES_VIEW_ID_PARAMETER, viewId);
-        }
 
         setPortletUrlParameters(url, portletURL);
 

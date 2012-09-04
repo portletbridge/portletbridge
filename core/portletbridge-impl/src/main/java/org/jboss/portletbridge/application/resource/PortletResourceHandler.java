@@ -72,7 +72,7 @@ public class PortletResourceHandler extends ResourceHandlerWrapper {
         if (request instanceof ResourceRequest) {
             String resourceIdentifier = ((ResourceRequest)request).getResourceID();
 
-            if (null != resourceIdentifier) {
+            if (null != resourceIdentifier && ResourceHandler.RESOURCE_IDENTIFIER.equals(resourceIdentifier)) {
                 return true;
             }
         }
