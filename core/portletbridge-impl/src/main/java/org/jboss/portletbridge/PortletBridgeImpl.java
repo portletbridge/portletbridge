@@ -248,14 +248,7 @@ public class PortletBridgeImpl implements Bridge {
         try {
             initRequest(request, response, PortletPhase.RENDER_PHASE);
             BridgeContext bridgeContext = getBridgeContext(request, response, PortletPhase.RENDER_PHASE);
-
-            Object renderPartAttribute = request.getAttribute(RenderRequest.RENDER_PART);
-
-            if (null != renderPartAttribute && renderPartAttribute.equals(RenderRequest.RENDER_HEADERS)) {
-                bridgeController.renderPortletHead(bridgeContext);
-            } else {
-                bridgeController.renderPortletBody(bridgeContext);
-            }
+            bridgeController.renderPortletBody(bridgeContext);
         } finally {
             finalizeRequest(request, BridgeContext.getCurrentInstance());
         }

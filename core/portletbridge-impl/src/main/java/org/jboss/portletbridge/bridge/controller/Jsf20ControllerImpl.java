@@ -217,8 +217,7 @@ public class Jsf20ControllerImpl implements BridgeController {
      * @see org.jboss.portletbridge.bridge.controller.BridgeController#renderPortletHead(org.jboss.portletbridge.bridge.context.BridgeContext)
      */
     public void renderPortletHead(BridgeContext bridgeContext) throws BridgeException {
-        // TODO Add support for processing Head
-        bridgeConfig.getLogger().log(Level.INFO, "Jsf20ControllerImpl.renderPortletHead called, but no action taken");
+        // Do Nothing
     }
 
     /**

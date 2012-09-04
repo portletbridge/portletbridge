@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<faces-config version="2.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:bridge="http://jboss.org/xml/ns/bridge/bridge-extension"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
+<faces-config version="2.1" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:bridge="http://jboss.org/xml/ns/bridge/bridge-extension"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_1.xsd">
     <name>JBossPortletBridge</name>
     <ordering>
         <before>
@@ -16,6 +16,9 @@
             <system-event-class>javax.faces.event.PostConstructApplicationEvent</system-event-class>
         </system-event-listener>
     </application>
+    <lifecycle>
+        <phase-listener>org.jboss.portletbridge.lifecycle.HeadResourcesPhaseListener</phase-listener>
+    </lifecycle>
     <factory>
         <application-factory>org.jboss.portletbridge.application.PortletApplicationFactoryImpl</application-factory>
         <exception-handler-factory>org.jboss.portletbridge.context.exception.PortletExceptionHandlerFactoryImpl</exception-handler-factory>
