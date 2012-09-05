@@ -123,15 +123,15 @@ public class PortletHeadRenderer extends Renderer {
         boolean isAjax = facesContext.getPartialViewContext().isAjaxRequest();
 
         for (UIComponent component : components) {
-            if (!resourceIds.contains(generateComponentId(component))) {
-                if (isAjax) {
+            if (isAjax) {
+                if (!resourceIds.contains(generateComponentId(component))) {
                     body.add(component);
+                }
+            } else {
+                if (canMarkupHead) {
+                    head.add(component);
                 } else {
-                    if (canMarkupHead) {
-                        head.add(component);
-                    } else {
-                        body.add(component);
-                    }
+                    body.add(component);
                 }
             }
         }
