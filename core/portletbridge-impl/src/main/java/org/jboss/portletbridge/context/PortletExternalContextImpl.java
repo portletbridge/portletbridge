@@ -41,6 +41,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.faces.FacesException;
+import javax.faces.application.ResourceHandler;
 import javax.faces.application.ViewHandler;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
@@ -69,7 +70,7 @@ import org.jboss.portletbridge.context.map.EnumerationIterator;
  * Version of the {@link ExternalContext} for a Portlet request. {@link FacesContextFactory} will create instance of this class
  * for a portal <code>action</code> phase.
  *
- * @author asmirnov
+ * @author asmirnov, <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
  */
 public abstract class PortletExternalContextImpl extends AbstractExternalContext {
 
@@ -157,8 +158,7 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
 
     @Override
     public void redirect(String url) throws IOException {
-        // TODO Auto-generated method stub
-
+        // Implemented in sub classes
     }
 
     @Override
@@ -976,6 +976,10 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
                 String facesViewId = getViewIdFromUrl(portalUrl);
                 if (null != portalUrl.getParameter(Bridge.IN_PROTOCOL_RESOURCE_LINK)) {
                     url = createResourceUrl(portalUrl, escapedUrl);
+                } else if (portalUrl.getPath().contains(ResourceHandler.RESOURCE_IDENTIFIER)) {
+                    // It's a JSF Resource
+                    setupJSFResourceParameters(portalUrl);
+                    url = createResourceUrl(portalUrl, escapedUrl);
                 } else if (null != facesViewId) {
                     portalUrl.setParameter(Bridge.FACES_VIEW_ID_PARAMETER, facesViewId);
                     url = createResourceUrl(portalUrl, escapedUrl);
@@ -988,6 +992,32 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
             throw new FacesException(e);
         }
         return url;
+    }
+
+    protected void setupJSFResourceParameters(PortalActionURL portalUrl) {
+        String path = portalUrl.getPath();
+        int pos = path.indexOf(ResourceHandler.RESOURCE_IDENTIFIER);
+        if (pos >= 0) {
+            String resourceName = path.substring(pos + 1);
+            int slash = resourceName.indexOf('/');
+            if (slash >= 0) {
+                resourceName = resourceName.substring(slash + 1);
+            }
+
+            List<String> servletMappings = BridgeContext.getCurrentInstance().getBridgeConfig().getFacesServletMappings();
+            //TODO Handle this nicer? Maybe cache extension mappings on startup
+            for (String mapping : servletMappings) {
+                if (mapping.startsWith("*.")) {
+                    mapping = mapping.substring(1);
+                    if (resourceName.endsWith(mapping)) {
+                        resourceName = resourceName.substring(0, resourceName.indexOf(mapping));
+                    }
+                }
+            }
+
+            portalUrl.setPath(null);
+            portalUrl.addParameter(ResourceHandler.RESOURCE_IDENTIFIER.substring(1), resourceName);
+        }
     }
 
     @Override

@@ -21,12 +21,14 @@
  */
 package org.jboss.portletbridge.application.resource;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.faces.application.Resource;
@@ -38,13 +40,17 @@ import javax.portlet.ResourceRequest;
 import javax.portlet.faces.BridgeUtil;
 import javax.servlet.http.HttpServletResponse;
 
+import org.jboss.portletbridge.bridge.context.BridgeContext;
+import org.jboss.portletbridge.bridge.logger.BridgeLogger;
+import org.jboss.portletbridge.bridge.logger.BridgeLogger.Level;
+import org.jboss.portletbridge.bridge.logger.JULLoggerImpl;
+
 /**
- * @author leo
- *
+ * @author leo, <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
  */
 public class PortletResourceHandler extends ResourceHandlerWrapper {
 
-    public static final String RESOURCE_ID = "id";
+    private static final BridgeLogger logger = new JULLoggerImpl(PortletResourceHandler.class.getName());
 
     public static final String LIBRARY_ID = "ln";
 
@@ -70,9 +76,9 @@ public class PortletResourceHandler extends ResourceHandlerWrapper {
         Object request = extContext.getRequest();
 
         if (request instanceof ResourceRequest) {
-            String resourceIdentifier = ((ResourceRequest)request).getResourceID();
+            String resourceIdentifier = extContext.getRequestParameterMap().get(RESOURCE_IDENTIFIER.substring(1));
 
-            if (null != resourceIdentifier && ResourceHandler.RESOURCE_IDENTIFIER.equals(resourceIdentifier)) {
+            if (null != resourceIdentifier) {
                 return true;
             }
         }
@@ -102,18 +108,21 @@ public class PortletResourceHandler extends ResourceHandlerWrapper {
 
         if (BridgeUtil.isPortletRequest()) {
             ExternalContext externalContext = context.getExternalContext();
-            String resourceId = externalContext.getRequestParameterMap().get(RESOURCE_ID);
-            if (null != resourceId) {
+            String resourceName = externalContext.getRequestParameterMap().get(RESOURCE_IDENTIFIER.substring(1));
+            if (null != resourceName) {
                 String libraryId = externalContext.getRequestParameterMap().get(LIBRARY_ID);
-                String contentType = externalContext.getRequestParameterMap().get(MIME_PARAM);
-                Resource resource = createResource(resourceId, libraryId, contentType);
+                ResourceHandler handler = context.getApplication().getResourceHandler();
+                Resource resource = handler.createResource(resourceName, libraryId);
                 if (null != resource) {
+                    if (!isPortletResource(resource)) {
+                        resource = new PortletResource(resource);
+                    }
                     handleResourceRequest(context, resource);
                 } else {
-                    send404(context, resourceId, libraryId);
+                    send404(context, resourceName, libraryId);
                 }
             } else {
-                send404(context, resourceId, null);
+                send404(context, resourceName, null);
             }
         } else {
             super.handleResourceRequest(context);
@@ -125,13 +134,16 @@ public class PortletResourceHandler extends ResourceHandlerWrapper {
             ExternalContext extContext = context.getExternalContext();
             ReadableByteChannel resourceChannel = null;
             WritableByteChannel out = null;
+            InputStream in = null;
+
             int bufferSize = extContext.getResponseBufferSize();
             if (0 == bufferSize)
                 bufferSize = 2048;
             ByteBuffer buf = ByteBuffer.allocate(bufferSize);
             extContext.setResponseBufferSize(buf.capacity());
+
             try {
-                InputStream in = resource.getInputStream();
+                in = resource.getInputStream();
                 if (in == null) {
                     send404(context, resource.getResourceName(), resource.getLibraryName());
                     return;
@@ -141,7 +153,8 @@ public class PortletResourceHandler extends ResourceHandlerWrapper {
                 if (contentType != null) {
                     extContext.setResponseContentType(resource.getContentType());
                 }
-                out = Channels.newChannel(extContext.getResponseOutputStream());
+                ByteArrayOutputStream byteArray = new ByteArrayOutputStream(bufferSize);
+                out = Channels.newChannel(byteArray);
                 extContext.setResponseBufferSize(buf.capacity());
                 handleHeaders(context, resource);
 
@@ -159,19 +172,92 @@ public class PortletResourceHandler extends ResourceHandlerWrapper {
 
                 }
 
-                extContext.setResponseContentLength(size);
+                // Fix RichFaces URLs in Resources
+                if (BridgeContext.getCurrentInstance().getBridgeConfig().hasRichFaces()) {
+                    if (resource.getResourceName().indexOf(".css") > 0) {
+                        String updatedCss = updateCssUrls(context, byteArray.toString());
+                        size = updatedCss.length();
+                        byteArray = new ByteArrayOutputStream(size);
+                        byteArray.write(updatedCss.getBytes());
+                    }
+                }
 
+                extContext.setResponseContentLength(size);
+                extContext.setResponseStatus(HttpServletResponse.SC_OK);
+
+                // Write out data
+                byteArray.writeTo(extContext.getResponseOutputStream());
+                byteArray.flush();
+                byteArray.close();
             } finally {
-                if (out != null) {
+                if (null != in) {
+                    in.close();
+                }
+                if (null != out) {
                     out.close();
                 }
-                if (resourceChannel != null) {
+                if (null != resourceChannel) {
                     resourceChannel.close();
                 }
             }
         } else {
             send304(context);
         }
+    }
+
+    protected String updateCssUrls(FacesContext context, String cssContent) {
+        Map<String, String> urlCache = new HashMap<String, String>();
+        ResourceHandler handler = context.getApplication().getResourceHandler();
+
+        for (RichFacesUrlType rfUrlType : RichFacesUrlType.values()) {
+            int urlStart = cssContent.indexOf(rfUrlType.getPathPrefix());
+
+            while (urlStart > 0) {
+                int fileNamePosStart = urlStart + rfUrlType.getPathPrefix().length();
+                int period = cssContent.indexOf('.', fileNamePosStart);
+
+                if (period > 0) {
+                    int extEnd = cssContent.indexOf(')', period + 1);
+
+                    String relPath = cssContent.substring(urlStart, extEnd);
+                    String imageUrl = urlCache.get(relPath);
+                    if (null == imageUrl) {
+                        String resourceName = cssContent.substring(fileNamePosStart, extEnd);
+                        String libraryName = rfUrlType.getLibraryName();
+                        Resource imageResource = handler.createResource(resourceName, libraryName);
+                        if (!isPortletResource(imageResource)) {
+                            imageResource = new PortletResource(imageResource);
+                        }
+                        if (null != imageResource) {
+                            imageUrl = imageResource.getRequestPath();
+                            imageUrl = imageUrl.replaceAll(libraryName, rfUrlType.getToken());
+                            urlCache.put(relPath, imageUrl);
+                        } else {
+                            // Shouldn't happen, but can when there are errors in resource mappings
+                            imageUrl = relPath;
+                            logger.log(Level.ERROR, "Unable to retrieve resource " + resourceName + " from library "
+                                    + libraryName);
+                        }
+                    }
+
+                    StringBuilder buf = new StringBuilder();
+                    buf.append(cssContent.substring(0, urlStart));
+                    buf.append(imageUrl);
+                    buf.append(cssContent.substring(extEnd));
+                    cssContent = buf.toString();
+                } else {
+                    // Filename not found
+                }
+
+                urlStart = cssContent.indexOf(rfUrlType.getPathPrefix(), fileNamePosStart);
+            }
+        }
+
+        for (RichFacesUrlType rfUrlType : RichFacesUrlType.values()) {
+            cssContent = cssContent.replaceAll(rfUrlType.getToken(), rfUrlType.getLibraryName());
+        }
+
+        return cssContent;
     }
 
     private boolean isPortletResource(Resource res) {
@@ -183,24 +269,48 @@ public class PortletResourceHandler extends ResourceHandlerWrapper {
     }
 
     protected void send404(FacesContext ctx, String resourceName, String libraryName) {
-
         ctx.getExternalContext().setResponseStatus(HttpServletResponse.SC_NOT_FOUND);
-
     }
 
     protected void send304(FacesContext ctx) {
-
         ctx.getExternalContext().setResponseStatus(HttpServletResponse.SC_NOT_MODIFIED);
-
     }
 
     protected void handleHeaders(FacesContext ctx, Resource resource) {
-
         ExternalContext extContext = ctx.getExternalContext();
         for (Map.Entry<String, String> cur : resource.getResponseHeaders().entrySet()) {
             extContext.setResponseHeader(cur.getKey(), cur.getValue());
         }
 
+    }
+
+    protected enum RichFacesUrlType {
+        ONE("org.richfaces", "../../org.richfaces.images/", "rf-one"),
+        TWO("org.richfaces", "../../", "rf-two"),
+        THREE("org.richfaces.images", "../org.richfaces.images/", "rf-three"),
+        FOUR("org.richfaces.images", "org.richfaces.images/", "rf-four");
+
+        private String libraryName;
+        private String pathPrefix;
+        private String token;
+
+        private RichFacesUrlType(String libraryName, String pathPrefix, String token) {
+            this.libraryName = libraryName;
+            this.pathPrefix = pathPrefix;
+            this.token = token;
+        }
+
+        public String getLibraryName() {
+            return libraryName;
+        }
+
+        public String getPathPrefix() {
+            return pathPrefix;
+        }
+
+        public String getToken() {
+            return token;
+        }
     }
 
 }

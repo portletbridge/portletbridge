@@ -187,6 +187,13 @@ public class PortletBridgeImpl implements Bridge {
             throw new BridgeException("No JSF view id's defined in portlet.xml for " + portletConfig.getPortletName());
         }
 
+        // Determine whether RichFaces is present
+        try {
+            Class.forName("org.richfaces.VersionBean");
+            bridgeConfig.setRichFaces(true);
+        } catch (Exception rfe) {
+            //Do Nothing
+        }
         return bridgeConfig;
     }
 

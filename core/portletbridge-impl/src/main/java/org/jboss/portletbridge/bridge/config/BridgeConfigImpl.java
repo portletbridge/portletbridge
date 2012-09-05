@@ -67,6 +67,7 @@ public class BridgeConfigImpl implements BridgeConfig {
     private String viewIdParameterName = Bridge.FACES_VIEW_ID_PARAMETER;
     private String viewIdResourceParameterName = VIEWID_RESOURCE_PARAMETER_NAME;
     private Map<String, Object> attributes;
+    private boolean richFacesPresent = false;
 
     public BridgeConfigImpl() {
     }
@@ -241,6 +242,22 @@ public class BridgeConfigImpl implements BridgeConfig {
      */
     public boolean hasPreserveActionParameters() {
         return preserveActionParams;
+    }
+
+    /**
+     * @see org.jboss.portletbridge.bridge.config.BridgeConfig#setRichFaces()
+     */
+    @Override
+    public void setRichFaces(boolean present) {
+        richFacesPresent = present;
+    }
+
+    /**
+     * @see org.jboss.portletbridge.bridge.config.BridgeConfig#hasRichFaces()
+     */
+    @Override
+    public boolean hasRichFaces() {
+        return richFacesPresent;
     }
 
     /**

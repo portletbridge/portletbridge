@@ -32,20 +32,19 @@ import javax.portlet.faces.BridgeWriteBehindResponse;
 import org.jboss.portletbridge.bridge.logger.BridgeLogger;
 
 /**
- * The <CODE>BridgeConfig</CODE> represents the set of values a portlet can configure for a given bridge instance.
- * Currently, by spec, the portlet passes most of this configuration to the bridge using <CODE>PortletContext</CODE>
- * attributes. The bridge, in its <code>init()</code> method, is responsible for packaging all this configuration
- * information into a BridgeConfig. It must then only reference such configuation information from this object. I.e. it
- * no longer makes reference to the <CODE>PortletContext</CODE> attributes. This allows replacable pieces of the bridge
- * implementation to always have a consistent object to retrieve configuration information from.
+ * The <CODE>BridgeConfig</CODE> represents the set of values a portlet can configure for a given bridge instance. Currently, by
+ * spec, the portlet passes most of this configuration to the bridge using <CODE>PortletContext</CODE> attributes. The bridge,
+ * in its <code>init()</code> method, is responsible for packaging all this configuration information into a BridgeConfig. It
+ * must then only reference such configuration information from this object. I.e. it no longer makes reference to the
+ * <CODE>PortletContext</CODE> attributes. This allows replaceable pieces of the bridge implementation to always have a
+ * consistent object to retrieve configuration information from.
  */
 public interface BridgeConfig {
 
     /**
      * Sets the <code>PortletConfig</code> object of the portlet that is utilizing this bridge.
      *
-     * @param config
-     *            the config object.
+     * @param config the config object.
      */
     void setPortletConfig(PortletConfig config);
 
@@ -57,318 +56,316 @@ public interface BridgeConfig {
     PortletConfig getPortletConfig();
 
     /**
-     * Sets the <code>Map</code> describing the mapping between each supported <code>PortletMode</code> and its default
-     * Faces View (id). When the bridge receives a request that isn't directly encoded with the target Faces view (such
-     * as the initial render request), the bridge relies on these default mappings to determine the target. There is one
-     * mapping per <code>PortletMode</code> supported by the portlet (and handledby Faces). The key to the each entry in
-     * the map is the <code>String</code> name of the associated <code>PortletMode</code>;
+     * Sets the <code>Map</code> describing the mapping between each supported <code>PortletMode</code> and its default Faces
+     * View (id). When the bridge receives a request that isn't directly encoded with the target Faces view (such as the initial
+     * render request), the bridge relies on these default mappings to determine the target. There is one mapping per
+     * <code>PortletMode</code> supported by the portlet (and handled by Faces). The key to the each entry in the map is the
+     * <code>String</code> name of the associated <code>PortletMode</code>;
      *
-     * @param defaultMappings
-     *            between each supported <code>PortletMode</code> and the default Faces target.
+     * @param defaultMappings between each supported <code>PortletMode</code> and the default Faces target.
      */
     void setDefaultViewMappings(Map<String, String> defaultMappings);
 
     /**
-     * Gets the <code>Map</code> describing the mapping between each supported <code>PortletMode</code> and its default
-     * Faces View (id). When the bridge receives a request that isn't directly encoded with the target Faces view (such
-     * as the initial render request), the bridge relies on these default mappings to determine the target. There is one
-     * mapping per <code>PortletMode</code> supported by the portlet (and handledby Faces). The key to the each entry in
-     * the map is the <code>String</code> name of the associated <code>PortletMode</code>;
+     * Gets the <code>Map</code> describing the mapping between each supported <code>PortletMode</code> and its default Faces
+     * View (id). When the bridge receives a request that isn't directly encoded with the target Faces view (such as the initial
+     * render request), the bridge relies on these default mappings to determine the target. There is one mapping per
+     * <code>PortletMode</code> supported by the portlet (and handled by Faces). The key to the each entry in the map is the
+     * <code>String</code> name of the associated <code>PortletMode</code>;
      *
      * @return defaultMappings between each supported <code>PortletMode</code> and the default Faces target.
      */
-     Map<String, String> getDefaultViewMappings();
+    Map<String, String> getDefaultViewMappings();
 
     /**
-     * Sets the <code>List</code> of <code>Servlet</code> mappings to the Faces servlet (information taken from
-     * web.xml). The bridge uses these mappings to both detect whether a given URL is handled by Faces or not and to
-     * deal with mapping between viewIds and their underlying resources.
+     * Sets the <code>List</code> of <code>Servlet</code> mappings to the Faces servlet (information taken from web.xml). The
+     * bridge uses these mappings to both detect whether a given URL is handled by Faces or not and to deal with mapping between
+     * viewIds and their underlying resources.
      *
-     * @param mappings
-     *            the various servlet mappings for the <code>FacesServlet</code>.
+     * @param mappings the various servlet mappings for the <code>FacesServlet</code>.
      */
-     void setFacesServletMappings(List<String> mappings);
+    void setFacesServletMappings(List<String> mappings);
 
     /**
-     * Gets the <code>List</code> of <code>Servlet</code> mappings to the Faces servlet (information taken from
-     * web.xml). The bridge uses these mappings to both detect whether a given URL is handled by Faces or not and to
-     * deal with mapping between viewIds and their underlying resources.
+     * Gets the <code>List</code> of <code>Servlet</code> mappings to the Faces servlet (information taken from web.xml). The
+     * bridge uses these mappings to both detect whether a given URL is handled by Faces or not and to deal with mapping between
+     * viewIds and their underlying resources.
      *
      * @return the various servlet mappings for the <code>FacesServlet</code>.
      */
-     List<String> getFacesServletMappings();
+    List<String> getFacesServletMappings();
 
-     /**
-      * Sets the <code>Map</code> of <code>Exception</code> classes to Faces views (information taken from web.xml).
-      *
-      * @param errorViewMappings
-      *           the various exception to jsf view mappings for errors
-      */
-     void setFacesErrorViewMappings(Map<Class<? extends Throwable>, String> errorViewMappings);
+    /**
+     * Sets the <code>Map</code> of <code>Exception</code> classes to Faces views (information taken from web.xml).
+     *
+     * @param errorViewMappings the various exception to jsf view mappings for errors
+     */
+    void setFacesErrorViewMappings(Map<Class<? extends Throwable>, String> errorViewMappings);
 
-     /**
-      * Gets the <code>Map</code> of <code>Exception</code> classes to Faces views (information taken from web.xml).
-      *
-      * @return the various exception to jsf view mappings for errors
-      */
-     Map<Class<? extends Throwable>, String> getFacesErrorViewMappings();
+    /**
+     * Gets the <code>Map</code> of <code>Exception</code> classes to Faces views (information taken from web.xml).
+     *
+     * @return the various exception to jsf view mappings for errors
+     */
+    Map<Class<? extends Throwable>, String> getFacesErrorViewMappings();
 
-     /**
+    /**
      * Sets the name of the parameter used by the bridge to encode the target viewId.
      *
-     * @param name
-     *            parameter name that holds the bridge encoded target viewId.
+     * @param name parameter name that holds the bridge encoded target viewId.
      */
-     void setViewIdRenderParameterName(String name);
+    void setViewIdRenderParameterName(String name);
 
     /**
      * Gets the name of the parameter used by the bridge to encode the target viewId.
      *
      * @return parameter name that holds the bridge encoded target viewId.
      */
-     String getViewIdRenderParameterName();
+    String getViewIdRenderParameterName();
 
     /**
      * Sets the name of the parameter used by the bridge to encode the target viewId when encoding a Resource URL. As
-     * resourceURLs can't impact render parameters and the resource request always receives the current render
-     * parameters, its we need a different parameter to hold this information. This allows us to use its existence in
-     * the request as an indication of whether the target is a Faces resource or a regular portlet one.
+     * resourceURLs can't impact render parameters and the resource request always receives the current render parameters, its
+     * we need a different parameter to hold this information. This allows us to use its existence in the request as an
+     * indication of whether the target is a Faces resource or a regular portlet one.
      *
-     * @param name
-     *            parameter name that holds the bridge encoded target viewId.
+     * @param name parameter name that holds the bridge encoded target viewId.
      */
-     void setViewIdResourceParameterName(String name);
+    void setViewIdResourceParameterName(String name);
 
     /**
      * Gets the name of the parameter used by the bridge to encode the target viewIdwhen encoding a Resource URL. As
-     * resourceURLs can't impact render parameters and the resource request always receives the current render
-     * parameters, its we need a different parameter to hold this information. This allows us to use its existence in
-     * the request as an indication of whether the target is a Faces resource or a regular portlet one.
+     * resourceURLs can't impact render parameters and the resource request always receives the current render parameters, its
+     * we need a different parameter to hold this information. This allows us to use its existence in the request as an
+     * indication of whether the target is a Faces resource or a regular portlet one.
      *
      * @return parameter name that holds the bridge encoded target viewId.
      */
-     String getViewIdResourceParameterName();
+    String getViewIdResourceParameterName();
 
     /**
      * Sets the <code>BridgeLogger</code> that the bridge uses to log diagnostic and warning messages.
      *
-     * @param logger
-     *            <code>BridgeLogger</code>.
+     * @param logger <code>BridgeLogger</code>.
      */
-     void setLogger(BridgeLogger logger);
+    void setLogger(BridgeLogger logger);
 
     /**
      * Gets the <code>BridgeLogger</code> that the bridge uses to log diagnostic and warning messages.
      *
      * @return <code>BridgeLogger</code>.
      */
-     BridgeLogger getLogger();
+    BridgeLogger getLogger();
 
     /**
      * Sets the <code>BridgeEventHandler</code> that the bridge calls to handle any portlet event it processes.
      *
      * @param handler
      */
-     void setEventHandler(BridgeEventHandler handler);
+    void setEventHandler(BridgeEventHandler handler);
 
     /**
      * Gets the <code>BridgeEventHandler</code> that the bridge calls to handle any portlet event it processes.
      *
      * @return the <code>BridgeEventHandler</code>
      */
-     BridgeEventHandler getEventHandler();
+    BridgeEventHandler getEventHandler();
 
     /**
-     * Sets the <code>BridgePublicRenderParameterHandler</code> that the bridge calls to handle post processing
-     * recalculations following the bridge pushing incoming portlet public render parameters to their models.
+     * Sets the <code>BridgePublicRenderParameterHandler</code> that the bridge calls to handle post processing recalculations
+     * following the bridge pushing incoming portlet public render parameters to their models.
      *
      * @param handler
      */
-     void setPublicRenderParameterHandler(BridgePublicRenderParameterHandler handler);
+    void setPublicRenderParameterHandler(BridgePublicRenderParameterHandler handler);
 
     /**
-     * Gets the <code>BridgePublicRenderParameterHandler</code> that the bridge calls to handle post processing
-     * recalculations following the bridge pushing incoming portlet public render parameters to their models.
+     * Gets the <code>BridgePublicRenderParameterHandler</code> that the bridge calls to handle post processing recalculations
+     * following the bridge pushing incoming portlet public render parameters to their models.
      *
      * @return <code>BridgePublicRenderParameterHandler</code>
      */
-     BridgePublicRenderParameterHandler getPublicRenderParameterHandler();
+    BridgePublicRenderParameterHandler getPublicRenderParameterHandler();
 
     /**
      * Sets whether or not the bridge should carry action parameters forward into subsequent renders.
      *
-     * @param preserve
-     *            <code>true</code> indicates the action parameters are preserved. <code>false</code> indicates they are
-     *            not.
+     * @param preserve <code>true</code> indicates the action parameters are preserved. <code>false</code> indicates they are
+     *        not.
      */
-     void setPreserveActionParameters(boolean preserve);
+    void setPreserveActionParameters(boolean preserve);
 
     /**
      * Sets whether or not the bridge should carry action parameters forward into subsequent renders.
      *
-     * @param preserve
-     *            <code>Boolean.TRUE</code> indicates the action parameters are preserved. <code>Boolean.FALSE</code>
-     *            indicates they are not.
+     * @param preserve <code>Boolean.TRUE</code> indicates the action parameters are preserved. <code>Boolean.FALSE</code>
+     *        indicates they are not.
      */
-     void setPreserveActionParameters(Boolean preserve);
+    void setPreserveActionParameters(Boolean preserve);
 
     /**
-     * Gets whether or not the bridge should carry action parameters forward into subsequent renders. If not previously
-     * set, it returns <code>false</code>.
+     * Gets whether or not the bridge should carry action parameters forward into subsequent renders. If not previously set, it
+     * returns <code>false</code>.
      *
-     * @return <code>true</code> indicates the action parameters are preserved. <code>false</code> indicates they are
-     *         not.
+     * @return <code>true</code> indicates the action parameters are preserved. <code>false</code> indicates they are not.
      */
-     boolean hasPreserveActionParameters();
+    boolean hasPreserveActionParameters();
 
     /**
-     * Sets the <code>List</code> of attributes to be excluded from the bridge's request scope. This list includes both
-     * the attributes configured in the portlet.xml (portlet init parameter) as well as any configured in any of this
-     * web application's faces-config.xml(s). It doesn't include any of the predefined attributes as defined by the
-     * specification. A list entry is either the fully qualified name of the attribute that should be excluded or a
-     * wildcard terminated (package) path. In the latter case, all attributes whose names reside in this package
-     * (non-recusive) are excluded.
+     * Sets whether or not RichFaces is being used by the Portlet.
      *
-     * @param excludedAttributes
-     *            <code>List</code> of request attribute names that are to be excluded from the bridge's managed request
-     *            scope.
+     * @param present <code>true</code> indicates RichFaces is present. <code>false</code> indicates it is not.
      */
-     void setExcludedRequestAttributes(List<String> excludedAttributes);
+    void setRichFaces(boolean present);
 
     /**
-     * Gets the <code>List</code> of attributes to be excluded from the bridge's request scope. This list includes both
-     * the attributes configured in the portlet.xml (portlet init parameter) as well as any configured in any of this
-     * web application's faces-config.xml(s). It doesn't include any of the predefined attributes as defined by the
-     * specification. A list entry is either the fully qualified name of the attribute that should be excluded or a
-     * wildcard terminated (package) path. In the latter case, all attributes whose names reside in this package
-     * (non-recusive) are excluded.
+     * Gets whether or not RichFaces is being used by the Portlet. If not previously set, it returns <code>false</code>.
      *
-     * @return <code>List</code> of request attribute names that are to be excluded from the bridge's managed request
-     *         scope. If no entries an empty List is returned.
+     * @return <code>true</code> indicates RichFaces is present. <code>false</code> indicates it is not.
      */
-     List<String> getExcludedRequestAttributes();
+    boolean hasRichFaces();
 
     /**
-     * Sets the <code>Map</code> containing the mappings between portlet public render parameter names and a
-     * corresponding Faces EL statement. The Faces EL is expected to resolve to a managed bean property allowing the
-     * bridge to push/pull public render parameter values directly from managed bean properties. This configuration
-     * information is extracted from the faces-config.xml(s).
+     * Sets the <code>List</code> of attributes to be excluded from the bridge's request scope. This list includes both the
+     * attributes configured in the portlet.xml (portlet init parameter) as well as any configured in any of this web
+     * application's faces-config.xml(s). It doesn't include any of the predefined attributes as defined by the specification. A
+     * list entry is either the fully qualified name of the attribute that should be excluded or a wildcard terminated (package)
+     * path. In the latter case, all attributes whose names reside in this package (non-recursive) are excluded.
      *
-     *
-     * @param prpMappings
-     *            <code>Map<String, String></code>. The key is the name of the portlet public render parameter for this
-     *            mapping. If prefixed with portletName: the mapping only pertains to the specifically named portlet,
-     *            otherwise the mapping pertains to all portlets in the web application. The value is a Faces EL that
-     *            resolves to a managed bean property.
+     * @param excludedAttributes <code>List</code> of request attribute names that are to be excluded from the bridge's managed
+     *        request scope.
      */
-
-     void setPublicRenderParameterMappings(Map<String, String> prpMappings);
+    void setExcludedRequestAttributes(List<String> excludedAttributes);
 
     /**
-     * Gets the <code>Map</code> containing the mappings between portlet public render parameter names and a
-     * corresponding Faces EL statement. The Faces EL is expected to resolve to a managed bean property allowing the
-     * bridge to push/pull public render parameter values directly from managed bean properties. This configuration
-     * information is extracted from the faces-config.xml(s).
+     * Gets the <code>List</code> of attributes to be excluded from the bridge's request scope. This list includes both the
+     * attributes configured in the portlet.xml (portlet init parameter) as well as any configured in any of this web
+     * application's faces-config.xml(s). It doesn't include any of the predefined attributes as defined by the specification. A
+     * list entry is either the fully qualified name of the attribute that should be excluded or a wildcard terminated (package)
+     * path. In the latter case, all attributes whose names reside in this package (non-recusive) are excluded.
      *
-     *
-     * @return <code>Map<String, String></code>. The key is the name of the portlet public render parameter for this
-     *         mapping. If prefixed with portletName: the mapping only pertains to the specifically named portlet,
-     *         otherwise the mapping pertains to all portlets in the web application. The value is a Faces EL that
-     *         resolves to a managed bean property.
+     * @return <code>List</code> of request attribute names that are to be excluded from the bridge's managed request scope. If
+     *         no entries an empty List is returned.
      */
-     Map<String, String> getPublicRenderParameterMappings();
+    List<String> getExcludedRequestAttributes();
+
+    /**
+     * Sets the <code>Map</code> containing the mappings between portlet public render parameter names and a corresponding Faces
+     * EL statement. The Faces EL is expected to resolve to a managed bean property allowing the bridge to push/pull public
+     * render parameter values directly from managed bean properties. This configuration information is extracted from the
+     * faces-config.xml(s).
+     *
+     *
+     * @param prpMappings <code>Map<String, String></code>. The key is the name of the portlet public render parameter for this
+     *        mapping. If prefixed with portletName: the mapping only pertains to the specifically named portlet, otherwise the
+     *        mapping pertains to all portlets in the web application. The value is a Faces EL that resolves to a managed bean
+     *        property.
+     */
+
+    void setPublicRenderParameterMappings(Map<String, String> prpMappings);
+
+    /**
+     * Gets the <code>Map</code> containing the mappings between portlet public render parameter names and a corresponding Faces
+     * EL statement. The Faces EL is expected to resolve to a managed bean property allowing the bridge to push/pull public
+     * render parameter values directly from managed bean properties. This configuration information is extracted from the
+     * faces-config.xml(s).
+     *
+     *
+     * @return <code>Map<String, String></code>. The key is the name of the portlet public render parameter for this mapping. If
+     *         prefixed with portletName: the mapping only pertains to the specifically named portlet, otherwise the mapping
+     *         pertains to all portlets in the web application. The value is a Faces EL that resolves to a managed bean
+     *         property.
+     */
+    Map<String, String> getPublicRenderParameterMappings();
 
     /**
      *
      * @return <code>true</code> if the config has public render parameter mappings.
      */
-     boolean hasPublicRenderParameterMappings();
+    boolean hasPublicRenderParameterMappings();
 
     /**
-     * Sets the <code>Class</code> that the bridge uses to wrap the response when rendering a <code>JSP</code> to
+     * Sets the <code>Class</code> that the bridge uses to wrap the response when rendering a <code>JSP</code> to implement the
+     * Faces implementation specific support for handling interleaved response writing.
+     *
+     * @param wbrClass <code>Class</code> that implements the <code>BridgeWritebehindResponse</code> interface and is a proper
+     *        portlet render response wrapper.
+     */
+    void setWriteBehindRenderResponseWrapper(Class<? extends BridgeWriteBehindResponse> renderResponseWrapper);
+
+    /**
+     * Gets the <code>Class</code> that the bridge uses to wrap the response when rendering a <code>JSP</code> to implement the
+     * Faces implementation specific support for handling interleaved response writing.
+     *
+     * @return <code>Class</code> that implements the <code>BridgeWritebehindResponse</code> interface and is a proper portlet
+     *         render response wrapper.
+     */
+    Class<? extends BridgeWriteBehindResponse> getWriteBehindRenderResponseWrapper();
+
+    /**
+     * Sets the <code>Class</code> that the bridge uses to wrap the response when rendering a <code>JSP</code> resource to
      * implement the Faces implementation specific support for handling interleaved response writing.
      *
-     * @param wbrClass
-     *            <code>Class</code> that implements the <code>BridgeWritebehindResponse</code> interface and is a
-     *            proper portlet render response wrapper.
+     * @param wbrClass <code>Class</code> that implements the <code>BridgeWritebehindResponse</code> interface and is a proper
+     *        portlet resource response wrapper.
      */
-     void setWriteBehindRenderResponseWrapper(Class<? extends BridgeWriteBehindResponse> renderResponseWrapper);
+    void setWriteBehindResourceResponseWrapper(Class<? extends BridgeWriteBehindResponse> resourceResponseWrapper);
 
     /**
-     * Gets the <code>Class</code> that the bridge uses to wrap the response when rendering a <code>JSP</code> to
+     * Gets the <code>Class</code> that the bridge uses to wrap the response when rendering a <code>JSP</code> resource to
      * implement the Faces implementation specific support for handling interleaved response writing.
      *
-     * @return <code>Class</code> that implements the <code>BridgeWritebehindResponse</code> interface and is a proper
-     *         portlet render response wrapper.
+     * @return <code>Class</code> that implements the <code>BridgeWritebehindResponse</code> interface and is a proper portlet
+     *         resource response wrapper.
      */
-     Class<? extends BridgeWriteBehindResponse> getWriteBehindRenderResponseWrapper();
+    Class<? extends BridgeWriteBehindResponse> getWriteBehindResourceResponseWrapper();
 
     /**
-     * Sets the <code>Class</code> that the bridge uses to wrap the response when rendering a <code>JSP</code> resource
-     * to implement the Faces implementation specific support for handling interleaved response writing.
+     * Sets the <code>List<String></code> of the possible suffixes that Faces recognizes as Faces processed targets. Since JSF
+     * 2.0 the default suffix mapping Faces recognizes is a list rather than a single value. This information comes from the
+     * web.xml and is used to help the bridge map between viewIds and their underlying resources.
      *
-     * @param wbrClass
-     *            <code>Class</code> that implements the <code>BridgeWritebehindResponse</code> interface and is a
-     *            proper portlet resource response wrapper.
+     * @param suffixes <code>List</code> of the suffixes Faces recognizes as Faces targets.
      */
-     void setWriteBehindResourceResponseWrapper(Class<? extends BridgeWriteBehindResponse> resourceResponseWrapper);
+    void setFacesSuffixes(List<String> suffixes);
 
     /**
-     * Gets the <code>Class</code> that the bridge uses to wrap the response when rendering a <code>JSP</code> resource
-     * to implement the Faces implementation specific support for handling interleaved response writing.
-     *
-     * @return <code>Class</code> that implements the <code>BridgeWritebehindResponse</code> interface and is a proper
-     *         portlet resource response wrapper.
-     */
-     Class<? extends BridgeWriteBehindResponse> getWriteBehindResourceResponseWrapper();
-
-    /**
-     * Sets the <code>List<String></code> of the possible suffixes that Faces recognizes as Faces processed targets.
-     * Since JSF 2.0 the default suffix mapping Faces recognizes is a list rather than a single value. This information
-     * comes from the web.xml and is used to help the bridge map between viewIds and their underlying resources.
-     *
-     * @param suffixes
-     *            <code>List</code> of the suffixes Faces recognizes as Faces targets.
-     */
-     void setFacesSuffixes(List<String> suffixes);
-
-    /**
-     * gets the <code>List<String></code> of the possible suffixes that Faces recognizes as Faces processed targets.
-     * Since JSF 2.0 the default suffix mapping Faces recognizes is a list rather than a single value. This information
-     * comes from the web.xml and is used to help the bridge map between viewIds and their underlying resources.
+     * gets the <code>List<String></code> of the possible suffixes that Faces recognizes as Faces processed targets. Since JSF
+     * 2.0 the default suffix mapping Faces recognizes is a list rather than a single value. This information comes from the
+     * web.xml and is used to help the bridge map between viewIds and their underlying resources.
      *
      * @return <code>List</code> of the suffixes Faces recognizes as Faces targets.
      */
-     List<String> getFacesSuffixes();
+    List<String> getFacesSuffixes();
 
     /**
      * Sets the id of the lifecycle the portlet should use for executing Faces requests.
      *
      * @param id
      */
-     void setLifecyleId(String id);
+    void setLifecyleId(String id);
 
     /**
      *
      * @return the lifecycle id the portlet should use for executing Faces requests. If not previously set the value
      *         <code>LifecycleFactory.DEFAULT_LIFECYCLE</code> is returned.
      */
-     String getLifecycleId();
+    String getLifecycleId();
 
     /**
-     * This <code>Map</code> is a place to put extra (implementation specific) bridge state or anything else whose
-     * lifetime matches this scope.
+     * This <code>Map</code> is a place to put extra (implementation specific) bridge state or anything else whose lifetime
+     * matches this scope.
      *
      * @return a mutable <code>Map<String, Object></code> of bridge context scoped attributes
      */
-     Map<String, Object> getAttributes();
+    Map<String, Object> getAttributes();
 
     /**
-     * By spec, the portlet can configure the specific renderkit it uses vs others in the app as a Portlet init
-     * parameter. This allows differeing portlets in the app to use different render kits.
+     * By spec, the portlet can configure the specific renderkit it uses vs others in the app as a Portlet init parameter. This
+     * allows differing portlets in the app to use different render kits.
      *
      * @return configured renderkit id for this portlet or null if none is configured.
      */
-     String getDefaultRenderKitId();
+    String getDefaultRenderKitId();
 
 }

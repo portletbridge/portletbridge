@@ -21,16 +21,16 @@
  */
 package org.jboss.portletbridge.application.resource;
 
+import java.net.URL;
+import java.util.List;
+
 import javax.faces.application.Resource;
 import javax.faces.application.ResourceHandler;
 import javax.faces.application.ResourceWrapper;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.portlet.MimeResponse;
-import javax.portlet.ResourceURL;
-import javax.portlet.faces.Bridge;
 
-import org.jboss.portletbridge.context.PortletExternalContextImpl;
+import org.jboss.portletbridge.bridge.context.BridgeContext;
 
 /**
  * @author leo
@@ -87,27 +87,33 @@ public class PortletResource extends ResourceWrapper {
         ExternalContext externalContext = facesContext.getExternalContext();
         String wrappedPath = wrapped.getRequestPath();
 
-        if (externalContext.getRequestMap().containsKey(Bridge.PORTLET_LIFECYCLE_PHASE)) {
-            if (externalContext.getResponse() instanceof MimeResponse) {
-                MimeResponse mimeResponse = (MimeResponse) externalContext.getResponse();
-                ResourceURL resourceURL = mimeResponse.createResourceURL();
-                resourceURL.setResourceID(ResourceHandler.RESOURCE_IDENTIFIER);
-                resourceURL.setParameter(PortletResourceHandler.RESOURCE_ID, getWrapped().getResourceName());
-                String libraryName = getWrapped().getLibraryName();
-                if (null != libraryName) {
-                    resourceURL.setParameter(PortletResourceHandler.LIBRARY_ID, libraryName);
+        if (null != wrappedPath) {
+            if (wrappedPath.contains(ResourceHandler.RESOURCE_IDENTIFIER)) {
+                List<String> servletMappings = BridgeContext.getCurrentInstance().getBridgeConfig().getFacesServletMappings();
+                //TODO Handle this nicer? Maybe cache extension mappings on startup
+                for (String mapping : servletMappings) {
+                    if (mapping.startsWith("*.")) {
+                        mapping = mapping.substring(1);
+                        String libraryToken = mapping + "?ln";
+                        int pos = wrappedPath.indexOf(libraryToken);
+                        if (pos > 0) {
+                            wrappedPath = wrappedPath.substring(0, pos) + wrappedPath.substring(pos + mapping.length());
+                        }
+                    }
                 }
-                String contentType = getWrapped().getContentType();
-                if (null != contentType) {
-                    resourceURL.setParameter(PortletResourceHandler.MIME_PARAM, contentType);
-                }
-                return resourceURL.toString();
-            } else {
-                return PortletExternalContextImpl.RESOURCE_URL_DO_NOTHITG;
             }
-        } else {
-            return wrappedPath;
+
+            if (getContentType().startsWith("image/") && wrappedPath.endsWith("org.richfaces")) {
+                // Special case for images that are in org.richfaces to allow ResourceHandler to process the request
+                String resourcePath = "META-INF/resources/org.richfaces/" + getResourceName();
+                URL imageUrl = getClass().getClassLoader().getResource(resourcePath);
+
+                if (null != imageUrl) {
+                    wrappedPath += ".images";
+                }
+            }
         }
+        return externalContext.encodeResourceURL(wrappedPath);
     }
 
 }
