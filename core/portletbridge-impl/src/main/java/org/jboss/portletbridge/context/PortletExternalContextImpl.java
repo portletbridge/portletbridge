@@ -148,6 +148,11 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
     }
 
     @Override
+    public void setResponseStatus(int statusCode) {
+        // Do nothing
+    }
+
+    @Override
     public void setRequest(Object request) {
         super.setRequest(request);
 

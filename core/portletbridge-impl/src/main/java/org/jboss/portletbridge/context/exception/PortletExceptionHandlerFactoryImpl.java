@@ -41,7 +41,10 @@ public class PortletExceptionHandlerFactoryImpl extends ExceptionHandlerFactory 
      */
     @Override
     public ExceptionHandler getExceptionHandler() {
-        ExceptionHandler handler = new PortletExceptionHandler(this.parent.getExceptionHandler());
+        ExceptionHandler handler = this.parent.getExceptionHandler();
+        if (!PortletExceptionHandler.class.getName().equals(handler.getClass().getName())) {
+            handler = new PortletExceptionHandler(handler);
+        }
 
         FacesContext facesContext = FacesContext.getCurrentInstance();
         if (facesContext.getPartialViewContext().isAjaxRequest()) {

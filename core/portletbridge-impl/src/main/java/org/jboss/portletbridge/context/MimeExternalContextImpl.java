@@ -238,10 +238,6 @@ public abstract class MimeExternalContextImpl extends PortletExternalContextImpl
     }
 
     @Override
-    public void setResponseStatus(int statusCode) {
-    }
-
-    @Override
     public String getRequestCharacterEncoding() {
         // TODO - save character encoding from action request.
         return null;
