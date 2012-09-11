@@ -32,7 +32,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.faces.FacesException;
-import javax.faces.application.ViewHandler;
 import javax.faces.webapp.FacesServlet;
 import javax.portlet.PortletContext;
 import javax.xml.parsers.SAXParser;
@@ -71,11 +70,7 @@ public final class WebXmlProcessor {
             InputStream inputStream = portletContext.getResourceAsStream(WEB_XML_PATH);
             this.parse(inputStream);
 
-            String viewSuffix = portletContext.getInitParameter(ViewHandler.DEFAULT_SUFFIX_PARAM_NAME);
-            if (null == viewSuffix) {
-                viewSuffix = ViewHandler.DEFAULT_SUFFIX;
-            }
-            errorViews = createErrorViews(viewSuffix);
+            errorViews = createErrorViews();
 
             try {
                 inputStream.close();
@@ -139,11 +134,9 @@ public final class WebXmlProcessor {
      * Create map between error class and corresponding JSF view id. Map created from the {@link #errorLocations}
      * string-based map.
      *
-     * @param viewSuffix
-     *            JSF view id suffix for mapping.
      * @return map between exception class and view id.
      */
-    protected Map<Class<? extends Throwable>, String> createErrorViews(String viewSuffix) {
+    protected Map<Class<? extends Throwable>, String> createErrorViews() {
         LinkedHashMap<Class<? extends Throwable>, String> viewsMap = new LinkedHashMap<Class<? extends Throwable>, String>();
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
@@ -154,7 +147,7 @@ public final class WebXmlProcessor {
         for (Entry<String, String> entry : errorPages.entrySet()) {
             try {
                 Class<? extends Throwable> clazz = classLoader.loadClass(entry.getKey()).asSubclass(Throwable.class);
-                String viewId = getViewIdFromLocation(entry.getValue(), viewSuffix);
+                String viewId = getViewIdFromLocation(entry.getValue());
                 if (null != viewId) {
                     viewsMap.put(clazz, viewId);
                 }
@@ -170,18 +163,16 @@ public final class WebXmlProcessor {
      *
      * @param location
      *            error page location
-     * @param viewSuffix
-     *            JSF view suffix.
      * @return view id if this location is mapped to the {@link FacesServlet} othervise null.
      */
-    protected String getViewIdFromLocation(String location, String viewSuffix) {
+    protected String getViewIdFromLocation(String location) {
         String viewId = null;
         for (String mapping : facesServlet.getMappings()) {
             if (mapping.startsWith("*")) {
                 // Suffix mapping.
                 String suffix = mapping.substring(1);
                 if (location.endsWith(suffix)) {
-                    viewId = location.substring(0, location.length() - suffix.length()) + viewSuffix;
+                    viewId = location.substring(0, location.length() - suffix.length());
                     break;
                 }
             } else if (mapping.endsWith("*")) {

@@ -23,6 +23,8 @@ package org.jboss.portletbridge.test;
 
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.shrinkwrap.descriptor.api.Descriptors;
+import org.jboss.shrinkwrap.descriptor.api.webapp30.WebAppDescriptor;
 import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
 
@@ -65,5 +67,23 @@ public class TestDeployment {
 
     public static WebArchive addPortletXml(WebArchive archive) {
         return archive.addAsWebInfResource("WEB-INF/portlet.xml", "portlet.xml");
+    }
+
+    public static WebAppDescriptor createWebXmlDescriptor() {
+        WebAppDescriptor webConfig = Descriptors.create(WebAppDescriptor.class);
+        webConfig.addDefaultNamespaces()
+                 .version("3.0")
+                 .displayName("integrationTest")
+                 .createServlet()
+                     .servletName("Faces Servlet")
+                     .servletClass("javax.faces.webapp.FacesServlet")
+                     .loadOnStartup(2)
+                     .up()
+                 .createServletMapping()
+                     .servletName("Faces Servlet")
+                     .urlPattern("*.jsf")
+                     .up();
+
+        return webConfig;
     }
 }

@@ -48,10 +48,10 @@ public class WebXMLTest extends TestCase {
         assertEquals(2, webXml.getFacesServlet().getMappings().size());
         assertEquals("*.jsf", webXml.getFacesServlet().getMappings().get(1));
         assertEquals("/faces/*", webXml.getFacesServlet().getMappings().get(0));
-        Map<Class<? extends Throwable>, String> errorViews = webXml.createErrorViews(".jspx");
+        Map<Class<? extends Throwable>, String> errorViews = webXml.createErrorViews();
         assertEquals(2, errorViews.size());
         assertEquals("/error.xhtml", errorViews.get(ServletException.class));
-        assertEquals("/error.jspx", errorViews.get(ViewExpiredException.class));
+        assertEquals("/error", errorViews.get(ViewExpiredException.class));
     }
 
     public void testGetViewIdFromLocation() throws Exception {
@@ -60,10 +60,9 @@ public class WebXMLTest extends TestCase {
         WebXmlProcessor.facesServlet.getMappings().add("/faces/*");
         WebXmlProcessor.facesServlet.getMappings().add("/seam*");
         WebXmlProcessor webXml = new WebXmlProcessor((PortletContext) null);
-        assertNull(webXml.getViewIdFromLocation("/foo/bar.jsp", ".jspx"));
-        assertEquals("/foo/bar.jspx", webXml.getViewIdFromLocation("/foo/bar.jsf", ".jspx"));
-        assertEquals("/foo/bar.jsp", webXml.getViewIdFromLocation("/faces/foo/bar.jsp", ".jspx"));
-        assertEquals("/foo/bar.jsp", webXml.getViewIdFromLocation("/seam/foo/bar.jsp", ".jspx"));
+        assertEquals("/foo/bar", webXml.getViewIdFromLocation("/foo/bar.jsf"));
+        assertEquals("/foo/bar.jsp", webXml.getViewIdFromLocation("/faces/foo/bar.jsp"));
+        assertEquals("/foo/bar.jsp", webXml.getViewIdFromLocation("/seam/foo/bar.jsp"));
     }
 
     public void testCreateErrorViews() throws Exception {
@@ -74,11 +73,11 @@ public class WebXMLTest extends TestCase {
         WebXmlProcessor.errorPages.put(ServletException.class.getName(), "/foo/bar.jsp");
         WebXmlProcessor.errorPages.put("no.such.Exception", "/foo/baz.jsp");
         WebXmlProcessor webXml = new WebXmlProcessor((PortletContext) null);
-        Map<Class<? extends Throwable>, String> errorViews = webXml.createErrorViews(".jspx");
+        Map<Class<? extends Throwable>, String> errorViews = webXml.createErrorViews();
         assertEquals(3, errorViews.size());
-        assertEquals("/foo/bar.jspx", errorViews.get(IOException.class));
-        assertEquals("/error/faces.jspx", errorViews.get(FacesException.class));
-        assertEquals("/error.jspx", errorViews.get(ViewExpiredException.class));
+        assertEquals("/foo/bar", errorViews.get(IOException.class));
+        assertEquals("/error/faces", errorViews.get(FacesException.class));
+        assertEquals("/error", errorViews.get(ViewExpiredException.class));
     }
 
 }
