@@ -21,23 +21,18 @@
  */
 package org.jboss.portletbridge.context;
 
-import java.util.List;
-import java.util.Map;
-
 import javax.el.ELContext;
 import javax.el.ELContextEvent;
 import javax.el.ELContextListener;
 import javax.faces.FacesException;
 import javax.faces.application.Application;
 import javax.faces.component.UIViewRoot;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.context.FacesContextFactory;
 import javax.faces.context.FacesContextWrapper;
 import javax.faces.lifecycle.Lifecycle;
 import javax.portlet.PortletContext;
 
-import org.jboss.portletbridge.bridge.context.BridgeContext;
 import org.jboss.portletbridge.el.ELContextImpl;
 
 /**
