@@ -56,7 +56,6 @@ public class Echo implements Serializable {
         this.str = str;
     }
 
-    @SuppressWarnings({ "UnusedDeclaration" })
     public void reset(ActionEvent ae) {
         str = "";
     }

@@ -16,7 +16,7 @@
     <!-- Facelets development mode (disable in production) -->
     <context-param>
         <param-name>facelets.DEVELOPMENT</param-name>
-        <param-value>false</param-value>
+        <param-value>true</param-value>
     </context-param>
 
     <!-- JSF -->
@@ -33,13 +33,4 @@
         <servlet-name>Faces Servlet</servlet-name>
         <url-pattern>*.faces</url-pattern>
     </servlet-mapping>
-
-    <error-page>
-        <exception-type>javax.faces.FacesException</exception-type>
-        <location>/error.faces</location>
-    </error-page>
-    <error-page>
-        <exception-type>ApplicationException</exception-type>
-        <location>/applicationError.faces</location>
-    </error-page>
 </web-app>
