@@ -13,7 +13,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.sun.faces</groupId>
+            <groupId>javax.faces</groupId>
             <artifactId>jsf-api</artifactId>
             <scope>provided</scope>
         </dependency>
