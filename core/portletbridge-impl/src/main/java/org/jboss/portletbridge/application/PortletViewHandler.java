@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.Locale;
 
 import javax.faces.FacesException;
+import javax.faces.application.ResourceHandler;
 import javax.faces.application.ViewHandler;
 import javax.faces.application.ViewHandlerWrapper;
 import javax.faces.component.UIViewRoot;
@@ -45,8 +46,7 @@ import org.jboss.portletbridge.bridge.logger.JULLoggerImpl;
 import org.jboss.portletbridge.context.PortalActionURL;
 
 /**
- * @author asmirnov
- *
+ * @author asmirnov, <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
  */
 public class PortletViewHandler extends ViewHandlerWrapper {
 
@@ -250,6 +250,15 @@ public class PortletViewHandler extends ViewHandlerWrapper {
 
     private void doRenderView(FacesContext context, UIViewRoot viewToRender) throws IOException {
         getViewDeclarationLanguage(context, viewToRender.getViewId()).renderView(context, viewToRender);
+    }
+
+    @Override
+    public String getResourceURL(FacesContext context, String path) {
+        String url = getWrapped().getResourceURL(context, path);
+        if (!url.contains(ResourceHandler.RESOURCE_IDENTIFIER)) {
+            url += "?" + Bridge.IN_PROTOCOL_RESOURCE_LINK + "=true";
+        }
+        return url;
     }
 
     @Override

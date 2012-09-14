@@ -40,6 +40,8 @@ import javax.portlet.WindowState;
 import javax.portlet.WindowStateException;
 import javax.portlet.faces.Bridge;
 
+import org.jboss.portletbridge.PortletBridgeConstants;
+
 /**
  * @author asmirnov
  */
@@ -164,6 +166,7 @@ public abstract class MimeExternalContextImpl extends PortletExternalContextImpl
         setBaseUrlParameters(portalUrl, resourceURL);
         resourceURL.setParameters(portalUrl.getParameters());
         resourceURL.setParameter(Bridge.FACES_VIEW_ID_PARAMETER, getViewIdFromUrl(portalUrl));
+        resourceURL.setParameter(PortletBridgeConstants.AJAX_PARAM, Boolean.TRUE.toString());
         return resourceURL.toString();
     }
 

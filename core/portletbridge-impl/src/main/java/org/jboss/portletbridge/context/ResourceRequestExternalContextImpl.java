@@ -35,11 +35,15 @@ import javax.portlet.PortletContext;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 
+import org.jboss.portletbridge.PortletBridgeConstants;
+
 /**
- * @author asmirnov
- *
+ * @author asmirnov, <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
  */
 public class ResourceRequestExternalContextImpl extends MimeExternalContextImpl {
+
+    protected String facesRequest = null;
+    protected boolean facesRequestSet = false;
 
     /**
      * @param context
@@ -83,8 +87,27 @@ public class ResourceRequestExternalContextImpl extends MimeExternalContextImpl 
             }
             return contentLength;
         }
+        if (PortletBridgeConstants.FACES_REQUEST_HEADER_PARAM.equals(name)) {
+            if (!facesRequestSet) {
+                constructFacesRequest();
+            }
+            return facesRequest;
+        }
 
         return super.getRequestHeader(name);
+    }
+
+    protected void constructFacesRequest() {
+        String facesReq = super.getRequestHeader(PortletBridgeConstants.FACES_REQUEST_HEADER_PARAM);
+        if (null != facesReq) {
+            facesRequest = facesReq;
+        } else {
+            String isAjaxParam = getRequestParameterMap().get(PortletBridgeConstants.AJAX_PARAM);
+            if (null != isAjaxParam && Boolean.parseBoolean(isAjaxParam)) {
+                facesRequest = PortletBridgeConstants.FACES_REQUEST_PARTIAL;
+            }
+        }
+        facesRequestSet = true;
     }
 
     protected Enumeration<String> getRequestHeaderNames() {
@@ -96,6 +119,7 @@ public class ResourceRequestExternalContextImpl extends MimeExternalContextImpl 
         }
         names.add("CONTENT-TYPE");
         names.add("CONTENT-LENGTH");
+        names.add(PortletBridgeConstants.FACES_REQUEST_HEADER_PARAM);
         return Collections.enumeration(names);
     }
 
@@ -111,6 +135,12 @@ public class ResourceRequestExternalContextImpl extends MimeExternalContextImpl 
                 constructContentLength();
             }
             return new String[] { contentLength };
+        }
+        if (PortletBridgeConstants.FACES_REQUEST_HEADER_PARAM.equals(name)) {
+            if (!facesRequestSet) {
+                constructFacesRequest();
+            }
+            return new String[] { facesRequest };
         }
 
         return super.getRequestHeaderValues(name);

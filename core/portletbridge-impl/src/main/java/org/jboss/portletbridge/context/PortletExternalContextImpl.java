@@ -933,6 +933,8 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
                 portalUrl.removeParameter(Bridge.VIEW_LINK);
                 encodeBackLink(portalUrl);
                 return replaceUrlWhitespace(encodeActionURL(portalUrl.toString()));
+            } else if (url.startsWith(PortletExternalContextImpl.WSRP_REWRITE)) {
+                return url = encodeURL(url);
             } else if (isOpaqueURL(url)) {
                 // Opaque URL
                 return url;
@@ -980,6 +982,7 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
 
                 String facesViewId = getViewIdFromUrl(portalUrl);
                 if (null != portalUrl.getParameter(Bridge.IN_PROTOCOL_RESOURCE_LINK)) {
+                    portalUrl.removeParameter(Bridge.IN_PROTOCOL_RESOURCE_LINK);
                     url = createResourceUrl(portalUrl, escapedUrl);
                 } else if (portalUrl.getPath().contains(ResourceHandler.RESOURCE_IDENTIFIER)) {
                     // It's a JSF Resource

@@ -35,13 +35,13 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
-import javax.portlet.PortalContext;
 import javax.portlet.PortletRequest;
 
 import org.jboss.portletbridge.bridge.context.BridgeContext;
 import org.jboss.portletbridge.bridge.logger.BridgeLogger;
 import org.jboss.portletbridge.bridge.logger.BridgeLogger.Level;
 import org.jboss.portletbridge.bridge.logger.JULLoggerImpl;
+import org.jboss.portletbridge.util.Helper;
 
 /**
  * This class is a JSF renderer that is designed for use with the h:head component tag. Portlets are forbidden from rendering
@@ -82,8 +82,8 @@ public class PortletHeadRenderer extends Renderer {
 
         ExternalContext externalContext = facesContext.getExternalContext();
         PortletRequest portletRequest = (PortletRequest) externalContext.getRequest();
-        String markupHeadSupport = portletRequest.getPortalContext().getProperty(PortalContext.MARKUP_HEAD_ELEMENT_SUPPORT);
-        boolean canMarkupHead = null != markupHeadSupport ? Boolean.valueOf(markupHeadSupport) : false;
+
+        boolean canMarkupHead = Helper.canMarkupHead(portletRequest);
 
         HeadResources headBean = HeadResources.instance();
         Set<String> resourceIds = null != headBean ? headBean.getIds() : new HashSet<String>();
