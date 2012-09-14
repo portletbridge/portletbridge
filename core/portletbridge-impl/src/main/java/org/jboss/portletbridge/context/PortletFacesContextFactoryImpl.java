@@ -60,8 +60,10 @@ public class PortletFacesContextFactoryImpl extends FacesContextFactory {
     public FacesContext getFacesContext(Object context, Object request, Object response, Lifecycle lifecycle)
             throws FacesException {
         FacesContext facesContext = getWrapped().getFacesContext(context, request, response, lifecycle);
-        if (facesContext.getExternalContext().getContext() instanceof PortletContext) {
-            facesContext = new PortletFacesContextImpl(facesContext);
+        if (!PortletFacesContextImpl.class.getName().equals(facesContext.getClass().getName())) {
+            if (facesContext.getExternalContext().getContext() instanceof PortletContext) {
+                facesContext = new PortletFacesContextImpl(facesContext);
+            }
         }
         return facesContext;
     }
