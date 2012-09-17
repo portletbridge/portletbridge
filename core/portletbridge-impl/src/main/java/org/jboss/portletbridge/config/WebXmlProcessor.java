@@ -30,6 +30,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.faces.FacesException;
 import javax.faces.webapp.FacesServlet;
@@ -52,7 +53,14 @@ public final class WebXmlProcessor {
 
     private static final String WEB_XML_PATH = "/WEB-INF/web.xml";
 
-    private SAXParserFactory factory;
+    private static SAXParserFactory saxFactory = SAXParserFactory.newInstance();
+    private static AtomicBoolean scan = new AtomicBoolean(true);
+    private static boolean scanned = false;
+
+    static {
+        saxFactory.setValidating(false);
+        saxFactory.setNamespaceAware(true);
+    }
 
     static List<ServletBean> servlets = new ArrayList<ServletBean>();
     static Map<String, ArrayList<String>> urlMappings = new HashMap<String, ArrayList<String>>();
@@ -62,30 +70,45 @@ public final class WebXmlProcessor {
     static Map<Class<? extends Throwable>, String> errorViews;
 
     public WebXmlProcessor(PortletContext portletContext) {
-        if (null != portletContext) {
-            factory = SAXParserFactory.newInstance();
-            factory.setValidating(false);
-            factory.setNamespaceAware(true);
+        if (scan.compareAndSet(true, false)) {
+            if (null != portletContext) {
+                InputStream inputStream = portletContext.getResourceAsStream(WEB_XML_PATH);
+                this.parse(inputStream);
 
-            InputStream inputStream = portletContext.getResourceAsStream(WEB_XML_PATH);
-            this.parse(inputStream);
+                errorViews = createErrorViews();
 
-            errorViews = createErrorViews();
-
-            try {
-                inputStream.close();
-            } catch (IOException e) {
-                portletContext.log("Portlet Bridge error parsing web.xml", e);
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    portletContext.log("Portlet Bridge error parsing web.xml", e);
+                }
+                scanned = true;
+            }
+        } else {
+            while (!scanned) {
+                try {
+                    Thread.sleep(300);
+                } catch (InterruptedException e) {
+                    break;
+                }
             }
         }
     }
 
     public WebXmlProcessor(InputStream webXml) {
-        if (null != webXml) {
-            factory = SAXParserFactory.newInstance();
-            factory.setValidating(false);
-            factory.setNamespaceAware(true);
-            this.parse(webXml);
+        if (scan.compareAndSet(true, false)) {
+            if (null != webXml) {
+                this.parse(webXml);
+                scanned = true;
+            }
+        } else {
+            while (!scanned) {
+                try {
+                    Thread.sleep(150);
+                } catch (InterruptedException e) {
+                    break;
+                }
+            }
         }
     }
 
@@ -114,7 +137,7 @@ public final class WebXmlProcessor {
 
     public void parse(InputStream webXml) {
         try {
-            SAXParser parser = factory.newSAXParser();
+            SAXParser parser = saxFactory.newSAXParser();
             XMLReader reader = parser.getXMLReader();
 
             WebXmlHandler webXmlHandler = new WebXmlHandler(reader);
