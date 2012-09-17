@@ -24,6 +24,7 @@ package org.jboss.portletbridge.test;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.descriptor.api.Descriptors;
+import org.jboss.shrinkwrap.descriptor.api.facesconfig21.WebFacesConfigDescriptor;
 import org.jboss.shrinkwrap.descriptor.api.webapp30.WebAppDescriptor;
 import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
@@ -85,5 +86,13 @@ public class TestDeployment {
                      .up();
 
         return webConfig;
+    }
+
+    public static WebFacesConfigDescriptor createFacesConfigXmlDescriptor() {
+        WebFacesConfigDescriptor facesConfig = Descriptors.create(WebFacesConfigDescriptor.class);
+        facesConfig.addDefaultNamespaces()
+                 .version("2.1");
+
+        return facesConfig;
     }
 }
