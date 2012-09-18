@@ -56,6 +56,8 @@ public class PortletResourceHandler extends ResourceHandlerWrapper {
 
     public static final String MIME_PARAM = "type";
 
+    private static final String ORG_RICHFACES_RESOURCE = "org.richfaces.resource";
+
     private final ResourceHandler parent;
 
     public PortletResourceHandler(ResourceHandler parent) {
@@ -86,9 +88,24 @@ public class PortletResourceHandler extends ResourceHandlerWrapper {
     }
 
     @Override
+    public Resource createResource(String resourceName) {
+        Resource resource = getWrapped().createResource(resourceName);
+
+        if ((resource != null) && resource.getClass().getName().startsWith(ORG_RICHFACES_RESOURCE)) {
+            resource = new RichFacesResourceHandler(resource);
+        } else if (!isPortletResource(resource)) {
+            resource = new PortletResource(resource);
+        }
+        return resource;
+    }
+
+    @Override
     public Resource createResource(String resourceName, String libraryName) {
         Resource resource = getWrapped().createResource(resourceName, libraryName);
-        if (!isPortletResource(resource)) {
+
+        if ((resource != null) && resource.getClass().getName().startsWith(ORG_RICHFACES_RESOURCE)) {
+            resource = new RichFacesResourceHandler(resource);
+        } else if (!isPortletResource(resource)) {
             resource = new PortletResource(resource);
         }
         return resource;
@@ -97,7 +114,10 @@ public class PortletResourceHandler extends ResourceHandlerWrapper {
     @Override
     public Resource createResource(String resourceName, String libraryName, String contentType) {
         Resource resource = getWrapped().createResource(resourceName, libraryName, contentType);
-        if (!isPortletResource(resource)) {
+
+        if ((resource != null) && resource.getClass().getName().startsWith(ORG_RICHFACES_RESOURCE)) {
+            resource = new RichFacesResourceHandler(resource);
+        } else if (!isPortletResource(resource)) {
             resource = new PortletResource(resource);
         }
         return resource;
@@ -160,7 +180,7 @@ public class PortletResourceHandler extends ResourceHandlerWrapper {
 
                 int size = 0;
                 for (int thisRead = resourceChannel.read(buf), totalWritten = 0; thisRead != -1; thisRead = resourceChannel
-                    .read(buf)) {
+                        .read(buf)) {
 
                     buf.rewind();
                     buf.limit(thisRead);
@@ -285,10 +305,9 @@ public class PortletResourceHandler extends ResourceHandlerWrapper {
     }
 
     protected enum RichFacesUrlType {
-        ONE("org.richfaces", "../../org.richfaces.images/", "rf-one"),
-        TWO("org.richfaces", "../../", "rf-two"),
-        THREE("org.richfaces.images", "../org.richfaces.images/", "rf-three"),
-        FOUR("org.richfaces.images", "org.richfaces.images/", "rf-four");
+        ONE("org.richfaces", "../../org.richfaces.images/", "rf-one"), TWO("org.richfaces", "../../", "rf-two"), THREE(
+                "org.richfaces.images", "../org.richfaces.images/", "rf-three"), FOUR("org.richfaces.images",
+                "org.richfaces.images/", "rf-four");
 
         private String libraryName;
         private String pathPrefix;

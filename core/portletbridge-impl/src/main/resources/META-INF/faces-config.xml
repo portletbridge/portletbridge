@@ -71,6 +71,7 @@
     </component>
     <render-kit>
         <render-kit-id>HTML_BASIC</render-kit-id>
+        <render-kit-class>org.jboss.portletbridge.renderkit.html.RenderKitBridgeImpl</render-kit-class>
         <renderer>
             <description>Overrides the BodyRenderer that comes with the JSF implementation</description>
             <component-family>javax.faces.Output</component-family>
