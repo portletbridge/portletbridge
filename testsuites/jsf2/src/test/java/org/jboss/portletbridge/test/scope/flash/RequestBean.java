@@ -19,22 +19,32 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.portletbridge.context.flash;
+package org.jboss.portletbridge.test.scope.flash;
 
-import javax.faces.context.ExternalContext;
-import javax.faces.context.Flash;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 
 /**
- * @author kenfinnigan
+ * @author <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
  */
-public class FlashContextFactory {
+@ManagedBean
+@RequestScoped
+public class RequestBean {
+    public static final String ORIG_VALUE = "original";
 
-    private FlashContextFactory() {
-        // Prevent instantiation
+    private String name = ORIG_VALUE;
+
+    public String getName() {
+        return name;
     }
 
-    public static Flash getFlashForBridge(ExternalContext extContext) {
-        // TODO Support retrieval of Mojarra Flash?
-        return new PortletFlashDefault();
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String next() {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("requestBean", this);
+        return "done?faces-redirect=true";
     }
 }

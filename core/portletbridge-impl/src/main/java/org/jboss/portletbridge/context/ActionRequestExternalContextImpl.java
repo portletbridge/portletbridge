@@ -65,13 +65,11 @@ public class ActionRequestExternalContextImpl extends PortletExternalContextImpl
         return (PortletContext) super.getContext();
     }
 
-    @Override
-    public ActionRequest getRequest() {
+    public ActionRequest getActionRequest() {
         return (ActionRequest) super.getRequest();
     }
 
-    @Override
-    public ActionResponse getResponse() {
+    public ActionResponse getActionResponse() {
         return (ActionResponse) super.getResponse();
     }
 
@@ -147,7 +145,7 @@ public class ActionRequestExternalContextImpl extends PortletExternalContextImpl
             PortalUrlQueryString queryString = new PortalUrlQueryString(null);
             queryString.setParameters(urlParams);
 
-            Map<String, String[]> publicParamMap = getRequest().getPublicParameterMap();
+            Map<String, String[]> publicParamMap = getActionRequest().getPublicParameterMap();
             if (null != publicParamMap && !publicParamMap.isEmpty()) {
                 for (Map.Entry<String, String[]> entry : publicParamMap.entrySet()) {
                     String key = entry.getKey();
@@ -163,11 +161,14 @@ public class ActionRequestExternalContextImpl extends PortletExternalContextImpl
             bridgeContext.setRenderRedirectQueryString(queryString.toString());
         } else if (url.startsWith("#") || (!actionURL.isInContext(getRequestContextPath()))
             || "true".equalsIgnoreCase(actionURL.getParameter(Bridge.DIRECT_LINK))) {
-            getResponse().sendRedirect(url);
+            getPortletFlash().doLastPhaseActions(FacesContext.getCurrentInstance(), true);
+            getActionResponse().sendRedirect(url);
         } else {
             redirect(encodeActionURL(url));
         }
-        FacesContext.getCurrentInstance().responseComplete();
+        FacesContext context = FacesContext.getCurrentInstance();
+        getPortletFlash().doLastPhaseActions(context, true);
+        context.responseComplete();
     }
 
     // ============================================================
@@ -175,18 +176,18 @@ public class ActionRequestExternalContextImpl extends PortletExternalContextImpl
 
     @Override
     public String getRequestContentType() {
-        return getRequest().getContentType();
+        return getActionRequest().getContentType();
     }
 
     @Override
     public int getRequestContentLength() {
-        return getRequest().getContentLength();
+        return getActionRequest().getContentLength();
     }
 
     @Override
     public void setRequestCharacterEncoding(String encoding) throws UnsupportedEncodingException {
         try {
-            getRequest().setCharacterEncoding(encoding);
+            getActionRequest().setCharacterEncoding(encoding);
         } catch (IllegalStateException e) {
             // No op
         }
@@ -194,7 +195,7 @@ public class ActionRequestExternalContextImpl extends PortletExternalContextImpl
 
     @Override
     public String getRequestCharacterEncoding() {
-        return getRequest().getCharacterEncoding();
+        return getActionRequest().getCharacterEncoding();
     }
 
     protected String getRequestHeader(String name) {
@@ -247,13 +248,13 @@ public class ActionRequestExternalContextImpl extends PortletExternalContextImpl
     public void addResponseHeader(String name, String value) {
         if ("X-Portlet-Mode".equals(name)) {
             try {
-                this.getResponse().setPortletMode(new PortletMode(value));
+                getActionResponse().setPortletMode(new PortletMode(value));
             } catch (PortletModeException e) {
                 throw new RuntimeException("Cant set portlet mode '" + value + "'", e);
             }
         } else if ("X-Window-State".equals(name)) {
             try {
-                this.getResponse().setWindowState(new WindowState(value));
+                getActionResponse().setWindowState(new WindowState(value));
             } catch (WindowStateException e) {
                 throw new RuntimeException("Cant set window state '" + value + "'", e);
             }
@@ -266,13 +267,13 @@ public class ActionRequestExternalContextImpl extends PortletExternalContextImpl
     public void setResponseHeader(String name, String value) {
         if ("X-Portlet-Mode".equals(name)) {
             try {
-                this.getResponse().setPortletMode(new PortletMode(value));
+                getActionResponse().setPortletMode(new PortletMode(value));
             } catch (PortletModeException e) {
                 throw new RuntimeException("Cant set portlet mode '" + value + "'", e);
             }
         } else if ("X-Window-State".equals(name)) {
             try {
-                this.getResponse().setWindowState(new WindowState(value));
+                getActionResponse().setWindowState(new WindowState(value));
             } catch (WindowStateException e) {
                 throw new RuntimeException("Cant set window state '" + value + "'", e);
             }
@@ -308,7 +309,7 @@ public class ActionRequestExternalContextImpl extends PortletExternalContextImpl
 
     @Override
     public void responseFlushBuffer() throws IOException {
-
+        getPortletFlash().doLastPhaseActions(FacesContext.getCurrentInstance(), true);
     }
 
     @Override

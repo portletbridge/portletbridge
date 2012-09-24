@@ -73,7 +73,7 @@ public class RenderPortletExternalContextImpl extends MimeExternalContextImpl {
             PortalUrlQueryString queryString = new PortalUrlQueryString(null);
             queryString.setParameters(urlParams);
 
-            Map<String, String[]> publicParamMap = getRequest().getPublicParameterMap();
+            Map<String, String[]> publicParamMap = getRenderRequest().getPublicParameterMap();
             if (null != publicParamMap && !publicParamMap.isEmpty()) {
                 for (Map.Entry<String, String[]> entry : publicParamMap.entrySet()) {
                     String key = entry.getKey();
@@ -104,15 +104,14 @@ public class RenderPortletExternalContextImpl extends MimeExternalContextImpl {
                 redirect(encodeActionURL(url));
             }
         }
+        getPortletFlash().doLastPhaseActions(FacesContext.getCurrentInstance(), true);
     }
 
-    @Override
-    public RenderRequest getRequest() {
+    public RenderRequest getRenderRequest() {
         return (RenderRequest) super.getRequest();
     }
 
-    @Override
-    public RenderResponse getResponse() {
+    public RenderResponse getRenderResponse() {
         return (RenderResponse) super.getResponse();
     }
 
@@ -128,7 +127,7 @@ public class RenderPortletExternalContextImpl extends MimeExternalContextImpl {
     @Override
     public void addResponseHeader(String name, String value) {
         if ("X-Portlet-Title".equals(name)) {
-            this.getResponse().setTitle(value);
+            getRenderResponse().setTitle(value);
         } else {
             super.addResponseHeader(name, value);
         }
@@ -137,7 +136,7 @@ public class RenderPortletExternalContextImpl extends MimeExternalContextImpl {
     @Override
     public void setResponseHeader(String name, String value) {
         if ("X-Portlet-Title".equals(name)) {
-            this.getResponse().setTitle(value);
+            getRenderResponse().setTitle(value);
         } else {
             super.setResponseHeader(name, value);
         }

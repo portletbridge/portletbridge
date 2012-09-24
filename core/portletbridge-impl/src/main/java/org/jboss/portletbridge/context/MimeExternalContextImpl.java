@@ -27,6 +27,7 @@ import java.io.Writer;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.context.FacesContext;
 import javax.portlet.BaseURL;
 import javax.portlet.MimeResponse;
 import javax.portlet.PortletContext;
@@ -60,19 +61,17 @@ public abstract class MimeExternalContextImpl extends PortletExternalContextImpl
 
     // ============================================================
     // public methods
-    @Override
-    public PortletRequest getRequest() {
+    public PortletRequest getPortletRequest() {
         return (PortletRequest) super.getRequest();
     }
 
-    @Override
-    public MimeResponse getResponse() {
+    public MimeResponse getMimeResponse() {
         return (MimeResponse) super.getResponse();
     }
 
     @Override
     protected String createActionUrl(PortalActionURL url, boolean escape) {
-        MimeResponse renderResponse = getResponse();
+        MimeResponse renderResponse = getMimeResponse();
         PortletURL portletURL = renderResponse.createActionURL();
 
         setPortletUrlParameters(url, portletURL);
@@ -86,7 +85,7 @@ public abstract class MimeExternalContextImpl extends PortletExternalContextImpl
 
     @Override
     protected String createResourceUrl(PortalActionURL portalUrl, boolean escape) {
-        MimeResponse renderResponse = getResponse();
+        MimeResponse renderResponse = getMimeResponse();
         ResourceURL resourceURL = renderResponse.createResourceURL();
         setBaseUrlParameters(portalUrl, resourceURL);
         String path = portalUrl.getPath();
@@ -104,7 +103,7 @@ public abstract class MimeExternalContextImpl extends PortletExternalContextImpl
 
     @Override
     protected String createRenderUrl(PortalActionURL portalUrl, boolean escape, Map<String, List<String>> parameters) {
-        MimeResponse renderResponse = getResponse();
+        MimeResponse renderResponse = getMimeResponse();
         PortletURL renderURL = renderResponse.createRenderURL();
         setPortletUrlParameters(portalUrl, renderURL);
         renderURL.setParameters(portalUrl.getParameters());
@@ -161,7 +160,7 @@ public abstract class MimeExternalContextImpl extends PortletExternalContextImpl
 
     @Override
     protected String createPartialActionUrl(PortalActionURL portalUrl) {
-        MimeResponse renderResponse = getResponse();
+        MimeResponse renderResponse = getMimeResponse();
         ResourceURL resourceURL = renderResponse.createResourceURL();
         setBaseUrlParameters(portalUrl, resourceURL);
         resourceURL.setParameters(portalUrl.getParameters());
@@ -172,17 +171,17 @@ public abstract class MimeExternalContextImpl extends PortletExternalContextImpl
 
     @Override
     public String getResponseCharacterEncoding() {
-        return getResponse().getCharacterEncoding();
+        return getMimeResponse().getCharacterEncoding();
     }
 
     @Override
     public String getResponseContentType() {
-        return getResponse().getContentType();
+        return getMimeResponse().getContentType();
     }
 
     @Override
     public void setResponseContentType(String contentType) {
-        getResponse().setContentType(contentType);
+        getMimeResponse().setContentType(contentType);
     }
 
     @Override
@@ -191,48 +190,48 @@ public abstract class MimeExternalContextImpl extends PortletExternalContextImpl
 
     @Override
     public int getResponseBufferSize() {
-        return getResponse().getBufferSize();
+        return getMimeResponse().getBufferSize();
     }
 
     @Override
     public void setResponseBufferSize(int size) {
-        getResponse().setBufferSize(size);
+        getMimeResponse().setBufferSize(size);
     }
 
     @Override
     public OutputStream getResponseOutputStream() throws IOException {
-        return getResponse().getPortletOutputStream();
+        return getMimeResponse().getPortletOutputStream();
     }
 
     @Override
     public Writer getResponseOutputWriter() throws IOException {
-        return getResponse().getWriter();
+        return getMimeResponse().getWriter();
     }
 
     @Override
     public boolean isResponseCommitted() {
-        return getResponse().isCommitted();
+        return getMimeResponse().isCommitted();
     }
 
     @Override
     public void responseFlushBuffer() throws IOException {
-        // getFlash().doLastPhaseActions(FacesContext.getCurrentInstance(), false);
-        getResponse().flushBuffer();
+        getPortletFlash().doLastPhaseActions(FacesContext.getCurrentInstance(), false);
+        getMimeResponse().flushBuffer();
     }
 
     @Override
     public void responseReset() {
-        getResponse().reset();
+        getMimeResponse().reset();
     }
 
     @Override
     public void addResponseHeader(String name, String value) {
-        getResponse().addProperty(name, value);
+        getMimeResponse().addProperty(name, value);
     }
 
     @Override
     public void setResponseHeader(String name, String value) {
-        getResponse().setProperty(name, value);
+        getMimeResponse().setProperty(name, value);
     }
 
     @Override

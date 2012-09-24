@@ -57,13 +57,13 @@ public class ResourceRequestExternalContextImpl extends MimeExternalContextImpl 
     @Override
     public String getRequestCharacterEncoding() {
         // TODO - save character encoding from action request.
-        return getRequest().getCharacterEncoding();
+        return getResourceRequest().getCharacterEncoding();
     }
 
     @Override
     public void setRequestCharacterEncoding(String encoding) throws UnsupportedEncodingException {
         try {
-            getRequest().setCharacterEncoding(encoding);
+            getResourceRequest().setCharacterEncoding(encoding);
         } catch (IllegalStateException e) {
             // TODO: handle exception
         }
@@ -71,7 +71,7 @@ public class ResourceRequestExternalContextImpl extends MimeExternalContextImpl 
 
     @Override
     public int getRequestContentLength() {
-        return getRequest().getContentLength();
+        return getResourceRequest().getContentLength();
     }
 
     protected String getRequestHeader(String name) {
@@ -152,9 +152,10 @@ public class ResourceRequestExternalContextImpl extends MimeExternalContextImpl 
         }
 
         FacesContext facesContext = FacesContext.getCurrentInstance();
+        getPortletFlash().doLastPhaseActions(facesContext, true);
 
         if (facesContext.getPartialViewContext().isPartialRequest()) {
-            ResourceResponse resourceResponse = getResponse();
+            ResourceResponse resourceResponse = getResourceResponse();
             resourceResponse.setContentType("text/xml");
             resourceResponse.setCharacterEncoding("UTF-8");
 
@@ -186,11 +187,11 @@ public class ResourceRequestExternalContextImpl extends MimeExternalContextImpl 
         return super.encodeNamespace(name);
     }
 
-    public ResourceRequest getRequest() {
+    public ResourceRequest getResourceRequest() {
         return (ResourceRequest) super.getRequest();
     }
 
-    public ResourceResponse getResponse() {
+    public ResourceResponse getResourceResponse() {
         return (ResourceResponse) super.getResponse();
     }
 

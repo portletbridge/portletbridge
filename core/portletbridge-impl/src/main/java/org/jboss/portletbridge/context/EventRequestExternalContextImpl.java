@@ -122,7 +122,7 @@ public class EventRequestExternalContextImpl extends PortletExternalContextImpl 
             PortalUrlQueryString queryString = new PortalUrlQueryString(null);
             queryString.setParameters(urlParams);
 
-            Map<String, String[]> publicParamMap = getRequest().getPublicParameterMap();
+            Map<String, String[]> publicParamMap = getPortletRequest().getPublicParameterMap();
             if (null != publicParamMap && !publicParamMap.isEmpty()) {
                 for (Map.Entry<String, String[]> entry : publicParamMap.entrySet()) {
                     String key = entry.getKey();
@@ -159,7 +159,9 @@ public class EventRequestExternalContextImpl extends PortletExternalContextImpl 
         } else {
             redirect(encodeActionURL(url));
         }
-        FacesContext.getCurrentInstance().responseComplete();
+        FacesContext context = FacesContext.getCurrentInstance();
+        getPortletFlash().doLastPhaseActions(context, true);
+        context.responseComplete();
     }
 
     @Override
@@ -174,12 +176,12 @@ public class EventRequestExternalContextImpl extends PortletExternalContextImpl 
 
     @Override
     public void addResponseHeader(String name, String value) {
-        getResponse().addProperty(name, value);
+        getPortletResponse().addProperty(name, value);
     }
 
     @Override
     public void setResponseHeader(String name, String value) {
-        getResponse().setProperty(name, value);
+        getPortletResponse().setProperty(name, value);
     }
 
     @Override
@@ -214,7 +216,7 @@ public class EventRequestExternalContextImpl extends PortletExternalContextImpl 
 
     @Override
     public void responseFlushBuffer() throws IOException {
-
+        getPortletFlash().doLastPhaseActions(FacesContext.getCurrentInstance(), true);
     }
 
     @Override
