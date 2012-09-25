@@ -32,6 +32,7 @@ import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
+import org.jboss.portletbridge.test.PortletExpectedConditions;
 import org.jboss.portletbridge.test.TestDeployment;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
@@ -88,8 +89,8 @@ public class FlashScopeTest {
 
         assertTrue("output1 field should contain: " + RequestBean.ORIG_VALUE,
                 ExpectedConditions.textToBePresentInElement(OUTPUT_FIELD_1, RequestBean.ORIG_VALUE).apply(driver));
-        assertTrue("output2 field should contain: [null]",
-                ExpectedConditions.textToBePresentInElement(OUTPUT_FIELD_2, "").apply(driver));
+        assertTrue("output2 field should be empty",
+                PortletExpectedConditions.emptyElement(OUTPUT_FIELD_2).apply(driver));
     }
 
     @Test
