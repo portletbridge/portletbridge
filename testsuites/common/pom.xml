@@ -33,6 +33,13 @@
       <artifactId>jsf-impl</artifactId>
       <scope>provided</scope>
     </dependency>
+
+    <dependency>
+      <groupId>org.jboss.arquillian.graphene</groupId>
+      <artifactId>graphene-webdriver</artifactId>
+      <scope>provided</scope>
+      <type>pom</type>
+    </dependency>
   </dependencies>
 
   <build>
