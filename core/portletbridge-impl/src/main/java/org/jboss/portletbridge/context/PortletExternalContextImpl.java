@@ -28,6 +28,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -834,7 +835,7 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
         } else {
             try {
                 boolean escapedUrl = isStrictEscaped(url);
-                PortalActionURL portalUrl = new PortalActionURL(escapedUrl ? unescapeUrl(url) : url);
+                PortalActionURL portalUrl = new PortalActionURL(escapedUrl ? unescapeUrl(url) : url, escapedUrl);
                 if (!isInContext(portalUrl)) {
                     if ("portlet:".equals(portalUrl.getProtocol())) {
                         /*
@@ -952,7 +953,7 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
     public String encodeResourceURL(String url) {
         try {
             boolean escapedUrl = isStrictEscaped(url);
-            PortalActionURL portalUrl = new PortalActionURL(url);
+            PortalActionURL portalUrl = new PortalActionURL(url, escapedUrl);
             // JSR-301 chapter 6.1.3.1 requirements:
             String path = portalUrl.getPath();
             if (null != portalUrl.getProtocol() && "portlet:".equalsIgnoreCase(portalUrl.getProtocol())) {
@@ -1257,7 +1258,12 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
             if (null != facesContext.getViewRoot() && null != (viewId = facesContext.getViewRoot().getViewId())) {
                 ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
                 String actionURL = viewHandler.getActionURL(facesContext, viewId);
-                portalUrl.addParameter(backLink, encodeActionURL(actionURL));
+                try {
+                    portalUrl.addParameter(backLink, URLEncoder.encode(encodeActionURL(actionURL), "UTF-8"));
+                } catch (UnsupportedEncodingException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
             }
         }
     }
