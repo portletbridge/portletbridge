@@ -1,0 +1,23 @@
+<f:view id="ajaxEcho" xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html">
+    <h:head />
+    <h:body>
+        <h:form id="loginRegisterBox" layout="block">
+            <p>
+                <h:outputLabel id="outlabel" for="userEmail" value="userEmail"/>
+                <h:inputText id="userEmail" value="#{loginRegisterBean.email}"
+                             validatorMessage="Invalid"
+                             required="true"
+                             requiredMessage="req"
+                             >
+                    <f:ajax event="change" execute="@this userEmail" render="@this loginRegisterBox"
+                            listener="#{loginRegisterBean.emailChanged}"/>
+                    <f:validateRegex pattern=".+@.+\.[a-z]+"/>
+                </h:inputText>
+                <h:message id="validator" for="userEmail" color="red"/>
+
+                <h:commandButton value="Submit" action="result" />
+            </p>
+        </h:form>
+    </h:body>
+</f:view>
