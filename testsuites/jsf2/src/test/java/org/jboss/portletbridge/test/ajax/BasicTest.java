@@ -78,17 +78,15 @@ public class BasicTest {
         assertNotNull("Check that page contains reload element.", driver.findElement(RELOAD));
         assertNotNull("Check that page contains reset element.", driver.findElement(RESET));
 
-        System.out.println(driver.getPageSource());
-
         assertTrue("Portlet should return: " + StringToolBean.INITIAL, ExpectedConditions.textToBePresentInElement(OUTPUT, StringToolBean.INITIAL).apply(driver));
 
         driver.findElement(INPUT).sendKeys(INPUT1);
         driver.findElement(SUBMIT).click();
 
-        assertTrue("Portlet should return: " + INPUT1, ExpectedConditions.textToBePresentInElement(OUTPUT, INPUT1).apply(driver));
+        assertTrue("Portlet should return: " + StringToolBean.INITIAL, ExpectedConditions.textToBePresentInElement(OUTPUT, StringToolBean.INITIAL).apply(driver));
 
         driver.findElement(INPUT).sendKeys(INPUT2);
-        driver.findElement(SUBMIT).click();
+        driver.findElement(RELOAD).click();
 
         assertTrue("Portlet should return: " + INPUT2, ExpectedConditions.textToBePresentInElement(OUTPUT, INPUT2).apply(driver));
 
@@ -101,7 +99,7 @@ public class BasicTest {
 
 
         driver.findElement(INPUT).sendKeys(INPUT3);
-        driver.findElement(SUBMIT).click();
+        driver.findElement(RELOAD).click();
 
         assertTrue("Portlet should return: " + INPUT3, ExpectedConditions.textToBePresentInElement(OUTPUT, INPUT3).apply(driver));
 

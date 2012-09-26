@@ -4,16 +4,16 @@
     <h:body>
         <h:form id="form1">
             Output: 
-            <h:outputText id="out1" value="#{echo.str}" />
+            <h:outputText id="out1" value="#{tool.str}" />
             
             Input: 
-            <h:inputText id="in1" autocomplete="off" value="#{echo.str}">
+            <h:inputText id="in1" autocomplete="off" value="#{tool.str}">
                 <f:ajax render="out1" />
             </h:inputText>
             
             <h:commandButton id="button1" value="Echo" type="button" />
             
-            <h:commandButton id="reset" value="reset" actionListener="#{echo.reset}">
+            <h:commandButton id="reset" value="reset" actionListener="#{tool.reset}">
                 <f:ajax render="@form" />
             </h:commandButton>
             
