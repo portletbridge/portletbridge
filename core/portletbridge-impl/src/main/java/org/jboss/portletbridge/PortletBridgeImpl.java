@@ -21,11 +21,8 @@
  */
 package org.jboss.portletbridge;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -56,11 +53,6 @@ import javax.portlet.faces.BridgePublicRenderParameterHandler;
 import javax.portlet.faces.BridgeUninitializedException;
 import javax.portlet.faces.BridgeWriteBehindResponse;
 
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.disk.DiskFileItem;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.portlet.PortletFileUpload;
-import org.apache.commons.fileupload.util.Streams;
 import org.jboss.portletbridge.bridge.config.BridgeConfig;
 import org.jboss.portletbridge.bridge.context.BridgeContext;
 import org.jboss.portletbridge.bridge.controller.BridgeController;
@@ -71,12 +63,9 @@ import org.jboss.portletbridge.bridge.factory.BridgeContextFactory;
 import org.jboss.portletbridge.bridge.factory.BridgeControllerFactory;
 import org.jboss.portletbridge.bridge.factory.BridgeFactoryFinder;
 import org.jboss.portletbridge.bridge.logger.BridgeLogger;
-import org.jboss.portletbridge.component.MultipartResourceRequest;
 import org.jboss.portletbridge.config.FacesConfigProcessor;
 import org.jboss.portletbridge.config.WebXmlProcessor;
 import org.jboss.portletbridge.context.InitFacesContext;
-import org.jboss.portletbridge.model.UploadedFile;
-import org.jboss.portletbridge.model.UploadedFileImpl;
 
 /**
  * @author kenfinnigan
@@ -197,13 +186,6 @@ public class PortletBridgeImpl implements Bridge {
             throw new BridgeException("No JSF view id's defined in portlet.xml for " + portletConfig.getPortletName());
         }
 
-        // Determine whether RichFaces is present
-        try {
-            Class.forName("org.richfaces.VersionBean");
-            bridgeConfig.setRichFaces(true);
-        } catch (Exception rfe) {
-            // Do Nothing
-        }
         return bridgeConfig;
     }
 
@@ -278,69 +260,6 @@ public class PortletBridgeImpl implements Bridge {
         assertParameters(request, response);
 
         try {
-            // Are we dealing with a multipart/fileupload request ?
-            try {
-                MultipartResourceRequest newRequest = new MultipartResourceRequest(request, new HashMap<String, String[]>());
-                if (PortletFileUpload.isMultipartContent(newRequest.getAsActionRequest())) {
-                    HashMap<String, String> requestParameterMap = new HashMap<String, String>();
-                    HashMap<String, List<UploadedFile>> requestParameterFileMap = new HashMap<String, List<UploadedFile>>();
-
-                    Map<String, String[]> parsedParameters = new HashMap<String, String[]>();
-                    PortletFileUpload upload = new PortletFileUpload(new DiskFileItemFactory());
-                    List<FileItem> result = (List<FileItem>) upload.parseRequest(newRequest.getAsActionRequest());
-
-                    if (result != null && !result.isEmpty()) {
-                        for (FileItem item : result) {
-                            if (item.isFormField()) {
-                                parsedParameters.put(item.getFieldName(), new String[] { item.getString() });
-                            } else {
-                                DiskFileItemFactory diskFileItemFactory = new DiskFileItemFactory();
-
-                                diskFileItemFactory.setRepository(new File(System.getProperty("java.io.tmpdir")));
-
-                                // Initialize the commons-fileupload size threshold to zero, so that all files will be dumped to
-                                // disk
-                                // instead of staying in memory.
-                                diskFileItemFactory.setSizeThreshold(0);
-
-                                DiskFileItem diskFileItem = (DiskFileItem) diskFileItemFactory.createItem(item.getFieldName(),
-                                        item.getContentType(), item.isFormField(), item.getName());
-                                Streams.copy(item.getInputStream(), diskFileItem.getOutputStream(), true);
-
-                                File tempFile = diskFileItem.getStoreLocation();
-
-                                Map<String, List<String>> headersMap = new HashMap<String, List<String>>();
-
-                                Map<String, Object> attributeMap = new HashMap<String, Object>();
-                                String id = Long.toString(((long) hashCode()) + System.currentTimeMillis());
-                                String message = null;
-                                UploadedFile uploadedFile = new UploadedFileImpl(tempFile.getAbsolutePath(), attributeMap,
-                                        diskFileItem.getCharSet(), diskFileItem.getContentType(), headersMap, id, message,
-                                        item.getName(), diskFileItem.getSize());
-
-                                requestParameterMap.put(item.getFieldName(), tempFile.getAbsolutePath());
-
-                                List<UploadedFile> uploadedFiles = requestParameterFileMap.get(item.getFieldName());
-
-                                if (uploadedFiles == null) {
-                                    uploadedFiles = new ArrayList<UploadedFile>();
-                                    requestParameterFileMap.put(item.getFieldName(), uploadedFiles);
-                                }
-
-                                uploadedFiles.add(uploadedFile);
-
-                                requestParameterFileMap.put(item.getFieldName(), uploadedFiles);
-                                request.setAttribute(item.getFieldName(), item);
-                            }
-                        }
-                    }
-                    request.setAttribute("xxxREMOVE_MExxx", requestParameterFileMap);
-                    request = new MultipartResourceRequest(request, parsedParameters);
-                }
-            } catch (Exception e) {
-                logger.log(Level.SEVERE, "Failure trying to parse multipart request.", e);
-            }
-
             initRequest(request, response, PortletPhase.RESOURCE_PHASE);
             BridgeContext bridgeContext = getBridgeContext(request, response, PortletPhase.RESOURCE_PHASE);
 

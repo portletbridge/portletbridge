@@ -13,25 +13,20 @@
 
     <dependencies>
         <dependency>
-            <groupId>javax.faces</groupId>
+            <groupId>javax.portlet</groupId>
+            <artifactId>portlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.faces</groupId>
             <artifactId>jsf-api</artifactId>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
-            <groupId>javax.portlet</groupId>
-            <artifactId>portlet-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
             <groupId>org.jboss.portletbridge</groupId>
-            <artifactId>portletbridge-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.portletbridge</groupId>
-            <artifactId>portletbridge-impl</artifactId>
-            <scope>runtime</scope>
+            <artifactId>jsf2-depchain</artifactId>
+            <type>pom</type>
         </dependency>
     </dependencies>
 
@@ -48,34 +43,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <profiles>
-        <!--Run this example in LifeRay-->
-        <!--example usage: mvn install -Pliferay-->
-        <profile>
-            <id>liferay</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-war-plugin</artifactId>
-                        <configuration>
-                            <webXml>src/main/liferay/liferay-web.xml</webXml>
-                            <webResources>
-                                <resource>
-                                    <filtering>false</filtering>
-                                    <directory>${basedir}/src/main/liferay</directory>
-                                    <targetPath>WEB-INF</targetPath>
-                                    <includes>
-                                        <include>liferay-display.xml</include>
-                                        <include>liferay-plugin-package.properties</include>
-                                        <include>liferay-portlet.xml</include>
-                                    </includes>
-                                </resource>
-                            </webResources>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>

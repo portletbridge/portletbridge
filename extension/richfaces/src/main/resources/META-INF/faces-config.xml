@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config version="2.1" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:bridge="http://jboss.org/xml/ns/bridge/bridge-extension"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_1.xsd">
+    <name>JBossPortletBridge_RichFaces4</name>
+    <ordering>
+        <after>
+            <name>JBossPortletBridge</name>
+        </after>
+        <before>
+            <others />
+        </before>
+    </ordering>
+    <application>
+        <view-handler>org.jboss.portletbridge.richfaces.application.ViewHandlerImpl</view-handler>
+        <resource-handler>org.jboss.portletbridge.richfaces.application.resource.RichFacesPortletResourceHandler</resource-handler>
+    </application>
+    <factory>
+        <faces-context-factory>org.jboss.portletbridge.richfaces.context.FileUploadFacesContextFactory</faces-context-factory>
+    </factory>
+</faces-config>

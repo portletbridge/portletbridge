@@ -32,7 +32,6 @@ import javax.faces.application.ViewHandlerWrapper;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.portlet.MimeResponse;
 import javax.portlet.PortletResponse;
 import javax.portlet.faces.Bridge;
 import javax.portlet.faces.BridgeUtil;
@@ -250,27 +249,6 @@ public class PortletViewHandler extends ViewHandlerWrapper {
 
     private void doRenderView(FacesContext context, UIViewRoot viewToRender) throws IOException {
         getViewDeclarationLanguage(context, viewToRender.getViewId()).renderView(context, viewToRender);
-    }
-
-    @Override
-    public String getResourceURL(FacesContext context, String path) {
-        //TODO Work around to prevent RF4 from pre-pending web context onto portal url.
-        Object resp = FacesContext.getCurrentInstance().getExternalContext().getResponse();
-        if (null != path) {
-            if (resp instanceof MimeResponse) {
-                String url = ((MimeResponse)resp).createResourceURL().toString();
-                if (null != url) {
-                    int pos = url.indexOf("?");
-                    if (pos > 0) {
-                        url = url.substring(0, pos);
-                    }
-                    if (path.startsWith(url)) {
-                        return path;
-                    }
-                }
-            }
-        }
-        return super.getResourceURL(context, path);
     }
 
     @Override

@@ -30,12 +30,8 @@
     <!-- Portlet Bridge -->
     <dependency>
       <groupId>org.jboss.portletbridge</groupId>
-      <artifactId>portletbridge-api</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.portletbridge</groupId>
-      <artifactId>portletbridge-impl</artifactId>
+      <artifactId>richfaces4-depchain</artifactId>
+      <type>pom</type>
       <scope>test</scope>
     </dependency>
 

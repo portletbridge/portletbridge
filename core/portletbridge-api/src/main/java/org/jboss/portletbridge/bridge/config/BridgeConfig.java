@@ -212,20 +212,6 @@ public interface BridgeConfig {
     boolean hasPreserveActionParameters();
 
     /**
-     * Sets whether or not RichFaces is being used by the Portlet.
-     *
-     * @param present <code>true</code> indicates RichFaces is present. <code>false</code> indicates it is not.
-     */
-    void setRichFaces(boolean present);
-
-    /**
-     * Gets whether or not RichFaces is being used by the Portlet. If not previously set, it returns <code>false</code>.
-     *
-     * @return <code>true</code> indicates RichFaces is present. <code>false</code> indicates it is not.
-     */
-    boolean hasRichFaces();
-
-    /**
      * Sets the <code>List</code> of attributes to be excluded from the bridge's request scope. This list includes both the
      * attributes configured in the portlet.xml (portlet init parameter) as well as any configured in any of this web
      * application's faces-config.xml(s). It doesn't include any of the predefined attributes as defined by the specification. A

@@ -19,33 +19,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.portletbridge.model;
+package org.jboss.portletbridge.richfaces.request;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Collection;
 
-public interface UploadedFile {
+import javax.portlet.ClientDataRequest;
+import javax.servlet.ServletInputStream;
 
-    String getContentType();
+/**
+ * @author <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
+ */
+public class ServletInputStreamAdapter extends ServletInputStream {
 
-    byte[] getData() throws IOException;
+    private ClientDataRequest request;
 
-    InputStream getInputStream() throws IOException;
+    public ServletInputStreamAdapter(ClientDataRequest request) {
+        this.request = request;
+    }
 
-    String getName();
+    /**
+     * @see java.io.InputStream#read()
+     */
+    @Override
+    public int read() throws IOException {
+        return request.getPortletInputStream().read();
+    }
 
-    long getSize();
-
-    void delete() throws IOException;
-
-    void write(String fileName) throws IOException;
-
-    String getHeader(String headerName);
-
-    Collection<String> getHeaderNames();
-
-    Collection<String> getHeaders(String headerName);
-
-    String getParameterName();
 }

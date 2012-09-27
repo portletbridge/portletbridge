@@ -16,8 +16,7 @@
 
     <properties>
         <!-- JSF2 Implementations -->
-        <version.jsf2.api>2.1</version.jsf2.api>
-        <version.mojarra2>2.1.7</version.mojarra2>
+        <version.mojarra2>2.1.11</version.mojarra2>
 
         <!-- RichFaces 4 versions -->
         <version.richfaces4>4.2.2.Final</version.richfaces4>
@@ -62,6 +61,23 @@
                 <artifactId>portletbridge-impl</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.jboss.portletbridge</groupId>
+                <artifactId>portletbridge-extension-richfaces</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.portletbridge</groupId>
+                <artifactId>jsf2-depchain</artifactId>
+                <version>${project.version}</version>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.portletbridge</groupId>
+                <artifactId>richfaces4-depchain</artifactId>
+                <version>${project.version}</version>
+                <type>pom</type>
+            </dependency>
 
             <!-- Spec dependencies -->
             <dependency>
@@ -78,11 +94,6 @@
                 <groupId>javax.servlet.jsp</groupId>
                 <artifactId>jsp-api</artifactId>
                 <version>2.1</version>
-            </dependency>
-            <dependency>
-                <groupId>javax.faces</groupId>
-                <artifactId>jsf-api</artifactId>
-                <version>${version.jsf2.api}</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.faces</groupId>
@@ -183,6 +194,9 @@
     <modules>
         <module>build-resources</module>
         <module>core</module>
+        <module>extension/richfaces</module>
+        <module>depchain/jsf2</module>
+        <module>depchain/richfaces4</module>
         <module>testsuites</module>
         <module>examples</module>
         <module>archetypes</module>

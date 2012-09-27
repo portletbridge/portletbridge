@@ -19,37 +19,36 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.portletbridge.renderkit.html;
+package org.jboss.portletbridge.richfaces.request;
 
-import javax.faces.render.RenderKit;
-import javax.faces.render.RenderKitWrapper;
-import javax.faces.render.Renderer;
+import javax.portlet.ResourceRequest;
+import javax.servlet.http.HttpServletRequest;
 
-import org.jboss.portletbridge.renderkit.richfaces.FileUploadRendererRichFacesImpl;
+import org.richfaces.model.UploadedFile;
+import org.richfaces.request.BaseMultipartResourceRequest;
+import org.richfaces.request.ProgressControl;
 
-public class RenderKitBridgeImpl extends RenderKitWrapper {
+import com.google.common.collect.Lists;
 
-    private RenderKit wrapped;
+/**
+ * @author <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
+ */
+@SuppressWarnings("unchecked")
+public class MultipartResourceRequestSizeExceeded extends BaseMultipartResourceRequest {
 
-    public RenderKitBridgeImpl(RenderKit wrapped) {
-        this.wrapped = wrapped;
+    public MultipartResourceRequestSizeExceeded(ResourceRequest resourceRequest, HttpServletRequest request, String uploadId,
+            ProgressControl progressControl) {
+        super(resourceRequest, request, uploadId, progressControl);
     }
 
     @Override
-    public Renderer getRenderer(String family, String rendererType) {
-
-        Renderer renderer = super.getRenderer(family, rendererType);
-
-        if ("org.richfaces.FileUpload".equals(family) && "org.richfaces.FileUploadRenderer".equals(rendererType)) {
-            renderer = new FileUploadRendererRichFacesImpl(renderer);
-        }
-
-        return renderer;
+    public Iterable<UploadedFile> getUploadedFiles() {
+        return Lists.newArrayList();
     }
 
     @Override
-    public RenderKit getWrapped() {
-        return wrapped;
+    public ResponseState getResponseState() {
+        return ResponseState.sizeExceeded;
     }
 
 }

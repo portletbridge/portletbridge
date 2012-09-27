@@ -63,7 +63,6 @@ import javax.faces.context.Flash;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.Cookie;
 
-import org.jboss.portletbridge.component.MultipartResourceRequest;
 import org.jboss.portletbridge.context.flash.FlashHttpServletAdapter;
 import org.jboss.portletbridge.context.flash.PortletFlash;
 import org.jboss.portletbridge.context.map.ContextAttributesMap;
@@ -285,10 +284,6 @@ public abstract class AbstractExternalContext extends ExternalContext {
                 }
 
                 protected String getAttribute(String name) {
-                    if(request instanceof MultipartResourceRequest) {
-                        if("faces-request".equalsIgnoreCase(name))
-                            return "partial/ajax";
-                    }
                     return getRequestHeader(name);
                 }
 
