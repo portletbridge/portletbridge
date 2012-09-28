@@ -1047,6 +1047,7 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
                     mapping = mapping.substring(1);
                     if (resourceName.endsWith(mapping)) {
                         resourceName = resourceName.substring(0, resourceName.indexOf(mapping));
+                        break;
                     }
                 }
             }
