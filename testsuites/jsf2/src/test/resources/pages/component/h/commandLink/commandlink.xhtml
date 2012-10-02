@@ -1,0 +1,26 @@
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xml:lang="en" lang="en">
+
+	<h:head>
+		<h:outputStylesheet name="stylesheet.css" />
+	</h:head>
+
+	<h:body>
+		<h:form id="form1">
+			Step: <h:inputText id="input" value="#{commandBean.step}"/><br/>
+			Value: <h:outputText id="output" value="#{commandBean.counter}"/><br/>
+			<h:commandLink id="submit" value="#{commandBean.submitLabel}" action="#{commandBean.incrementCounter}" /> | 
+			<h:commandLink action="#{commandBean.setCounterTo}" value="Reset Counter" > | 
+				<f:param name="nc" value="0" />
+			</h:commandLink>
+			<h:commandLink id="ajax" value="Ajax" image="ajax.png">
+				<f:ajax execute="submit" render="output" />
+			</h:commandLink>
+		</h:form>
+
+		<h:messages id="messages" />
+	</h:body>
+</f:view>
