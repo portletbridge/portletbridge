@@ -44,12 +44,10 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 @RunWith(Arquillian.class)
 public class NavigationConditionalTest {
 
-    public static final String NEW_VALUE = "New Value";
-
     @Deployment()
     public static WebArchive createDeployment() {
         WebArchive wa = TestDeployment.createDeployment()
-        //        .addClass(PaymentController.class)
+                .addClass(PaymentController.class)
                 .addAsWebResource("pages/navigation/mainConditional.xhtml", "home.xhtml")
                 .addAsWebResource("pages/navigation/order.xhtml", "order.xhtml")
                 .addAsWebResource("pages/navigation/payment.xhtml", "payment.xhtml")
@@ -72,13 +70,6 @@ public class NavigationConditionalTest {
         return webConfig.exportAsString();
     }
 
-    private static void addNavigationRule(WebFacesConfigDescriptor webConfig, String fromOutcome, String toViewId) {
-        webConfig.createNavigationRule().createNavigationCase().fromOutcome(fromOutcome).toViewId(toViewId);
-    }
-
-    private static void addNavigationRuleFromAction(WebFacesConfigDescriptor webConfig, String action, String fromOutcome, String toViewId) {
-        webConfig.createNavigationRule().createNavigationCase().fromAction(action).fromOutcome(fromOutcome).toViewId(toViewId);
-    }
     protected static final By HEADER = By.xpath("//h1[contains(@id,'title')]");
     protected static final By BUTTON_TARGET_PAYMENT = By.xpath("//input[contains(@id,'buttonPay')]");
     protected static final By INPUT_QUANTITY = By.xpath("//input[contains(@id,'quantity')]");
