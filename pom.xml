@@ -305,12 +305,6 @@
                 </configuration>
             </plugin>
 
-            <!-- m2e Config -->
-            <plugin>
-                <groupId>org.eclipse.m2e</groupId>
-                <artifactId>lifecycle-mapping</artifactId>
-            </plugin>
-
             <!-- Release plugin -->
             <plugin>
                 <artifactId>maven-release-plugin</artifactId>
