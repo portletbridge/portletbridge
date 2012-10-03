@@ -195,8 +195,8 @@
         <module>build-resources</module>
         <module>core</module>
         <module>extension/richfaces</module>
-        <module>depchain/jsf2</module>
-        <module>depchain/richfaces4</module>
+        <module>depchain-jsf2</module>
+        <module>depchain-richfaces4</module>
         <module>testsuites</module>
         <module>examples</module>
         <module>archetypes</module>
