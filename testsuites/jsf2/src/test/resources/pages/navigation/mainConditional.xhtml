@@ -1,0 +1,23 @@
+<f:view id="ajaxEcho" xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html">
+    <h:head/>
+    <h:body>
+        <h1 id="title">MainPage</h1>
+        <h:outputText value="Conditional"/>
+        <!-- http://www.mkyong.com/jsf2/conditional-navigation-rule-in-jsf-2-0/ -->
+        <h:form id="formcondnavi">
+            Register:
+            <h:selectBooleanCheckbox id="check" value="#{paymentController.registerCompleted}" >
+                <f:ajax render="check" />
+            </h:selectBooleanCheckbox>
+            Order: <h:outputText id="output" value="#{paymentController.orderQty}" />
+            <br/>
+            Order: <h:inputText id="quantity" autocomplete="off" value="#{paymentController.orderQty}">
+                <f:ajax render="output" />
+            </h:inputText>
+        </h:form>
+        <h:form>
+            <h:commandButton id="buttonPay" action="payment" value="Payment" />
+        </h:form>
+    </h:body>
+</f:view>
