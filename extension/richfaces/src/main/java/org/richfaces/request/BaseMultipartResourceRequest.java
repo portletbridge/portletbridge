@@ -26,7 +26,6 @@ import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Map;
 
-import javax.portlet.ActionRequest;
 import javax.portlet.PortalContext;
 import javax.portlet.PortletMode;
 import javax.portlet.PortletPreferences;
@@ -41,7 +40,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
  */
 @SuppressWarnings("unchecked")
-public abstract class BaseMultipartResourceRequest extends BaseMultipartRequest implements ResourceRequest, ActionRequest {
+public abstract class BaseMultipartResourceRequest extends BaseMultipartRequest implements ResourceRequest {
 
     protected ResourceRequest resourceRequest;
 

@@ -48,16 +48,17 @@ public class ViewHandlerImpl extends ViewHandlerWrapper {
     @Override
     public String getResourceURL(FacesContext context, String path) {
         if (path.startsWith(RICHFACES_PATH_TOKEN)) {
-            path = path.replaceAll("[.]faces", "");
-            path = path.replaceAll("[.]jsf", "");
-            path = path.replaceAll("[.]xhtml", "");
-
             ExternalContext externalContext = context.getExternalContext();
             StringBuilder buf = new StringBuilder();
             buf.append(externalContext.getRequestContextPath());
-            buf.append(ResourceHandler.RESOURCE_IDENTIFIER);
-            buf.append('/');
-            buf.append(path.substring(RICHFACES_PATH_TOKEN.length()));
+
+            if (!path.contains("MediaOutputResource")) {
+                buf.append(ResourceHandler.RESOURCE_IDENTIFIER);
+                buf.append('/');
+                buf.append(path.substring(RICHFACES_PATH_TOKEN.length()));
+            } else {
+                buf.append(path);
+            }
             path = externalContext.encodeResourceURL(buf.toString());
             return path;
         }
