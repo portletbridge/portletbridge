@@ -10,7 +10,7 @@ For full details on how to install and configure JBoss Portlet Bridge, check the
 
 ### Get Involved
 
-[User Forum](https://community.jboss.org/en/portletbridge?view=discussions)
-[Developer Forum](https://community.jboss.org/en/portletbridge/dev?view=discussions)
-[Twitter](http://twitter.com/portletbridge)
+ * [User Forum](https://community.jboss.org/en/portletbridge?view=discussions)
+ * [Developer Forum](https://community.jboss.org/en/portletbridge/dev?view=discussions)
+ * [Twitter](http://twitter.com/portletbridge)
 
