@@ -41,8 +41,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 @RunWith(Arquillian.class)
 public class ValidatorEmailTest {
 
-    public static final String NEW_VALUE = "New Value";
-
     @Deployment()
     public static WebArchive createDeployment() {
         return TestDeployment.createDeploymentWithAll()
@@ -78,21 +76,25 @@ public class ValidatorEmailTest {
         assertNotNull("Check that page contains output element!", driver.findElement(LABEL));
         assertTrue("Portlet should return: " + outLabelValue, ExpectedConditions.textToBePresentInElement(LABEL, outLabelValue).apply(driver));
         
+        driver.findElement(INPUT_FIELD).clear();        
         driver.findElement(INPUT_FIELD).sendKeys(INPUT1);
         driver.findElement(SUBMIT_BUTTON).click();
         assertNotNull("Check that page after 1st submit contains output element", driver.findElement(OUTPUT_FIELD));
         assertTrue("Portlet should 1st return: " + outInvalid, ExpectedConditions.textToBePresentInElement(OUTPUT_FIELD, outInvalid).apply(driver));
         
+        driver.findElement(INPUT_FIELD).clear();
         driver.findElement(INPUT_FIELD).sendKeys(INPUT2);
         driver.findElement(SUBMIT_BUTTON).click();
         assertNotNull("Check that page after 2nd submit contains output element", driver.findElement(OUTPUT_FIELD));
         assertTrue("Portlet should 2nd return: " + outInvalid, ExpectedConditions.textToBePresentInElement(OUTPUT_FIELD, outInvalid).apply(driver));
         
+        driver.findElement(INPUT_FIELD).clear();
         driver.findElement(INPUT_FIELD).sendKeys(INPUT3);
         driver.findElement(SUBMIT_BUTTON).click();
         assertNotNull("Check that page after 3rd submit contains output element", driver.findElement(OUTPUT_FIELD));
         assertTrue("Portlet should 3rd return: " + outInvalid, ExpectedConditions.textToBePresentInElement(OUTPUT_FIELD, outInvalid).apply(driver));
         
+        driver.findElement(INPUT_FIELD).clear();
         driver.findElement(INPUT_FIELD).sendKeys(INPUT4);
         driver.findElement(SUBMIT_BUTTON).click();
         assertNotNull("Check that page after 4th submit contains output element", driver.findElement(OUTPUT_FIELD));

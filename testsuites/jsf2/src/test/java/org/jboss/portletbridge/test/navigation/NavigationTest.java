@@ -43,8 +43,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 @RunWith(Arquillian.class)
 public class NavigationTest {
 
-    public static final String NEW_VALUE = "New Value";
-
     @Deployment()
     public static WebArchive createDeployment() {
         WebArchive wa = TestDeployment.createDeployment()
@@ -145,7 +143,7 @@ public class NavigationTest {
 
         driver.findElement(BUTTON_TARGET_NAV1).click();
                 
-        assertTrue("Portlet should be on target page.", ExpectedConditions.textToBePresentInElement(HEADER, "page1").apply(driver));
+        assertTrue("Portlet should be on page1 page.", ExpectedConditions.textToBePresentInElement(HEADER, "page1").apply(driver));
     }
     
     @Test
@@ -160,7 +158,7 @@ public class NavigationTest {
 
         driver.findElement(BUTTON_TARGET_NAV2).click();
                 
-        assertTrue("Portlet should be on target page.", ExpectedConditions.textToBePresentInElement(HEADER, "page2").apply(driver));
+        assertTrue("Portlet should be on page2 page.", ExpectedConditions.textToBePresentInElement(HEADER, "page2").apply(driver));
     }    
   
 }

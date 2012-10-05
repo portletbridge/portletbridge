@@ -45,7 +45,7 @@ public class StageDevelopmentTest extends StageAbstractTest{
     @RunAsClient
     public void testStageDevelopmentState() throws Exception {
         driver.get(portalURL.toString());
-        assertNotNull("Check that page contains output element!", driver.findElement(LABEL));
+        assertNotNull("Check that page contains output element.", driver.findElement(LABEL));
         assertTrue("Portlet should return: " + outStage, ExpectedConditions.textToBePresentInElement(LABEL, outStage).apply(driver));                
     }
 

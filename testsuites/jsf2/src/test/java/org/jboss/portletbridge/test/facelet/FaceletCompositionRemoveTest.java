@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.portletbridge.test.facet;
+package org.jboss.portletbridge.test.facelet;
 
 import java.net.URL;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -39,33 +39,22 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 @RunWith(Arquillian.class)
-public class FacetCompositionTest {
-
-    public static final String NEW_VALUE = "New Value";
+public class FaceletCompositionRemoveTest {
 
     @Deployment()
     public static WebArchive createDeployment() {
         WebArchive wa = TestDeployment.createDeployment()
-                .addAsWebResource("pages/facet/composition.xhtml", "home.xhtml")
-                .addAsWebResource("pages/facet/commonContent.xhtml", "commonContent.xhtml")
-                .addAsWebResource("pages/facet/commonFooter.xhtml", "commonFooter.xhtml")
-                .addAsWebResource("pages/facet/commonHeader.xhtml", "commonHeader.xhtml")
-                .addAsWebResource("pages/facet/commonLayout.xhtml", "commonLayout.xhtml");
+                .addAsWebResource("pages/facelet/remove/main.xhtml", "home.xhtml");
         TestDeployment.addWebXml(wa);
         TestDeployment.addPortletXml(wa);
         return wa;
     }
 
     protected static final By HEADER = By.xpath("//h1[contains(@id,'header')]");
-    protected static final By CONTENT = By.xpath("//h1[contains(@id,'content')]");
-    protected static final By FOOTER = By.xpath("//h1[contains(@id,'footer')]");
-    protected static final By BUTTON_TARGET_PAYMENT = By.xpath("//input[contains(@id,'buttonPay')]");
-    protected static final By INPUT_QUANTITY = By.xpath("//input[contains(@id,'quantity')]");
-    protected static final By CHECKBOX_REG = By.xpath("//input[contains(@id,'check')]");
+    protected static final By BUTTON_UNREMOVED = By.xpath("//input[contains(@id,'unremoved')]");
+    protected static final By BUTTON_REMOVED= By.xpath("//input[contains(@id,'deleted')]");
     
-    protected static final String headerContent = "This is default header";
-    protected static final String contentContent = "This is default content";
-    protected static final String footerContent = "This is default footer";
+    protected static final String headerContent = "UI:Remove";
     
     @ArquillianResource
     @PortalURL
@@ -75,16 +64,15 @@ public class FacetCompositionTest {
 
     @Test
     @RunAsClient
-    public void testNavigationConditionalOrder() throws Exception {
+    public void testFaceletCompositionRemove() throws Exception {
         driver.get(portalURL.toString());
 
         assertNotNull("Check that page contains header element.", driver.findElement(HEADER));
-        assertNotNull("Check that page contains header element.", driver.findElement(CONTENT));
-        assertNotNull("Check that page contains header element.", driver.findElement(FOOTER));
-
         assertTrue("Header should contain: " + headerContent, ExpectedConditions.textToBePresentInElement(HEADER, headerContent).apply(driver));
-        assertTrue("Content should contain: " + contentContent, ExpectedConditions.textToBePresentInElement(CONTENT, contentContent).apply(driver));
-        assertTrue("Footer should contain: " + footerContent, ExpectedConditions.textToBePresentInElement(FOOTER, footerContent).apply(driver));
+                
+        assertNotNull("Check that page contains unremoved element.", driver.findElement(BUTTON_UNREMOVED));
         
+        assertTrue("Check that page does not contain removed element.", driver.findElements(BUTTON_REMOVED).isEmpty());
+
     } 
 }

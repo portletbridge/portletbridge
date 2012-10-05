@@ -62,7 +62,7 @@ public class NavigationConditionalTest {
         WebFacesConfigDescriptor webConfig = TestDeployment.createFacesConfigXmlDescriptor();
         
         FacesConfigNavigationRuleType<WebFacesConfigDescriptor> rule = webConfig.createNavigationRule();
-        
+        rule.fromViewId("/home.xhtml");
         rule.createNavigationCase().fromOutcome("payment")._if("#{paymentController.orderQty < 100}").toViewId("/order.xhtml");
         rule.createNavigationCase().fromOutcome("payment")._if("#{paymentController.registerCompleted}").toViewId("/payment.xhtml");
         rule.createNavigationCase().fromOutcome("payment").toViewId("/register.xhtml");
@@ -71,7 +71,7 @@ public class NavigationConditionalTest {
     }
 
     protected static final By HEADER = By.xpath("//h1[contains(@id,'title')]");
-    protected static final By BUTTON_TARGET_PAYMENT = By.xpath("//input[contains(@id,'buttonPay')]");
+    protected static final By BUTTON_PAYMENT = By.xpath("//input[contains(@id,'buttonPay')]");
     protected static final By INPUT_QUANTITY = By.xpath("//input[contains(@id,'quantity')]");
     protected static final By CHECKBOX_REG = By.xpath("//input[contains(@id,'check')]");
     
@@ -87,21 +87,22 @@ public class NavigationConditionalTest {
     @RunAsClient
     public void testNavigationConditionalOrder() throws Exception {
         driver.get(portalURL.toString());
-
+        
         assertNotNull("Check that page contains header element.", driver.findElement(HEADER));
-        assertNotNull("Check that page contains button element.", driver.findElement(BUTTON_TARGET_PAYMENT));
+        assertNotNull("Check that page contains button element.", driver.findElement(BUTTON_PAYMENT));
         assertNotNull("Check that page contains input element.", driver.findElement(INPUT_QUANTITY));
         assertNotNull("Check that page contains checkbox element.", driver.findElement(CHECKBOX_REG));        
 
         assertTrue("Header should be named: " + headerName, ExpectedConditions.textToBePresentInElement(HEADER, headerName).apply(driver));
 
+        driver.findElement(INPUT_QUANTITY).clear();
         driver.findElement(INPUT_QUANTITY).sendKeys("12");
         
-        if (!driver.findElement(CHECKBOX_REG).isEnabled()) {
+        if (!driver.findElement(CHECKBOX_REG).isSelected()) {
             driver.findElement(CHECKBOX_REG).click();
-        }
-        
-        driver.findElement(BUTTON_TARGET_PAYMENT).click();
+        }        
+       
+        driver.findElement(BUTTON_PAYMENT).click();
        
         assertTrue("Portlet should be on order page.", ExpectedConditions.textToBePresentInElement(HEADER, "order").apply(driver));
     }
@@ -112,7 +113,7 @@ public class NavigationConditionalTest {
         driver.get(portalURL.toString());
 
         assertNotNull("Check that page contains header element.", driver.findElement(HEADER));
-        assertNotNull("Check that page contains button element.", driver.findElement(BUTTON_TARGET_PAYMENT));
+        assertNotNull("Check that page contains button element.", driver.findElement(BUTTON_PAYMENT));
         assertNotNull("Check that page contains input element.", driver.findElement(INPUT_QUANTITY));
         assertNotNull("Check that page contains checkbox element.", driver.findElement(CHECKBOX_REG));       
 
@@ -121,11 +122,11 @@ public class NavigationConditionalTest {
         driver.findElement(INPUT_QUANTITY).clear();
         driver.findElement(INPUT_QUANTITY).sendKeys("121");
         
-        if (!driver.findElement(CHECKBOX_REG).isEnabled()) {
+        if (!driver.findElement(CHECKBOX_REG).isSelected()) {
             driver.findElement(CHECKBOX_REG).click();
         }
         
-        driver.findElement(BUTTON_TARGET_PAYMENT).click();
+        driver.findElement(BUTTON_PAYMENT).click();
         
         assertTrue("Portlet should be on payment page.", ExpectedConditions.textToBePresentInElement(HEADER, "payment").apply(driver));
     }
@@ -136,19 +137,20 @@ public class NavigationConditionalTest {
         driver.get(portalURL.toString());
 
         assertNotNull("Check that page contains header element.", driver.findElement(HEADER));
-        assertNotNull("Check that page contains button element.", driver.findElement(BUTTON_TARGET_PAYMENT));
+        assertNotNull("Check that page contains button element.", driver.findElement(BUTTON_PAYMENT));
         assertNotNull("Check that page contains input element.", driver.findElement(INPUT_QUANTITY));
         assertNotNull("Check that page contains checkbox element.", driver.findElement(CHECKBOX_REG));       
 
         assertTrue("Header should be named: " + headerName, ExpectedConditions.textToBePresentInElement(HEADER, headerName).apply(driver));
 
+        driver.findElement(INPUT_QUANTITY).clear();
         driver.findElement(INPUT_QUANTITY).sendKeys("121");
         
-        if (driver.findElement(CHECKBOX_REG).isEnabled()) {
+        if (driver.findElement(CHECKBOX_REG).isSelected()) {
             driver.findElement(CHECKBOX_REG).click();
         }
-        
-        driver.findElement(BUTTON_TARGET_PAYMENT).click();       
+                
+        driver.findElement(BUTTON_PAYMENT).click();       
         
         assertTrue("Portlet should be on register page.", ExpectedConditions.textToBePresentInElement(HEADER, "register").apply(driver));
     }

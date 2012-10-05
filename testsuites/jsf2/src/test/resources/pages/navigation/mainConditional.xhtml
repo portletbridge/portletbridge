@@ -7,16 +7,10 @@
         <!-- http://www.mkyong.com/jsf2/conditional-navigation-rule-in-jsf-2-0/ -->
         <h:form id="formcondnavi">
             Register:
-            <h:selectBooleanCheckbox id="check" value="#{paymentController.registerCompleted}" >
-                <f:ajax render="check" />
-            </h:selectBooleanCheckbox>
+            <h:selectBooleanCheckbox id="check" value="#{paymentController.registerCompleted}" />
             Order: <h:outputText id="output" value="#{paymentController.orderQty}" />
             <br/>
-            Order: <h:inputText id="quantity" autocomplete="off" value="#{paymentController.orderQty}">
-                <f:ajax render="output" />
-            </h:inputText>
-        </h:form>
-        <h:form>
+            Order: <h:inputText id="quantity" autocomplete="off" value="#{paymentController.orderQty}"/>        
             <h:commandButton id="buttonPay" action="payment" value="Payment" />
         </h:form>
     </h:body>
