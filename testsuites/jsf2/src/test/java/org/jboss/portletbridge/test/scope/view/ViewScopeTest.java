@@ -1,4 +1,4 @@
-package org.jboss.portletbridge.test;
+package org.jboss.portletbridge.test.scope.view;
 
 import static org.junit.Assert.assertTrue;
 
@@ -10,6 +10,7 @@ import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
+import org.jboss.portletbridge.test.TestDeployment;
 import org.jboss.portletbridge.test.scopes.UserList;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
@@ -24,7 +25,7 @@ public class ViewScopeTest {
     @Deployment()
     public static WebArchive createDeployment() {
         return TestDeployment.createDeploymentWithAll()
-                .addAsWebResource("users.xhtml", "home.xhtml")
+                .addAsWebResource("pages/scope/view/users.xhtml", "home.xhtml")
                 .addClass(UserList.class)
                 .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css");
     }

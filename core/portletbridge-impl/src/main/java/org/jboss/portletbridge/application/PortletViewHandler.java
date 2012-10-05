@@ -45,8 +45,7 @@ import org.jboss.portletbridge.bridge.logger.JULLoggerImpl;
 import org.jboss.portletbridge.context.PortalActionURL;
 
 /**
- * @author asmirnov
- *
+ * @author asmirnov, <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
  */
 public class PortletViewHandler extends ViewHandlerWrapper {
 

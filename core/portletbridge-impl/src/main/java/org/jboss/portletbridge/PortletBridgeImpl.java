@@ -72,8 +72,7 @@ import org.jboss.portletbridge.context.InitFacesContext;
  */
 public class PortletBridgeImpl implements Bridge {
 
-    private static final Logger logger = Logger.getLogger(PortletBridgeImpl.class.getName(),
-        BridgeLogger.LOGGING_BUNDLE);
+    private static final Logger logger = Logger.getLogger(PortletBridgeImpl.class.getName(), BridgeLogger.LOGGING_BUNDLE);
 
     private BridgeConfig bridgeConfig;
     private BridgeController bridgeController;
@@ -100,7 +99,7 @@ public class PortletBridgeImpl implements Bridge {
         this.bridgeConfig = getBridgeConfig(portletConfig);
 
         this.bridgeController = ((BridgeControllerFactory) BridgeFactoryFinder
-            .getFactoryInstance(BridgeControllerFactory.class)).getBridgeController();
+                .getFactoryInstance(BridgeControllerFactory.class)).getBridgeController();
         this.bridgeController.init(bridgeConfig);
 
         this.initialized = true;
@@ -111,8 +110,8 @@ public class PortletBridgeImpl implements Bridge {
 
     @SuppressWarnings("unchecked")
     private BridgeConfig getBridgeConfig(PortletConfig portletConfig) {
-        BridgeConfig bridgeConfig = ((BridgeConfigFactory) BridgeFactoryFinder
-            .getFactoryInstance(BridgeConfigFactory.class)).getBridgeConfig();
+        BridgeConfig bridgeConfig = ((BridgeConfigFactory) BridgeFactoryFinder.getFactoryInstance(BridgeConfigFactory.class))
+                .getBridgeConfig();
 
         bridgeConfig.setPortletConfig(portletConfig);
 
@@ -122,24 +121,24 @@ public class PortletBridgeImpl implements Bridge {
 
         // Check if Bridge should log messages
         Boolean enableLogging = (Boolean) portletContext.getAttribute(bridgeParametersPrefix
-            + BridgeLogger.LOGGING_ENABLED_PORTLET_INIT_PARAM);
+                + BridgeLogger.LOGGING_ENABLED_PORTLET_INIT_PARAM);
         bridgeConfig.getLogger().setEnabled(null != enableLogging ? enableLogging : Boolean.FALSE);
 
         // Bridge Event Handler
         bridgeConfig.setEventHandler((BridgeEventHandler) portletContext.getAttribute(bridgeParametersPrefix
-            + Bridge.BRIDGE_EVENT_HANDLER));
+                + Bridge.BRIDGE_EVENT_HANDLER));
 
         // Public Render Parameter Handler
         bridgeConfig.setPublicRenderParameterHandler((BridgePublicRenderParameterHandler) portletContext
-            .getAttribute(bridgeParametersPrefix + Bridge.BRIDGE_PUBLIC_RENDER_PARAMETER_HANDLER));
+                .getAttribute(bridgeParametersPrefix + Bridge.BRIDGE_PUBLIC_RENDER_PARAMETER_HANDLER));
 
         // Preserve Action Parameters
         bridgeConfig.setPreserveActionParameters((Boolean) portletContext.getAttribute(bridgeParametersPrefix
-            + Bridge.PRESERVE_ACTION_PARAMS));
+                + Bridge.PRESERVE_ACTION_PARAMS));
 
         // Excluded Request Attributes from Portlet definition
         bridgeConfig.setExcludedRequestAttributes((List<String>) portletContext.getAttribute(bridgeParametersPrefix
-            + Bridge.EXCLUDED_REQUEST_ATTRIBUTES));
+                + Bridge.EXCLUDED_REQUEST_ATTRIBUTES));
 
         // Lifecycle Id
         String lifecycleId = portletContext.getInitParameter(FacesServlet.LIFECYCLE_ID_ATTR);
@@ -176,24 +175,17 @@ public class PortletBridgeImpl implements Bridge {
 
         // Write Behind Response Wrappers
         bridgeConfig.setWriteBehindRenderResponseWrapper(createWrapper(FacesConfigProcessor
-            .getWriteBehindRenderResponseWrapperClassName()));
+                .getWriteBehindRenderResponseWrapperClassName()));
         bridgeConfig.setWriteBehindResourceResponseWrapper(createWrapper(FacesConfigProcessor
-            .getWriteBehindResourceResponseWrapperClassName()));
+                .getWriteBehindResourceResponseWrapperClassName()));
 
         // Default View Id Mappings
         bridgeConfig.setDefaultViewMappings((Map<String, String>) portletContext.getAttribute(bridgeParametersPrefix
-            + Bridge.DEFAULT_VIEWID_MAP));
+                + Bridge.DEFAULT_VIEWID_MAP));
         if (null == bridgeConfig.getDefaultViewMappings() || 0 == bridgeConfig.getDefaultViewMappings().size()) {
             throw new BridgeException("No JSF view id's defined in portlet.xml for " + portletConfig.getPortletName());
         }
 
-        // Determine whether RichFaces is present
-        try {
-            Class.forName("org.richfaces.VersionBean");
-            bridgeConfig.setRichFaces(true);
-        } catch (Exception rfe) {
-            //Do Nothing
-        }
         return bridgeConfig;
     }
 
@@ -205,9 +197,9 @@ public class PortletBridgeImpl implements Bridge {
                 return (Class<? extends BridgeWriteBehindResponse>) loader.loadClass(wrapperClassName);
             } catch (Exception e) {
                 bridgeConfig.getLogger().log(
-                    BridgeLogger.Level.WARNING,
-                    "Unable to instantiate BridgeWriteBehindResponse class: " + wrapperClassName + " due to "
-                        + e.getMessage());
+                        BridgeLogger.Level.WARNING,
+                        "Unable to instantiate BridgeWriteBehindResponse class: " + wrapperClassName + " due to "
+                                + e.getMessage());
                 return null;
             }
         }
@@ -309,7 +301,7 @@ public class PortletBridgeImpl implements Bridge {
 
     protected BridgeContext getBridgeContext(PortletRequest request, PortletResponse response, PortletPhase phase) {
         BridgeContext bridgeContext = ((BridgeContextFactory) BridgeFactoryFinder
-            .getFactoryInstance(BridgeContextFactory.class)).getBridgeContext();
+                .getFactoryInstance(BridgeContextFactory.class)).getBridgeContext();
 
         bridgeContext.setBridgeConfig(bridgeConfig);
         bridgeContext.setPortletContext(bridgeConfig.getPortletConfig().getPortletContext());
@@ -343,11 +335,9 @@ public class PortletBridgeImpl implements Bridge {
         boolean createdInitContext = false;
 
         if (null == facesContext) {
-            ApplicationFactory factory = (ApplicationFactory) FactoryFinder
-                .getFactory(FactoryFinder.APPLICATION_FACTORY);
+            ApplicationFactory factory = (ApplicationFactory) FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
 
-            facesContext = new InitFacesContext(factory.getApplication(), bridgeConfig.getPortletConfig()
-                .getPortletContext());
+            facesContext = new InitFacesContext(factory.getApplication(), bridgeConfig.getPortletConfig().getPortletContext());
             createdInitContext = true;
         }
 

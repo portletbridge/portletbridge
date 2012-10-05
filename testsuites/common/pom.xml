@@ -24,14 +24,16 @@
 
     <!-- JSF Dependencies -->
     <dependency>
-      <groupId>javax.faces</groupId>
+      <groupId>com.sun.faces</groupId>
       <artifactId>jsf-api</artifactId>
       <scope>provided</scope>
     </dependency>
+
     <dependency>
-      <groupId>com.sun.faces</groupId>
-      <artifactId>jsf-impl</artifactId>
+      <groupId>org.jboss.arquillian.graphene</groupId>
+      <artifactId>graphene-webdriver</artifactId>
       <scope>provided</scope>
+      <type>pom</type>
     </dependency>
   </dependencies>
 

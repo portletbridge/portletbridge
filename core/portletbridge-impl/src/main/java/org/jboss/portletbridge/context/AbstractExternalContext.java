@@ -53,7 +53,6 @@
  */
 package org.jboss.portletbridge.context;
 
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -64,12 +63,13 @@ import javax.faces.context.Flash;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.Cookie;
 
-import org.jboss.portletbridge.context.flash.FlashContextFactory;
+import org.jboss.portletbridge.context.flash.FlashHttpServletAdapter;
+import org.jboss.portletbridge.context.flash.PortletFlash;
 import org.jboss.portletbridge.context.map.ContextAttributesMap;
 import org.jboss.portletbridge.context.map.EnumerationIterator;
 
 /**
- * @author shura
+ * @author shura, <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
  */
 public abstract class AbstractExternalContext extends ExternalContext {
 
@@ -102,13 +102,15 @@ public abstract class AbstractExternalContext extends ExternalContext {
 
     private Map<String, Object> sessionMap;
 
+    private Map<String, Object> cookieMap;
+
     private Object request;
 
     private Object response;
 
-    // private Map<String,Object> actionSettings;
-
     private Object context;
+
+    protected PortletFlash portletFlash = null;
 
     public static final String CONVERSATION_ID_PARAMETER = "conversationId";
     private Map<String, String> fallbackContentTypeMap = null;
@@ -217,24 +219,20 @@ public abstract class AbstractExternalContext extends ExternalContext {
     }
 
     /**
-     * Hoock method for initialization parameters.
+     * Hook method for initialization parameters.
      *
      * @return
      */
     protected abstract Enumeration<String> getInitParametersNames();
 
-    /*
-     * (non-Javadoc)
-     *
+    /**
      * @see javax.faces.context.ExternalContext#getRequest()
      */
     public Object getRequest() {
         return this.request;
     }
 
-    /*
-     * (non-Javadoc)
-     *
+    /**
      * @see javax.faces.context.ExternalContext#setRequest(java.lang.Object)
      */
     public void setRequest(Object request) {
@@ -248,16 +246,33 @@ public abstract class AbstractExternalContext extends ExternalContext {
     }
 
     public Map<String, Object> getRequestCookieMap() {
-        // Portlet environment don't have methods to use cookies.
-        return Collections.emptyMap();
+        if (null == this.cookieMap) {
+            this.cookieMap = new ContextAttributesMap<Object>() {
+
+                @Override
+                protected Object getAttribute(String name) {
+                    return getRequestCookie(name);
+                }
+
+                @Override
+                protected void setAttribute(String name, Object value) {
+                    throw new UnsupportedOperationException();
+                }
+
+                @Override
+                protected Enumeration<String> getEnumeration() {
+                    return getRequestCookieNames();
+                }
+            };
+        }
+        return this.cookieMap;
     }
 
-    /*
-     *
-     * (non-Javadoc)
-     *
-     *
-     *
+    protected abstract Object getRequestCookie(String name);
+
+    protected abstract Enumeration<String> getRequestCookieNames();
+
+    /**
      * @see javax.faces.context.ExternalContext#getRequestHeaderMap()
      */
     public Map<String, String> getRequestHeaderMap() {
@@ -364,21 +379,14 @@ public abstract class AbstractExternalContext extends ExternalContext {
 
     protected abstract Enumeration<String> enumerateRequestParameterNames();
 
-    /*
-     * (non-Javadoc)
-     *
+    /**
      * @see javax.faces.context.ExternalContext#getRequestParameterNames()
      */
     public Iterator<String> getRequestParameterNames() {
         return new EnumerationIterator<String>(enumerateRequestParameterNames());
     }
 
-    /*
-     *
-     * (non-Javadoc)
-     *
-     *
-     *
+    /**
      * @see javax.faces.context.ExternalContext#getRequestParameterValuesMap()
      */
     public Map<String, String[]> getRequestParameterValuesMap() {
@@ -403,12 +411,7 @@ public abstract class AbstractExternalContext extends ExternalContext {
 
     protected abstract String[] getRequestParameterValues(String name);
 
-    /*
-     *
-     * (non-Javadoc)
-     *
-     *
-     *
+    /**
      * @see javax.faces.context.ExternalContext#getResponse()
      */
     @Override
@@ -417,15 +420,17 @@ public abstract class AbstractExternalContext extends ExternalContext {
     }
 
     public Object getResponse() {
+        if (isBridgeFlashServletResponse()) {
+            return new FlashHttpServletAdapter((PortletResponse)response);
+        }
         return this.response;
     }
 
-    /*
-     *
-     * (non-Javadoc)
-     *
-     *
-     *
+    protected boolean isBridgeFlashServletResponse() {
+        return ((null != portletFlash) && portletFlash.isServletResponse());
+    }
+
+    /**
      * @see javax.faces.context.ExternalContext#getSessionMap()
      */
     public Map<String, Object> getSessionMap() {
@@ -493,7 +498,14 @@ public abstract class AbstractExternalContext extends ExternalContext {
 
     @Override
     public Flash getFlash() {
-        return FlashContextFactory.getFlashForBridge(this);
+        return getPortletFlash();
+    }
+
+    protected PortletFlash getPortletFlash() {
+        if (null == portletFlash) {
+            portletFlash = PortletFlash.getFlash(this, true);
+        }
+        return portletFlash;
     }
 
     public String getFallbackMimeType(String file) {

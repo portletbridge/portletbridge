@@ -37,7 +37,7 @@ import javax.portlet.PortletContext;
 /**
  * Stub {@link ExternalContext} implementation. The only context operations are implemented.
  *
- * @author asmirnov
+ * @author asmirnov, <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
  */
 public class InitExternalContext extends AbstractExternalContext {
 
@@ -49,11 +49,6 @@ public class InitExternalContext extends AbstractExternalContext {
     public PortletContext getContext() {
         return (PortletContext) super.getContext();
     }
-
-
-    /* (non-Javadoc)
-     * @see org.jboss.portletbridge.context.AbstractExternalContext#createResourceUrl(org.jboss.portletbridge.context.PortalActionURL)
-     */
 
     /* (non-Javadoc)
      * @see org.jboss.portletbridge.context.AbstractExternalContext#enumerateRequestParameterNames()
@@ -396,6 +391,16 @@ public class InitExternalContext extends AbstractExternalContext {
     @Override
     public String encodeResourceURL(String url) {
         return url;
+    }
+
+    @Override
+    protected Object getRequestCookie(String name) {
+        throw new UnsupportedOperationException("this method is not supported at initialization phase");
+    }
+
+    @Override
+    protected Enumeration<String> getRequestCookieNames() {
+        throw new UnsupportedOperationException("this method is not supported at initialization phase");
     }
 
 }

@@ -28,6 +28,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -58,6 +59,7 @@ import javax.portlet.PortletResponse;
 import javax.portlet.PortletSession;
 import javax.portlet.faces.Bridge;
 import javax.portlet.faces.BridgeDefaultViewNotSpecifiedException;
+import javax.servlet.http.Cookie;
 
 import org.jboss.portletbridge.bridge.context.BridgeContext;
 import org.jboss.portletbridge.bridge.controller.BridgeController;
@@ -187,13 +189,11 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
         return (PortletContext) super.getContext();
     }
 
-    @Override
-    public PortletRequest getRequest() {
+    public PortletRequest getPortletRequest() {
         return (PortletRequest) super.getRequest();
     }
 
-    @Override
-    public PortletResponse getResponse() {
+    public PortletResponse getPortletResponse() {
         return (PortletResponse) super.getResponse();
     }
 
@@ -203,7 +203,7 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
 
     protected String getNamespace() {
         if (null == namespace) {
-            namespace = getResponse().getNamespace();
+            namespace = getPortletResponse().getNamespace();
         }
         return namespace;
     }
@@ -222,7 +222,7 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
 
     protected Enumeration<String> enumerateRequestParameterNames() {
         List<String> names = new ArrayList<String>();
-        Enumeration<String> paramNames = getRequest().getParameterNames();
+        Enumeration<String> paramNames = getPortletRequest().getParameterNames();
         while (paramNames.hasMoreElements()) {
             String name = (String) paramNames.nextElement();
             names.add(name);
@@ -249,16 +249,16 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
         } else if (SERVLET_PATH_ATTRIBUTE.equals(name)) {
             return getRequestServletPath();
         } else {
-            return getRequest().getAttribute(name);
+            return getPortletRequest().getAttribute(name);
         }
     }
 
     protected Enumeration<String> getRequestAttributeNames() {
-        return getRequest().getAttributeNames();
+        return getPortletRequest().getAttributeNames();
     }
 
     protected String[] getRequestParameterValues(String name) {
-        String[] temp = getRequest().getParameterValues(name);
+        String[] temp = getPortletRequest().getParameterValues(name);
         if (null == temp || temp.length == 0) {
             temp = extraRequestParameters.get(name);
         }
@@ -266,7 +266,7 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
     }
 
     protected void constructAcceptLanguageHeader() {
-        Enumeration<Locale> locales = getRequest().getLocales();
+        Enumeration<Locale> locales = getPortletRequest().getLocales();
         StringBuilder acceptLangHeader = new StringBuilder(64);
 
         boolean found = false;
@@ -295,7 +295,7 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
     }
 
     protected void constructAcceptHeader() {
-        Enumeration<String> contentTypes = getRequest().getResponseContentTypes();
+        Enumeration<String> contentTypes = getPortletRequest().getResponseContentTypes();
         StringBuilder acceptHeader = new StringBuilder(64);
 
         boolean found = false;
@@ -365,17 +365,17 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
             return null;
         }
 
-        String headerValue = getRequest().getProperty(name);
+        String headerValue = getPortletRequest().getProperty(name);
         if (null == headerValue) {
             // HACK - GateIn converts all request header names to the lower case.
-            headerValue = getRequest().getProperty(name.toLowerCase());
+            headerValue = getPortletRequest().getProperty(name.toLowerCase());
         }
         return headerValue;
     }
 
     protected Enumeration<String> getRequestHeaderNames() {
         List<String> names = new ArrayList<String>();
-        Enumeration<String> propNames = getRequest().getPropertyNames();
+        Enumeration<String> propNames = getPortletRequest().getPropertyNames();
         while (propNames.hasMoreElements()) {
             String name = (String) propNames.nextElement();
             if (!"CONTENT-TYPE".equalsIgnoreCase(name) && !"CONTENT-LENGTH".equalsIgnoreCase(name)) {
@@ -407,10 +407,10 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
             return null;
         }
 
-        Enumeration<String> properties = getRequest().getProperties(name);
+        Enumeration<String> properties = getPortletRequest().getProperties(name);
         if (!properties.hasMoreElements()) {
             // HACK - GateIn converts all request header names to the lower case.
-            properties = getRequest().getProperties(name.toLowerCase());
+            properties = getPortletRequest().getProperties(name.toLowerCase());
         }
         if (properties.hasMoreElements()) {
             List<String> values = new ArrayList<String>();
@@ -425,7 +425,7 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
     }
 
     protected String getRequestParameter(String name) {
-        String temp = getRequest().getParameter(name);
+        String temp = getPortletRequest().getParameter(name);
         if (null == temp) {
             String[] tempArray = extraRequestParameters.get(name);
             if (null != tempArray && tempArray.length > 0) {
@@ -444,7 +444,7 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
     }
 
     protected Object getSessionAttribute(String name, int scope) {
-        return getRequest().getPortletSession(true).getAttribute(name, scope);
+        return getPortletRequest().getPortletSession(true).getAttribute(name, scope);
     }
 
     protected Enumeration<String> getSessionAttributeNames() {
@@ -483,7 +483,7 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
     }
 
     protected Enumeration<String> getSessionAttributeNames(int scope) {
-        return getRequest().getPortletSession(true).getAttributeNames(scope);
+        return getPortletRequest().getPortletSession(true).getAttributeNames(scope);
     }
 
     protected void removeContextAttribute(String name) {
@@ -491,7 +491,7 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
     }
 
     protected void removeRequestAttribute(String name) {
-        getRequest().removeAttribute(name);
+        getPortletRequest().removeAttribute(name);
     }
 
     protected void removeSessionAttribute(String name) {
@@ -499,7 +499,7 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
     }
 
     protected void removeSessionAttribute(String name, int scope) {
-        getRequest().getPortletSession(true).removeAttribute(name, scope);
+        getPortletRequest().getPortletSession(true).removeAttribute(name, scope);
     }
 
     protected void setContextAttribute(String name, Object value) {
@@ -507,7 +507,7 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
     }
 
     protected void setRequestAttribute(String name, Object value) {
-        getRequest().setAttribute(name, value);
+        getPortletRequest().setAttribute(name, value);
     }
 
     protected void setSessionAttribute(String name, Object value) {
@@ -515,7 +515,7 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
     }
 
     protected void setSessionAttribute(String name, Object value, int scope) {
-        getRequest().getPortletSession(true).setAttribute(name, value, scope);
+        getPortletRequest().getPortletSession(true).setAttribute(name, value, scope);
     }
 
     /**
@@ -523,7 +523,7 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
      * @return
      */
     protected String encodeURL(String url) {
-        return getResponse().encodeURL(url);
+        return getPortletResponse().encodeURL(url);
     }
 
     protected String replaceUrlWhitespace(String url) {
@@ -531,11 +531,11 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
     }
 
     public String getAuthType() {
-        return getRequest().getAuthType();
+        return getPortletRequest().getAuthType();
     }
 
     public String getRemoteUser() {
-        String user = getRequest().getRemoteUser();
+        String user = getPortletRequest().getRemoteUser();
         if (user == null) {
             Principal userPrincipal = getUserPrincipal();
             if (null != userPrincipal) {
@@ -547,15 +547,15 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
     }
 
     public String getRequestContextPath() {
-        return getRequest().getContextPath();
+        return getPortletRequest().getContextPath();
     }
 
     public Locale getRequestLocale() {
-        return getRequest().getLocale();
+        return getPortletRequest().getLocale();
     }
 
     public Iterator<Locale> getRequestLocales() {
-        return new EnumerationIterator<Locale>(getRequest().getLocales());
+        return new EnumerationIterator<Locale>(getPortletRequest().getLocales());
     }
 
     public String getRequestPathInfo() {
@@ -573,15 +573,15 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
     }
 
     public Object getSession(boolean create) {
-        return getRequest().getPortletSession(create);
+        return getPortletRequest().getPortletSession(create);
     }
 
     public Principal getUserPrincipal() {
-        return getRequest().getUserPrincipal();
+        return getPortletRequest().getUserPrincipal();
     }
 
     public boolean isUserInRole(String role) {
-        return getRequest().isUserInRole(role);
+        return getPortletRequest().isUserInRole(role);
     }
 
     public void log(String message) {
@@ -642,8 +642,8 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
                 servletPath = viewId;
                 pathInfo = null;
 
-                getRequest().setAttribute(SERVLET_PATH_ATTRIBUTE, servletPath);
-                getRequest().setAttribute("com.sun.faces.INVOCATION_PATH", servletMappingSuffix);
+                getPortletRequest().setAttribute(SERVLET_PATH_ATTRIBUTE, servletPath);
+                getPortletRequest().setAttribute("com.sun.faces.INVOCATION_PATH", servletMappingSuffix);
             } else if (mapping.endsWith("*")) {
                 // Prefix Mapping
                 mapping = mapping.substring(0, mapping.length() - 1);
@@ -652,7 +652,7 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
                 }
                 servletMappingPrefix = servletPath = mapping;
                 pathInfo = viewId;
-                getRequest().setAttribute("com.sun.faces.INVOCATION_PATH", servletMappingSuffix);
+                getPortletRequest().setAttribute("com.sun.faces.INVOCATION_PATH", servletMappingSuffix);
             } else {
                 servletPath = null;
                 pathInfo = viewId;
@@ -725,9 +725,9 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
         try {
             boolean hasRenderRedirectedAfterForward = bridgeContext.hasRenderRedirectAfterDispatch();
             if (!hasRenderRedirectedAfterForward) {
-                dispatcher.forward(getRequest(), getResponse());
+                dispatcher.forward(getPortletRequest(), getPortletResponse());
             } else {
-                dispatcher.include(getRequest(), getResponse());
+                dispatcher.include(getPortletRequest(), getPortletResponse());
             }
         } catch (PortletException e) {
             throw new FacesException(e);
@@ -755,22 +755,50 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
 
     @Override
     public String getRequestScheme() {
-        return getRequest().getScheme();
+        return getPortletRequest().getScheme();
     }
 
     @Override
     public String getRequestServerName() {
-        return getRequest().getServerName();
+        return getPortletRequest().getServerName();
     }
 
     @Override
     public int getRequestServerPort() {
-        return getRequest().getServerPort();
+        return getPortletRequest().getServerPort();
+    }
+
+    @Override
+    protected Object getRequestCookie(String key) {
+        Object value = null;
+        Cookie[] cookies = getPortletRequest().getCookies();
+        if (null != key && null != cookies) {
+            for (Cookie cookie : cookies) {
+                if (key.equalsIgnoreCase(cookie.getName())) {
+                    value = cookie;
+                    break;
+                }
+            }
+        }
+        return value;
+    }
+
+    @Override
+    protected Enumeration<String> getRequestCookieNames() {
+        Cookie[] cookies = getPortletRequest().getCookies();
+        List<String> names = null;
+        if (null != cookies) {
+            names = new ArrayList<String>();
+            for (Cookie cookie : cookies) {
+                names.add(cookie.getName());
+            }
+        }
+        return Collections.enumeration(names);
     }
 
     @Override
     public void invalidateSession() {
-        PortletSession session = getRequest().getPortletSession(false);
+        PortletSession session = getPortletRequest().getPortletSession(false);
         if (session != null) {
             session.invalidate();
         }
@@ -807,7 +835,7 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
         } else {
             try {
                 boolean escapedUrl = isStrictEscaped(url);
-                PortalActionURL portalUrl = new PortalActionURL(escapedUrl ? unescapeUrl(url) : url);
+                PortalActionURL portalUrl = new PortalActionURL(escapedUrl ? unescapeUrl(url) : url, escapedUrl);
                 if (!isInContext(portalUrl)) {
                     if ("portlet:".equals(portalUrl.getProtocol())) {
                         /*
@@ -836,7 +864,7 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
                          */
                         if (null != directLink && Boolean.parseBoolean(directLink)) {
                             // make absolute url
-                            PortletRequest request = getRequest();
+                            PortletRequest request = getPortletRequest();
                             portalUrl.setProtocol(request.getScheme() + ":");
                             portalUrl.setHost("//" + request.getServerName());
                             portalUrl.setPort(request.getServerPort());
@@ -859,7 +887,7 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
                          */
                         if (Boolean.parseBoolean(directLink)) {
                             // make absolute url
-                            PortletRequest request = getRequest();
+                            PortletRequest request = getPortletRequest();
                             portalUrl.setProtocol(request.getScheme() + ":");
                             portalUrl.setHost("//" + request.getServerName());
                             portalUrl.setPort(request.getServerPort());
@@ -925,7 +953,7 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
     public String encodeResourceURL(String url) {
         try {
             boolean escapedUrl = isStrictEscaped(url);
-            PortalActionURL portalUrl = new PortalActionURL(url);
+            PortalActionURL portalUrl = new PortalActionURL(url, escapedUrl);
             // JSR-301 chapter 6.1.3.1 requirements:
             String path = portalUrl.getPath();
             if (null != portalUrl.getProtocol() && "portlet:".equalsIgnoreCase(portalUrl.getProtocol())) {
@@ -933,6 +961,8 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
                 portalUrl.removeParameter(Bridge.VIEW_LINK);
                 encodeBackLink(portalUrl);
                 return replaceUrlWhitespace(encodeActionURL(portalUrl.toString()));
+            } else if (url.startsWith(PortletExternalContextImpl.WSRP_REWRITE)) {
+                return url = encodeURL(url);
             } else if (isOpaqueURL(url)) {
                 // Opaque URL
                 return url;
@@ -980,6 +1010,7 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
 
                 String facesViewId = getViewIdFromUrl(portalUrl);
                 if (null != portalUrl.getParameter(Bridge.IN_PROTOCOL_RESOURCE_LINK)) {
+                    portalUrl.removeParameter(Bridge.IN_PROTOCOL_RESOURCE_LINK);
                     url = createResourceUrl(portalUrl, escapedUrl);
                 } else if (portalUrl.getPath().contains(ResourceHandler.RESOURCE_IDENTIFIER)) {
                     // It's a JSF Resource
@@ -1016,6 +1047,7 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
                     mapping = mapping.substring(1);
                     if (resourceName.endsWith(mapping)) {
                         resourceName = resourceName.substring(0, resourceName.indexOf(mapping));
+                        break;
                     }
                 }
             }
@@ -1211,8 +1243,8 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
             if (Bridge.FACES_USE_CURRENT_VIEW_PARAMETER.equals(portalUrl.getParameter(Bridge.FACES_VIEW_ID_PARAMETER))) {
                 portalUrl.removeParameter(Bridge.FACES_VIEW_ID_PARAMETER);
                 if (this instanceof RenderPortletExternalContextImpl) {
-                    portalUrl.getParameters().putAll(getRequest().getPrivateParameterMap());
-                    portalUrl.getParameters().putAll(getRequest().getPublicParameterMap());
+                    portalUrl.getParameters().putAll(getPortletRequest().getPrivateParameterMap());
+                    portalUrl.getParameters().putAll(getPortletRequest().getPublicParameterMap());
                 }
             }
         }
@@ -1227,7 +1259,12 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
             if (null != facesContext.getViewRoot() && null != (viewId = facesContext.getViewRoot().getViewId())) {
                 ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
                 String actionURL = viewHandler.getActionURL(facesContext, viewId);
-                portalUrl.addParameter(backLink, encodeActionURL(actionURL));
+                try {
+                    portalUrl.addParameter(backLink, URLEncoder.encode(encodeActionURL(actionURL), "UTF-8"));
+                } catch (UnsupportedEncodingException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
             }
         }
     }

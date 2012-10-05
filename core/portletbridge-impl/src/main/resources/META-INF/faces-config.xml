@@ -22,7 +22,6 @@
     <factory>
         <application-factory>org.jboss.portletbridge.application.PortletApplicationFactoryImpl</application-factory>
         <exception-handler-factory>org.jboss.portletbridge.context.exception.PortletExceptionHandlerFactoryImpl</exception-handler-factory>
-        <faces-context-factory>org.jboss.portletbridge.context.PortletFacesContextFactoryImpl</faces-context-factory>
         <external-context-factory>org.jboss.portletbridge.context.PortletExternalContextFactoryImpl</external-context-factory>
         <view-declaration-language-factory>org.jboss.portletbridge.application.view.PortletVdlFactoryImpl</view-declaration-language-factory>
         <partial-view-context-factory>org.jboss.portletbridge.context.PortletPartialViewContextFactoryImpl</partial-view-context-factory>

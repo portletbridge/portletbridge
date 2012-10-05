@@ -41,8 +41,15 @@ public class PortalUrlQueryString {
 
     private Map<String, String[]> parameters;
 
+    private boolean escape = false;
+
     public PortalUrlQueryString(String params) {
+        this(params, false);
+    }
+
+    public PortalUrlQueryString(String params, boolean escape) {
         setQueryString(params);
+        this.escape = escape;
     }
 
     @SuppressWarnings("deprecation")
@@ -147,9 +154,9 @@ public class PortalUrlQueryString {
                 Entry<String, String[]> param = iterator.next();
                 String[] values = param.getValue();
                 for (int i = 0; i < values.length; i++) {
-                    queryString.append(encodeURL(param.getKey()));
+                    queryString.append(escape ? encodeURL(param.getKey()) : param.getKey());
                     if (values[i] != NULL) {
-                        queryString.append('=').append(encodeURL(values[i]));
+                        queryString.append('=').append(escape ? encodeURL(values[i]) : values[i]);
                     }
                     if (i < values.length - 1) {
                         queryString.append('&');

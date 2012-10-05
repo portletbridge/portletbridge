@@ -65,6 +65,13 @@ public class PortalActionURL {
      * @param url
      */
     public PortalActionURL(String url) throws MalformedURLException {
+        this(url, false);
+    }
+
+    /**
+     * @param url
+     */
+    public PortalActionURL(String url, boolean escape) throws MalformedURLException {
         Matcher urlMatcher = urlPattern.matcher(url);
         if (!urlMatcher.matches()) {
             throw new MalformedURLException(url);
@@ -77,7 +84,7 @@ public class PortalActionURL {
             this.port = Integer.parseInt(portStr);
         }
         this.path = urlMatcher.group(5);
-        this.queryString = new PortalUrlQueryString(urlMatcher.group(7));
+        this.queryString = new PortalUrlQueryString(urlMatcher.group(7), escape);
     }
 
     /**
@@ -85,7 +92,7 @@ public class PortalActionURL {
      *
      * @param src
      */
-    public PortalActionURL(PortalActionURL src) {
+    public PortalActionURL(PortalActionURL src, boolean escape) {
         if (null == src) {
             throw new NullPointerException("Source URL is null");
         }
@@ -94,7 +101,7 @@ public class PortalActionURL {
         this.host = src.host;
         this.port = src.port;
         this.path = src.path;
-        this.queryString = new PortalUrlQueryString(src.getQueryString());
+        this.queryString = new PortalUrlQueryString(src.getQueryString(), escape);
         this.authority = src.authority;
         this.userInfo = src.userInfo;
     }
@@ -233,8 +240,8 @@ public class PortalActionURL {
         this.queryString.setParameters(parameters);
     }
 
-    public void setQueryString(String queryString) {
-        this.queryString = new PortalUrlQueryString(queryString);
+    public void setQueryString(String queryString, boolean escape) {
+        this.queryString = new PortalUrlQueryString(queryString, escape);
     }
 
 }

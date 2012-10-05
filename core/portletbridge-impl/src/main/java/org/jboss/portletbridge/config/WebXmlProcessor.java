@@ -70,8 +70,8 @@ public final class WebXmlProcessor {
     static Map<Class<? extends Throwable>, String> errorViews;
 
     public WebXmlProcessor(PortletContext portletContext) {
-        if (scan.compareAndSet(true, false)) {
-            if (null != portletContext) {
+        if (null != portletContext) {
+            if (scan.compareAndSet(true, false)) {
                 InputStream inputStream = portletContext.getResourceAsStream(WEB_XML_PATH);
                 this.parse(inputStream);
 
@@ -83,30 +83,30 @@ public final class WebXmlProcessor {
                     portletContext.log("Portlet Bridge error parsing web.xml", e);
                 }
                 scanned = true;
-            }
-        } else {
-            while (!scanned) {
-                try {
-                    Thread.sleep(300);
-                } catch (InterruptedException e) {
-                    break;
+            } else {
+                while (!scanned) {
+                    try {
+                        Thread.sleep(300);
+                    } catch (InterruptedException e) {
+                        break;
+                    }
                 }
             }
         }
     }
 
     public WebXmlProcessor(InputStream webXml) {
-        if (scan.compareAndSet(true, false)) {
-            if (null != webXml) {
+        if (null != webXml) {
+            if (scan.compareAndSet(true, false)) {
                 this.parse(webXml);
                 scanned = true;
-            }
-        } else {
-            while (!scanned) {
-                try {
-                    Thread.sleep(150);
-                } catch (InterruptedException e) {
-                    break;
+            } else {
+                while (!scanned) {
+                    try {
+                        Thread.sleep(150);
+                    } catch (InterruptedException e) {
+                        break;
+                    }
                 }
             }
         }

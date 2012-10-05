@@ -48,11 +48,13 @@ import javax.faces.lifecycle.LifecycleFactory;
 import javax.faces.render.ResponseStateManager;
 import javax.portlet.EventRequest;
 import javax.portlet.EventResponse;
+import javax.portlet.PortletContext;
 import javax.portlet.PortletException;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletRequestDispatcher;
 import javax.portlet.RenderRequest;
 import javax.portlet.ResourceRequest;
+import javax.portlet.ResourceResponse;
 import javax.portlet.StateAwareResponse;
 import javax.portlet.faces.Bridge;
 import javax.portlet.faces.BridgeException;
@@ -275,7 +277,7 @@ public class Jsf20ControllerImpl implements BridgeController {
             if (resourceHandler.isResourceRequest(facesContext)) {
                 // JSF2 Resource
                 resourceHandler.handleResourceRequest(facesContext);
-            } else if (null != resourceId && !"wsrp".equalsIgnoreCase(resourceId)) {
+            } else if (null != resourceId) {
                 renderNonFacesResource(bridgeContext, resourceId);
             } else {
                 renderFacesResource(bridgeContext, facesContext, facesLifecycle);
@@ -560,39 +562,27 @@ public class Jsf20ControllerImpl implements BridgeController {
             PortletException, IOException {
 
         if (null != resourceId) {
-            PortletRequestDispatcher dispatcher = bridgeContext.getPortletContext().getRequestDispatcher(resourceId);
+            PortletContext portletContext = bridgeContext.getPortletContext();
+            PortletRequestDispatcher dispatcher = portletContext.getRequestDispatcher(resourceId);
+
             if (null != dispatcher) {
-                // TODO Verify this works on GateIn. May need following code:
-                // String serverInfo = portletContext.getServerInfo();
-                // if (null != serverInfo
-                // && (serverInfo
-                // .startsWith("JBossPortletContainer") || serverInfo
-                // .startsWith("GateInPortletContainer"))) {
-                // // HACK - Jboss portal does not handle 'forward'
-                // // method during resource requests.
-                // // see
-                // // https://jira.jboss.org/jira/browse/JBPORTAL-2432
-                // String mimeType = portletContext
-                // .getMimeType(target);
-                // if (null == mimeType) {
-                // int lastIndexOfSlash = target
-                // .lastIndexOf('/');
-                // if (lastIndexOfSlash >= 0) {
-                // target = target
-                // .substring(lastIndexOfSlash + 1);
-                // }
-                // int indexOfQuestion = target.indexOf('?');
-                // if (indexOfQuestion >= 0) {
-                // target = target.substring(0,
-                // indexOfQuestion);
-                // }
-                // mimeType = portletContext
-                // .getMimeType(target);
-                // }
-                // if (null != mimeType) {
-                // response.setContentType(mimeType);
-                // }
-                // dispatcher.include(request, response);
+                String mimeType = portletContext.getMimeType(resourceId);
+
+                if (null == mimeType) {
+                    int lastIndexOfSlash = resourceId.lastIndexOf('/');
+                    if (lastIndexOfSlash >= 0) {
+                        resourceId = resourceId.substring(lastIndexOfSlash + 1);
+                    }
+                    int indexOfQuestion = resourceId.indexOf('?');
+                    if (indexOfQuestion >= 0) {
+                        resourceId = resourceId.substring(0, indexOfQuestion);
+                    }
+                    mimeType = portletContext.getMimeType(resourceId);
+                }
+
+                if (null != mimeType) {
+                    ((ResourceResponse) bridgeContext.getPortletResponse()).setContentType(mimeType);
+                }
 
                 dispatcher.forward(bridgeContext.getPortletRequest(), bridgeContext.getPortletResponse());
             }

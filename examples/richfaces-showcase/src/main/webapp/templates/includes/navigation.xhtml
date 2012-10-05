@@ -4,11 +4,11 @@
 
 	<rich:panelMenu activeItem="#{demoNavigator.currentDemo.id}">
 		<c:forEach items="#{demoNavigator.groups}" var="gr">
-			<rich:panelMenuGroup label="#{gr.name}" rightExpandedIcon="#{gr.newItems ? '/images/icons/new-ic.gif' : null}"
-				rightCollapsedIcon="#{gr.newItems ? '/images/icons/new-ic.gif' : null}">
+			<rich:panelMenuGroup label="#{gr.name}" rightExpandedIcon="#{gr.newItems ? portletRes['/images/icons/new-ic.gif'] : null}"
+				rightCollapsedIcon="#{gr.newItems ? portletRes['/images/icons/new-ic.gif'] : null}">
 				<c:forEach items="#{gr.demos}" var="d">
 					<rich:panelMenuItem action="#{d.id}" mode="client" name="#{d.id}"
-						rightIcon="#{(d.newItems || gr.newItem) ? '/images/icons/new-small-ic.gif' : null}">
+						rightIcon="#{(d.newItems || gr.newItem) ? portletRes['/images/icons/new-small-ic.gif'] : null}">
 						<!-- ammendonca: replaced JS onclick with h:outputLink . added style(s) to make it look like the original -->
 						<h:outputLink styleClass="rf-pm-itm-lbl" style="text-decoration: none;" value="#{facesContext.externalContext.requestContextPath}/richfaces/component-sample.jsf" >
 							<f:param name="javax.portlet.faces.ViewLink" value="true"/>

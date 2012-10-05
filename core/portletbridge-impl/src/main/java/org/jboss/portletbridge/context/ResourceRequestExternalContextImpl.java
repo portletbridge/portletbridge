@@ -35,11 +35,15 @@ import javax.portlet.PortletContext;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 
+import org.jboss.portletbridge.PortletBridgeConstants;
+
 /**
- * @author asmirnov
- *
+ * @author asmirnov, <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
  */
 public class ResourceRequestExternalContextImpl extends MimeExternalContextImpl {
+
+    protected String facesRequest = null;
+    protected boolean facesRequestSet = false;
 
     /**
      * @param context
@@ -53,13 +57,13 @@ public class ResourceRequestExternalContextImpl extends MimeExternalContextImpl 
     @Override
     public String getRequestCharacterEncoding() {
         // TODO - save character encoding from action request.
-        return getRequest().getCharacterEncoding();
+        return getResourceRequest().getCharacterEncoding();
     }
 
     @Override
     public void setRequestCharacterEncoding(String encoding) throws UnsupportedEncodingException {
         try {
-            getRequest().setCharacterEncoding(encoding);
+            getResourceRequest().setCharacterEncoding(encoding);
         } catch (IllegalStateException e) {
             // TODO: handle exception
         }
@@ -67,7 +71,7 @@ public class ResourceRequestExternalContextImpl extends MimeExternalContextImpl 
 
     @Override
     public int getRequestContentLength() {
-        return getRequest().getContentLength();
+        return getResourceRequest().getContentLength();
     }
 
     protected String getRequestHeader(String name) {
@@ -83,8 +87,27 @@ public class ResourceRequestExternalContextImpl extends MimeExternalContextImpl 
             }
             return contentLength;
         }
+        if (PortletBridgeConstants.FACES_REQUEST_HEADER_PARAM.equals(name)) {
+            if (!facesRequestSet) {
+                constructFacesRequest();
+            }
+            return facesRequest;
+        }
 
         return super.getRequestHeader(name);
+    }
+
+    protected void constructFacesRequest() {
+        String facesReq = super.getRequestHeader(PortletBridgeConstants.FACES_REQUEST_HEADER_PARAM);
+        if (null != facesReq) {
+            facesRequest = facesReq;
+        } else {
+            String isAjaxParam = getRequestParameterMap().get(PortletBridgeConstants.AJAX_PARAM);
+            if (null != isAjaxParam && Boolean.parseBoolean(isAjaxParam)) {
+                facesRequest = PortletBridgeConstants.FACES_REQUEST_PARTIAL;
+            }
+        }
+        facesRequestSet = true;
     }
 
     protected Enumeration<String> getRequestHeaderNames() {
@@ -96,6 +119,7 @@ public class ResourceRequestExternalContextImpl extends MimeExternalContextImpl 
         }
         names.add("CONTENT-TYPE");
         names.add("CONTENT-LENGTH");
+        names.add(PortletBridgeConstants.FACES_REQUEST_HEADER_PARAM);
         return Collections.enumeration(names);
     }
 
@@ -112,6 +136,12 @@ public class ResourceRequestExternalContextImpl extends MimeExternalContextImpl 
             }
             return new String[] { contentLength };
         }
+        if (PortletBridgeConstants.FACES_REQUEST_HEADER_PARAM.equals(name)) {
+            if (!facesRequestSet) {
+                constructFacesRequest();
+            }
+            return new String[] { facesRequest };
+        }
 
         return super.getRequestHeaderValues(name);
     }
@@ -122,9 +152,10 @@ public class ResourceRequestExternalContextImpl extends MimeExternalContextImpl 
         }
 
         FacesContext facesContext = FacesContext.getCurrentInstance();
+        getPortletFlash().doLastPhaseActions(facesContext, true);
 
         if (facesContext.getPartialViewContext().isPartialRequest()) {
-            ResourceResponse resourceResponse = getResponse();
+            ResourceResponse resourceResponse = getResourceResponse();
             resourceResponse.setContentType("text/xml");
             resourceResponse.setCharacterEncoding("UTF-8");
 
@@ -156,11 +187,11 @@ public class ResourceRequestExternalContextImpl extends MimeExternalContextImpl 
         return super.encodeNamespace(name);
     }
 
-    public ResourceRequest getRequest() {
+    public ResourceRequest getResourceRequest() {
         return (ResourceRequest) super.getRequest();
     }
 
-    public ResourceResponse getResponse() {
+    public ResourceResponse getResourceResponse() {
         return (ResourceResponse) super.getResponse();
     }
 

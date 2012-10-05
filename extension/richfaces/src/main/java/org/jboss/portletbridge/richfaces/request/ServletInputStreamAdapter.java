@@ -19,22 +19,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.portletbridge.context.flash;
+package org.jboss.portletbridge.richfaces.request;
 
-import javax.faces.context.ExternalContext;
-import javax.faces.context.Flash;
+import java.io.IOException;
+
+import javax.portlet.ClientDataRequest;
+import javax.servlet.ServletInputStream;
 
 /**
- * @author kenfinnigan
+ * @author <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
  */
-public class FlashContextFactory {
+public class ServletInputStreamAdapter extends ServletInputStream {
 
-    private FlashContextFactory() {
-        // Prevent instantiation
+    private ClientDataRequest request;
+
+    public ServletInputStreamAdapter(ClientDataRequest request) {
+        this.request = request;
     }
 
-    public static Flash getFlashForBridge(ExternalContext extContext) {
-        // TODO Support retrieval of Mojarra Flash?
-        return new PortletFlashDefault();
+    /**
+     * @see java.io.InputStream#read()
+     */
+    @Override
+    public int read() throws IOException {
+        return request.getPortletInputStream().read();
     }
+
 }
