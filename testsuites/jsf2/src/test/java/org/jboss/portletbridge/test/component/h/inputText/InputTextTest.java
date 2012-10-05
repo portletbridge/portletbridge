@@ -29,6 +29,7 @@ import java.net.URL;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
+import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
@@ -39,7 +40,6 @@ import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -47,190 +47,168 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 @RunWith(Arquillian.class)
 public class InputTextTest {
 
-    @Deployment()
-    public static WebArchive createDeployment() {
-        return TestDeployment.createDeploymentWithAll()
-                .addAsWebResource("pages/component/h/inputText/inputtext.xhtml", "home.xhtml")
-                .addClass(InputTextBean.class);
-        //.addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css");
-    }
+	@Deployment()
+	public static WebArchive createDeployment() {
+		return TestDeployment.createDeploymentWithAll()
+				.addAsWebResource("pages/component/h/inputText/inputtext.xhtml", "home.xhtml")
+				.addClass(InputTextBean.class);
+		//.addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css");
+	}
 
-    @ArquillianResource
-    @PortalURL
-    URL portalURL;
+	@ArquillianResource
+	@PortalURL
+	URL portalURL;
 
-    //@Drone FIXME: JS not working
-    WebDriver driver = new HtmlUnitDriver(true);
+	protected static final By INPUT_ONE = By.xpath("//input[contains(@id,':input1')]");
+	protected static final By OUTPUT_ONE = By.xpath("//span[contains(@id,':output1')]");
+	protected static final By OUTPUT_ONE_COUNTER = By.xpath("//span[contains(@id,':output1count')]");
+	protected static final By SUBMIT_ONE = By.xpath("//input[contains(@id,':submit1')]");
 
-    protected static final By INPUT_ONE = By.xpath("//input[contains(@id,':input1')]");
-    protected static final By OUTPUT_ONE = By.xpath("//span[contains(@id,':output1')]");
-    protected static final By OUTPUT_ONE_COUNTER = By.xpath("//span[contains(@id,':output1count')]");
-    protected static final By SUBMIT_ONE = By.xpath("//input[contains(@id,':submit1')]");
+	protected static final By INPUT_TWO = By.xpath("//input[contains(@id,':input2')]");
+	protected static final By OUTPUT_TWO = By.xpath("//span[contains(@id,':output2')]");
+	protected static final By OUTPUT_TWO_COUNTER = By.xpath("//span[contains(@id,':output2count')]");
 
-    protected static final By INPUT_TWO = By.xpath("//input[contains(@id,':input2')]");
-    protected static final By OUTPUT_TWO = By.xpath("//span[contains(@id,':output2')]");
-    protected static final By OUTPUT_TWO_COUNTER = By.xpath("//span[contains(@id,':output2count')]");
+	protected static final By MESSAGES = By.xpath("//*[contains(@id,':messages')]");
 
-    protected static final By MESSAGES = By.xpath("//*[contains(@id,':messages')]");
+	@Test
+	@RunAsClient
+	public void testInputText(@Drone WebDriver driver) throws Exception {
+		driver.get(portalURL.toString());
 
-    @Test
-    @RunAsClient
-    public void testInputText() throws Exception {
-        driver.get(portalURL.toString());
-        System.out.println(driver.getPageSource());
+		assertNotNull("Check that page contains INPUT ONE element.", driver.findElement(INPUT_ONE));
+		assertNotNull("Check that page contains OUTPUT ONE element.", driver.findElement(OUTPUT_ONE));
+		assertNotNull("Check that page contains SUBMIT ONE element.", driver.findElement(SUBMIT_ONE));
 
-        assertNotNull("Check that page contains INPUT ONE element.", driver.findElement(INPUT_ONE));
-        assertNotNull("Check that page contains OUTPUT ONE element.", driver.findElement(OUTPUT_ONE));
-        assertNotNull("Check that page contains SUBMIT ONE element.", driver.findElement(SUBMIT_ONE));
+		assertEquals("Check that INPUT ONE element starts empty.", "", driver.findElement(INPUT_ONE).getAttribute("value"));
+		assertEquals("Check that OUTPUT ONE element starts empty.", "", driver.findElement(OUTPUT_ONE).getText());
 
-        assertEquals("Check that INPUT ONE element starts empty.", "", driver.findElement(INPUT_ONE).getAttribute("value"));
-        assertEquals("Check that OUTPUT ONE element starts empty.", "", driver.findElement(OUTPUT_ONE).getText());
+		String textToInput = "pbr";
 
-        String textToInput = "pbr";
+		driver.findElement(INPUT_ONE).sendKeys(textToInput);
+		driver.findElement(SUBMIT_ONE).click();
 
-        driver.findElement(INPUT_ONE).sendKeys(textToInput);
-        driver.findElement(SUBMIT_ONE).click();
+		assertEquals("OUTPUT ONE element should have inputed text.", textToInput, driver.findElement(OUTPUT_ONE).getText());
+	}
 
-        assertEquals("OUTPUT ONE element should have inputed text.", textToInput, driver.findElement(OUTPUT_ONE).getText());
+	@Test
+	@RunAsClient
+	public void testAjaxInputText(@Drone WebDriver driver) throws Exception {
+		driver.get(portalURL.toString());
 
-        driver.quit();
-    }
+		assertNotNull("Check that page contains INPUT TWO element.", driver.findElement(INPUT_TWO));
+		assertNotNull("Check that page contains OUTPUT TWO element.", driver.findElement(OUTPUT_TWO));
 
-    @Test
-    @RunAsClient
-    public void testAjaxInputText() throws Exception {
-        driver.get(portalURL.toString());
-        System.out.println(driver.getPageSource());
+		assertEquals("Check that INPUT TWO element starts empty.", "", driver.findElement(INPUT_TWO).getText());
+		assertEquals("Check that OUTPUT TWO element starts empty.", "", driver.findElement(OUTPUT_TWO).getText());
 
-        assertNotNull("Check that page contains INPUT TWO element.", driver.findElement(INPUT_TWO));
-        assertNotNull("Check that page contains OUTPUT TWO element.", driver.findElement(OUTPUT_TWO));
+		final String textToInput = "pbr";
 
-        assertEquals("Check that INPUT TWO element starts empty.", "", driver.findElement(INPUT_TWO).getText());
-        assertEquals("Check that OUTPUT TWO element starts empty.", "", driver.findElement(OUTPUT_TWO).getText());
+		for(String s : textToInput.split("")) {
+			if(!s.equals("")) {
+				driver.findElement(INPUT_TWO).sendKeys(s);            
+			}
+		}
 
-        final String textToInput = "pbr";
+		// Wait for AJAX to do it's work
+		new WebDriverWait(driver, 10).until(new ExpectedCondition<WebElement>() {
+			public WebElement apply(WebDriver driver) {
+				WebElement toReturn = driver.findElement(OUTPUT_TWO);
+				if (toReturn.getText().equals(textToInput)) {
+					return toReturn;
+				}
+				return null;
+			}
+		});
 
-        for(String s : textToInput.split("")) {
-            if(!s.equals("")) {
-                driver.findElement(INPUT_TWO).sendKeys(s);            
-            }
-        }
+		assertEquals("OUTPUT TWO element should have inputed text.", textToInput, driver.findElement(OUTPUT_TWO).getText());
+	}
 
-        // Wait for AJAX to do it's work
-        new WebDriverWait(driver, 10).until(new ExpectedCondition<WebElement>() {
-            public WebElement apply(WebDriver driver) {
-                WebElement toReturn = driver.findElement(OUTPUT_TWO);
-                if (toReturn.getText().equals(textToInput)) {
-                    return toReturn;
-                }
-                return null;
-            }
-        });
+	@Test
+	@RunAsClient
+	public void testOnChange(@Drone WebDriver driver) throws Exception {
+		driver.get(portalURL.toString());
 
-        System.out.println("AFTER_\r\n" + driver.getPageSource());
-        assertEquals("OUTPUT TWO element should have inputed text.", textToInput, driver.findElement(OUTPUT_TWO).getText());
-        
-        driver.quit();
-    }
+		assertNotNull("Check that page contains INPUT TWO element.", driver.findElement(INPUT_TWO));
+		assertNotNull("Check that page contains OUTPUT TWO element.", driver.findElement(OUTPUT_TWO));
 
-    @Test
-    @RunAsClient
-    public void testOnChange() throws Exception {
-        driver.get(portalURL.toString());
-        System.out.println(driver.getPageSource());
+		assertEquals("Check that INPUT TWO element starts empty.", "", driver.findElement(INPUT_TWO).getText());
+		assertEquals("Check that OUTPUT TWO element starts empty.", "", driver.findElement(OUTPUT_TWO).getText());
 
-        assertNotNull("Check that page contains INPUT TWO element.", driver.findElement(INPUT_TWO));
-        assertNotNull("Check that page contains OUTPUT TWO element.", driver.findElement(OUTPUT_TWO));
+		final String textToInput = "pbr";
 
-        assertEquals("Check that INPUT TWO element starts empty.", "", driver.findElement(INPUT_TWO).getText());
-        assertEquals("Check that OUTPUT TWO element starts empty.", "", driver.findElement(OUTPUT_TWO).getText());
+		// Fill input one and submit
+		driver.findElement(INPUT_ONE).sendKeys(textToInput);
+		driver.findElement(SUBMIT_ONE).click();
 
-        final String textToInput = "pbr";
+		// FIXME: Why doesn't it update in time ?
+		// assertEquals("OUTPUT ONE COUNTER element should have inputed text length.", String.valueOf(textToInput.length()), driver.findElement(OUTPUT_ONE_COUNTER).getText());
 
-        // Fill input one and submit
-        driver.findElement(INPUT_ONE).sendKeys(textToInput);
-        driver.findElement(SUBMIT_ONE).click();
-        
-        // FIXME: Why doesn't it update in time ?
-        // assertEquals("OUTPUT ONE COUNTER element should have inputed text length.", String.valueOf(textToInput.length()), driver.findElement(OUTPUT_ONE_COUNTER).getText());
+		// Fill input two, char by char
+		for(String s : textToInput.split("")) {
+			if(!s.equals("")) {
+				driver.findElement(INPUT_TWO).sendKeys(s);
+			}
+		}
 
-        // Fill input two, char by char
-        for(String s : textToInput.split("")) {
-            if(!s.equals("")) {
-                driver.findElement(INPUT_TWO).sendKeys(s);
-            }
-        }
+		// Wait for AJAX to do it's work
+		new WebDriverWait(driver, 10).until(new ExpectedCondition<WebElement>() {
+			public WebElement apply(WebDriver driver) {
+				WebElement toReturn = driver.findElement(OUTPUT_TWO);
+				if (toReturn.getText().equals(textToInput)) {
+					return toReturn;
+				}
+				return null;
+			}
+		});
 
-        // Wait for AJAX to do it's work
-        new WebDriverWait(driver, 10).until(new ExpectedCondition<WebElement>() {
-            public WebElement apply(WebDriver driver) {
-                WebElement toReturn = driver.findElement(OUTPUT_TWO);
-                if (toReturn.getText().equals(textToInput)) {
-                    return toReturn;
-                }
-                return null;
-            }
-        });
+		assertEquals("OUTPUT TWO COUNTER element should have inputed text length.", String.valueOf(textToInput.length()/*FIXME: .. AJAX*/-1), driver.findElement(OUTPUT_TWO_COUNTER).getText());
 
-        assertEquals("OUTPUT TWO COUNTER element should have inputed text length.", String.valueOf(textToInput.length()/*FIXME: .. AJAX*/-1), driver.findElement(OUTPUT_TWO_COUNTER).getText());
+		assertEquals("OUTPUT ONE COUNTER element should have inputed text length.", String.valueOf(textToInput.length()), driver.findElement(OUTPUT_ONE_COUNTER).getText());
+		// FIXME: .. assertEquals("OUTPUT TWO COUNTER element should have inputed text length.", String.valueOf(textToInput.length()), driver.findElement(OUTPUT_TWO_COUNTER).getText());
+	}
 
-        assertEquals("OUTPUT ONE COUNTER element should have inputed text length.", String.valueOf(textToInput.length()), driver.findElement(OUTPUT_ONE_COUNTER).getText());
-        // FIXME: .. assertEquals("OUTPUT TWO COUNTER element should have inputed text length.", String.valueOf(textToInput.length()), driver.findElement(OUTPUT_TWO_COUNTER).getText());
+	@Test
+	@RunAsClient
+	public void testRequired(@Drone WebDriver driver) throws Exception {
+		driver.get(portalURL.toString());
 
-        driver.quit();
-    }
+		assertNotNull("Check that page contains INPUT ONE element.", driver.findElement(INPUT_ONE));
+		assertNotNull("Check that page contains OUTPUT ONE element.", driver.findElement(OUTPUT_ONE));
+		assertNotNull("Check that page contains SUBMIT ONE element.", driver.findElement(SUBMIT_ONE));
 
-    @Test
-    @RunAsClient
-    public void testRequired() throws Exception {
-        driver.get(portalURL.toString());
-        System.out.println(driver.getPageSource());
+		assertEquals("Check that INPUT ONE element starts empty.", "", driver.findElement(INPUT_ONE).getText());
+		assertEquals("Check that OUTPUT ONE element starts empty.", "", driver.findElement(OUTPUT_ONE).getText());
 
-        assertNotNull("Check that page contains INPUT ONE element.", driver.findElement(INPUT_ONE));
-        assertNotNull("Check that page contains OUTPUT ONE element.", driver.findElement(OUTPUT_ONE));
-        assertNotNull("Check that page contains SUBMIT ONE element.", driver.findElement(SUBMIT_ONE));
+		// Submit with no input
+		driver.findElement(SUBMIT_ONE).click();
 
-        assertEquals("Check that INPUT ONE element starts empty.", "", driver.findElement(INPUT_ONE).getText());
-        assertEquals("Check that OUTPUT ONE element starts empty.", "", driver.findElement(OUTPUT_ONE).getText());
+		assertTrue("MESSAGES should contain error message: " + InputTextBean.REQUIRED_MESSAGE, 
+				ExpectedConditions.textToBePresentInElement(MESSAGES, InputTextBean.REQUIRED_MESSAGE).apply(driver));
+	}
 
-        // Submit with no input
-        driver.findElement(SUBMIT_ONE).click();
-        
-        assertTrue("MESSAGES should contain error message: " + InputTextBean.REQUIRED_MESSAGE, 
-                ExpectedConditions.textToBePresentInElement(MESSAGES, InputTextBean.REQUIRED_MESSAGE).apply(driver));
+	@Test
+	@RunAsClient
+	public void testValidateLength(@Drone WebDriver driver) throws Exception {
+		driver.get(portalURL.toString());
 
-        driver.quit();
-    }
+		assertNotNull("Check that page contains INPUT ONE element.", driver.findElement(INPUT_ONE));
+		assertNotNull("Check that page contains OUTPUT ONE element.", driver.findElement(OUTPUT_ONE));
+		assertNotNull("Check that page contains SUBMIT ONE element.", driver.findElement(SUBMIT_ONE));
 
-    @Test
-    @RunAsClient
-    public void testValidateLength() throws Exception {
-        driver.get(portalURL.toString());
-        System.out.println(driver.getPageSource());
+		assertEquals("Check that INPUT ONE element starts empty.", "", driver.findElement(INPUT_ONE).getText());
+		assertEquals("Check that OUTPUT ONE element starts empty.", "", driver.findElement(OUTPUT_ONE).getText());
 
-        assertNotNull("Check that page contains INPUT ONE element.", driver.findElement(INPUT_ONE));
-        assertNotNull("Check that page contains OUTPUT ONE element.", driver.findElement(OUTPUT_ONE));
-        assertNotNull("Check that page contains SUBMIT ONE element.", driver.findElement(SUBMIT_ONE));
+		// Submit a small input
+		driver.findElement(INPUT_ONE).sendKeys("pb");
+		driver.findElement(SUBMIT_ONE).click();
 
-        assertEquals("Check that INPUT ONE element starts empty.", "", driver.findElement(INPUT_ONE).getText());
-        assertEquals("Check that OUTPUT ONE element starts empty.", "", driver.findElement(OUTPUT_ONE).getText());
+		assertTrue("MESSAGES should contain error message: " + InputTextBean.MIN_LENGTH_MESSAGE, 
+				ExpectedConditions.textToBePresentInElement(MESSAGES, InputTextBean.MIN_LENGTH_MESSAGE).apply(driver));
+	}
 
-        // Submit a small input
-        driver.findElement(INPUT_ONE).sendKeys("pb");
-        driver.findElement(SUBMIT_ONE).click();
-        
-        System.out.println(driver.getPageSource());
 
-        assertTrue("MESSAGES should contain error message: " + InputTextBean.MIN_LENGTH_MESSAGE, 
-                ExpectedConditions.textToBePresentInElement(MESSAGES, InputTextBean.MIN_LENGTH_MESSAGE).apply(driver));
-
-        driver.quit();
-    }
-
-    
-    
-    /* -- [ SANDBOX ] ------------------------------------------------------ */
-    /*
+	/* -- [ SANDBOX ] ------------------------------------------------------ */
+	/*
     @Test
     @RunAsClient
     public void testAjaxInputText() throws Exception {
@@ -289,7 +267,6 @@ public class InputTextTest {
             Thread.sleep(2500);
         }
 
-        System.out.println(driver.getPageSource());
         assertEquals("OUTPUT TWO element should have inputed text.", textToInput, driver.findElement(OUTPUT_TWO).getText());
     }
 
@@ -304,5 +281,5 @@ public class InputTextTest {
             }
         };
     }
-     */
+	 */
 }

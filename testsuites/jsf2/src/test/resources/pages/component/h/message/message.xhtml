@@ -4,6 +4,10 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xml:lang="en" lang="en">
 
+	<h:head>
+		<h:outputStylesheet name="stylesheet.css" />
+	</h:head>
+
 	<h:body>
 		<h:form>
 			<p id="input_one"><h:inputText id="i1" value="${msgsBean.textOne}" validator="${msgsBean.validateOne}" /></p>

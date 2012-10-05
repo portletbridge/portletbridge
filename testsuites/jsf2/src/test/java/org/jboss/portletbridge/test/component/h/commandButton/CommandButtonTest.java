@@ -8,6 +8,7 @@ import java.net.URL;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
+import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
@@ -17,166 +18,140 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
 @RunWith(Arquillian.class)
 public class CommandButtonTest {
 
+	@Deployment()
+	public static WebArchive createDeployment() {
+		return TestDeployment.createDeploymentWithAll()
+				.addAsWebResource("pages/component/h/commandButton/commandbutton.xhtml", "home.xhtml")
+				.addAsWebResource("resources/ajax.png", "ajax.png")
+				.addClass(CommandButtonBean.class);
+		//.addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css");
+	}
 
-    @Deployment()
-    public static WebArchive createDeployment() {
-        return TestDeployment.createDeploymentWithAll()
-                .addAsWebResource("pages/component/h/commandButton/commandbutton.xhtml", "home.xhtml")
-                .addAsWebResource("pages/component/h/commandButton/ajax.png", "ajax.png")
-                .addClass(CommandButtonBean.class);
-        //.addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css");
-    }
+	@ArquillianResource
+	@PortalURL
+	URL portalURL;
 
-    @ArquillianResource
-    @PortalURL
-    URL portalURL;
+	protected static final By SUBMIT_BUTTON = By.xpath("//input[contains(@id,':submit')]");
+	protected static final By RESET_BUTTON = By.xpath("//input[contains(@id,':reset')]");
+	protected static final By AJAX_BUTTON = By.xpath("//input[contains(@id,':ajax')]");
+	protected static final By ALERT_BUTTON = By.xpath("//input[contains(@id,':alert')]");
 
-    //@Drone FIXME: JS not working
-    WebDriver driver = new HtmlUnitDriver(true);
+	protected static final By OUTPUT_TEXT = By.xpath("//span[contains(@id,':output')]");
+	protected static final By INPUT_TEXT = By.xpath("//input[contains(@id,':input')]");
 
-    protected static final By SUBMIT_BUTTON = By.xpath("//input[contains(@id,':submit')]");
-    protected static final By RESET_BUTTON = By.xpath("//input[contains(@id,':reset')]");
-    protected static final By AJAX_BUTTON = By.xpath("//input[contains(@id,':ajax')]");
-    protected static final By ALERT_BUTTON = By.xpath("//input[contains(@id,':alert')]");
+	@Test
+	@RunAsClient
+	public void testCommandButtonTypes(@Drone WebDriver driver) throws Exception {
+		driver.get(portalURL.toString());
 
-    protected static final By OUTPUT_TEXT = By.xpath("//span[contains(@id,':output')]");
-    protected static final By INPUT_TEXT = By.xpath("//input[contains(@id,':input')]");
+		assertNotNull("Check that page contains SUBMIT button element.", driver.findElement(SUBMIT_BUTTON));
+		assertNotNull("Check that page contains RESET button element.", driver.findElement(RESET_BUTTON));
+		assertNotNull("Check that page contains TWEET button element.", driver.findElement(AJAX_BUTTON));
+		assertNotNull("Check that page contains ALERT button element.", driver.findElement(ALERT_BUTTON));
 
-    @Test
-    @RunAsClient
-    public void testCommandButtonTypes() throws Exception {
-        driver.get(portalURL.toString());
-        System.out.println(driver.getPageSource());
+		assertEquals("Check that SUBMIT button type is submit (default).", "submit", driver.findElement(SUBMIT_BUTTON).getAttribute("type"));
+		assertEquals("Check that RESET button type is reset.", "reset", driver.findElement(RESET_BUTTON).getAttribute("type"));
+		assertEquals("Check that TWEET button type is image.", "image", driver.findElement(AJAX_BUTTON).getAttribute("type"));
+		assertEquals("Check that ALERT button type is button.", "button", driver.findElement(ALERT_BUTTON).getAttribute("type"));
+	}
 
-        assertNotNull("Check that page contains SUBMIT button element.", driver.findElement(SUBMIT_BUTTON));
-        assertNotNull("Check that page contains RESET button element.", driver.findElement(RESET_BUTTON));
-        assertNotNull("Check that page contains TWEET button element.", driver.findElement(AJAX_BUTTON));
-        assertNotNull("Check that page contains ALERT button element.", driver.findElement(ALERT_BUTTON));
+	@Test
+	@RunAsClient
+	public void testCommandButtonValue(@Drone WebDriver driver) throws Exception {
+		driver.get(portalURL.toString());
 
-        assertEquals("Check that SUBMIT button type is submit (default).", "submit", driver.findElement(SUBMIT_BUTTON).getAttribute("type"));
-        assertEquals("Check that RESET button type is reset.", "reset", driver.findElement(RESET_BUTTON).getAttribute("type"));
-        assertEquals("Check that TWEET button type is image.", "image", driver.findElement(AJAX_BUTTON).getAttribute("type"));
-        assertEquals("Check that ALERT button type is button.", "button", driver.findElement(ALERT_BUTTON).getAttribute("type"));
-        
-        driver.quit();
-    }
+		assertEquals("Check that SUBMIT button value is '" + CommandButtonBean.SUBMIT_LABEL + "'.", CommandButtonBean.SUBMIT_LABEL, driver.findElement(SUBMIT_BUTTON).getAttribute("value"));
+	}
 
-    @Test
-    @RunAsClient
-    public void testCommandButtonValue() throws Exception {
-        driver.get(portalURL.toString());
-        System.out.println(driver.getPageSource());
+	@Test
+	@RunAsClient
+	public void testCommandButtonAction(@Drone WebDriver driver) throws Exception {
+		driver.get(portalURL.toString());
 
-        assertEquals("Check that SUBMIT button value is 'Submit'.", CommandButtonBean.SUBMIT_LABEL, driver.findElement(SUBMIT_BUTTON).getAttribute("value"));
-        
-        driver.quit();
-    }
+		int oldValue = Integer.valueOf(driver.findElement(OUTPUT_TEXT).getText());
+		int step = Integer.valueOf(driver.findElement(INPUT_TEXT).getAttribute("value"));
+		driver.findElement(SUBMIT_BUTTON).click();
+		assertEquals("New value should be " + oldValue + "+" + step + " = " + (oldValue + step), 
+				new Integer(oldValue + step), Integer.valueOf(driver.findElement(OUTPUT_TEXT).getText()));
+	}
 
-    @Test
-    @RunAsClient
-    public void testCommandButtonAction() throws Exception {
-        driver.get(portalURL.toString());
-        System.out.println(driver.getPageSource());
+	@Test
+	@RunAsClient
+	public void testCommandButtonReset(@Drone WebDriver driver) throws Exception {
+		driver.get(portalURL.toString());
 
-        int oldValue = Integer.valueOf(driver.findElement(OUTPUT_TEXT).getText());
-        int step = Integer.valueOf(driver.findElement(INPUT_TEXT).getAttribute("value"));
-        driver.findElement(SUBMIT_BUTTON).click();
-        assertEquals("New value should be " + oldValue + "+" + step + " = " + (oldValue + step), 
-                new Integer(oldValue + step), Integer.valueOf(driver.findElement(OUTPUT_TEXT).getText()));
-        
-        driver.quit();
-    }
+		String oldText = driver.findElement(INPUT_TEXT).getAttribute("value");
+		assertFalse("Check that INPUT text has a value at start.", oldText.equals(""));
 
-    @Test
-    @RunAsClient
-    public void testCommandButtonReset() throws Exception {
-        driver.get(portalURL.toString());
-        System.out.println(driver.getPageSource());
+		String addedText = "00";
+		driver.findElement(INPUT_TEXT).sendKeys(addedText);
+		assertEquals("Check that INPUT text has a changed value after inputting '" + addedText + "'.", oldText + addedText, driver.findElement(INPUT_TEXT).getAttribute("value"));
 
-        String oldText = driver.findElement(INPUT_TEXT).getAttribute("value");
-        assertFalse("Check that INPUT text has a value at start.", oldText.equals(""));
+		driver.findElement(RESET_BUTTON).click();
+		assertEquals("Check that INPUT text has old value after RESET.", oldText, driver.findElement(INPUT_TEXT).getAttribute("value"));
+	}
 
-        String addedText = "00";
-        driver.findElement(INPUT_TEXT).sendKeys(addedText);
-        assertEquals("Check that INPUT text has a changed value after inputting '" + addedText + "'.", oldText + addedText, driver.findElement(INPUT_TEXT).getAttribute("value"));
+	@Test
+	@RunAsClient
+	public void testCommandButtonSubmit(@Drone WebDriver driver) throws Exception {
+		driver.get(portalURL.toString());
 
-        driver.findElement(RESET_BUTTON).click();
-        assertEquals("Check that INPUT text has a no value after RESET.", oldText, driver.findElement(INPUT_TEXT).getAttribute("value"));
-        
-        driver.quit();
-    }
+		int oldStep = Integer.valueOf(driver.findElement(INPUT_TEXT).getAttribute("value"));
+		int newStep = oldStep + 2; // just to make sure it's not the same
+		driver.findElement(INPUT_TEXT).sendKeys("\u0008"); // delete
+		driver.findElement(INPUT_TEXT).sendKeys(String.valueOf(newStep)); // set to new value
 
-    @Test
-    @RunAsClient
-    public void testCommandButtonSubmit() throws Exception {
-        driver.get(portalURL.toString());
-        System.out.println(driver.getPageSource());
+		int oldValue = Integer.valueOf(driver.findElement(OUTPUT_TEXT).getText());
+		driver.findElement(SUBMIT_BUTTON).click();
+		assertEquals("New value for Step should be " + newStep, new Integer(newStep), Integer.valueOf(driver.findElement(INPUT_TEXT).getAttribute("value")));
+		assertEquals("New value should be " + oldValue + "+" + newStep + " = " + (oldValue + newStep), new Integer(oldValue + newStep), Integer.valueOf(driver.findElement(OUTPUT_TEXT).getText()));
+		Integer.valueOf(driver.findElement(OUTPUT_TEXT).getText());
+	}
 
-        int oldStep = Integer.valueOf(driver.findElement(INPUT_TEXT).getAttribute("value"));
-        int newStep = oldStep + 2; // just to make sure it's not the same
-        driver.findElement(INPUT_TEXT).sendKeys("\u0008"); // delete
-        driver.findElement(INPUT_TEXT).sendKeys(String.valueOf(newStep)); // set to new value
+	@Test
+	@RunAsClient
+	public void testCommandButtonOnClickJS(@Drone WebDriver driver) throws Exception {
+		driver.get(portalURL.toString());
 
-        int oldValue = Integer.valueOf(driver.findElement(OUTPUT_TEXT).getText());
-        driver.findElement(SUBMIT_BUTTON).click();
-        assertEquals("New value for Step should be " + newStep, new Integer(newStep), Integer.valueOf(driver.findElement(INPUT_TEXT).getAttribute("value")));
-        assertEquals("New value should be " + oldValue + "+" + newStep + " = " + (oldValue + newStep), new Integer(oldValue + newStep), Integer.valueOf(driver.findElement(OUTPUT_TEXT).getText()));
-        Integer.valueOf(driver.findElement(OUTPUT_TEXT).getText());
-        
-        driver.quit();
-    }
+		// click the submit a few times ...
+		for(int i = 0; i < 3; i++) {
+			driver.findElement(SUBMIT_BUTTON).click();
+		}
 
-    @Test
-    @RunAsClient
-    public void testCommandButtonAlert() throws Exception {
-        driver.get(portalURL.toString());
-        System.out.println(driver.getPageSource());
+		String curValue = driver.findElement(OUTPUT_TEXT).getText();
+		driver.findElement(ALERT_BUTTON).click();
+		// FIXME: this test fails with HtmlUnitDriver as there's no alert() support
+		assertEquals("Check that Alert text is: " + "Current Value is " + curValue, "Current Value is " + curValue, driver.switchTo().alert().getText());
+	}
 
-        // click the submit a few times ...
-        for(int i = 0; i < 3; i++) {
-            driver.findElement(SUBMIT_BUTTON).click();
-        }
+	@Test
+	@RunAsClient
+	public void testCommandButtonAjax(@Drone WebDriver driver) throws Exception {
+		driver.get(portalURL.toString());
 
-        String curValue = driver.findElement(OUTPUT_TEXT).getText();
-        driver.findElement(ALERT_BUTTON).click();
-        // FIXME: this test fails with HtmlUnitDriver as there's no alert() support
-        assertEquals("Check that Alert text is: " + "Current Value is " + curValue, "Current Value is " + curValue, driver.switchTo().alert().getText());
+		// FIXME: Ajax only works after one *real* submit...
+		driver.findElement(SUBMIT_BUTTON).click();
 
-        driver.quit();
-    }
+		String curURL = driver.getCurrentUrl();
 
-    @Test
-    @RunAsClient
-    public void testCommandButtonAjax() throws Exception {
-        driver.get(portalURL.toString());
-        System.out.println(driver.getPageSource());
+		int oldValue = Integer.valueOf(driver.findElement(OUTPUT_TEXT).getText());
+		int step = Integer.valueOf(driver.findElement(INPUT_TEXT).getAttribute("value"));
 
-        // FIXME: Ajax only works after one *real* submit...
-        driver.findElement(SUBMIT_BUTTON).click();
+		// click the ajax button a few times ...
+		int nTimes = 4;
+		for(int i = 0; i < nTimes; i++) {
+			driver.findElement(AJAX_BUTTON).click();
+			// wait for ajax
+			Thread.sleep(500);
+		}
 
-        String curURL = driver.getCurrentUrl();
-        
-        int oldValue = Integer.valueOf(driver.findElement(OUTPUT_TEXT).getText());
-        int step = Integer.valueOf(driver.findElement(INPUT_TEXT).getAttribute("value"));
+		assertEquals("New value should be " + oldValue + "+" + step + "*" + nTimes + " = " + (oldValue + step * nTimes), 
+				new Integer(oldValue + step * nTimes), Integer.valueOf(driver.findElement(OUTPUT_TEXT).getText()));
 
-        // click the ajax button a few times ...
-        int nTimes = 4;
-        for(int i = 0; i < nTimes; i++) {
-            driver.findElement(AJAX_BUTTON).click();
-            // wait for ajax
-            Thread.sleep(500);
-        }
-
-        assertEquals("New value should be " + oldValue + "+" + step + "*" + nTimes + " = " + (oldValue + step * nTimes), 
-                new Integer(oldValue + step * nTimes), Integer.valueOf(driver.findElement(OUTPUT_TEXT).getText()));
-
-        assertEquals("Check that URL is the same as this is an ajax request.", curURL, driver.getCurrentUrl());
-
-        driver.quit();
-    }
+		assertEquals("Check that URL is the same as this is an ajax request.", curURL, driver.getCurrentUrl());
+	}
 }

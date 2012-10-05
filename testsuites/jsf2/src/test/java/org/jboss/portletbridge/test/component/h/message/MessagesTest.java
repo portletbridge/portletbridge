@@ -65,15 +65,12 @@ public class MessagesTest {
 	@PortalURL
 	URL portalURL;
 
-	@Drone
-	WebDriver driver;
-
 	@Test
 	@RunAsClient
-	public void renderFacesPortlet() throws Exception {
-        MessagesBean.setDefaults();
-
+	public void renderFacesPortlet(@Drone WebDriver driver) throws Exception {
+		MessagesBean.setDefaults();
 		driver.get(portalURL.toString());
+
 		assertNotNull("Check that page contains MESSAGES element", driver.findElement(MESSAGES_FIELD));
 		assertNotNull("Check that page contains MESSAGE ONE element", driver.findElement(MESSAGE_ONE_FIELD));
 		assertNotNull("Check that page contains MESSAGE TWO element", driver.findElement(MESSAGE_TWO_FIELD));
@@ -160,39 +157,37 @@ public class MessagesTest {
 	}
 
 	// h:message --------------------------------------------------------------
-	
-    @Test
-    @RunAsClient
-    public void testMessageRendered() throws Exception {
-        MessagesBean.setDefaults();
-
-        driver.get(portalURL.toString());
-
-        driver.findElement(INPUT_ONE_FIELD).clear();
-        driver.findElement(INPUT_ONE_FIELD).sendKeys(MessagesBean.ONE);
-        driver.findElement(SUBMIT_BUTTON).click();
-
-        assertEquals("MESSAGE ONE should be rendered with DETAIL message: " + MessagesBean.ONE_OK_DETAIL,
-                MessagesBean.ONE_OK_DETAIL, driver.findElement(MESSAGE_ONE_FIELD).getText());
-
-        MessagesBean.RENDER_ONE = false;
-        
-        driver.findElement(INPUT_ONE_FIELD).clear();
-        driver.findElement(INPUT_ONE_FIELD).sendKeys(MessagesBean.ONE);
-        driver.findElement(SUBMIT_BUTTON).click();
-
-        assertEquals("MESSAGE ONE should not be rendered.", "", driver.findElement(MESSAGE_ONE_FIELD).getText());
-    }
 
 	@Test
 	@RunAsClient
-	public void testMessageShowDetail() throws Exception {
-        MessagesBean.setDefaults();
+	public void testMessageRendered(@Drone WebDriver driver) throws Exception {
+		MessagesBean.setDefaults();
+		driver.get(portalURL.toString());
 
+		driver.findElement(INPUT_ONE_FIELD).clear();
+		driver.findElement(INPUT_ONE_FIELD).sendKeys(MessagesBean.ONE);
+		driver.findElement(SUBMIT_BUTTON).click();
+
+		assertEquals("MESSAGE ONE should be rendered with DETAIL message: " + MessagesBean.ONE_OK_DETAIL,
+				MessagesBean.ONE_OK_DETAIL, driver.findElement(MESSAGE_ONE_FIELD).getText());
+
+		MessagesBean.RENDER_ONE = false;
+
+		driver.findElement(INPUT_ONE_FIELD).clear();
+		driver.findElement(INPUT_ONE_FIELD).sendKeys(MessagesBean.ONE);
+		driver.findElement(SUBMIT_BUTTON).click();
+
+		assertEquals("MESSAGE ONE should not be rendered.", "", driver.findElement(MESSAGE_ONE_FIELD).getText());
+	}
+
+	@Test
+	@RunAsClient
+	public void testMessageShowDetail(@Drone WebDriver driver) throws Exception {
+		MessagesBean.setDefaults();
 		driver.get(portalURL.toString());
 
 		// Should display DETAIL message
-        driver.findElement(INPUT_ONE_FIELD).clear();
+		driver.findElement(INPUT_ONE_FIELD).clear();
 		driver.findElement(INPUT_ONE_FIELD).sendKeys(MessagesBean.ONE);
 		driver.findElement(SUBMIT_BUTTON).click();
 
@@ -204,7 +199,7 @@ public class MessagesTest {
 
 		// Should not display any message
 		MessagesBean.SHOW_DETAIL_ONE = false;
-		
+
 		driver.findElement(INPUT_ONE_FIELD).clear();
 		driver.findElement(INPUT_ONE_FIELD).sendKeys(MessagesBean.ONE);
 		driver.findElement(SUBMIT_BUTTON).click();
@@ -217,13 +212,12 @@ public class MessagesTest {
 
 	@Test
 	@RunAsClient
-	public void testMessageShowSummary() throws Exception {
-        MessagesBean.setDefaults();
-
+	public void testMessageShowSummary(@Drone WebDriver driver) throws Exception {
+		MessagesBean.setDefaults();
 		driver.get(portalURL.toString());
 
 		// Should display DETAIL message
-        driver.findElement(INPUT_ONE_FIELD).clear();
+		driver.findElement(INPUT_ONE_FIELD).clear();
 		driver.findElement(INPUT_ONE_FIELD).sendKeys(MessagesBean.ONE);
 		driver.findElement(SUBMIT_BUTTON).click();
 
@@ -235,7 +229,7 @@ public class MessagesTest {
 
 		// Should now display both DETAIL and SUMMARY
 		MessagesBean.SHOW_SUMMARY_ONE = true;
-		
+
 		driver.findElement(INPUT_ONE_FIELD).clear();
 		driver.findElement(INPUT_ONE_FIELD).sendKeys(MessagesBean.ONE);
 		driver.findElement(SUBMIT_BUTTON).click();
@@ -251,7 +245,7 @@ public class MessagesTest {
 
 		// Should only display SUMMARY message now
 		MessagesBean.SHOW_DETAIL_ONE = false;
-		
+
 		driver.findElement(INPUT_ONE_FIELD).clear();
 		driver.findElement(INPUT_ONE_FIELD).sendKeys(MessagesBean.ONE);
 		driver.findElement(SUBMIT_BUTTON).click();
@@ -266,160 +260,156 @@ public class MessagesTest {
 				MessagesBean.ONE_OK_SUMMARY, driver.findElement(MESSAGES_FIELD).getText());
 	}
 
-    // h:messages -------------------------------------------------------------
+	// h:messages -------------------------------------------------------------
 
-    @Test
-    @RunAsClient
-    public void testMessagesRendered() throws Exception {
-        MessagesBean.setDefaults();
+	@Test
+	@RunAsClient
+	public void testMessagesRendered(@Drone WebDriver driver) throws Exception {
+		MessagesBean.setDefaults();
+		driver.get(portalURL.toString());
 
-        driver.get(portalURL.toString());
+		driver.findElement(INPUT_ONE_FIELD).clear();
+		driver.findElement(INPUT_ONE_FIELD).sendKeys(MessagesBean.ONE);
+		driver.findElement(SUBMIT_BUTTON).click();
 
-        driver.findElement(INPUT_ONE_FIELD).clear();
-        driver.findElement(INPUT_ONE_FIELD).sendKeys(MessagesBean.ONE);
-        driver.findElement(SUBMIT_BUTTON).click();
+		assertEquals("MESSAGES should be rendered with message: " + MessagesBean.ONE_OK_SUMMARY,
+				MessagesBean.ONE_OK_SUMMARY, driver.findElement(MESSAGES_FIELD).getText());
 
-        assertEquals("MESSAGES should be rendered with message: " + MessagesBean.ONE_OK_SUMMARY,
-                MessagesBean.ONE_OK_SUMMARY, driver.findElement(MESSAGES_FIELD).getText());
+		MessagesBean.RENDER_MESSAGES = false;
 
-        MessagesBean.RENDER_MESSAGES = false;
-        
-        driver.findElement(INPUT_ONE_FIELD).clear();
-        driver.findElement(INPUT_ONE_FIELD).sendKeys(MessagesBean.ONE);
-        driver.findElement(SUBMIT_BUTTON).click();
+		driver.findElement(INPUT_ONE_FIELD).clear();
+		driver.findElement(INPUT_ONE_FIELD).sendKeys(MessagesBean.ONE);
+		driver.findElement(SUBMIT_BUTTON).click();
 
-        assertEquals("MESSAGES should NOT be rendered.", "", driver.findElement(MESSAGES_FIELD).getText());
-    }
+		assertEquals("MESSAGES should NOT be rendered.", "", driver.findElement(MESSAGES_FIELD).getText());
+	}
 
-    @Test
-    @RunAsClient
-    public void testMessagesShowDetail() throws Exception {
-        MessagesBean.setDefaults();
+	@Test
+	@RunAsClient
+	public void testMessagesShowDetail(@Drone WebDriver driver) throws Exception {
+		MessagesBean.setDefaults();
+		driver.get(portalURL.toString());
 
-        driver.get(portalURL.toString());
+		driver.findElement(INPUT_ONE_FIELD).clear();
+		driver.findElement(INPUT_ONE_FIELD).sendKeys(MessagesBean.ONE);
+		driver.findElement(SUBMIT_BUTTON).click();
 
-        driver.findElement(INPUT_ONE_FIELD).clear();
-        driver.findElement(INPUT_ONE_FIELD).sendKeys(MessagesBean.ONE);
-        driver.findElement(SUBMIT_BUTTON).click();
+		assertEquals("MESSAGES should be rendered with ONLY SUMMARY message: " + MessagesBean.ONE_OK_SUMMARY,
+				MessagesBean.ONE_OK_SUMMARY, driver.findElement(MESSAGES_FIELD).getText());
 
-        assertEquals("MESSAGES should be rendered with ONLY SUMMARY message: " + MessagesBean.ONE_OK_SUMMARY,
-                MessagesBean.ONE_OK_SUMMARY, driver.findElement(MESSAGES_FIELD).getText());
+		MessagesBean.SHOW_DETAIL_MESSAGES = true;
 
-        MessagesBean.SHOW_DETAIL_MESSAGES = true;
-        
-        driver.findElement(INPUT_ONE_FIELD).clear();
-        driver.findElement(INPUT_ONE_FIELD).sendKeys(MessagesBean.ONE);
-        driver.findElement(SUBMIT_BUTTON).click();
+		driver.findElement(INPUT_ONE_FIELD).clear();
+		driver.findElement(INPUT_ONE_FIELD).sendKeys(MessagesBean.ONE);
+		driver.findElement(SUBMIT_BUTTON).click();
 
-        assertTrue("MESSAGES should show DETAIL message: " + MessagesBean.ONE_OK_DETAIL,
-                ExpectedConditions.textToBePresentInElement(MESSAGES_FIELD, MessagesBean.ONE_OK_DETAIL).apply(driver));
+		assertTrue("MESSAGES should show DETAIL message: " + MessagesBean.ONE_OK_DETAIL,
+				ExpectedConditions.textToBePresentInElement(MESSAGES_FIELD, MessagesBean.ONE_OK_DETAIL).apply(driver));
 
-        assertTrue("MESSAGES should show SUMMARY message: " + MessagesBean.ONE_OK_SUMMARY,
-                ExpectedConditions.textToBePresentInElement(MESSAGES_FIELD, MessagesBean.ONE_OK_SUMMARY).apply(driver));
+		assertTrue("MESSAGES should show SUMMARY message: " + MessagesBean.ONE_OK_SUMMARY,
+				ExpectedConditions.textToBePresentInElement(MESSAGES_FIELD, MessagesBean.ONE_OK_SUMMARY).apply(driver));
 
-        MessagesBean.SHOW_SUMMARY_MESSAGES = false;
+		MessagesBean.SHOW_SUMMARY_MESSAGES = false;
 
-        driver.findElement(INPUT_ONE_FIELD).clear();
-        driver.findElement(INPUT_ONE_FIELD).sendKeys(MessagesBean.ONE);
-        driver.findElement(SUBMIT_BUTTON).click();
+		driver.findElement(INPUT_ONE_FIELD).clear();
+		driver.findElement(INPUT_ONE_FIELD).sendKeys(MessagesBean.ONE);
+		driver.findElement(SUBMIT_BUTTON).click();
 
-        assertEquals("MESSAGES should be rendered with ONLY DETAIL message: " + MessagesBean.ONE_OK_DETAIL,
-                MessagesBean.ONE_OK_DETAIL, driver.findElement(MESSAGES_FIELD).getText());
-    }
+		assertEquals("MESSAGES should be rendered with ONLY DETAIL message: " + MessagesBean.ONE_OK_DETAIL,
+				MessagesBean.ONE_OK_DETAIL, driver.findElement(MESSAGES_FIELD).getText());
+	}
 
-    @Test
-    @RunAsClient
-    public void testMessagesShowSummary() throws Exception {
-        MessagesBean.setDefaults();
+	@Test
+	@RunAsClient
+	public void testMessagesShowSummary(@Drone WebDriver driver) throws Exception {
+		MessagesBean.setDefaults();
+		driver.get(portalURL.toString());
 
-        driver.get(portalURL.toString());
+		driver.findElement(INPUT_ONE_FIELD).clear();
+		driver.findElement(INPUT_ONE_FIELD).sendKeys(MessagesBean.ONE);
+		driver.findElement(SUBMIT_BUTTON).click();
 
-        driver.findElement(INPUT_ONE_FIELD).clear();
-        driver.findElement(INPUT_ONE_FIELD).sendKeys(MessagesBean.ONE);
-        driver.findElement(SUBMIT_BUTTON).click();
+		assertEquals("MESSAGES should be rendered with SUMMARY message: " + MessagesBean.ONE_OK_SUMMARY,
+				MessagesBean.ONE_OK_SUMMARY, driver.findElement(MESSAGES_FIELD).getText());
 
-        assertEquals("MESSAGES should be rendered with SUMMARY message: " + MessagesBean.ONE_OK_SUMMARY,
-                MessagesBean.ONE_OK_SUMMARY, driver.findElement(MESSAGES_FIELD).getText());
+		// Should not display any message
+		MessagesBean.SHOW_SUMMARY_MESSAGES = false;
 
-        // Should not display any message
-        MessagesBean.SHOW_SUMMARY_MESSAGES = false;
-        
-        driver.findElement(INPUT_ONE_FIELD).clear();
-        driver.findElement(INPUT_ONE_FIELD).sendKeys(MessagesBean.ONE);
-        driver.findElement(SUBMIT_BUTTON).click();
+		driver.findElement(INPUT_ONE_FIELD).clear();
+		driver.findElement(INPUT_ONE_FIELD).sendKeys(MessagesBean.ONE);
+		driver.findElement(SUBMIT_BUTTON).click();
 
-        assertEquals("MESSAGES should NOT be rendered as showDetail and showSummary are false", "", driver.findElement(MESSAGES_FIELD).getText());
-    }
+		assertEquals("MESSAGES should NOT be rendered as showDetail and showSummary are false", "", driver.findElement(MESSAGES_FIELD).getText());
+	}
 
-    @Test
-    @RunAsClient
-    public void testMessagesGlobalOnly() throws Exception {
-        MessagesBean.setDefaults();
+	@Test
+	@RunAsClient
+	public void testMessagesGlobalOnly(@Drone WebDriver driver) throws Exception {
+		MessagesBean.setDefaults();
+		driver.get(portalURL.toString());
 
-        driver.get(portalURL.toString());
+		driver.findElement(INPUT_ONE_FIELD).clear();
+		driver.findElement(INPUT_ONE_FIELD).sendKeys(MessagesBean.GLOBAL);
+		driver.findElement(INPUT_TWO_FIELD).clear();
+		driver.findElement(INPUT_TWO_FIELD).sendKeys(MessagesBean.TWO);
+		driver.findElement(SUBMIT_BUTTON).click();
 
-        driver.findElement(INPUT_ONE_FIELD).clear();
-        driver.findElement(INPUT_ONE_FIELD).sendKeys(MessagesBean.GLOBAL);
-        driver.findElement(INPUT_TWO_FIELD).clear();
-        driver.findElement(INPUT_TWO_FIELD).sendKeys(MessagesBean.TWO);
-        driver.findElement(SUBMIT_BUTTON).click();
+		assertEquals("MESSAGE ONE should NOT be rendered.", "", driver.findElement(MESSAGE_ONE_FIELD).getText());
 
-        assertEquals("MESSAGE ONE should NOT be rendered.", "", driver.findElement(MESSAGE_ONE_FIELD).getText());
+		assertEquals("MESSAGE TWO should be rendered with DETAIL message: " + MessagesBean.TWO_OK_DETAIL,
+				MessagesBean.TWO_OK_DETAIL, driver.findElement(MESSAGE_TWO_FIELD).getText());
 
-        assertEquals("MESSAGE TWO should be rendered with DETAIL message: " + MessagesBean.TWO_OK_DETAIL,
-                MessagesBean.TWO_OK_DETAIL, driver.findElement(MESSAGE_TWO_FIELD).getText());
+		assertTrue("MESSAGES should show SUMMARY message: " + MessagesBean.TWO_OK_SUMMARY,
+				ExpectedConditions.textToBePresentInElement(MESSAGES_FIELD, MessagesBean.TWO_OK_SUMMARY).apply(driver));
 
-        assertTrue("MESSAGES should show SUMMARY message: " + MessagesBean.TWO_OK_SUMMARY,
-                ExpectedConditions.textToBePresentInElement(MESSAGES_FIELD, MessagesBean.TWO_OK_SUMMARY).apply(driver));
+		assertTrue("MESSAGES should show GLOBAL SUMMARY message: " + MessagesBean.GLOBAL_SUMMARY,
+				ExpectedConditions.textToBePresentInElement(MESSAGES_FIELD, MessagesBean.GLOBAL_SUMMARY).apply(driver));
 
-        assertTrue("MESSAGES should show GLOBAL SUMMARY message: " + MessagesBean.GLOBAL_SUMMARY,
-                ExpectedConditions.textToBePresentInElement(MESSAGES_FIELD, MessagesBean.GLOBAL_SUMMARY).apply(driver));
+		assertFalse("MESSAGES should NOT show GLOBAL DETAIL message: " + MessagesBean.GLOBAL_DETAIL,
+				ExpectedConditions.textToBePresentInElement(MESSAGES_FIELD, MessagesBean.GLOBAL_DETAIL).apply(driver));
 
-        assertFalse("MESSAGES should NOT show GLOBAL DETAIL message: " + MessagesBean.GLOBAL_DETAIL,
-                ExpectedConditions.textToBePresentInElement(MESSAGES_FIELD, MessagesBean.GLOBAL_DETAIL).apply(driver));
+		MessagesBean.GLOBAL_ONLY_MESSAGES = true;
 
-        MessagesBean.GLOBAL_ONLY_MESSAGES = true;
-        
-        driver.findElement(INPUT_ONE_FIELD).clear();
-        driver.findElement(INPUT_ONE_FIELD).sendKeys(MessagesBean.GLOBAL);
-        driver.findElement(INPUT_TWO_FIELD).clear();
-        driver.findElement(INPUT_TWO_FIELD).sendKeys(MessagesBean.TWO);
-        driver.findElement(SUBMIT_BUTTON).click();
+		driver.findElement(INPUT_ONE_FIELD).clear();
+		driver.findElement(INPUT_ONE_FIELD).sendKeys(MessagesBean.GLOBAL);
+		driver.findElement(INPUT_TWO_FIELD).clear();
+		driver.findElement(INPUT_TWO_FIELD).sendKeys(MessagesBean.TWO);
+		driver.findElement(SUBMIT_BUTTON).click();
 
-        assertEquals("MESSAGE ONE should NOT be rendered.", "", driver.findElement(MESSAGE_ONE_FIELD).getText());
+		assertEquals("MESSAGE ONE should NOT be rendered.", "", driver.findElement(MESSAGE_ONE_FIELD).getText());
 
-        assertEquals("MESSAGE TWO should be rendered with DETAIL message: " + MessagesBean.TWO_OK_DETAIL,
-                MessagesBean.TWO_OK_DETAIL, driver.findElement(MESSAGE_TWO_FIELD).getText());
+		assertEquals("MESSAGE TWO should be rendered with DETAIL message: " + MessagesBean.TWO_OK_DETAIL,
+				MessagesBean.TWO_OK_DETAIL, driver.findElement(MESSAGE_TWO_FIELD).getText());
 
-        assertFalse("MESSAGES should NOT show SUMMARY message: " + MessagesBean.TWO_OK_SUMMARY,
-                ExpectedConditions.textToBePresentInElement(MESSAGES_FIELD, MessagesBean.TWO_OK_SUMMARY).apply(driver));
+		assertFalse("MESSAGES should NOT show SUMMARY message: " + MessagesBean.TWO_OK_SUMMARY,
+				ExpectedConditions.textToBePresentInElement(MESSAGES_FIELD, MessagesBean.TWO_OK_SUMMARY).apply(driver));
 
-        assertTrue("MESSAGES should show GLOBAL SUMMARY message: " + MessagesBean.GLOBAL_SUMMARY,
-                ExpectedConditions.textToBePresentInElement(MESSAGES_FIELD, MessagesBean.GLOBAL_SUMMARY).apply(driver));
+		assertTrue("MESSAGES should show GLOBAL SUMMARY message: " + MessagesBean.GLOBAL_SUMMARY,
+				ExpectedConditions.textToBePresentInElement(MESSAGES_FIELD, MessagesBean.GLOBAL_SUMMARY).apply(driver));
 
-        assertFalse("MESSAGES should NOT show GLOBAL DETAIL message: " + MessagesBean.GLOBAL_DETAIL,
-                ExpectedConditions.textToBePresentInElement(MESSAGES_FIELD, MessagesBean.GLOBAL_DETAIL).apply(driver));
+		assertFalse("MESSAGES should NOT show GLOBAL DETAIL message: " + MessagesBean.GLOBAL_DETAIL,
+				ExpectedConditions.textToBePresentInElement(MESSAGES_FIELD, MessagesBean.GLOBAL_DETAIL).apply(driver));
 
-        MessagesBean.SHOW_DETAIL_MESSAGES= true;
+		MessagesBean.SHOW_DETAIL_MESSAGES= true;
 
-        driver.findElement(INPUT_ONE_FIELD).clear();
-        driver.findElement(INPUT_ONE_FIELD).sendKeys(MessagesBean.GLOBAL);
-        driver.findElement(INPUT_TWO_FIELD).clear();
-        driver.findElement(INPUT_TWO_FIELD).sendKeys(MessagesBean.TWO);
-        driver.findElement(SUBMIT_BUTTON).click();
+		driver.findElement(INPUT_ONE_FIELD).clear();
+		driver.findElement(INPUT_ONE_FIELD).sendKeys(MessagesBean.GLOBAL);
+		driver.findElement(INPUT_TWO_FIELD).clear();
+		driver.findElement(INPUT_TWO_FIELD).sendKeys(MessagesBean.TWO);
+		driver.findElement(SUBMIT_BUTTON).click();
 
-        assertEquals("MESSAGE ONE should NOT be rendered.", "", driver.findElement(MESSAGE_ONE_FIELD).getText());
+		assertEquals("MESSAGE ONE should NOT be rendered.", "", driver.findElement(MESSAGE_ONE_FIELD).getText());
 
-        assertEquals("MESSAGE TWO should be rendered with DETAIL message: " + MessagesBean.TWO_OK_DETAIL,
-                MessagesBean.TWO_OK_DETAIL, driver.findElement(MESSAGE_TWO_FIELD).getText());
+		assertEquals("MESSAGE TWO should be rendered with DETAIL message: " + MessagesBean.TWO_OK_DETAIL,
+				MessagesBean.TWO_OK_DETAIL, driver.findElement(MESSAGE_TWO_FIELD).getText());
 
-        assertFalse("MESSAGES should NOT show SUMMARY message: " + MessagesBean.TWO_OK_SUMMARY,
-                ExpectedConditions.textToBePresentInElement(MESSAGES_FIELD, MessagesBean.TWO_OK_SUMMARY).apply(driver));
+		assertFalse("MESSAGES should NOT show SUMMARY message: " + MessagesBean.TWO_OK_SUMMARY,
+				ExpectedConditions.textToBePresentInElement(MESSAGES_FIELD, MessagesBean.TWO_OK_SUMMARY).apply(driver));
 
-        assertTrue("MESSAGES should show GLOBAL SUMMARY message: " + MessagesBean.GLOBAL_SUMMARY,
-                ExpectedConditions.textToBePresentInElement(MESSAGES_FIELD, MessagesBean.GLOBAL_SUMMARY).apply(driver));
+		assertTrue("MESSAGES should show GLOBAL SUMMARY message: " + MessagesBean.GLOBAL_SUMMARY,
+				ExpectedConditions.textToBePresentInElement(MESSAGES_FIELD, MessagesBean.GLOBAL_SUMMARY).apply(driver));
 
-        assertTrue("MESSAGES should show GLOBAL DETAIL message: " + MessagesBean.GLOBAL_DETAIL,
-                ExpectedConditions.textToBePresentInElement(MESSAGES_FIELD, MessagesBean.GLOBAL_DETAIL).apply(driver));
-    }
+		assertTrue("MESSAGES should show GLOBAL DETAIL message: " + MessagesBean.GLOBAL_DETAIL,
+				ExpectedConditions.textToBePresentInElement(MESSAGES_FIELD, MessagesBean.GLOBAL_DETAIL).apply(driver));
+	}
 }

@@ -5,9 +5,8 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.portlet.ActionRequest;
-import javax.portlet.RenderRequest;
 
-@ManagedBean(name = "commandBean")
+@ManagedBean(name = "commandLinkBean")
 @SessionScoped
 public class CommandLinkBean {
 

@@ -11,11 +11,11 @@
 	<h:body>
 		<h:form id="form1">
 			Step: <h:inputText id="input" value="#{commandButtonBean.step}"/><br/>
-			Value: <h:outputText id="output" value="#{commandButtonBean.counter}"/><br/>
+			Value: <h:outputText id="output" value="${commandButtonBean.counter}"/><br/>
 			<h:commandButton id="submit" value="#{commandButtonBean.submitLabel}" action="#{commandButtonBean.incrementCounter}" />
 			<h:commandButton id="reset" type="reset" value="Reset" />
 			<h:commandButton id="ajax" value="Ajax" image="ajax.png">
-				<f:ajax execute="submit" render="output" />
+				<f:ajax execute="@form" render="output alert" />
 			</h:commandButton>
 			<h:commandButton id="alert" type="button" value="Alert" onclick="alert('Current Value is #{commandButtonBean.counter}');" />
 		</h:form>

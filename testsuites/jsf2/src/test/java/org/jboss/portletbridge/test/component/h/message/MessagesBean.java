@@ -47,64 +47,52 @@ public class MessagesBean {
     public static final String NAMESPACE = FacesContext.getCurrentInstance().getExternalContext().encodeNamespace("");
 
     public String getTextOne() {
-        System.out.println("getTextOne() = '" + textOne + "'");
         return textOne;
     }
 
     public void setTextOne(String textOne) {
-        System.out.println("setTextOne('" + textOne + "')");
         this.textOne = textOne;
     }
 
     public String getTextTwo() {
-        System.out.println("getTextTwo() = '" + textTwo + "'");
         return textTwo;
     }
 
     public void setTextTwo(String textTwo) {
-        System.out.println("setTextTwo('" + textTwo + "')");
         this.textTwo = textTwo;
     }
 
     // Message Control Getters
     public boolean getRenderOne() {
-        System.out.println("getRenderOne() = " + RENDER_ONE);
         return RENDER_ONE;
     }
 
     public boolean getShowDetailOne() {
-        System.out.println("getShowDetailOne() = " + SHOW_DETAIL_ONE);
         return SHOW_DETAIL_ONE;
     }
 
     public boolean getShowSummaryOne() {
-        System.out.println("getShowSummaryOne() = " + SHOW_SUMMARY_ONE);
         return SHOW_SUMMARY_ONE;
     }
 
     // Messages Control Getters
     public boolean getRenderMessages() {
-        System.out.println("getRenderedMessages() = " + RENDER_MESSAGES);
         return RENDER_MESSAGES;
     }
 
     public boolean getShowDetailMessages() {
-        System.out.println("getShowDetailMessages() = " + SHOW_DETAIL_MESSAGES);
         return SHOW_DETAIL_MESSAGES;
     }
 
     public boolean getShowSummaryMessages() {
-        System.out.println("getShowSummaryMessages() = " + SHOW_SUMMARY_MESSAGES);
         return SHOW_SUMMARY_MESSAGES;
     }
 
     public boolean getGlobalOnlyMessages() {
-        System.out.println("getGlobalOnlyMessages() = " + GLOBAL_ONLY_MESSAGES);
         return GLOBAL_ONLY_MESSAGES;
     }
 
     public void validateOne(FacesContext context, UIComponent input, Object newValue) throws ValidatorException {
-        System.out.println("validateOne(..., ..., '" + newValue + "')");
         if (TWO.equals(newValue)) {
             FacesMessage msg = new FacesMessage(ONE_ERROR_SUMMARY, ONE_ERROR_DETAIL);
             throw new ValidatorException(msg);
@@ -120,7 +108,6 @@ public class MessagesBean {
     }
 
     public void validateTwo(FacesContext context, UIComponent input, Object newValue) throws ValidatorException {
-        System.out.println("validateTwo(..., ..., '" + newValue + "')");
         if (ONE.equals(newValue)) {
             FacesMessage msg = new FacesMessage(TWO_ERROR_SUMMARY, TWO_ERROR_DETAIL);
             throw new ValidatorException(msg);
