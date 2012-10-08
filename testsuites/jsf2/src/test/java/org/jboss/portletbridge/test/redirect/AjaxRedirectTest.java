@@ -21,6 +21,8 @@
  */
 package org.jboss.portletbridge.test.redirect;
 
+import static org.jboss.arquillian.graphene.Graphene.element;
+import static org.jboss.arquillian.graphene.Graphene.waitAjax;
 import static org.junit.Assert.assertTrue;
 
 import java.net.URL;
@@ -94,6 +96,8 @@ public class AjaxRedirectTest {
         driver.get(portalURL.toString());
         driver.findElement(SUBMIT_BUTTON_1).click();
 
+        waitAjax(driver).until(element(OUTPUT_FIELD).isPresent());;
+        
         assertTrue("output text should contain: " + DONE1,
                 ExpectedConditions.textToBePresentInElement(OUTPUT_FIELD, DONE1).apply(driver));
     }
@@ -103,6 +107,8 @@ public class AjaxRedirectTest {
     public void redirectInButtonAction() throws Exception {
         driver.get(portalURL.toString());
         driver.findElement(SUBMIT_BUTTON_2).click();
+
+        waitAjax(driver).until(element(OUTPUT_FIELD).isPresent());;
 
         assertTrue("output text should contain: " + DONE2,
                 ExpectedConditions.textToBePresentInElement(OUTPUT_FIELD, DONE2).apply(driver));

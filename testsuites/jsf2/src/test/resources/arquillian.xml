@@ -9,10 +9,10 @@
     </engine>
     -->
 
-     <extension qualifier="webdriver">
-         <property name="browserCapabilities">firefox</property>
-         <property name="useJavaScript">true</property>
-     </extension>
+    <extension qualifier="webdriver">
+        <property name="browserCapabilities">htmlUnit</property>
+        <property name="useJavaScript">true</property>
+    </extension>
 
     <extension qualifier="graphene">
         <property name="browser">*firefox</property>

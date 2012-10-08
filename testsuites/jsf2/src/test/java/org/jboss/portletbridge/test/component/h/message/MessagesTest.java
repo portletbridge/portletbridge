@@ -24,6 +24,7 @@ package org.jboss.portletbridge.test.component.h.message;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.net.URL;
@@ -39,6 +40,7 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
@@ -53,13 +55,13 @@ public class MessagesTest {
 		//.addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css");
 	}
 
-	protected static final By MESSAGES_FIELD = By.id("messages");
-	protected static final By MESSAGE_ONE_FIELD = By.id("message_one");
-	protected static final By MESSAGE_TWO_FIELD = By.id("message_two");
+	protected static final By MESSAGES_FIELD = By.xpath("//*[contains(@id,':messages')]");
+	protected static final By MESSAGE_ONE_FIELD = By.xpath("//*[contains(@id,':message_one')]");
+	protected static final By MESSAGE_TWO_FIELD = By.xpath("//*[contains(@id,':message_two')]");
 
-	protected static final By INPUT_ONE_FIELD = By.xpath("//input[@type='text']");
-	protected static final By INPUT_TWO_FIELD = By.xpath("//input[@type='password']");
-	protected static final By SUBMIT_BUTTON = By.xpath("//input[@type='submit']");
+	protected static final By INPUT_ONE_FIELD = By.xpath("//input[@type='text'][contains(@id,':input_one')]");
+	protected static final By INPUT_TWO_FIELD = By.xpath("//input[@type='password'][contains(@id,':input_two')]");
+	protected static final By SUBMIT_BUTTON = By.xpath("//input[@type='submit'][contains(@id,':submit')]");
 
 	@ArquillianResource
 	@PortalURL
@@ -177,7 +179,12 @@ public class MessagesTest {
 		driver.findElement(INPUT_ONE_FIELD).sendKeys(MessagesBean.ONE);
 		driver.findElement(SUBMIT_BUTTON).click();
 
-		assertEquals("MESSAGE ONE should not be rendered.", "", driver.findElement(MESSAGE_ONE_FIELD).getText());
+		try {
+			assertNull("MESSAGE ONE should not be rendered.", driver.findElement(MESSAGE_ONE_FIELD));			
+		}
+		catch (NoSuchElementException nsee) {
+			// expected
+		}
 	}
 
 	@Test
@@ -281,7 +288,12 @@ public class MessagesTest {
 		driver.findElement(INPUT_ONE_FIELD).sendKeys(MessagesBean.ONE);
 		driver.findElement(SUBMIT_BUTTON).click();
 
-		assertEquals("MESSAGES should NOT be rendered.", "", driver.findElement(MESSAGES_FIELD).getText());
+		try {
+			assertNull("MESSAGES should NOT be rendered.", driver.findElement(MESSAGES_FIELD));			
+		}
+		catch (NoSuchElementException nsee) {
+			// expected
+		}
 	}
 
 	@Test

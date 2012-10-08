@@ -10,16 +10,16 @@
 
 	<h:body>
 		<h:form>
-			<p id="input_one"><h:inputText id="i1" value="${msgsBean.textOne}" validator="${msgsBean.validateOne}" /></p>
-			<p id="message_one"><h:message for="i1" rendered="${msgsBean.renderOne}" showDetail="${msgsBean.showDetailOne}" showSummary="${msgsBean.showSummaryOne}" /></p>	
+			<h:inputText id="input_one" value="${msgsBean.textOne}" validator="#{msgsBean.validateOne}" />
+			<h:message id="message_one" for="input_one" rendered="#{msgsBean.renderOne}" showDetail="#{msgsBean.showDetailOne}" showSummary="${msgsBean.showSummaryOne}" />	
 
-			<p id="input_two"><h:inputSecret id="i2" value="${msgsBean.textTwo}" validator="${msgsBean.validateTwo}" /></p>	
-			<p id="message_two"><h:message for="i2" /></p>	
+			<h:inputSecret id="input_two" value="${msgsBean.textTwo}" validator="#{msgsBean.validateTwo}" />	
+			<h:message id="message_two" for="input_two" />	
 
-			<p id="output"><h:outputText value="1: '${msgsBean.textOne}', 2: '${msgsBean.textTwo}'" /></p>
+			<h:outputText id="output" value="1: '${msgsBean.textOne}', 2: '${msgsBean.textTwo}'" />
 
-			<p id="submit"><h:commandButton value="OK"/></p>		
+			<h:commandButton id="submit" value="OK"/>		
 		</h:form>
-		<p id="messages"><h:messages showDetail="${msgsBean.showDetailMessages}" showSummary="${msgsBean.showSummaryMessages}" rendered="${msgsBean.renderMessages}" globalOnly="${msgsBean.globalOnlyMessages}" /></p>
+		<h:messages id="messages" showDetail="#{msgsBean.showDetailMessages}" showSummary="${msgsBean.showSummaryMessages}" rendered="#{msgsBean.renderMessages}" globalOnly="#{msgsBean.globalOnlyMessages}" />
 	</h:body>
 </f:view>
