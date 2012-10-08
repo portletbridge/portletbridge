@@ -21,6 +21,8 @@
  */
 package org.jboss.portletbridge.test.component.h.inputText;
 
+import static org.jboss.arquillian.graphene.Graphene.element;
+import static org.jboss.arquillian.graphene.Graphene.waitAjax;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -39,10 +41,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 @RunWith(Arquillian.class)
 public class InputTextTest {
@@ -109,16 +108,7 @@ public class InputTextTest {
 			}
 		}
 
-		// Wait for AJAX to do it's work
-		new WebDriverWait(driver, 10).until(new ExpectedCondition<WebElement>() {
-			public WebElement apply(WebDriver driver) {
-				WebElement toReturn = driver.findElement(OUTPUT_TWO);
-				if (toReturn.getText().equals(textToInput)) {
-					return toReturn;
-				}
-				return null;
-			}
-		});
+		waitAjax(driver).until(element(OUTPUT_TWO).textEquals("pbr"));
 
 		assertEquals("OUTPUT TWO element should have inputed text.", textToInput, driver.findElement(OUTPUT_TWO).getText());
 	}
@@ -150,16 +140,7 @@ public class InputTextTest {
 			}
 		}
 
-		// Wait for AJAX to do it's work
-		new WebDriverWait(driver, 10).until(new ExpectedCondition<WebElement>() {
-			public WebElement apply(WebDriver driver) {
-				WebElement toReturn = driver.findElement(OUTPUT_TWO);
-				if (toReturn.getText().equals(textToInput)) {
-					return toReturn;
-				}
-				return null;
-			}
-		});
+		waitAjax(driver).until(element(OUTPUT_TWO).textEquals(textToInput));
 
 		assertEquals("OUTPUT TWO COUNTER element should have inputed text length.", String.valueOf(textToInput.length()/*FIXME: .. AJAX*/-1), driver.findElement(OUTPUT_TWO_COUNTER).getText());
 

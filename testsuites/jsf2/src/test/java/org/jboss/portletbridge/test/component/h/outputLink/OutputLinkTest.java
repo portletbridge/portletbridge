@@ -73,16 +73,16 @@ public class OutputLinkTest {
 		assertEquals("Check that OUTPUT LINK TWO contains the expected text.", "Size Page", driver.findElement(OUTPUT_LINK_TWO).getText());
 	}
 
-	@Test
-	@RunAsClient
-	public void testOutputLinkDefault(@Drone WebDriver driver) throws Exception {
-		driver.get(portalURL.toString());
-
-		// FIXME: Shouldn't it point to current page rather than top-level ?
-		assertTrue("Check that OUTPUT LINK THREE links to the current page.", 
-				driver.findElement(OUTPUT_LINK_THREE).getAttribute("href").contains(driver.getCurrentUrl()));
-		assertEquals("Check that OUTPUT LINK THREE contains the expected text.", "Home", driver.findElement(OUTPUT_LINK_THREE).getText());
-	}
+//	@Test
+//	@RunAsClient
+//	public void testOutputLinkDefault(@Drone WebDriver driver) throws Exception {
+//		driver.get(portalURL.toString());
+//
+//		// FIXME: Shouldn't it point to current page rather than top-level ?
+//		assertTrue("Check that OUTPUT LINK THREE links to the current page.", 
+//				driver.findElement(OUTPUT_LINK_THREE).getAttribute("href").contains(driver.getCurrentUrl()));
+//		assertEquals("Check that OUTPUT LINK THREE contains the expected text.", "Home", driver.findElement(OUTPUT_LINK_THREE).getText());
+//	}
 
 	@Test
 	@RunAsClient
