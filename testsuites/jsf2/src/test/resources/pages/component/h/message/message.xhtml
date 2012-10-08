@@ -1,0 +1,25 @@
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xml:lang="en" lang="en">
+
+	<h:head>
+		<h:outputStylesheet name="stylesheet.css" />
+	</h:head>
+
+	<h:body>
+		<h:form>
+			<p id="input_one"><h:inputText id="i1" value="${msgsBean.textOne}" validator="${msgsBean.validateOne}" /></p>
+			<p id="message_one"><h:message for="i1" rendered="${msgsBean.renderOne}" showDetail="${msgsBean.showDetailOne}" showSummary="${msgsBean.showSummaryOne}" /></p>	
+
+			<p id="input_two"><h:inputSecret id="i2" value="${msgsBean.textTwo}" validator="${msgsBean.validateTwo}" /></p>	
+			<p id="message_two"><h:message for="i2" /></p>	
+
+			<p id="output"><h:outputText value="1: '${msgsBean.textOne}', 2: '${msgsBean.textTwo}'" /></p>
+
+			<p id="submit"><h:commandButton value="OK"/></p>		
+		</h:form>
+		<p id="messages"><h:messages showDetail="${msgsBean.showDetailMessages}" showSummary="${msgsBean.showSummaryMessages}" rendered="${msgsBean.renderMessages}" globalOnly="${msgsBean.globalOnlyMessages}" /></p>
+	</h:body>
+</f:view>

@@ -21,6 +21,8 @@
  */
 package org.jboss.portletbridge.test;
 
+import static org.jboss.arquillian.graphene.Graphene.element;
+import static org.jboss.arquillian.graphene.Graphene.waitAjax;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -88,6 +90,8 @@ public class AjaxSubmitTest {
         driver.get(portalURL.toString());
         driver.findElement(INPUT_FIELD).sendKeys(NEW_VALUE);
         driver.findElement(SUBMIT_BUTTON).click();
+        
+        waitAjax(driver).until(element(OUTPUT_FIELD).textContains(NEW_VALUE));
 
         assertTrue("output text should contain: " + NEW_VALUE,
                 ExpectedConditions.textToBePresentInElement(OUTPUT_FIELD, NEW_VALUE).apply(driver));

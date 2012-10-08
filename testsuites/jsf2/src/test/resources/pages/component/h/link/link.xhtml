@@ -1,0 +1,19 @@
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xml:lang="en" lang="en">
+
+	<h:head>
+		<h:outputStylesheet name="stylesheet.css" />
+	</h:head>
+
+	<h:body>
+		<h:link id="link1" value="#{linkBean.linkOneText}" outcome="${linkBean.linkOne}" rendered="#{linkBean.linkRender}" /> | 
+		<h:link id="link2" value="#{linkBean.linkOneText} Bottom" outcome="${linkBean.linkOne}" fragment="bottom" /> | 
+		<h:link id="link3">
+			<h:graphicImage id="link3img" value="ajax.png" />
+			<f:param name="from" value="L3" />
+		</h:link>
+	</h:body>
+</f:view>
