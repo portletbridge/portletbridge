@@ -21,6 +21,8 @@
  */
 package org.jboss.portletbridge.test.exception;
 
+import static org.jboss.arquillian.graphene.Graphene.element;
+import static org.jboss.arquillian.graphene.Graphene.waitAjax;
 import static org.junit.Assert.assertTrue;
 
 import java.net.URL;
@@ -88,6 +90,8 @@ public class ExceptionWithoutSuffixTest {
         driver.findElement(INPUT_FIELD).sendKeys(NEW_VALUE);
         driver.findElement(SUBMIT_BUTTON).click();
 
+        waitAjax(driver).until(element(HEADING).isPresent());
+        
         assertTrue("Should have redirected to error page",
                 ExpectedConditions.textToBePresentInElement(HEADING, "UpdateModelException").apply(driver));
     }
