@@ -12,6 +12,15 @@
     <modules>
         <module>jsf2portlet</module>
         <module>richfaces-showcase</module>
-        <module>richfaces-metamer</module>
+        
+        <!--+
+          depends on org.richfaces:metamer:war app, which is not available on public maven repo.
+          It is required build it yourself - if not have access into internal RedHat Nexus QA repo
+          
+          Sources available at https://github.com/richfaces/qa
+          To build metamer/application (needed) follow RichFaces documentation 
+          https://community.jboss.org/wiki/HowToBuildRichFaces4x
+          -->
+        <!-- module>richfaces-metamer</module-->
     </modules>
 </project>
