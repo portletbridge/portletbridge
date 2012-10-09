@@ -9,6 +9,11 @@
     </engine>
     -->
 
+     <extension qualifier="webdriver">
+         <property name="browserCapabilities">htmlUnit</property>
+         <property name="useJavaScript">true</property>
+     </extension>
+
     <extension qualifier="graphene">
         <property name="browser">*firefox</property>
         <property name="seleniumTimeoutAjax">5000</property>

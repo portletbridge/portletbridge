@@ -1,6 +1,7 @@
 .settings
 .project
 .classpath
+bin
 target
 .faces-config.xml.jsfdia
 .factorypath
