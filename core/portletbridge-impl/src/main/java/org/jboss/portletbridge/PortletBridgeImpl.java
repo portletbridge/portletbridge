@@ -155,6 +155,13 @@ public class PortletBridgeImpl implements Bridge {
 
         // Process web.xml content
         WebXmlProcessor webXmlProc = new WebXmlProcessor(portletConfig.getPortletContext());
+        // Check if we have what we need to proceed
+        if (webXmlProc.getFacesServlet() == null) {
+            throw new BridgeException("No Faces Servlet defined in web.xml");
+        }
+        if (webXmlProc.getFacesServlet().getMappings() == null) {
+            throw new BridgeException("No Servlet Mapping defined in web.xml");
+        }
         // Retrieve Faces Servlet Mapping
         bridgeConfig.setFacesServletMappings(webXmlProc.getFacesServlet().getMappings());
         // Retrieve Error Page Mapping
