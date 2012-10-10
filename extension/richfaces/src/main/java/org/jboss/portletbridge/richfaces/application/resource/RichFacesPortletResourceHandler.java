@@ -51,11 +51,11 @@ public class RichFacesPortletResourceHandler extends PortletResourceHandler {
 
     private static final BridgeLogger logger = new JULLoggerImpl(RichFacesPortletResourceHandler.class.getName());
 
-    private final ResourceHandler parent;
+    private final ResourceHandler wrapped;
 
-    public RichFacesPortletResourceHandler(ResourceHandler parent) {
-        super(parent);
-        this.parent = parent;
+    public RichFacesPortletResourceHandler(ResourceHandler resourceHandler) {
+        super(resourceHandler);
+        wrapped = resourceHandler;
     }
 
     /**
@@ -63,7 +63,7 @@ public class RichFacesPortletResourceHandler extends PortletResourceHandler {
      */
     @Override
     public ResourceHandler getWrapped() {
-        return this.parent;
+        return wrapped;
     }
 
     @Override
@@ -87,7 +87,7 @@ public class RichFacesPortletResourceHandler extends PortletResourceHandler {
                 send404(context, resourceName, null);
             }
         } else {
-            super.handleResourceRequest(context);
+            wrapped.handleResourceRequest(context);
         }
     }
 

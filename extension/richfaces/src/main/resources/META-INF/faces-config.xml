@@ -15,6 +15,11 @@
         <resource-handler>org.jboss.portletbridge.richfaces.application.resource.RichFacesPortletResourceHandler</resource-handler>
     </application>
     <factory>
+        <application-factory>org.jboss.portletbridge.richfaces.application.ApplicationFactoryImpl</application-factory>
         <faces-context-factory>org.jboss.portletbridge.richfaces.context.FileUploadFacesContextFactory</faces-context-factory>
     </factory>
+    <render-kit>
+        <render-kit-id>HTML_BASIC</render-kit-id>
+        <render-kit-class>org.jboss.portletbridge.richfaces.renderkit.html.RichFacesRenderKit</render-kit-class>
+    </render-kit>
 </faces-config>

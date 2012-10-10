@@ -21,10 +21,8 @@
  */
 package org.jboss.portletbridge.richfaces.application;
 
-import javax.faces.application.ResourceHandler;
 import javax.faces.application.ViewHandler;
 import javax.faces.application.ViewHandlerWrapper;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.portlet.MimeResponse;
 
@@ -32,8 +30,6 @@ import javax.portlet.MimeResponse;
  * @author <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
  */
 public class ViewHandlerImpl extends ViewHandlerWrapper {
-
-    public static final String RICHFACES_PATH_TOKEN = "/rfRes/";
 
     ViewHandler parent;
 
@@ -47,22 +43,6 @@ public class ViewHandlerImpl extends ViewHandlerWrapper {
 
     @Override
     public String getResourceURL(FacesContext context, String path) {
-        if (path.startsWith(RICHFACES_PATH_TOKEN)) {
-            ExternalContext externalContext = context.getExternalContext();
-            StringBuilder buf = new StringBuilder();
-            buf.append(externalContext.getRequestContextPath());
-
-            if (!path.contains("MediaOutputResource")) {
-                buf.append(ResourceHandler.RESOURCE_IDENTIFIER);
-                buf.append('/');
-                buf.append(path.substring(RICHFACES_PATH_TOKEN.length()));
-            } else {
-                buf.append(path);
-            }
-            path = externalContext.encodeResourceURL(buf.toString());
-            return path;
-        }
-
         //Work around to prevent RF from pre-pending web context onto portal url.
         if (null != path) {
             Object resp = FacesContext.getCurrentInstance().getExternalContext().getResponse();

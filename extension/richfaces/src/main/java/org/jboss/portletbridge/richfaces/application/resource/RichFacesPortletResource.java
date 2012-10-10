@@ -19,10 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.portletbridge.application.resource;
-
-import java.net.URL;
-import java.util.List;
+package org.jboss.portletbridge.richfaces.application.resource;
 
 import javax.faces.application.Resource;
 import javax.faces.application.ResourceHandler;
@@ -30,17 +27,16 @@ import javax.faces.application.ResourceWrapper;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
-import org.jboss.portletbridge.bridge.context.BridgeContext;
-
 /**
- * @author leo, <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
+ * @author <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
  */
-public class PortletResource extends ResourceWrapper {
+public class RichFacesPortletResource extends ResourceWrapper {
+    public static final String RICHFACES_PATH_TOKEN = "/rfRes/";
 
-    private final Resource wrapped;
+    private Resource wrapped;
 
-    public PortletResource(Resource wrapped) {
-        this.wrapped = wrapped;
+    public RichFacesPortletResource(Resource resource) {
+        wrapped = resource;
     }
 
     /**
@@ -81,42 +77,26 @@ public class PortletResource extends ResourceWrapper {
         return wrapped.getContentType();
     }
 
-    /**
-     * @see javax.faces.application.Resource#getRequestPath()
-     */
     @Override
     public String getRequestPath() {
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        ExternalContext externalContext = facesContext.getExternalContext();
-        String wrappedPath = wrapped.getRequestPath();
-
-        if (null != wrappedPath) {
-            if (wrappedPath.contains(ResourceHandler.RESOURCE_IDENTIFIER)) {
-                List<String> servletMappings = BridgeContext.getCurrentInstance().getBridgeConfig().getFacesServletMappings();
-                //TODO Handle this nicer? Maybe cache extension mappings on startup
-                for (String mapping : servletMappings) {
-                    if (mapping.startsWith("*.")) {
-                        mapping = mapping.substring(1);
-                        String libraryToken = mapping + "?ln";
-                        int pos = wrappedPath.indexOf(libraryToken);
-                        if (pos > 0) {
-                            wrappedPath = wrappedPath.substring(0, pos) + wrappedPath.substring(pos + mapping.length());
-                        }
-                    }
+        String path = wrapped.getRequestPath();
+        if (null != path) {
+            int pos = path.indexOf(RICHFACES_PATH_TOKEN);
+            if (pos >= 0) {
+                FacesContext facesContext = FacesContext.getCurrentInstance();
+                ExternalContext externalContext = facesContext.getExternalContext();
+                StringBuilder buf = new StringBuilder(150);
+                if (path.contains("MediaOutputResource")) {
+                    buf.append(path);
+                } else {
+                    buf.append(ResourceHandler.RESOURCE_IDENTIFIER);
+                    buf.append("/");
+                    buf.append(path.substring(pos + RICHFACES_PATH_TOKEN.length()));
                 }
-            }
-
-            if (getContentType().startsWith("image/") && wrappedPath.endsWith("org.richfaces")) {
-                // Special case for images that are in org.richfaces to allow ResourceHandler to process the request
-                String resourcePath = "META-INF/resources/org.richfaces/" + getResourceName();
-                URL imageUrl = getClass().getClassLoader().getResource(resourcePath);
-
-                if (null != imageUrl) {
-                    wrappedPath += ".images";
-                }
+                path = externalContext.encodeResourceURL(buf.toString());
             }
         }
-        return externalContext.encodeResourceURL(wrappedPath);
+        return path;
     }
 
 }
