@@ -1,27 +1,25 @@
-<f:view xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets" xml:lang="en" lang="en">
-	<h:head>
-		<h:outputStylesheet name="stylesheet.css" />
-	</h:head>
+<f:view xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets" xml:lang="en" lang="en">
+    <h:head>
+        <h:outputStylesheet name="stylesheet.css" />
+    </h:head>
 
-	<h:body>
-		<h:form>
-			<p id="input">
-				<h:inputText id="in" value="${bean.text}" />
-			</p>
-			<p id="output">
-				<h:outputText id="out" value="${bean.text}" />
-			</p>
-			<p id="submit">
-				<h:commandButton id="sub" value="Ok">
-					<f:ajax execute="@form" render="in out msg"/> 
-				</h:commandButton>
-			</p>
-			<p id="messages">
-				<h:messages id="msg"/>
-			</p>
-		</h:form>
-	</h:body>
+    <h:body>
+        <h:form>
+            <p id="input">
+                <h:inputText id="in" value="${bean.text}" />
+            </p>
+            <p id="output">
+                <h:outputText id="out" value="${bean.text}" />
+            </p>
+            <p id="submit">
+                <h:commandButton id="sub" value="Ok">
+                    <f:ajax execute="@form" render="in out msg" />
+                </h:commandButton>
+            </p>
+            <p id="messages">
+                <h:messages id="msg" />
+            </p>
+        </h:form>
+    </h:body>
 </f:view>

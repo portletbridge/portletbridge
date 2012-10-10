@@ -50,7 +50,8 @@ public class AjaxSubmitTest {
     @Deployment()
     public static WebArchive createDeployment() {
         return TestDeployment.createDeploymentWithAll()
-                .addAsWebResource("ajax.xhtml", "home.xhtml").addClass(Bean.class)
+                .addAsWebResource("ajax.xhtml", "home.xhtml")
+                .addClass(Bean.class)
                 .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css");
     }
 
@@ -90,7 +91,7 @@ public class AjaxSubmitTest {
         driver.get(portalURL.toString());
         driver.findElement(INPUT_FIELD).sendKeys(NEW_VALUE);
         driver.findElement(SUBMIT_BUTTON).click();
-        
+
         waitAjax(driver).until(element(OUTPUT_FIELD).textContains(NEW_VALUE));
 
         assertTrue("output text should contain: " + NEW_VALUE,

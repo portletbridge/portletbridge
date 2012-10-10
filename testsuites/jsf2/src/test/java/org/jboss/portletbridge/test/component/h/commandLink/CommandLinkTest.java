@@ -27,7 +27,7 @@ public class CommandLinkTest {
                 .addAsWebResource("pages/component/h/commandLink/commandlink.xhtml", "home.xhtml")
                 .addAsWebResource("resources/ajax.png", "ajax.png")
                 .addClass(CommandLinkBean.class);
-        //.addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css");
+        // .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css");
     }
 
     protected static final By SUBMIT_LINK = By.xpath("//a[contains(@id,':submit')]");
@@ -47,7 +47,8 @@ public class CommandLinkTest {
     public void testCommandButtonValue(@Drone WebDriver driver) throws Exception {
         driver.get(portalURL.toString());
 
-        assertEquals("Check that SUBMIT button value is '" + CommandLinkBean.SUBMIT_LABEL + "'.", CommandLinkBean.SUBMIT_LABEL, driver.findElement(SUBMIT_LINK).getText());
+        assertEquals("Check that SUBMIT button value is '" + CommandLinkBean.SUBMIT_LABEL + "'.", CommandLinkBean.SUBMIT_LABEL,
+                driver.findElement(SUBMIT_LINK).getText());
     }
 
     @Test
@@ -58,8 +59,8 @@ public class CommandLinkTest {
         int oldValue = Integer.valueOf(driver.findElement(OUTPUT_TEXT).getText());
         int step = Integer.valueOf(driver.findElement(INPUT_TEXT).getAttribute("value"));
         driver.findElement(SUBMIT_LINK).click();
-        assertEquals("New value should be " + oldValue + "+" + step + " = " + (oldValue + step), 
-                new Integer(oldValue + step), Integer.valueOf(driver.findElement(OUTPUT_TEXT).getText()));
+        assertEquals("New value should be " + oldValue + "+" + step + " = " + (oldValue + step), new Integer(oldValue + step),
+                Integer.valueOf(driver.findElement(OUTPUT_TEXT).getText()));
     }
 
     @Test
@@ -92,26 +93,29 @@ public class CommandLinkTest {
 
         int oldValue = Integer.valueOf(driver.findElement(OUTPUT_TEXT).getText());
         driver.findElement(SUBMIT_LINK).click();
-        assertEquals("New value for Step should be " + newStep, new Integer(newStep), Integer.valueOf(driver.findElement(INPUT_TEXT).getAttribute("value")));
-        assertEquals("New value should be " + oldValue + "+" + newStep + " = " + (oldValue + newStep), new Integer(oldValue + newStep), Integer.valueOf(driver.findElement(OUTPUT_TEXT).getText()));
+        assertEquals("New value for Step should be " + newStep, new Integer(newStep),
+                Integer.valueOf(driver.findElement(INPUT_TEXT).getAttribute("value")));
+        assertEquals("New value should be " + oldValue + "+" + newStep + " = " + (oldValue + newStep), new Integer(oldValue
+                + newStep), Integer.valueOf(driver.findElement(OUTPUT_TEXT).getText()));
         Integer.valueOf(driver.findElement(OUTPUT_TEXT).getText());
     }
 
-//    @Test
-//    @RunAsClient
-//    public void testCommandLinkOnClickJS(@Drone WebDriver driver) throws Exception {
-//        driver.get(portalURL.toString());
-//
-//        // click the submit a few times ...
-//        for(int i = 0; i < 3; i++) {
-//            driver.findElement(SUBMIT_LINK).click();
-//        }
-//
-//        String curValue = driver.findElement(OUTPUT_TEXT).getText();
-//        driver.findElement(ALERT_LINK).click();
-//        // FIXME: this test fails with HtmlUnitDriver as there's no alert() support
-//        assertEquals("Check that Alert text is: " + "Current Value is " + curValue, "Current Value is " + curValue, driver.switchTo().alert().getText());
-//    }
+    // @Test
+    // @RunAsClient
+    // public void testCommandLinkOnClickJS(@Drone WebDriver driver) throws Exception {
+    // driver.get(portalURL.toString());
+    //
+    // // click the submit a few times ...
+    // for(int i = 0; i < 3; i++) {
+    // driver.findElement(SUBMIT_LINK).click();
+    // }
+    //
+    // String curValue = driver.findElement(OUTPUT_TEXT).getText();
+    // driver.findElement(ALERT_LINK).click();
+    // // FIXME: this test fails with HtmlUnitDriver as there's no alert() support
+    // assertEquals("Check that Alert text is: " + "Current Value is " + curValue, "Current Value is " + curValue,
+    // driver.switchTo().alert().getText());
+    // }
 
     @Test
     @RunAsClient
@@ -122,19 +126,19 @@ public class CommandLinkTest {
         driver.findElement(SUBMIT_LINK).click();
 
         String curURL = driver.getCurrentUrl();
-        
+
         int oldValue = Integer.valueOf(driver.findElement(OUTPUT_TEXT).getText());
         int step = Integer.valueOf(driver.findElement(INPUT_TEXT).getAttribute("value"));
 
         // click the ajax button a few times ...
         int nTimes = 4;
-        for(int i = 0; i < nTimes; i++) {
+        for (int i = 0; i < nTimes; i++) {
             driver.findElement(AJAX_LINK).click();
             // wait for ajax
             Thread.sleep(500);
         }
 
-        assertEquals("New value should be " + oldValue + "+" + step + "*" + nTimes + " = " + (oldValue + step * nTimes), 
+        assertEquals("New value should be " + oldValue + "+" + step + "*" + nTimes + " = " + (oldValue + step * nTimes),
                 new Integer(oldValue + step * nTimes), Integer.valueOf(driver.findElement(OUTPUT_TEXT).getText()));
 
         assertEquals("Check that URL is the same as this is an ajax request.", curURL, driver.getCurrentUrl());

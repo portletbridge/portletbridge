@@ -1,28 +1,30 @@
 <f:view xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xml:lang="en" lang="en">
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets" xml:lang="en" lang="en">
 
-	<h:head>
-		<h:outputStylesheet name="stylesheet.css" />
-	</h:head>
+    <h:head>
+        <h:outputStylesheet name="stylesheet.css" />
+    </h:head>
 
-	<h:body>
-		<h:form id="form1">
-			Step: <h:inputText id="input" value="#{commandLinkBean.step}"/><br/>
-			Value: <h:outputText id="output" value="#{commandLinkBean.counter}"/><br/>
-			<h:commandLink id="submit" value="#{commandLinkBean.submitLabel}" action="#{commandLinkBean.incrementCounter}" /> | 
-			<h:commandLink id="reset_counter" action="#{commandLinkBean.setCounterTo}" value="Reset Counter" >
-				<f:param name="nc" value="0" />
-			</h:commandLink> | 
+    <h:body>
+        <h:form id="form1">
+			Step: <h:inputText id="input" value="#{commandLinkBean.step}" />
+            <br />
+			Value: <h:outputText id="output" value="#{commandLinkBean.counter}" />
+            <br />
+            <h:commandLink id="submit" value="#{commandLinkBean.submitLabel}" action="#{commandLinkBean.incrementCounter}" /> | 
+			<h:commandLink id="reset_counter" action="#{commandLinkBean.setCounterTo}" value="Reset Counter">
+                <f:param name="nc" value="0" />
+            </h:commandLink> | 
 			<h:commandLink id="ajax">
-				<h:graphicImage value="ajax.png" />
-				<f:ajax execute="submit" render="output alert" />
-			</h:commandLink>
-			<h:commandLink id="alert" value="Alert" onclick="alert('Current Value is #{commandLinkBean.counter}'); return false;" />
-		</h:form>
+                <h:graphicImage value="ajax.png" />
+                <f:ajax execute="submit" render="output alert" />
+            </h:commandLink>
+            <h:commandLink id="alert" value="Alert"
+                onclick="alert('Current Value is #{commandLinkBean.counter}'); return false;" />
+        </h:form>
 
-		<h:messages id="messages" />
-	</h:body>
+        <h:messages id="messages" />
+    </h:body>
 </f:view>

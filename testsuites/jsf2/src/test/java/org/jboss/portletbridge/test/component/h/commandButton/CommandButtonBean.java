@@ -9,9 +9,9 @@ import javax.faces.bean.SessionScoped;
 @SessionScoped
 public class CommandButtonBean implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public static final String SUBMIT_LABEL = "Increment";
+    public static final String SUBMIT_LABEL = "Increment";
 
     private Integer counter = 0;
     private Integer step = 1;
@@ -35,5 +35,5 @@ public class CommandButtonBean implements Serializable {
     public String getSubmitLabel() {
         return SUBMIT_LABEL;
     }
-    
+
 }

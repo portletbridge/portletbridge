@@ -10,7 +10,7 @@ public class InputTextBean {
 
     public static final String REQUIRED_MESSAGE = "Please fill INPUT ONE field.";
     public static final String MIN_LENGTH_MESSAGE = "The INPUT ONE field has to have at least 3 chars.";
-    
+
     private String textOne = "";
     private String textTwo = "";
 
@@ -34,8 +34,8 @@ public class InputTextBean {
     }
 
     // For valueChangeListener attribute
-    
-    public void onChange(ValueChangeEvent e){
+
+    public void onChange(ValueChangeEvent e) {
         textOneCount = textOne.length();
         textTwoCount = textTwo.length();
     }
@@ -47,9 +47,9 @@ public class InputTextBean {
     public int getTextTwoCount() {
         return textTwoCount;
     }
-    
+
     // For required attribute
-    
+
     public String getRequiredMessage() {
         return REQUIRED_MESSAGE;
     }

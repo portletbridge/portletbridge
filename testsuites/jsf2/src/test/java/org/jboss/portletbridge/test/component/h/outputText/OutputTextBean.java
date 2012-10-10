@@ -6,7 +6,7 @@ import javax.faces.bean.SessionScoped;
 @ManagedBean(name = "outputBean")
 @SessionScoped
 public class OutputTextBean {
-    
+
     public static final String OUTPUT_TEXT_DEFAULT_HTML = "Hello, <i>Portlet</i> World!";
     public static final String OUTPUT_TEXT_DEFAULT_PLAINTEXT = "Hello, Portlet World!";
 
@@ -22,16 +22,16 @@ public class OutputTextBean {
     public String getTextOne() {
         return textOne;
     }
-    
+
     public int getTextOneLength() {
         return textOne.length();
     }
-    
-   public boolean getOutputTextEscape() {
+
+    public boolean getOutputTextEscape() {
         return OUTPUT_TEXT_ESCAPE;
     }
-   
-  public boolean getOutputTextRender() {
-       return OUTPUT_TEXT_RENDER;
-   }
+
+    public boolean getOutputTextRender() {
+        return OUTPUT_TEXT_RENDER;
+    }
 }

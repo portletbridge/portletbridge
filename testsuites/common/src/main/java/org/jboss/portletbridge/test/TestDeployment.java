@@ -33,14 +33,14 @@ public class TestDeployment {
 
     public static WebArchive createDeployment() {
         return ShrinkWrap
-            .create(WebArchive.class)
-            .addAsLibraries(
-                DependencyResolvers.use(MavenDependencyResolver.class).loadEffectivePom("pom.xml")
-                    .artifacts("org.jboss.portletbridge:portletbridge-api").resolveAsFiles())
-            .addAsLibraries(
-                DependencyResolvers.use(MavenDependencyResolver.class).loadEffectivePom("pom.xml")
-                    .artifacts("org.jboss.portletbridge:portletbridge-impl").resolveAsFiles())
-            .addAsWebInfResource("WEB-INF/jboss-deployment-structure.xml", "jboss-deployment-structure.xml");
+                .create(WebArchive.class)
+                .addAsLibraries(
+                        DependencyResolvers.use(MavenDependencyResolver.class).loadEffectivePom("pom.xml")
+                                .artifacts("org.jboss.portletbridge:portletbridge-api").resolveAsFiles())
+                .addAsLibraries(
+                        DependencyResolvers.use(MavenDependencyResolver.class).loadEffectivePom("pom.xml")
+                                .artifacts("org.jboss.portletbridge:portletbridge-impl").resolveAsFiles())
+                .addAsWebInfResource("WEB-INF/jboss-deployment-structure.xml", "jboss-deployment-structure.xml");
     }
 
     public static WebArchive createDeploymentWithAll() {
@@ -79,11 +79,11 @@ public class TestDeployment {
                      .servletName("Faces Servlet")
                      .servletClass("javax.faces.webapp.FacesServlet")
                      .loadOnStartup(2)
-                     .up()
+                 .up()
                  .createServletMapping()
                      .servletName("Faces Servlet")
                      .urlPattern("*.jsf")
-                     .up();
+                 .up();
 
         return webConfig;
     }
@@ -91,7 +91,7 @@ public class TestDeployment {
     public static WebFacesConfigDescriptor createFacesConfigXmlDescriptor() {
         WebFacesConfigDescriptor facesConfig = Descriptors.create(WebFacesConfigDescriptor.class);
         facesConfig.addDefaultNamespaces()
-                 .version("2.1");
+                   .version("2.1");
 
         return facesConfig;
     }

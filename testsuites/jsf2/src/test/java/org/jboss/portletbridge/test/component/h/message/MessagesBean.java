@@ -96,8 +96,7 @@ public class MessagesBean {
         if (TWO.equals(newValue)) {
             FacesMessage msg = new FacesMessage(ONE_ERROR_SUMMARY, ONE_ERROR_DETAIL);
             throw new ValidatorException(msg);
-        }
-        else if (ONE.equals(newValue)) {
+        } else if (ONE.equals(newValue)) {
             FacesMessage msg = new FacesMessage(ONE_OK_SUMMARY, ONE_OK_DETAIL);
             context.addMessage(input.getClientId(context), msg);
         }
@@ -111,8 +110,7 @@ public class MessagesBean {
         if (ONE.equals(newValue)) {
             FacesMessage msg = new FacesMessage(TWO_ERROR_SUMMARY, TWO_ERROR_DETAIL);
             throw new ValidatorException(msg);
-        }
-        else if (TWO.equals(newValue)) {
+        } else if (TWO.equals(newValue)) {
             FacesMessage msg = new FacesMessage(TWO_OK_SUMMARY, TWO_OK_DETAIL);
             context.addMessage(input.getClientId(context), msg);
         }

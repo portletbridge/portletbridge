@@ -1,22 +1,22 @@
 <f:view xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:pbr="http://jboss.org/portletbridge"
-      xml:lang="en" lang="en">
-<h:head>
-</h:head>
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:pbr="http://jboss.org/portletbridge"
+    xml:lang="en" lang="en">
+    <h:head>
+    </h:head>
 
-<h:body>
-    <span id="modeName">View</span>
-    <br/>
-    <span id="spanId">spanId</span>
-    <br/>
-    <span id="namespaceSpanId"><pbr:namespace />spanId</span>
-    <br/>
-    <pbr:renderURL var="renderUrl" portletMode="edit">
-        <pbr:param name="testing" value="nothing" />
-    </pbr:renderURL>
-    <h:outputLink value="#{renderUrl}">Render</h:outputLink>
-</h:body>
+    <h:body>
+        <span id="modeName">View</span>
+        <br/>
+        <span id="spanId">spanId</span>
+        <br/>
+        <span id="namespaceSpanId"><pbr:namespace />spanId</span>
+        <br/>
+        <pbr:renderURL var="renderUrl" portletMode="edit">
+            <pbr:param name="testing" value="nothing" />
+        </pbr:renderURL>
+        <h:outputLink value="#{renderUrl}">Render</h:outputLink>
+    </h:body>
 </f:view>
