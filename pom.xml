@@ -19,7 +19,7 @@
         <version.mojarra2>2.1.13</version.mojarra2>
 
         <!-- RichFaces 4 versions -->
-        <version.richfaces4>4.2.2.Final</version.richfaces4>
+        <version.richfaces4>4.2.3.CR1</version.richfaces4>
 
         <!-- Testing versions -->
         <version.junit>4.10</version.junit>
