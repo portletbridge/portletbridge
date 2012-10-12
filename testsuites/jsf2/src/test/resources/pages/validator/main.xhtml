@@ -10,13 +10,11 @@
                              required="true"
                              requiredMessage="req"
                              >
-                    <f:ajax event="change" execute="@this userEmail" render="@this loginRegisterBox"
-                            listener="#{loginRegisterBean.emailChanged}"/>
                     <f:validateRegex pattern=".+@.+\.[a-z]+"/>
                 </h:inputText>
                 <h:message id="validator" for="userEmail" color="red"/>
 
-                <h:commandButton value="Submit" action="result" />
+                <h:commandButton value="Submit" action="result" type="submit"/>
             </p>
         </h:form>
     </h:body>
