@@ -25,6 +25,8 @@ import java.net.URL;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
+import static org.jboss.arquillian.graphene.Graphene.element;
+import static org.jboss.arquillian.graphene.Graphene.waitAjax;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
@@ -79,25 +81,29 @@ public class ValidatorAjaxEmailTest {
         driver.findElement(INPUT_FIELD).clear();        
         driver.findElement(INPUT_FIELD).sendKeys(INPUT1);
         driver.findElement(SUBMIT_BUTTON).click();
+        waitAjax(driver).until(element(OUTPUT_FIELD).textEquals(outInvalid));
         assertNotNull("Check that page after 1st submit contains output element", driver.findElement(OUTPUT_FIELD));
         assertTrue("Portlet should 1st return: " + outInvalid, ExpectedConditions.textToBePresentInElement(OUTPUT_FIELD, outInvalid).apply(driver));
         
         driver.findElement(INPUT_FIELD).clear();
         driver.findElement(INPUT_FIELD).sendKeys(INPUT2);
         driver.findElement(SUBMIT_BUTTON).click();
+        waitAjax(driver).until(element(OUTPUT_FIELD).textEquals(outInvalid));
         assertNotNull("Check that page after 2nd submit contains output element", driver.findElement(OUTPUT_FIELD));
         assertTrue("Portlet should 2nd return: " + outInvalid, ExpectedConditions.textToBePresentInElement(OUTPUT_FIELD, outInvalid).apply(driver));
         
         driver.findElement(INPUT_FIELD).clear();
         driver.findElement(INPUT_FIELD).sendKeys(INPUT3);
         driver.findElement(SUBMIT_BUTTON).click();
+        waitAjax(driver).until(element(OUTPUT_FIELD).textEquals(outInvalid));
         assertNotNull("Check that page after 3rd submit contains output element", driver.findElement(OUTPUT_FIELD));
         assertTrue("Portlet should 3rd return: " + outInvalid, ExpectedConditions.textToBePresentInElement(OUTPUT_FIELD, outInvalid).apply(driver));
         
         driver.findElement(INPUT_FIELD).clear();
         driver.findElement(INPUT_FIELD).sendKeys(INPUT4);
         driver.findElement(SUBMIT_BUTTON).click();
+        waitAjax(driver).until(element(OUTPUT_FIELD).textEquals(""));
         assertNotNull("Check that page after 4th submit contains output element", driver.findElement(OUTPUT_FIELD));
-        assertTrue("Portlet should 4th return empty string", ExpectedConditions.textToBePresentInElement(OUTPUT_FIELD, "").apply(driver));        
+        assertTrue("Portlet should 4th return empty string", driver.findElement(OUTPUT_FIELD).getText().equals(""));        
     }
 }
