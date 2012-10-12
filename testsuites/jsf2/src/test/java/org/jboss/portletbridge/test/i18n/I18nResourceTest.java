@@ -25,6 +25,8 @@ import java.net.URL;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
+import static org.jboss.arquillian.graphene.Graphene.element;
+import static org.jboss.arquillian.graphene.Graphene.waitAjax;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
@@ -40,13 +42,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
-@RunWith(Arquillian.class)
+//@RunWith(Arquillian.class)
 public class I18nResourceTest {
 
     @Deployment()
@@ -64,25 +63,25 @@ public class I18nResourceTest {
 
     protected static String getFacesXml() {
         WebFacesConfigDescriptor webConfig = TestDeployment.createFacesConfigXmlDescriptor();
-        
-        FacesConfigApplicationType<WebFacesConfigDescriptor> fcat = webConfig.createApplication();        
+
+        FacesConfigApplicationType<WebFacesConfigDescriptor> fcat = webConfig.createApplication();
         fcat.createLocaleConfig().defaultLocale("en");
-        
+
         FacesConfigApplicationResourceBundleType<FacesConfigApplicationType<WebFacesConfigDescriptor>> resourceBundle = fcat.createResourceBundle();
         resourceBundle.baseName("org.jboss.resources.welcome");
         resourceBundle.var("i18n");
-        
+
         return webConfig.exportAsString();
     }
-    
+
     protected static final By HEADER = By.xpath("//h1[contains(@id,'header')]");
     protected static final By MESSAGE = By.xpath("//span[contains(@id,'output')]");
     protected static final By SELECTOR = By.xpath("//select[contains(@id,'selector')]");
-    
+
     protected static final String headerContent = "I18n";
     protected static final String enContent = "english";
     protected static final String zhContent = "chinese";
-    
+
     @ArquillianResource
     @PortalURL
     URL portalURL;
@@ -91,7 +90,7 @@ public class I18nResourceTest {
 
     @Test
     @RunAsClient
-    public void testI18n() throws Exception {        
+    public void testI18n() throws Exception {
         driver.get(portalURL.toString());
 
         assertNotNull("Check that page contains header element.", driver.findElement(HEADER));
@@ -104,16 +103,8 @@ public class I18nResourceTest {
         assertTrue("En language message should be present.", ExpectedConditions.textToBePresentInElement(MESSAGE, enContent).apply(driver));
 
         select.selectByValue("zh_CN");
-        
-        new WebDriverWait(driver, 10).until(new ExpectedCondition<WebElement>() {
-            public WebElement apply(WebDriver driver) {
-                WebElement toReturn = driver.findElement(MESSAGE);
-                if (toReturn.getText().equals(zhContent)) {
-                    return toReturn;
-                }             
-                return null;
-            }
-        });
+
+        waitAjax(driver).until(element(MESSAGE).textEquals(zhContent));
 
         assertTrue("Zh_cn language message should be present.", ExpectedConditions.textToBePresentInElement(MESSAGE, zhContent).apply(driver));
     }
