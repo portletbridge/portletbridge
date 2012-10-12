@@ -25,9 +25,5 @@
 <!--       <property name="javaVmArguments">-Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=y</property> -->
         </configuration>
     </container>
- 
-    <extension qualifier="webdriver">
-        <property name="useJavaScript">true</property>
-    </extension>
- 
+
 </arquillian>
