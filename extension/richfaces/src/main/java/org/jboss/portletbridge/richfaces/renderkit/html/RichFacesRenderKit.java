@@ -25,13 +25,25 @@ import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitWrapper;
 import javax.faces.render.Renderer;
 
+import org.richfaces.component.UIEditor;
+import org.richfaces.component.UIInplaceInput;
+import org.richfaces.component.UIInplaceSelect;
+
 /**
  * @author <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
  */
 public class RichFacesRenderKit extends RenderKitWrapper {
 
-    private static final String EDITOR_FAMILY = "org.richfaces.Editor";
-    private static final String EDITOR_RENDERER_TYPE = "org.richfaces.EditorRenderer";
+    private static final String RENDERER_SUFFIX = "Renderer";
+
+    private static final String EDITOR_FAMILY = UIEditor.COMPONENT_FAMILY;
+    private static final String EDITOR_RENDERER_TYPE = UIEditor.COMPONENT_TYPE + RENDERER_SUFFIX;
+
+    private static final String INPLACESELECT_FAMILY = UIInplaceSelect.COMPONENT_FAMILY;
+    private static final String INPLACESELECT_RENDERER_TYPE = UIInplaceSelect.COMPONENT_TYPE + RENDERER_SUFFIX;
+
+    private static final String INPLACEINPUT_FAMILY = UIInplaceInput.COMPONENT_FAMILY;
+    private static final String INPLACEINPUT_RENDERER_TYPE = UIInplaceInput.COMPONENT_TYPE + RENDERER_SUFFIX;
 
     private RenderKit wrapped;
 
@@ -51,6 +63,12 @@ public class RichFacesRenderKit extends RenderKitWrapper {
     public Renderer getRenderer(String family, String rendererType) {
         if (EDITOR_FAMILY.equals(family) && EDITOR_RENDERER_TYPE.equals(rendererType)) {
             return new RichFacesEditorRenderer();
+        }
+        else if(INPLACESELECT_FAMILY.equals(family) && INPLACESELECT_RENDERER_TYPE.equals(rendererType)) {
+            return new RichFacesInplaceSelectRenderer();
+        }
+        else if(INPLACEINPUT_FAMILY.equals(family) && INPLACEINPUT_RENDERER_TYPE.equals(rendererType)) {
+            return new RichFacesInplaceInputRenderer();
         }
         return wrapped.getRenderer(family, rendererType);
     }
