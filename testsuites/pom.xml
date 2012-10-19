@@ -34,8 +34,13 @@
         </dependency>
         <dependency>
             <groupId>org.jboss.shrinkwrap.resolver</groupId>
-            <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
+            <artifactId>shrinkwrap-resolver-api-maven</artifactId>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.shrinkwrap.resolver</groupId>
+            <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.jboss.shrinkwrap.descriptors</groupId>
@@ -44,7 +49,7 @@
         </dependency>
         <dependency>
             <groupId>org.jboss.arquillian.extension</groupId>
-            <artifactId>arquillian-portal-impl-base</artifactId>
+            <artifactId>arquillian-portal-impl</artifactId>
             <scope>compile</scope>
         </dependency>
     </dependencies>
@@ -101,6 +106,11 @@
                     <type>pom</type>
                     <scope>test</scope>
                 </dependency>
+                <dependency>
+                    <groupId>org.jboss.portletbridge.testing.pluto</groupId>
+                    <artifactId>pluto-extension-jsf</artifactId>
+                    <scope>test</scope>
+                </dependency>
             </dependencies>
         </profile>
 
@@ -125,10 +135,14 @@
                     <scope>test</scope>
                 </dependency>
                 <dependency>
-                    <groupId>org.jboss.portletbridge.testing.gatein</groupId>
-                    <artifactId>gatein-portal-container</artifactId>
-                    <classifier>jboss-as7</classifier>
-                    <type>war</type>
+                    <groupId>javax.portlet</groupId>
+                    <artifactId>portlet-api</artifactId>
+                    <scope>provided</scope>
+                </dependency>
+                <dependency>
+                    <groupId>com.sun.faces</groupId>
+                    <artifactId>jsf-api</artifactId>
+                    <scope>provided</scope>
                 </dependency>
             </dependencies>
 

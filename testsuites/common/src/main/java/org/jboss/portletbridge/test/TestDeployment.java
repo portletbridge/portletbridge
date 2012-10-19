@@ -21,13 +21,14 @@
  */
 package org.jboss.portletbridge.test;
 
+import java.io.File;
+
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.descriptor.api.Descriptors;
 import org.jboss.shrinkwrap.descriptor.api.facesconfig21.WebFacesConfigDescriptor;
 import org.jboss.shrinkwrap.descriptor.api.webapp30.WebAppDescriptor;
-import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
-import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
+import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 
 public class TestDeployment {
 
@@ -35,12 +36,10 @@ public class TestDeployment {
         return ShrinkWrap
                 .create(WebArchive.class)
                 .addAsLibraries(
-                        DependencyResolvers.use(MavenDependencyResolver.class).loadEffectivePom("pom.xml")
-                                .artifacts("org.jboss.portletbridge:portletbridge-api").resolveAsFiles())
-                .addAsLibraries(
-                        DependencyResolvers.use(MavenDependencyResolver.class).loadEffectivePom("pom.xml")
-                                .artifacts("org.jboss.portletbridge:portletbridge-impl").resolveAsFiles())
-                .addAsWebInfResource("WEB-INF/jboss-deployment-structure.xml", "jboss-deployment-structure.xml");
+                        Maven.resolver().loadPomFromFile("pom.xml")
+                                .resolve("org.jboss.portletbridge:portletbridge-impl")
+                                .withTransitivity()
+                                .as(File.class));
     }
 
     public static WebArchive createDeploymentWithAll() {

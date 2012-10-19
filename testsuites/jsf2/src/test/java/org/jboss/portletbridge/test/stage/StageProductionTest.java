@@ -21,9 +21,14 @@
  */
 package org.jboss.portletbridge.test.stage;
 
+import java.net.URL;
+
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.arquillian.portal.api.PortalTest;
+import org.jboss.arquillian.portal.api.PortalURL;
+import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -32,13 +37,18 @@ import org.junit.runner.RunWith;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 @RunWith(Arquillian.class)
+@PortalTest
 public class StageProductionTest extends StageAbstractTest {
     
     @Deployment()
     public static WebArchive createDeployment() {        
         return createDeployment("Production");
     }
-      
+
+    @ArquillianResource
+    @PortalURL
+    URL portalURL;
+
     protected static final String outStage = "Stage:Production";
 
     @Test

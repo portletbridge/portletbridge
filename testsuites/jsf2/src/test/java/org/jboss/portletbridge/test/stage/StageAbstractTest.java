@@ -32,7 +32,6 @@ import org.jboss.shrinkwrap.descriptor.api.webapp30.WebAppDescriptor;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
-
 public abstract class StageAbstractTest {
 
     protected static String getWebXml(String value) {
@@ -54,10 +53,6 @@ public abstract class StageAbstractTest {
     }
 
     protected static final By LABEL = By.xpath("//span[contains(@id,'outStage')]");
- 
-    @ArquillianResource
-    @PortalURL
-    URL portalURL;
 
     @Drone
     WebDriver driver;

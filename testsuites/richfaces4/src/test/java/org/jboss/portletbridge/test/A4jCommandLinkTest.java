@@ -23,24 +23,23 @@ package org.jboss.portletbridge.test;
 
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.net.URL;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
-import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
-import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 //@RunWith(Arquillian.class)
+@PortalTest
 public class A4jCommandLinkTest {
 
     public static final String NEW_VALUE = "New Value";
@@ -53,14 +52,14 @@ public class A4jCommandLinkTest {
                 .addAsWebResource("a4jLink.xhtml", "home.xhtml")
                 .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css")
                 .addAsLibraries(
-                        DependencyResolvers.use(MavenDependencyResolver.class).loadEffectivePom("pom.xml")
-                                .artifacts("org.richfaces.core:richfaces-core-impl").resolveAsFiles())
+                        Maven.resolver().loadPomFromFile("pom.xml")
+                            .resolve("org.richfaces.core:richfaces-core-impl").withTransitivity().as(File.class))
                 .addAsLibraries(
-                        DependencyResolvers.use(MavenDependencyResolver.class).loadEffectivePom("pom.xml")
-                                .artifacts("org.richfaces.ui:richfaces-components-api").resolveAsFiles())
+                        Maven.resolver().loadPomFromFile("pom.xml")
+                        .resolve("org.richfaces.core:richfaces-components-api").withTransitivity().as(File.class))
                 .addAsLibraries(
-                        DependencyResolvers.use(MavenDependencyResolver.class).loadEffectivePom("pom.xml")
-                                .artifacts("org.richfaces.ui:richfaces-components-ui").resolveAsFiles());
+                        Maven.resolver().loadPomFromFile("pom.xml")
+                        .resolve("org.richfaces.core:richfaces-components-ui").withTransitivity().as(File.class));
     }
 
     protected static final By OUTPUT_FIELD = By.id("output");

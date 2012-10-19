@@ -25,11 +25,11 @@
         <version.junit>4.10</version.junit>
         <version.arquillian>1.0.2.Final</version.arquillian>
         <version.shrinkwrap.descriptor>2.0.0-alpha-4</version.shrinkwrap.descriptor>
-        <version.shrinkwrap.resolver>2.0.0-alpha-1</version.shrinkwrap.resolver>
+        <version.shrinkwrap.resolver>2.0.0-alpha-4</version.shrinkwrap.resolver>
         <version.arquillian.graphene>2.0.0.Alpha2</version.arquillian.graphene>
-        <version.arquillian.extension.portal>1.0.0.Alpha1</version.arquillian.extension.portal>
-        <version.gatein.portal.testing>1.0.0.Alpha1</version.gatein.portal.testing>
-        <version.pluto.portal.testing>1.0.0.Alpha1</version.pluto.portal.testing>
+        <version.arquillian.extension.portal>1.0.0.Alpha2</version.arquillian.extension.portal>
+        <version.gatein.portal.testing>1.0.0.Alpha2</version.gatein.portal.testing>
+        <version.pluto.portal.testing>1.0.0.Alpha2</version.pluto.portal.testing>
         <version.jbossas7.container>7.1.1.Final</version.jbossas7.container>
 
         <!-- Plugin versions -->
@@ -158,7 +158,7 @@
             </dependency>
             <dependency>
                 <groupId>org.jboss.arquillian.extension</groupId>
-                <artifactId>arquillian-portal-impl-base</artifactId>
+                <artifactId>arquillian-portal-impl</artifactId>
                 <version>${version.arquillian.extension.portal}</version>
             </dependency>
 
@@ -168,25 +168,18 @@
                 <artifactId>gatein-arquillian-extension</artifactId>
                 <version>${version.gatein.portal.testing}</version>
             </dependency>
-            <dependency>
-                <groupId>org.jboss.portletbridge.testing.gatein</groupId>
-                <artifactId>gatein-portal-container</artifactId>
-                <version>${version.gatein.portal.testing}</version>
-                <classifier>jboss-as7</classifier>
-                <type>war</type>
-            </dependency>
 
             <!-- Pluto Testing dependencies -->
-            <dependency>
-                <groupId>org.jboss.portletbridge.testing.pluto</groupId>
-                <artifactId>pluto-container</artifactId>
-                <version>${version.pluto.portal.testing}</version>
-            </dependency>
             <dependency>
                 <groupId>org.jboss.portletbridge.testing.pluto</groupId>
                 <artifactId>pluto-jetty-bom</artifactId>
                 <version>${version.pluto.portal.testing}</version>
                 <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.portletbridge.testing.pluto</groupId>
+                <artifactId>pluto-extension-jsf</artifactId>
+                <version>${version.pluto.portal.testing}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

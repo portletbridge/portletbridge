@@ -28,6 +28,7 @@ import org.jboss.arquillian.drone.api.annotation.Drone;
 import static org.jboss.arquillian.graphene.Graphene.element;
 import static org.jboss.arquillian.graphene.Graphene.waitAjax;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.portletbridge.test.TestDeployment;
@@ -46,6 +47,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 
 @RunWith(Arquillian.class)
+@PortalTest
 public class I18nResourceTest {
 
     @Deployment()

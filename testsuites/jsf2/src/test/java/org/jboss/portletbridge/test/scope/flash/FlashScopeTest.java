@@ -30,6 +30,7 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.portletbridge.test.PortletExpectedConditions;
@@ -45,6 +46,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
  * @author <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
  */
 @RunWith(Arquillian.class)
+@PortalTest
 public class FlashScopeTest {
 
     @Deployment()
