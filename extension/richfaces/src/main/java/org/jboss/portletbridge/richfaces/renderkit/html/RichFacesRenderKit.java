@@ -25,13 +25,17 @@ import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitWrapper;
 import javax.faces.render.Renderer;
 
+import org.richfaces.component.UIEditor;
+
 /**
  * @author <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
  */
 public class RichFacesRenderKit extends RenderKitWrapper {
 
-    private static final String EDITOR_FAMILY = "org.richfaces.Editor";
-    private static final String EDITOR_RENDERER_TYPE = "org.richfaces.EditorRenderer";
+    private static final String RENDERER_SUFFIX = "Renderer";
+
+    private static final String EDITOR_FAMILY = UIEditor.COMPONENT_FAMILY;
+    private static final String EDITOR_RENDERER_TYPE = UIEditor.COMPONENT_TYPE + RENDERER_SUFFIX;
 
     private RenderKit wrapped;
 

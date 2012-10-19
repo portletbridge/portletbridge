@@ -82,9 +82,10 @@ public class RichFacesPortletResource extends ResourceWrapper {
         String path = wrapped.getRequestPath();
         if (null != path) {
             int pos = path.indexOf(RICHFACES_PATH_TOKEN);
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            ExternalContext externalContext = facesContext.getExternalContext();
+
             if (pos >= 0) {
-                FacesContext facesContext = FacesContext.getCurrentInstance();
-                ExternalContext externalContext = facesContext.getExternalContext();
                 StringBuilder buf = new StringBuilder(150);
                 if (path.contains("MediaOutputResource")) {
                     buf.append(path);
@@ -94,6 +95,8 @@ public class RichFacesPortletResource extends ResourceWrapper {
                     buf.append(path.substring(pos + RICHFACES_PATH_TOKEN.length()));
                 }
                 path = externalContext.encodeResourceURL(buf.toString());
+            } else {
+                path = externalContext.encodeResourceURL(path);
             }
         }
         return path;
