@@ -21,6 +21,7 @@
  */
 package org.jboss.portletbridge.bridge.scope;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -44,14 +45,14 @@ import org.jboss.portletbridge.bridge.logger.BridgeLogger.Level;
  *
  * @author kenfinnigan
  */
-public class BridgeRequestScopeManagerImpl implements BridgeRequestScopeManager {
+public class BridgeRequestScopeManagerImpl implements BridgeRequestScopeManager, Serializable {
 
     private static final int DEFAULT_MAX_MANAGED_REQUEST_SCOPES = 100;
 
     private static final BridgeLogger logger = BridgeLoggerFactoryImpl.getLogger(BridgeRequestScopeManagerImpl.class
         .getName());
 
-    private BridgeRequestScopeFactory scopeFactory;
+    private transient BridgeRequestScopeFactory scopeFactory;
 
     private Map<String, BridgeRequestScope> bridgeRequestScopeCache;
     private Map<String, String> scopeIdMap;
