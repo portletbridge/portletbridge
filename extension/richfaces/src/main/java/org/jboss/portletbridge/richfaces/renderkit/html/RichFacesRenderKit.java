@@ -25,6 +25,7 @@ import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitWrapper;
 import javax.faces.render.Renderer;
 
+import org.richfaces.component.UICalendar;
 import org.richfaces.component.UIEditor;
 import org.richfaces.component.UIInplaceInput;
 import org.richfaces.component.UIInplaceSelect;
@@ -44,6 +45,9 @@ public class RichFacesRenderKit extends RenderKitWrapper {
 
     private static final String INPLACEINPUT_FAMILY = UIInplaceInput.COMPONENT_FAMILY;
     private static final String INPLACEINPUT_RENDERER_TYPE = UIInplaceInput.COMPONENT_TYPE + RENDERER_SUFFIX;
+
+    private static final String CALENDAR_FAMILY = UICalendar.COMPONENT_FAMILY;
+    private static final String CALENDAR_RENDERER_TYPE = UICalendar.COMPONENT_TYPE + RENDERER_SUFFIX;
 
     private RenderKit wrapped;
 
@@ -69,6 +73,9 @@ public class RichFacesRenderKit extends RenderKitWrapper {
         }
         else if(INPLACEINPUT_FAMILY.equals(family) && INPLACEINPUT_RENDERER_TYPE.equals(rendererType)) {
             return new RichFacesInplaceInputRenderer();
+        }
+        else if(CALENDAR_FAMILY.equals(family) && CALENDAR_RENDERER_TYPE.equals(rendererType)) {
+            return new RichFacesCalendarRenderer();
         }
         return wrapped.getRenderer(family, rendererType);
     }
