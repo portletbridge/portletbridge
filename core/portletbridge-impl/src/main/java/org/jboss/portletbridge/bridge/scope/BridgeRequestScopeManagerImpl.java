@@ -58,8 +58,7 @@ public class BridgeRequestScopeManagerImpl implements BridgeRequestScopeManager,
     private Map<String, String> scopeIdMap;
 
     public BridgeRequestScopeManagerImpl(BridgeConfig bridgeConfig) {
-        this.scopeFactory = (BridgeRequestScopeFactory) BridgeFactoryFinder
-            .getFactoryInstance(BridgeRequestScopeFactory.class);
+        this.scopeFactory = retrieveScopeFactory();
         this.bridgeRequestScopeCache = createBridgeRequestScopeCache(bridgeConfig.getPortletConfig()
             .getPortletContext());
         this.scopeIdMap = new HashMap<String, String>(getCacheMax(bridgeConfig.getPortletConfig().getPortletContext()));
@@ -71,7 +70,7 @@ public class BridgeRequestScopeManagerImpl implements BridgeRequestScopeManager,
      */
     public BridgeRequestScope createRequestScope(BridgeContext ctx, String portletName, String sessionId,
         String viewId, String portletMode) {
-        BridgeRequestScope scope = scopeFactory.getBridgeRequestScope(portletName, sessionId, viewId, portletMode);
+        BridgeRequestScope scope = getScopeFactory().getBridgeRequestScope(portletName, sessionId, viewId, portletMode);
         this.bridgeRequestScopeCache.put(scope.getId(), scope);
         this.scopeIdMap.put(
             BridgeRequestScopeUtil.generateBridgeRequestScopeIdPrefix(portletName, sessionId, viewId, portletMode),
@@ -278,5 +277,16 @@ public class BridgeRequestScopeManagerImpl implements BridgeRequestScopeManager,
         }
         return maxManagedScopes;
     }
+
+   public BridgeRequestScopeFactory getScopeFactory() {
+      if(scopeFactory == null) {
+         scopeFactory = retrieveScopeFactory();
+      }
+      return scopeFactory;
+   }
+
+   private BridgeRequestScopeFactory retrieveScopeFactory() {
+      return (BridgeRequestScopeFactory) BridgeFactoryFinder.getFactoryInstance(BridgeRequestScopeFactory.class);
+   }
 
 }
