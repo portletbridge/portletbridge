@@ -90,6 +90,7 @@ public class RichFacesPortletResource extends ResourceWrapper {
                 if (path.contains("MediaOutputResource")) {
                     buf.append(path);
                 } else {
+                    buf.append(path.substring(0, pos));
                     buf.append(ResourceHandler.RESOURCE_IDENTIFIER);
                     buf.append("/");
                     buf.append(path.substring(pos + RICHFACES_PATH_TOKEN.length()));
