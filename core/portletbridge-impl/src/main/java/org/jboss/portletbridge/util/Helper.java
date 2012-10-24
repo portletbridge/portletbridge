@@ -24,16 +24,27 @@ package org.jboss.portletbridge.util;
 import javax.portlet.PortalContext;
 import javax.portlet.PortletRequest;
 
+import org.jboss.portletbridge.bridge.context.BridgeContext;
+
 /**
  * @author <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
  */
 public final class Helper {
+    public static final String MARKUP_HEAD_ENABLED = "org.jboss.portletbridge.markupHead.enabled";
 
     private Helper() {
     }
 
     public static boolean canMarkupHead(PortletRequest request) {
-        // TODO Add bit to retrieve value from BridgeContext (web.xml context param maybe?)
+        // Check if Portlet App has requested it to be disabled
+        BridgeContext bridgeContext = BridgeContext.getCurrentInstance();
+        String bridgeMarkupHead = bridgeContext.getPortletContext().getInitParameter(MARKUP_HEAD_ENABLED);
+        if (null != bridgeMarkupHead) {
+            Boolean bridgeMarkup = Boolean.valueOf(bridgeMarkupHead);
+            if (!bridgeMarkup) {
+                return false;
+            }
+        }
 
         // Check if Portlet Container supports it
         String containerMarkupHeadSupport = request.getPortalContext().getProperty(PortalContext.MARKUP_HEAD_ELEMENT_SUPPORT);
