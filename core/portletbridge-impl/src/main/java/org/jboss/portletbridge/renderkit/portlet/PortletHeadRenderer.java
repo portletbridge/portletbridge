@@ -59,9 +59,6 @@ public class PortletHeadRenderer extends Renderer {
     static final String ORIGINAL_TARGET = "originalTarget";
 
     private static final String ADDED = UIComponentBase.class.getName() + ".ADDED";
-    private static final String START_OF_FACET = "start";
-    private static final String MIDDLE_OF_FACET = "middle";
-    private static final String END_OF_FACET = "end";
 
     @Override
     public void decode(FacesContext context, UIComponent component) {
@@ -168,9 +165,6 @@ public class PortletHeadRenderer extends Renderer {
      */
     protected List<UIComponent> buildComponentAddSequence(UIComponent uiComponent, FacesContext facesContext) {
         List<UIComponent> headComponentResources = facesContext.getViewRoot().getComponentResources(facesContext, HEAD);
-        List<UIComponent> resourcesForStart = getFacetResources(uiComponent, START_OF_FACET);
-        List<UIComponent> resourcesForMiddle = getFacetResources(uiComponent, MIDDLE_OF_FACET);
-        List<UIComponent> resourcesForEnd = getFacetResources(uiComponent, END_OF_FACET);
 
         List<UIComponent> headStylesheetComponentResources = null;
         List<UIComponent> headScriptComponentResources = null;
@@ -194,35 +188,14 @@ public class PortletHeadRenderer extends Renderer {
 
         // Add Components based on defined sequence
         List<UIComponent> aggregatedComponentResources = new ArrayList<UIComponent>();
-        if (null != resourcesForStart) {
-            aggregatedComponentResources.addAll(resourcesForStart);
-        }
         if (null != headStylesheetComponentResources) {
             aggregatedComponentResources.addAll(headStylesheetComponentResources);
-        }
-        if (null != resourcesForMiddle) {
-            aggregatedComponentResources.addAll(resourcesForMiddle);
         }
         if (null != headScriptComponentResources) {
             aggregatedComponentResources.addAll(headScriptComponentResources);
         }
-        if (null != resourcesForEnd) {
-            aggregatedComponentResources.addAll(resourcesForEnd);
-        }
 
         return aggregatedComponentResources;
-    }
-
-    protected List<UIComponent> getFacetResources(UIComponent uiComponent, String facetName) {
-        List<UIComponent> resources = null;
-        UIComponent facet = uiComponent.getFacet(facetName);
-
-        if (null != facet) {
-            resources = new ArrayList<UIComponent>();
-            resources.addAll(facet.getChildren());
-        }
-
-        return resources;
     }
 
     @Override
