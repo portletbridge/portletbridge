@@ -32,4 +32,5 @@ public interface PortletBridgeConstants {
 
     String AJAX_PARAM = "_pbrAjax";
 
+    String WSRP_REQUEST_PARAM = "org.gatein.invocation.fromWSRP";
 }

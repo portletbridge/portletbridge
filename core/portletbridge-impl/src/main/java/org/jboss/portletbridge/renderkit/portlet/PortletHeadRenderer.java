@@ -41,7 +41,7 @@ import org.jboss.portletbridge.bridge.context.BridgeContext;
 import org.jboss.portletbridge.bridge.logger.BridgeLogger;
 import org.jboss.portletbridge.bridge.logger.BridgeLogger.Level;
 import org.jboss.portletbridge.bridge.logger.JULLoggerImpl;
-import org.jboss.portletbridge.util.Helper;
+import org.jboss.portletbridge.util.RequestHelper;
 
 /**
  * This class is a JSF renderer that is designed for use with the h:head component tag. Portlets are forbidden from rendering
@@ -80,7 +80,7 @@ public class PortletHeadRenderer extends Renderer {
         ExternalContext externalContext = facesContext.getExternalContext();
         PortletRequest portletRequest = (PortletRequest) externalContext.getRequest();
 
-        boolean canMarkupHead = Helper.canMarkupHead(portletRequest);
+        boolean canMarkupHead = RequestHelper.canMarkupHead(portletRequest);
 
         HeadResources headBean = HeadResources.instance();
         Set<String> resourceIds = null != headBean ? headBean.getIds() : new HashSet<String>();

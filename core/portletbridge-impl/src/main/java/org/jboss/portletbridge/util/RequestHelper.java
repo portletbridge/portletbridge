@@ -24,15 +24,16 @@ package org.jboss.portletbridge.util;
 import javax.portlet.PortalContext;
 import javax.portlet.PortletRequest;
 
+import org.jboss.portletbridge.PortletBridgeConstants;
 import org.jboss.portletbridge.bridge.context.BridgeContext;
 
 /**
  * @author <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
  */
-public final class Helper {
+public final class RequestHelper {
     public static final String MARKUP_HEAD_ENABLED = "org.jboss.portletbridge.markupHead.enabled";
 
-    private Helper() {
+    private RequestHelper() {
     }
 
     public static boolean canMarkupHead(PortletRequest request) {
@@ -46,6 +47,11 @@ public final class Helper {
             }
         }
 
+        // Check for WSRP Request and disable head markup if it is
+        if (isWSRPRequest()) {
+            return false;
+        }
+
         // Check if Portlet Container supports it
         String containerMarkupHeadSupport = request.getPortalContext().getProperty(PortalContext.MARKUP_HEAD_ELEMENT_SUPPORT);
         if (null != containerMarkupHeadSupport) {
@@ -55,6 +61,15 @@ public final class Helper {
             }
         }
 
+        return false;
+    }
+
+    public static boolean isWSRPRequest() {
+        BridgeContext bridgeContext = BridgeContext.getCurrentInstance();
+        Boolean wsrpRequestParam = (Boolean)bridgeContext.getPortletRequest().getAttribute(PortletBridgeConstants.WSRP_REQUEST_PARAM);
+        if (Boolean.TRUE.equals(wsrpRequestParam)) {
+            return true;
+        }
         return false;
     }
 }
