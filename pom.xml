@@ -10,7 +10,7 @@
 
     <groupId>org.jboss.portletbridge</groupId>
     <artifactId>portletbridge-parent</artifactId>
-    <version>3.1.0.CR1</version>
+    <version>3.1.0.Final-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>JBoss JSF2 Portlet Bridge for a portlet environment, parent pom</name>
 
