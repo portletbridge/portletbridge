@@ -72,7 +72,7 @@ public class FileUploadFacesContextFactory extends FacesContextFactory implement
                 String uid = clientRequest.getParameter(org.richfaces.context.FileUploadFacesContextFactory.UID_KEY);
 
                 if (null != uid) {
-                    long contentLength = Long.parseLong(clientRequest.getProperty("content-length"));
+                    long contentLength = clientRequest.getContentLength();
 
                     ProgressControl progressControl = new ProgressControl(uid, contentLength);
 
