@@ -118,17 +118,6 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
         }
 
         BridgeRequestScope scope = bridgeContext.getBridgeScope();
-
-        String viewStateParam = request.getParameter(ResponseStateManager.VIEW_STATE_PARAM);
-        if (null == viewStateParam) {
-            if (null != scope) {
-                viewStateParam = (String) scope.get(FACES_VIEW_STATE);
-                if (null != viewStateParam) {
-                    extraRequestParameters.put(ResponseStateManager.VIEW_STATE_PARAM, new String[] { viewStateParam });
-                }
-            }
-        }
-
         if (null != scope) {
             // Restore Action Parameters
             @SuppressWarnings("unchecked")
@@ -227,6 +216,9 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
             String name = (String) paramNames.nextElement();
             names.add(name);
         }
+        if (!names.contains(ResponseStateManager.VIEW_STATE_PARAM)) {
+            names.add(ResponseStateManager.VIEW_STATE_PARAM);
+        }
         names.addAll(extraRequestParameters.keySet());
         return Collections.enumeration(names);
     }
@@ -260,7 +252,14 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
     protected String[] getRequestParameterValues(String name) {
         String[] temp = getPortletRequest().getParameterValues(name);
         if (null == temp || temp.length == 0) {
-            temp = extraRequestParameters.get(name);
+            if (ResponseStateManager.VIEW_STATE_PARAM.equals(name)) {
+                BridgeRequestScope scope = bridgeContext.getBridgeScope();
+                if (null != scope) {
+                    temp = new String[] { (String) scope.get(FACES_VIEW_STATE) };
+                }
+            } else {
+                temp = extraRequestParameters.get(name);
+            }
         }
         return temp;
     }
@@ -427,9 +426,16 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
     protected String getRequestParameter(String name) {
         String temp = getPortletRequest().getParameter(name);
         if (null == temp) {
-            String[] tempArray = extraRequestParameters.get(name);
-            if (null != tempArray && tempArray.length > 0) {
-                temp = extraRequestParameters.get(name)[0];
+            if (ResponseStateManager.VIEW_STATE_PARAM.equals(name)) {
+                BridgeRequestScope scope = bridgeContext.getBridgeScope();
+                if (null != scope) {
+                    temp = (String) scope.get(FACES_VIEW_STATE);
+                }
+            } else {
+                String[] tempArray = extraRequestParameters.get(name);
+                if (null != tempArray && tempArray.length > 0) {
+                    temp = extraRequestParameters.get(name)[0];
+                }
             }
         }
         return temp;
