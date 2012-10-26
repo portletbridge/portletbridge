@@ -30,6 +30,7 @@ import java.net.URL;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
+import org.jboss.arquillian.graphene.Graphene;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
@@ -40,9 +41,9 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.descriptor.api.facesconfig21.WebFacesConfigDescriptor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
 /**
  * @author <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
@@ -81,9 +82,14 @@ public class AjaxRedirectTest {
     protected static final String DONE1 = "Done1";
     protected static final String DONE2 = "Done2";
 
-    protected static final By OUTPUT_FIELD = By.id("output");
-    protected static final By SUBMIT_BUTTON_1 = By.xpath("//input[@value='done1']");
-    protected static final By SUBMIT_BUTTON_2 = By.xpath("//input[@value='done2']");
+    @FindBy(id = "output")
+    private WebElement outputField;
+
+    @FindBy(xpath = "//input[@value='done1']")
+    private WebElement submitButton1;
+
+    @FindBy(xpath = "//input[@value='done2']")
+    private WebElement submitButton2;
 
     @ArquillianResource
     @PortalURL
@@ -96,24 +102,22 @@ public class AjaxRedirectTest {
     @RunAsClient
     public void redirectInFacesConfig() throws Exception {
         driver.get(portalURL.toString());
-        driver.findElement(SUBMIT_BUTTON_1).click();
+        submitButton1.click();
 
-        waitAjax(driver).until(element(OUTPUT_FIELD).isPresent());;
-        
-        assertTrue("output text should contain: " + DONE1,
-                ExpectedConditions.textToBePresentInElement(OUTPUT_FIELD, DONE1).apply(driver));
+        waitAjax(driver).until(element(outputField).isPresent());;
+
+        assertTrue("output text should contain: " + DONE1, Graphene.element(outputField).textEquals(DONE1).apply(driver));
     }
 
     @Test
     @RunAsClient
     public void redirectInButtonAction() throws Exception {
         driver.get(portalURL.toString());
-        driver.findElement(SUBMIT_BUTTON_2).click();
+        submitButton2.click();
 
-        waitAjax(driver).until(element(OUTPUT_FIELD).isPresent());;
+        waitAjax(driver).until(element(outputField).isPresent());;
 
-        assertTrue("output text should contain: " + DONE2,
-                ExpectedConditions.textToBePresentInElement(OUTPUT_FIELD, DONE2).apply(driver));
+        assertTrue("output text should contain: " + DONE2, Graphene.element(outputField).textEquals(DONE2).apply(driver));
     }
 
 }

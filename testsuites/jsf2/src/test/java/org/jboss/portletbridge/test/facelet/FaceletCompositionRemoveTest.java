@@ -21,23 +21,25 @@
  */
 package org.jboss.portletbridge.test.facelet;
 
+import static org.junit.Assert.assertTrue;
+
 import java.net.URL;
+
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
+import org.jboss.arquillian.graphene.Graphene;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.portletbridge.test.TestDeployment;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
 @RunWith(Arquillian.class)
 @PortalTest
@@ -52,12 +54,17 @@ public class FaceletCompositionRemoveTest {
         return wa;
     }
 
-    protected static final By HEADER = By.xpath("//h1[contains(@id,'header')]");
-    protected static final By BUTTON_UNREMOVED = By.xpath("//input[contains(@id,'unremoved')]");
-    protected static final By BUTTON_REMOVED= By.xpath("//input[contains(@id,'deleted')]");
-    
+    @FindBy(xpath = "//h1[contains(@id,'header')]")
+    private WebElement header;
+
+    @FindBy(xpath = "//input[contains(@id,'unremoved')]")
+    private WebElement buttonUnremoved;
+
+    @FindBy(xpath = "//input[contains(@id,'deleted')]")
+    private WebElement buttonRemoved;
+
     protected static final String headerContent = "UI:Remove";
-    
+
     @ArquillianResource
     @PortalURL
     URL portalURL;
@@ -69,12 +76,16 @@ public class FaceletCompositionRemoveTest {
     public void testFaceletCompositionRemove() throws Exception {
         driver.get(portalURL.toString());
 
-        assertNotNull("Check that page contains header element.", driver.findElement(HEADER));
-        assertTrue("Header should contain: " + headerContent, ExpectedConditions.textToBePresentInElement(HEADER, headerContent).apply(driver));
-                
-        assertNotNull("Check that page contains unremoved element.", driver.findElement(BUTTON_UNREMOVED));
-        
-        assertTrue("Check that page does not contain removed element.", driver.findElements(BUTTON_REMOVED).isEmpty());
+        assertTrue("Check that page contains header element.",
+                Graphene.element(header).isPresent().apply(driver));
 
-    } 
+        assertTrue("Header should contain: " + headerContent,
+                Graphene.element(header).textEquals(headerContent).apply(driver));
+
+        assertTrue("Check that page contains unremoved element.",
+                Graphene.element(buttonUnremoved).isPresent().apply(driver));
+
+        assertTrue("Check that page does not contain removed element.",
+                Graphene.element(buttonRemoved).not().isPresent().apply(driver));
+    }
 }

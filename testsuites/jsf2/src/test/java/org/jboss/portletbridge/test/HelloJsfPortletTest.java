@@ -21,7 +21,6 @@
  */
 package org.jboss.portletbridge.test;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.net.URL;
@@ -29,6 +28,7 @@ import java.net.URL;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
+import org.jboss.arquillian.graphene.Graphene;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
@@ -36,9 +36,9 @@ import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
 @RunWith(Arquillian.class)
 @PortalTest
@@ -52,7 +52,8 @@ public class HelloJsfPortletTest {
                 .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css");
     }
 
-    protected static final By OUTPUT_FIELD = By.id("output");
+    @FindBy(id = "output")
+    private WebElement outputField;
 
     @ArquillianResource
     @PortalURL
@@ -65,9 +66,9 @@ public class HelloJsfPortletTest {
     @RunAsClient
     public void renderFacesPortlet() throws Exception {
         driver.get(portalURL.toString());
-        assertNotNull("Check that page contains output element", driver.findElement(OUTPUT_FIELD));
+        assertTrue("Check that page contains output element", Graphene.element(outputField).isVisible().apply(driver));
         assertTrue("Portlet should return: " + Bean.HELLO_JSF_PORTLET,
-                ExpectedConditions.textToBePresentInElement(OUTPUT_FIELD, Bean.HELLO_JSF_PORTLET).apply(driver));
+                Graphene.element(outputField).textEquals(Bean.HELLO_JSF_PORTLET).apply(driver));
     }
 
 }

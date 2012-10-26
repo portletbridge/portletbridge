@@ -23,8 +23,6 @@ package org.jboss.portletbridge.test.component.h.inputText;
 
 import static org.jboss.arquillian.graphene.Graphene.element;
 import static org.jboss.arquillian.graphene.Graphene.waitAjax;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.net.URL;
@@ -32,6 +30,7 @@ import java.net.URL;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
+import org.jboss.arquillian.graphene.Graphene;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
@@ -40,9 +39,9 @@ import org.jboss.portletbridge.test.TestDeployment;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
 @RunWith(Arquillian.class)
 @PortalTest
@@ -52,43 +51,60 @@ public class InputTextTest {
     public static WebArchive createDeployment() {
         return TestDeployment.createDeploymentWithAll()
                 .addAsWebResource("pages/component/h/inputText/inputtext.xhtml", "home.xhtml")
-                .addClass(InputTextBean.class);
-        // .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css");
+                .addClass(InputTextBean.class)
+                .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css")
+                .addAsWebResource("resources/stylesheet.css", "portlet-spec-1.0.css");
     }
 
     @ArquillianResource
     @PortalURL
     URL portalURL;
 
-    protected static final By INPUT_ONE = By.xpath("//input[contains(@id,':input1')]");
-    protected static final By OUTPUT_ONE = By.xpath("//span[contains(@id,':output1')]");
-    protected static final By OUTPUT_ONE_COUNTER = By.xpath("//span[contains(@id,':output1count')]");
-    protected static final By SUBMIT_ONE = By.xpath("//input[contains(@id,':submit1')]");
+    @FindBy(xpath = "//input[contains(@id,':input1')]")
+    private WebElement inputOne;
 
-    protected static final By INPUT_TWO = By.xpath("//input[contains(@id,':input2')]");
-    protected static final By OUTPUT_TWO = By.xpath("//span[contains(@id,':output2')]");
-    protected static final By OUTPUT_TWO_COUNTER = By.xpath("//span[contains(@id,':output2count')]");
+    @FindBy(xpath = "//span[contains(@id,':output1')]")
+    private WebElement outputOne;
 
-    protected static final By MESSAGES = By.xpath("//*[contains(@id,':messages')]");
+    @FindBy(xpath = "//span[contains(@id,':output1count')]")
+    private WebElement outputOneCounter;
+
+    @FindBy(xpath = "//input[contains(@id,':submit1')]")
+    private WebElement submitOne;
+
+    @FindBy(xpath = "//input[contains(@id,':input2')]")
+    private WebElement inputTwo;
+
+    @FindBy(xpath = "//span[contains(@id,':output2')]")
+    private WebElement outputTwo;
+
+    @FindBy(xpath = "//span[contains(@id,':output2count')]")
+    private WebElement outputTwoCounter;
+
+    @FindBy(xpath = "//*[contains(@id,':messages')]")
+    private WebElement messages;
 
     @Test
     @RunAsClient
     public void testInputText(@Drone WebDriver driver) throws Exception {
         driver.get(portalURL.toString());
 
-        assertNotNull("Check that page contains INPUT ONE element.", driver.findElement(INPUT_ONE));
-        assertNotNull("Check that page contains OUTPUT ONE element.", driver.findElement(OUTPUT_ONE));
-        assertNotNull("Check that page contains SUBMIT ONE element.", driver.findElement(SUBMIT_ONE));
+        assertTrue("Check that page contains INPUT ONE element.", Graphene.element(inputOne).isVisible().apply(driver));
+        assertTrue("Check that page contains OUTPUT ONE element.", Graphene.element(outputOne).isVisible().apply(driver));
+        assertTrue("Check that page contains SUBMIT ONE element.", Graphene.element(submitOne).isVisible().apply(driver));
 
-        assertEquals("Check that INPUT ONE element starts empty.", "", driver.findElement(INPUT_ONE).getAttribute("value"));
-        assertEquals("Check that OUTPUT ONE element starts empty.", "", driver.findElement(OUTPUT_ONE).getText());
+        assertTrue("Check that INPUT ONE element starts empty.",
+                Graphene.attribute(inputOne, "value").valueEquals("").apply(driver));
+        assertTrue("Check that OUTPUT ONE element starts empty.",
+                Graphene.element(outputOne).textEquals("").apply(driver));
 
         String textToInput = "pbr";
 
-        driver.findElement(INPUT_ONE).sendKeys(textToInput);
-        driver.findElement(SUBMIT_ONE).click();
+        inputOne.sendKeys(textToInput);
+        submitOne.click();
 
-        assertEquals("OUTPUT ONE element should have inputed text.", textToInput, driver.findElement(OUTPUT_ONE).getText());
+        assertTrue("OUTPUT ONE element should have inputed text.",
+                Graphene.element(outputOne).textEquals(textToInput).apply(driver));
     }
 
     @Test
@@ -96,23 +112,26 @@ public class InputTextTest {
     public void testAjaxInputText(@Drone WebDriver driver) throws Exception {
         driver.get(portalURL.toString());
 
-        assertNotNull("Check that page contains INPUT TWO element.", driver.findElement(INPUT_TWO));
-        assertNotNull("Check that page contains OUTPUT TWO element.", driver.findElement(OUTPUT_TWO));
+        assertTrue("Check that page contains INPUT TWO element.", Graphene.element(inputTwo).isVisible().apply(driver));
+        assertTrue("Check that page contains OUTPUT TWO element.", Graphene.element(outputTwo).isVisible().apply(driver));
 
-        assertEquals("Check that INPUT TWO element starts empty.", "", driver.findElement(INPUT_TWO).getText());
-        assertEquals("Check that OUTPUT TWO element starts empty.", "", driver.findElement(OUTPUT_TWO).getText());
+        assertTrue("Check that INPUT TWO element starts empty.",
+                Graphene.attribute(inputTwo, "value").valueEquals("").apply(driver));
+        assertTrue("Check that OUTPUT TWO element starts empty.",
+                Graphene.element(outputTwo).textEquals("").apply(driver));
 
         final String textToInput = "pbr";
 
         for (String s : textToInput.split("")) {
             if (!s.equals("")) {
-                driver.findElement(INPUT_TWO).sendKeys(s);
+                inputTwo.sendKeys(s);
             }
         }
 
-        waitAjax(driver).until(element(OUTPUT_TWO).textEquals("pbr"));
+        waitAjax(driver).until(element(outputTwo).textEquals(textToInput));
 
-        assertEquals("OUTPUT TWO element should have inputed text.", textToInput, driver.findElement(OUTPUT_TWO).getText());
+        assertTrue("OUTPUT TWO element should have inputed text.",
+                Graphene.element(outputTwo).textEquals(textToInput).apply(driver));
     }
 
     @Test
@@ -120,42 +139,42 @@ public class InputTextTest {
     public void testOnChange(@Drone WebDriver driver) throws Exception {
         driver.get(portalURL.toString());
 
-        assertNotNull("Check that page contains INPUT TWO element.", driver.findElement(INPUT_TWO));
-        assertNotNull("Check that page contains OUTPUT TWO element.", driver.findElement(OUTPUT_TWO));
+        assertTrue("Check that page contains INPUT TWO element.", Graphene.element(inputTwo).isVisible().apply(driver));
+        assertTrue("Check that page contains OUTPUT TWO element.", Graphene.element(outputTwo).isVisible().apply(driver));
 
-        assertEquals("Check that INPUT TWO element starts empty.", "", driver.findElement(INPUT_TWO).getText());
-        assertEquals("Check that OUTPUT TWO element starts empty.", "", driver.findElement(OUTPUT_TWO).getText());
+        assertTrue("Check that INPUT TWO element starts empty.",
+                Graphene.attribute(inputTwo, "value").valueEquals("").apply(driver));
+        assertTrue("Check that OUTPUT TWO element starts empty.",
+                Graphene.element(outputTwo).textEquals("").apply(driver));
 
         final String textToInput = "pbr";
 
         // Fill input one and submit
-        driver.findElement(INPUT_ONE).sendKeys(textToInput);
-        driver.findElement(SUBMIT_ONE).click();
+        inputOne.sendKeys(textToInput);
+        submitOne.click();
 
         // FIXME: Why doesn't it update in time ?
-        // assertEquals("OUTPUT ONE COUNTER element should have inputed text length.", String.valueOf(textToInput.length()),
-        // driver.findElement(OUTPUT_ONE_COUNTER).getText());
+        //assertTrue("OUTPUT ONE COUNTER element should have inputed text length.",
+        //        Graphene.element(outputOneCounter).textEquals(String.valueOf(textToInput.length())).apply(driver));
 
         // Fill input two, char by char
         for (String s : textToInput.split("")) {
             if (!s.equals("")) {
-                driver.findElement(INPUT_TWO).sendKeys(s);
+                inputTwo.sendKeys(s);
             }
         }
 
-        waitAjax(driver).until(element(OUTPUT_TWO).textEquals(textToInput));
+        waitAjax(driver).until(element(outputTwo).textEquals(textToInput));
 
-        assertEquals("OUTPUT TWO COUNTER element should have inputed text length.", String.valueOf(textToInput.length()/*
-                                                                                                                        * FIXME:
-                                                                                                                        * ..
-                                                                                                                        * AJAX
-                                                                                                                        */- 1),
-                driver.findElement(OUTPUT_TWO_COUNTER).getText());
+        assertTrue("OUTPUT TWO COUNTER element should have inputed text length.",
+                Graphene.element(outputTwoCounter).textEquals(String.valueOf(textToInput.length()/* FIXME: AJAX */- 1)).
+                apply(driver));
 
-        assertEquals("OUTPUT ONE COUNTER element should have inputed text length.", String.valueOf(textToInput.length()),
-                driver.findElement(OUTPUT_ONE_COUNTER).getText());
-        // FIXME: .. assertEquals("OUTPUT TWO COUNTER element should have inputed text length.",
-        // String.valueOf(textToInput.length()), driver.findElement(OUTPUT_TWO_COUNTER).getText());
+        assertTrue("OUTPUT ONE COUNTER element should have inputed text length.",
+                Graphene.element(outputOneCounter).textEquals(String.valueOf(textToInput.length())).apply(driver));
+        // FIXME: ..
+        //assertTrue("OUTPUT TWO COUNTER element should have inputed text length.",
+        //        Graphene.element(outputTwoCounter).textEquals(String.valueOf(textToInput.length())).apply(driver));
     }
 
     @Test
@@ -163,18 +182,20 @@ public class InputTextTest {
     public void testRequired(@Drone WebDriver driver) throws Exception {
         driver.get(portalURL.toString());
 
-        assertNotNull("Check that page contains INPUT ONE element.", driver.findElement(INPUT_ONE));
-        assertNotNull("Check that page contains OUTPUT ONE element.", driver.findElement(OUTPUT_ONE));
-        assertNotNull("Check that page contains SUBMIT ONE element.", driver.findElement(SUBMIT_ONE));
+        assertTrue("Check that page contains INPUT ONE element.", Graphene.element(inputOne).isVisible().apply(driver));
+        assertTrue("Check that page contains OUTPUT ONE element.", Graphene.element(outputOne).isVisible().apply(driver));
+        assertTrue("Check that page contains SUBMIT ONE element.", Graphene.element(submitOne).isVisible().apply(driver));
 
-        assertEquals("Check that INPUT ONE element starts empty.", "", driver.findElement(INPUT_ONE).getText());
-        assertEquals("Check that OUTPUT ONE element starts empty.", "", driver.findElement(OUTPUT_ONE).getText());
+        assertTrue("Check that INPUT ONE element starts empty.",
+                Graphene.attribute(inputOne, "value").valueEquals("").apply(driver));
+        assertTrue("Check that OUTPUT ONE element starts empty.",
+                Graphene.element(outputOne).textEquals("").apply(driver));
 
         // Submit with no input
-        driver.findElement(SUBMIT_ONE).click();
+        submitOne.click();
 
-        assertTrue("MESSAGES should contain error message: " + InputTextBean.REQUIRED_MESSAGE, ExpectedConditions
-                .textToBePresentInElement(MESSAGES, InputTextBean.REQUIRED_MESSAGE).apply(driver));
+        assertTrue("MESSAGES should contain error message: " + InputTextBean.REQUIRED_MESSAGE,
+                Graphene.element(messages).textEquals(InputTextBean.REQUIRED_MESSAGE).apply(driver));
     }
 
     @Test
@@ -182,66 +203,21 @@ public class InputTextTest {
     public void testValidateLength(@Drone WebDriver driver) throws Exception {
         driver.get(portalURL.toString());
 
-        assertNotNull("Check that page contains INPUT ONE element.", driver.findElement(INPUT_ONE));
-        assertNotNull("Check that page contains OUTPUT ONE element.", driver.findElement(OUTPUT_ONE));
-        assertNotNull("Check that page contains SUBMIT ONE element.", driver.findElement(SUBMIT_ONE));
+        assertTrue("Check that page contains INPUT ONE element.", Graphene.element(inputOne).isVisible().apply(driver));
+        assertTrue("Check that page contains OUTPUT ONE element.", Graphene.element(outputOne).isVisible().apply(driver));
+        assertTrue("Check that page contains SUBMIT ONE element.", Graphene.element(submitOne).isVisible().apply(driver));
 
-        assertEquals("Check that INPUT ONE element starts empty.", "", driver.findElement(INPUT_ONE).getText());
-        assertEquals("Check that OUTPUT ONE element starts empty.", "", driver.findElement(OUTPUT_ONE).getText());
+        assertTrue("Check that INPUT ONE element starts empty.",
+                Graphene.attribute(inputOne, "value").valueEquals("").apply(driver));
+        assertTrue("Check that OUTPUT ONE element starts empty.",
+                Graphene.element(outputOne).textEquals("").apply(driver));
 
         // Submit a small input
-        driver.findElement(INPUT_ONE).sendKeys("pb");
-        driver.findElement(SUBMIT_ONE).click();
+        inputOne.sendKeys("pb");
+        submitOne.click();
 
-        assertTrue("MESSAGES should contain error message: " + InputTextBean.MIN_LENGTH_MESSAGE, ExpectedConditions
-                .textToBePresentInElement(MESSAGES, InputTextBean.MIN_LENGTH_MESSAGE).apply(driver));
+        assertTrue("MESSAGES should contain error message: " + InputTextBean.MIN_LENGTH_MESSAGE,
+                Graphene.element(messages).textEquals(InputTextBean.MIN_LENGTH_MESSAGE).apply(driver));
     }
 
-    /* -- [ SANDBOX ] ------------------------------------------------------ */
-    /*
-     * @Test
-     * 
-     * @RunAsClient public void testAjaxInputText() throws Exception { boolean replaceWebDriver = false; boolean
-     * useWebDriverBackedSelenium = false;
-     * 
-     * //WebDriver driver = (HtmlUnitDriver) driver;
-     * 
-     * if(replaceWebDriver) { driver = new HtmlUnitDriver(); ((HtmlUnitDriver) driver).setJavascriptEnabled(true); }
-     * 
-     * String textToInput = "pbr";
-     * 
-     * if(!useWebDriverBackedSelenium) { driver.get(portalURL.toString()); System.out.println(driver.getPageSource());
-     * 
-     * assertNotNull("Check that page contains INPUT TWO element.", driver.findElement(INPUT_TWO));
-     * assertNotNull("Check that page contains OUTPUT TWO element.", driver.findElement(OUTPUT_TWO));
-     * 
-     * assertEquals("Check that INPUT TWO element starts empty.", "", driver.findElement(INPUT_TWO).getText());
-     * assertEquals("Check that OUTPUT TWO element starts empty.", "", driver.findElement(OUTPUT_TWO).getText());
-     * 
-     * for(String s : textToInput.split("")) { if(!s.equals("")) { driver.findElement(INPUT_TWO).sendKeys(s); } }
-     * //driver.findElement(SUBMIT_TWO).click();
-     * 
-     * System.out.println("AFTER_\r\n" + driver.getPageSource());
-     * 
-     * // Let AJAX work Thread.sleep(2500);
-     * 
-     * // Wait for AJAX to do it's work Wait<WebDriver> wait = new WebDriverWait(driver, 10); WebElement element=
-     * wait.until(visibilityOfElementLocated(OUTPUT_TWO)); } else { Selenium selenium = new WebDriverBackedSelenium(driver,
-     * portalURL.toString());
-     * 
-     * selenium.open(portalURL.toString());
-     * 
-     * for(String s : textToInput.split("")) { if(!s.equals("")) {
-     * selenium.keyDown("//*[@id[substring(., string-length() - 5) = 'input2']]", s);
-     * selenium.keyPress("//*[@id[substring(., string-length() - 5) = 'input2']]", s);
-     * selenium.keyUp("//*[@id[substring(., string-length() - 5) = 'input2']]", s); } }
-     * 
-     * // Let AJAX work Thread.sleep(2500); }
-     * 
-     * assertEquals("OUTPUT TWO element should have inputed text.", textToInput, driver.findElement(OUTPUT_TWO).getText()); }
-     * 
-     * public ExpectedCondition<WebElement> visibilityOfElementLocated(final By locator) { return new
-     * ExpectedCondition<WebElement>() { public WebElement apply(WebDriver driver) { WebElement toReturn =
-     * driver.findElement(locator); if (toReturn.getText().length() > 0) { return toReturn; } return null; } }; }
-     */
 }

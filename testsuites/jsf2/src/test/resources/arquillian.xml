@@ -11,10 +11,17 @@
 
     <extension qualifier="webdriver">
         <property name="browserCapabilities">htmlUnit</property>
-        <property name="javaScriptEnabled">true</property>
+        <property name="javascriptEnabled">true</property>
     </extension>
 
-    <container qualifier="jbossas-managed-7" default="true">
+    <extension qualifier="graphene">
+        <!-- Increase default wait intervals -->
+        <property name="waitGuiInterval">5</property>
+        <property name="waitAjaxInterval">10</property>
+        <property name="waitModelInterval">25</property>
+    </extension>
+
+    <container qualifier="jbossas-managed-7">
         <configuration>
             <property name="jbossHome">target/jboss-as-7.1.1.Final</property>
       <property name="javaVmArguments">-Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=y</property>

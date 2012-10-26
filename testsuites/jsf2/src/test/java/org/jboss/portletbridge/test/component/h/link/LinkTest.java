@@ -1,8 +1,5 @@
 package org.jboss.portletbridge.test.component.h.link;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.net.URL;
@@ -10,6 +7,7 @@ import java.net.URL;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
+import org.jboss.arquillian.graphene.Graphene;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
@@ -19,8 +17,9 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
 @RunWith(Arquillian.class)
 @PortalTest
@@ -40,9 +39,15 @@ public class LinkTest {
     @PortalURL
     URL portalURL;
 
-    protected static final By LINK_ONE = By.xpath("//a[contains(@id,':link1')]");
-    protected static final By LINK_TWO = By.xpath("//a[contains(@id,':link2')]");
-    protected static final By LINK_THREE = By.xpath("//a[contains(@id,':link3')]");
+    @FindBy(xpath = "//a[contains(@id,':link1')]")
+    private WebElement linkOne;
+
+    @FindBy(xpath = "//a[contains(@id,':link2')]")
+    private WebElement linkTwo;
+
+    @FindBy(xpath = "//a[contains(@id,':link3')]")
+    private WebElement linkThree;
+
     protected static final By LINK_THREE_IMAGE = By.xpath("img[contains(@id,':link3img')]");
 
     @Test
@@ -50,9 +55,9 @@ public class LinkTest {
     public void testLink(@Drone WebDriver driver) throws Exception {
         driver.get(portalURL.toString());
 
-        assertNotNull("Check that page contains LINK ONE element.", driver.findElement(LINK_ONE));
-        assertNotNull("Check that page contains LINK TWO element.", driver.findElement(LINK_TWO));
-        assertNotNull("Check that page contains LINK THREE element.", driver.findElement(LINK_THREE));
+        assertTrue("Check that page contains LINK ONE element.", Graphene.element(linkOne).isVisible().apply(driver));
+        assertTrue("Check that page contains LINK TWO element.", Graphene.element(linkTwo).isVisible().apply(driver));
+        assertTrue("Check that page contains LINK THREE element.", Graphene.element(linkThree).isVisible().apply(driver));
     }
 
     @Test
@@ -61,10 +66,10 @@ public class LinkTest {
         driver.get(portalURL.toString());
 
         // FIXME: shouldn't link be .../portal/exit.xhtml instead of .../exit.xhtml ?
-        assertTrue("Check that LINK ONE links to the expected location.", driver.findElement(LINK_ONE).getAttribute("href")
-                .contains(LinkBean.LINK_ONE));
-        assertEquals("Check that LINK ONE contains the expected text.", LinkBean.LINK_ONE_TEXT, driver.findElement(LINK_ONE)
-                .getText());
+        assertTrue("Check that LINK ONE links to the expected location.",
+                Graphene.attribute(linkOne, "href").valueContains(LinkBean.LINK_ONE).apply(driver));
+        assertTrue("Check that LINK ONE contains the expected text.",
+                Graphene.element(linkOne).textEquals(LinkBean.LINK_ONE_TEXT).apply(driver));
     }
 
     @Test
@@ -72,12 +77,12 @@ public class LinkTest {
     public void testLinkWithConverter(@Drone WebDriver driver) throws Exception {
         driver.get(portalURL.toString());
 
-        assertTrue("Check that LINK TWO links to the #bottom of LINK ONE.", driver.findElement(LINK_TWO).getAttribute("href")
-                .contains(LinkBean.LINK_ONE));
-        assertTrue("Check that LINK TWO links to the #bottom of LINK ONE.", driver.findElement(LINK_TWO).getAttribute("href")
-                .endsWith("#bottom"));
-        assertEquals("Check that LINK TWO contains the expected text.", LinkBean.LINK_ONE_TEXT + " Bottom",
-                driver.findElement(LINK_TWO).getText());
+        assertTrue("Check that LINK TWO links to the #bottom of LINK ONE.",
+                Graphene.attribute(linkTwo, "href").valueContains(LinkBean.LINK_ONE).apply(driver));
+        assertTrue("Check that LINK TWO links to the #bottom of LINK ONE.",
+                Graphene.attribute(linkTwo, "href").valueContains("#bottom").apply(driver));
+        assertTrue("Check that LINK TWO contains the expected text.",
+                Graphene.element(linkTwo).textEquals(LinkBean.LINK_ONE_TEXT+ " Bottom").apply(driver));
     }
 
     @Test
@@ -85,9 +90,9 @@ public class LinkTest {
     public void testLinkDefault(@Drone WebDriver driver) throws Exception {
         driver.get(portalURL.toString());
 
-        assertTrue("Check that LINK THREE links to the current page.", driver.findElement(LINK_THREE).getAttribute("href")
-                .contains("home0x2xhtml")
-                || driver.findElement(LINK_THREE).getAttribute("href").contains("home.xhtml"));
+        assertTrue("Check that LINK THREE links to the current page.",
+                Graphene.attribute(linkThree, "href").valueContains("home0x2xhtml").apply(driver) ||
+                Graphene.attribute(linkThree, "href").valueContains("home.xhtml").apply(driver));
     }
 
     @Test
@@ -95,9 +100,9 @@ public class LinkTest {
     public void testOutputLinkWithParam(@Drone WebDriver driver) throws Exception {
         driver.get(portalURL.toString());
 
-        assertTrue("Check that OUTPUT LINK THREE link contains the expected parameter.", driver.findElement(LINK_THREE)
-                .getAttribute("href").contains("from0xc2FL3")
-                || driver.findElement(LINK_THREE).getAttribute("href").contains("from=L3"));
+        assertTrue("Check that OUTPUT LINK THREE link contains the expected parameter.",
+                Graphene.attribute(linkThree, "href").valueContains("from0xc2FL3").apply(driver) ||
+                Graphene.attribute(linkThree, "href").valueContains("from=L3").apply(driver));
     }
 
     @Test
@@ -105,8 +110,8 @@ public class LinkTest {
     public void testLinkImage(@Drone WebDriver driver) throws Exception {
         driver.get(portalURL.toString());
 
-        assertTrue("Check that LINK THREE link is an image.", driver.findElement(LINK_THREE).findElement(LINK_THREE_IMAGE)
-                .getAttribute("src").contains("ajax.png"));
+        assertTrue("Check that LINK THREE link is an image.",
+                linkThree.findElement(LINK_THREE_IMAGE).getAttribute("src").contains("ajax.png"));
     }
 
     @Test
@@ -117,11 +122,8 @@ public class LinkTest {
 
         driver.get(portalURL.toString());
 
-        try {
-            assertNull("Check that page does not contains LINK ONE element.", driver.findElement(LINK_ONE));
-        } catch (NoSuchElementException e) {
-            // expected
-        }
+        assertTrue("Check that page does not contains LINK ONE element.",
+                Graphene.element(linkOne).not().isPresent().apply(driver));
     }
 
     // TODO: Add more tests, clicking on links, but only after fixing the above FIXMEs.

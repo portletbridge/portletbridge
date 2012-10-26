@@ -21,23 +21,25 @@
  */
 package org.jboss.portletbridge.test.facelet;
 
+import static org.junit.Assert.assertTrue;
+
 import java.net.URL;
+
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
+import org.jboss.arquillian.graphene.Graphene;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.portletbridge.test.TestDeployment;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
 @RunWith(Arquillian.class)
 @PortalTest
@@ -56,19 +58,23 @@ public class FaceletCompositionParameterTest {
         return wa;
     }
 
-    protected static final By HEADER = By.xpath("//h1[contains(@id,'header')]");
-    protected static final By CONTENT = By.xpath("//h1[contains(@id,'content')]");
-    protected static final By FOOTER = By.xpath("//h1[contains(@id,'footer')]");
-    protected static final By HEADER_PARAM = By.xpath("//h2[contains(@id,'paramHeader')]");
-    protected static final By BUTTON_TARGET_PAYMENT = By.xpath("//input[contains(@id,'buttonPay')]");
-    protected static final By INPUT_QUANTITY = By.xpath("//input[contains(@id,'quantity')]");
-    protected static final By CHECKBOX_REG = By.xpath("//input[contains(@id,'check')]");
-    
+    @FindBy(xpath = "//h1[contains(@id,'header')]")
+    private WebElement header;
+
+    @FindBy(xpath = "//h1[contains(@id,'content')]")
+    private WebElement content;
+
+    @FindBy(xpath = "//h1[contains(@id,'footer')]")
+    private WebElement footer;
+
+    @FindBy(xpath = "//h2[contains(@id,'paramHeader')]")
+    private WebElement headerParam;
+
     protected static final String headerContent = "This is parametrized header";
     protected static final String headerParamContent = "Parameter";
     protected static final String contentContent = "This is default content";
     protected static final String footerContent = "This is default footer";
-    
+
     @ArquillianResource
     @PortalURL
     URL portalURL;
@@ -79,16 +85,23 @@ public class FaceletCompositionParameterTest {
     @RunAsClient
     public void testFaceletCompositionParameter() throws Exception {
         driver.get(portalURL.toString());
-        
-        assertNotNull("Check that page contains header parameter element.", driver.findElement(HEADER_PARAM));
-        assertNotNull("Check that page contains header element.", driver.findElement(HEADER));
-        assertNotNull("Check that page contains content element.", driver.findElement(CONTENT));
-        assertNotNull("Check that page contains footer element.", driver.findElement(FOOTER));
 
-        assertTrue("Header should contain: " + headerContent, ExpectedConditions.textToBePresentInElement(HEADER, headerContent).apply(driver));
-        assertTrue("Header parameter should contain: " + headerContent, ExpectedConditions.textToBePresentInElement(HEADER_PARAM, headerParamContent).apply(driver));
-        assertTrue("Content should contain: " + contentContent, ExpectedConditions.textToBePresentInElement(CONTENT, contentContent).apply(driver));
-        assertTrue("Footer should contain: " + footerContent, ExpectedConditions.textToBePresentInElement(FOOTER, footerContent).apply(driver));
-        
-    } 
+        assertTrue("Check that page contains header element.",
+                Graphene.element(header).isVisible().apply(driver));
+        assertTrue("Check that page contains header parameter element.",
+                Graphene.element(headerParam).isVisible().apply(driver));
+        assertTrue("Check that page contains content element.",
+                Graphene.element(content).isVisible().apply(driver));
+        assertTrue("Check that page contains footer element.",
+                Graphene.element(footer).isVisible().apply(driver));
+
+        assertTrue("Header should contain: " + headerContent,
+                Graphene.element(header).textEquals(headerContent).apply(driver));
+        assertTrue("Header parameter should contain: " + headerParamContent,
+                Graphene.element(headerParam).textEquals(headerParamContent).apply(driver));
+        assertTrue("Content should contain: " + contentContent,
+                Graphene.element(content).textEquals(contentContent).apply(driver));
+        assertTrue("Footer should contain: " + footerContent,
+                Graphene.element(footer).textEquals(footerContent).apply(driver));
+    }
 }

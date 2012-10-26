@@ -24,7 +24,6 @@ package org.jboss.portletbridge.test;
 import static org.jboss.arquillian.graphene.Graphene.element;
 import static org.jboss.arquillian.graphene.Graphene.waitAjax;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.net.URL;
@@ -32,6 +31,7 @@ import java.net.URL;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
+import org.jboss.arquillian.graphene.Graphene;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
@@ -39,9 +39,9 @@ import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
 @RunWith(Arquillian.class)
 @PortalTest
@@ -57,9 +57,14 @@ public class AjaxSubmitTest {
                 .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css");
     }
 
-    protected static final By OUTPUT_FIELD = By.id("output");
-    protected static final By INPUT_FIELD = By.xpath("//input[@type='text']");
-    protected static final By SUBMIT_BUTTON = By.xpath("//input[@type='submit']");
+    @FindBy(id = "output")
+    private WebElement outputField;
+
+    @FindBy(xpath = "//input[@type='text']")
+    private WebElement inputField;
+
+    @FindBy(xpath = "//input[@type='submit']")
+    private WebElement submitButton;
 
     @ArquillianResource
     @PortalURL
@@ -73,42 +78,41 @@ public class AjaxSubmitTest {
     public void renderFormPortlet() throws Exception {
         driver.get(portalURL.toString());
 
-        assertNotNull("Check that page contains output element", driver.findElement(OUTPUT_FIELD));
+        assertTrue("Check that page contains output element", Graphene.element(outputField).isVisible().apply(driver));
 
         assertTrue("output text should contain: " + Bean.HELLO_JSF_PORTLET,
-                ExpectedConditions.textToBePresentInElement(OUTPUT_FIELD, Bean.HELLO_JSF_PORTLET).apply(driver));
+                Graphene.element(outputField).textEquals(Bean.HELLO_JSF_PORTLET).apply(driver));
 
         assertTrue("input text should contain: " + Bean.HELLO_JSF_PORTLET,
-                ExpectedConditions.textToBePresentInElementValue(INPUT_FIELD, Bean.HELLO_JSF_PORTLET).apply(driver));
+                Graphene.attribute(inputField, "value").valueEquals(Bean.HELLO_JSF_PORTLET).apply(driver));
 
-        assertTrue("Submit button is not enabled", ExpectedConditions.elementToBeClickable(SUBMIT_BUTTON).apply(driver)
-                .isEnabled());
+        assertTrue("Submit button is not enabled", submitButton.isEnabled());
         assertFalse("Submit button onclick attribute should not be blank",
-                driver.findElement(SUBMIT_BUTTON).getAttribute("onclick").equals(""));
+                Graphene.attribute(submitButton, "onclick").valueEquals("").apply(driver));
     }
 
     @Test
     @RunAsClient
     public void testSubmitAndRemainOnPage() throws Exception {
         driver.get(portalURL.toString());
-        driver.findElement(INPUT_FIELD).sendKeys(NEW_VALUE);
-        driver.findElement(SUBMIT_BUTTON).click();
+        inputField.sendKeys(NEW_VALUE);
+        submitButton.click();
 
-        waitAjax(driver).until(element(OUTPUT_FIELD).textContains(NEW_VALUE));
+        waitAjax(driver).until(element(outputField).textContains(NEW_VALUE));
 
         assertTrue("output text should contain: " + NEW_VALUE,
-                ExpectedConditions.textToBePresentInElement(OUTPUT_FIELD, NEW_VALUE).apply(driver));
+                Graphene.element(outputField).textContains(NEW_VALUE).apply(driver));
 
         assertTrue("input text should contain: " + NEW_VALUE,
-                ExpectedConditions.textToBePresentInElementValue(INPUT_FIELD, NEW_VALUE).apply(driver));
+                Graphene.attribute(inputField, "value").valueContains(NEW_VALUE).apply(driver));
 
         // Re-render page
         driver.get(portalURL.toString());
         assertTrue("output text should contain: " + NEW_VALUE,
-                ExpectedConditions.textToBePresentInElement(OUTPUT_FIELD, NEW_VALUE).apply(driver));
+                Graphene.element(outputField).textContains(NEW_VALUE).apply(driver));
 
         assertTrue("input text should contain: " + NEW_VALUE,
-                ExpectedConditions.textToBePresentInElementValue(INPUT_FIELD, NEW_VALUE).apply(driver));
+                Graphene.attribute(inputField, "value").valueContains(NEW_VALUE).apply(driver));
     }
 
 }
