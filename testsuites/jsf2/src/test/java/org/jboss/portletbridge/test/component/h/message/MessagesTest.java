@@ -50,8 +50,8 @@ public class MessagesTest {
     public static WebArchive createDeployment() {
         return TestDeployment.createDeploymentWithAll()
                 .addAsWebResource("pages/component/h/message/message.xhtml", "home.xhtml")
+                .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css")
                 .addClass(MessagesBean.class);
-        // .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css");
     }
 
     @FindBy(xpath = "//*[contains(@id,':messages')]")

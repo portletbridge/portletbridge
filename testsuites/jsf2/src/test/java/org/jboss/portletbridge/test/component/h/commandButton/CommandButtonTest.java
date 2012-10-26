@@ -34,8 +34,8 @@ public class CommandButtonTest {
         return TestDeployment.createDeploymentWithAll()
                 .addAsWebResource("pages/component/h/commandButton/commandbutton.xhtml", "home.xhtml")
                 .addAsWebResource("resources/ajax.png", "ajax.png")
+                .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css")
                 .addClass(CommandButtonBean.class);
-        // .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css");
     }
 
     @ArquillianResource

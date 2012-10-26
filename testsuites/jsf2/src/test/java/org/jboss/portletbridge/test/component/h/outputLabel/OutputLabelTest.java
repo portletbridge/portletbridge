@@ -29,8 +29,8 @@ public class OutputLabelTest {
     public static WebArchive createDeployment() {
         return TestDeployment.createDeploymentWithAll()
                 .addAsWebResource("pages/component/h/outputLabel/outputlabel.xhtml", "home.xhtml")
+                .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css")
                 .addClass(OutputLabelBean.class);
-        // .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css");
     }
 
     @ArquillianResource
@@ -46,6 +46,9 @@ public class OutputLabelTest {
     @Test
     @RunAsClient
     public void testOutputLabel(@Drone WebDriver driver) throws Exception {
+        OutputLabelBean.OUTPUT_LABEL_RENDER = true;
+        OutputLabelBean.OUTPUT_LABEL_ESCAPE = true;
+
         driver.get(portalURL.toString());
 
         assertTrue("Check that page contains OUTPUT ONE element.", Graphene.element(outputOne).isVisible().apply(driver));
@@ -59,6 +62,7 @@ public class OutputLabelTest {
     public void testOutputLabelEscape(@Drone WebDriver driver) throws Exception {
         // Set outputLabel not to escape XML/HTML
         OutputLabelBean.OUTPUT_LABEL_ESCAPE = false;
+        OutputLabelBean.OUTPUT_LABEL_RENDER = true;
 
         driver.get(portalURL.toString());
 
@@ -73,6 +77,7 @@ public class OutputLabelTest {
     public void testOutputLabelRendered(@Drone WebDriver driver) throws Exception {
         // Set outputLabel not to render
         OutputLabelBean.OUTPUT_LABEL_RENDER = false;
+        OutputLabelBean.OUTPUT_LABEL_ESCAPE = true;
 
         driver.get(portalURL.toString());
 
@@ -83,6 +88,8 @@ public class OutputLabelTest {
     @Test
     @RunAsClient
     public void testOutputLabelConverter(@Drone WebDriver driver) throws Exception {
+        OutputLabelBean.OUTPUT_LABEL_RENDER = true;
+        OutputLabelBean.OUTPUT_LABEL_ESCAPE = true;
         driver.get(portalURL.toString());
 
         assertTrue("Check that page contains OUTPUT TWO element.", Graphene.element(outputTwo).isVisible().apply(driver));

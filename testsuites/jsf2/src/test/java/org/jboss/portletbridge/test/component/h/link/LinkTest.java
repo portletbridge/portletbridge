@@ -31,8 +31,8 @@ public class LinkTest {
                 .addAsWebResource("pages/component/h/link/link.xhtml", "home.xhtml")
                 .addAsWebResource("pages/component/h/link/link.xhtml", "exit.xhtml")
                 .addAsWebResource("resources/ajax.png", "ajax.png")
+                .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css")
                 .addClass(LinkBean.class);
-        // .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css");
     }
 
     @ArquillianResource
@@ -53,6 +53,8 @@ public class LinkTest {
     @Test
     @RunAsClient
     public void testLink(@Drone WebDriver driver) throws Exception {
+        LinkBean.LINK_RENDER = true;
+
         driver.get(portalURL.toString());
 
         assertTrue("Check that page contains LINK ONE element.", Graphene.element(linkOne).isVisible().apply(driver));
@@ -63,6 +65,8 @@ public class LinkTest {
     @Test
     @RunAsClient
     public void testLinkWithValue(@Drone WebDriver driver) throws Exception {
+        LinkBean.LINK_RENDER = true;
+
         driver.get(portalURL.toString());
 
         // FIXME: shouldn't link be .../portal/exit.xhtml instead of .../exit.xhtml ?
@@ -75,6 +79,8 @@ public class LinkTest {
     @Test
     @RunAsClient
     public void testLinkWithConverter(@Drone WebDriver driver) throws Exception {
+        LinkBean.LINK_RENDER = true;
+
         driver.get(portalURL.toString());
 
         assertTrue("Check that LINK TWO links to the #bottom of LINK ONE.",
@@ -88,6 +94,8 @@ public class LinkTest {
     @Test
     @RunAsClient
     public void testLinkDefault(@Drone WebDriver driver) throws Exception {
+        LinkBean.LINK_RENDER = true;
+
         driver.get(portalURL.toString());
 
         assertTrue("Check that LINK THREE links to the current page.",
@@ -98,6 +106,8 @@ public class LinkTest {
     @Test
     @RunAsClient
     public void testOutputLinkWithParam(@Drone WebDriver driver) throws Exception {
+        LinkBean.LINK_RENDER = true;
+
         driver.get(portalURL.toString());
 
         assertTrue("Check that OUTPUT LINK THREE link contains the expected parameter.",
@@ -108,6 +118,8 @@ public class LinkTest {
     @Test
     @RunAsClient
     public void testLinkImage(@Drone WebDriver driver) throws Exception {
+        LinkBean.LINK_RENDER = true;
+
         driver.get(portalURL.toString());
 
         assertTrue("Check that LINK THREE link is an image.",

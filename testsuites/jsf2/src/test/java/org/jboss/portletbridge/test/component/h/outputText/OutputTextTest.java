@@ -29,8 +29,8 @@ public class OutputTextTest {
     public static WebArchive createDeployment() {
         return TestDeployment.createDeploymentWithAll()
                 .addAsWebResource("pages/component/h/outputText/outputtext.xhtml", "home.xhtml")
+                .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css")
                 .addClass(OutputTextBean.class);
-        // .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css");
     }
 
     @ArquillianResource
@@ -46,6 +46,9 @@ public class OutputTextTest {
     @Test
     @RunAsClient
     public void testOutputText(@Drone WebDriver driver) throws Exception {
+        OutputTextBean.OUTPUT_TEXT_ESCAPE = true;
+        OutputTextBean.OUTPUT_TEXT_RENDER = true;
+
         driver.get(portalURL.toString());
 
         assertTrue("Check that page contains OUTPUT ONE element.",
@@ -60,6 +63,7 @@ public class OutputTextTest {
     public void testOutputTextEscape(@Drone WebDriver driver) throws Exception {
         // Set outputText not to escape XML/HTML
         OutputTextBean.OUTPUT_TEXT_ESCAPE = false;
+        OutputTextBean.OUTPUT_TEXT_RENDER = true;
 
         driver.get(portalURL.toString());
 
@@ -75,6 +79,7 @@ public class OutputTextTest {
     public void testOutputTextRendered(@Drone WebDriver driver) throws Exception {
         // Set outputText not to render
         OutputTextBean.OUTPUT_TEXT_RENDER = false;
+        OutputTextBean.OUTPUT_TEXT_ESCAPE = true;
 
         driver.get(portalURL.toString());
 
@@ -85,6 +90,9 @@ public class OutputTextTest {
     @Test
     @RunAsClient
     public void testOutputTextConverter(@Drone WebDriver driver) throws Exception {
+        OutputTextBean.OUTPUT_TEXT_ESCAPE = true;
+        OutputTextBean.OUTPUT_TEXT_RENDER = true;
+
         driver.get(portalURL.toString());
 
         assertTrue("Check that page contains OUTPUT TWO element.",

@@ -34,8 +34,8 @@ public class CommandLinkTest {
         return TestDeployment.createDeploymentWithAll()
                 .addAsWebResource("pages/component/h/commandLink/commandlink.xhtml", "home.xhtml")
                 .addAsWebResource("resources/ajax.png", "ajax.png")
+                .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css")
                 .addClass(CommandLinkBean.class);
-        // .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css");
     }
 
     @FindBy(xpath = "//a[contains(@id,':submit')]")

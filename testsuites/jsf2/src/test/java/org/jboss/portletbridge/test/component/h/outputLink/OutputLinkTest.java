@@ -31,8 +31,8 @@ public class OutputLinkTest {
         return TestDeployment.createDeploymentWithAll()
                 .addAsWebResource("pages/component/h/outputLink/outputlink.xhtml", "home.xhtml")
                 .addAsWebResource("resources/ajax.png", "ajax.png")
-                .addClass(OutputLinkBean.class);
-        // .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css");
+                .addClass(OutputLinkBean.class)
+                .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css");
     }
 
     @ArquillianResource
@@ -53,6 +53,8 @@ public class OutputLinkTest {
     @Test
     @RunAsClient
     public void testOutputLink(@Drone WebDriver driver) throws Exception {
+        OutputLinkBean.OUTPUT_LINK_RENDER = true;
+
         driver.get(portalURL.toString());
 
         assertTrue("Check that page contains OUTPUT LINK ONE element.",
@@ -66,6 +68,8 @@ public class OutputLinkTest {
     @Test
     @RunAsClient
     public void testOutputLinkWithValue(@Drone WebDriver driver) throws Exception {
+        OutputLinkBean.OUTPUT_LINK_RENDER = true;
+
         driver.get(portalURL.toString());
 
         // FIXME: shouldn't link be .../portal/exit.xhtml instead of .../exit.xhtml ?
@@ -78,6 +82,8 @@ public class OutputLinkTest {
     @Test
     @RunAsClient
     public void testOutputLinkWithConverter(@Drone WebDriver driver) throws Exception {
+        OutputLinkBean.OUTPUT_LINK_RENDER = true;
+
         driver.get(portalURL.toString());
 
         // FIXME: shouldn't link be .../portal/10.0.xhtml instead of .../10.0.xhtml ?
@@ -103,6 +109,8 @@ public class OutputLinkTest {
     @Test
     @RunAsClient
     public void testOutputLinkWithParam(@Drone WebDriver driver) throws Exception {
+        OutputLinkBean.OUTPUT_LINK_RENDER = true;
+
         driver.get(portalURL.toString());
 
         // FIXME: Shouldn't it point to current page rather than top-level ?
@@ -113,6 +121,8 @@ public class OutputLinkTest {
     @Test
     @RunAsClient
     public void testOutputLinkImage(@Drone WebDriver driver) throws Exception {
+        OutputLinkBean.OUTPUT_LINK_RENDER = true;
+
         driver.get(portalURL.toString());
 
         // FIXME: Shouldn't it point to current page rather than top-level ?
