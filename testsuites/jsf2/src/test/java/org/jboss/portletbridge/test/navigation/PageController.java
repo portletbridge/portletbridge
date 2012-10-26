@@ -16,6 +16,8 @@ import javax.faces.bean.SessionScoped;
 @SessionScoped
 public class PageController implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     public String moveToPage2() {
         return "target";
     }

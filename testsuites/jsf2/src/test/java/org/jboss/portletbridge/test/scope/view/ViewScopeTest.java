@@ -1,6 +1,6 @@
 package org.jboss.portletbridge.test.scope.view;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import java.net.URL;
 
@@ -19,6 +19,7 @@ import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
 @RunWith(Arquillian.class)
 @PortalTest
@@ -32,7 +33,12 @@ public class ViewScopeTest {
                 .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css");
     }
 
-    protected static final By SECOND_ROW = By.xpath("//tr[2]");
+    @FindBy(xpath = "//tr[2]")
+    private WebElement secondRow;
+
+    // FIXME: Only available in Graphene > 2.0.0.Alpha2
+    // @FindBy(xpath = "//tr")
+    // private List<WebElement> rows;
 
     @ArquillianResource
     @PortalURL
@@ -45,10 +51,9 @@ public class ViewScopeTest {
     @RunAsClient
     public void renderPostBackWithViewScope() throws Exception {
         driver.get(portalURL.toString());
-        assertTrue(driver.findElements(By.xpath("//tr")).size() == 6);
-        WebElement secondRow = driver.findElement(SECOND_ROW);
+        assertEquals("Check that table contains 6 rows", 6, /*rows*/driver.findElements(By.xpath("//tr")).size());
         secondRow.findElement(By.xpath("td/input")).click();
-        assertTrue(driver.findElements(By.xpath("//tr")).size() == 5);
+        assertEquals("Check that table contains 5 rows", 5, /*rows*/driver.findElements(By.xpath("//tr")).size());
     }
 
 }

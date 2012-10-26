@@ -21,10 +21,14 @@
  */
 package org.jboss.portletbridge.test.facelet;
 
+import static org.junit.Assert.assertTrue;
+
 import java.net.URL;
+
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
+import org.jboss.arquillian.graphene.Graphene;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
@@ -33,11 +37,11 @@ import org.jboss.portletbridge.test.TestDeployment;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.descriptor.api.webapp30.WebAppDescriptor;
-import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
 @RunWith(Arquillian.class)
 @PortalTest
@@ -45,40 +49,43 @@ public class FaceletCompositionCustomTagTest {
 
     @Deployment()
     public static WebArchive createDeployment() {
-        WebAppDescriptor webConfig = TestDeployment.createWebXmlDescriptor();        
+        WebAppDescriptor webConfig = TestDeployment.createWebXmlDescriptor();
         webConfig.createContextParam()
-                 .paramName("facelets.LIBRARIES")
-                 .paramValue("/WEB-INF/pbr.taglib.xml");
-        
+        .paramName("facelets.LIBRARIES")
+        .paramValue("/WEB-INF/pbr.taglib.xml");
+
         WebArchive wa = TestDeployment.createDeployment()
                 .addAsWebResource("pages/facelet/customTag/main.xhtml", "home.xhtml")
                 .addAsWebResource("pages/facelet/customTag/button.xhtml", "button.xhtml")
                 .addAsWebInfResource(new StringAsset(webConfig.exportAsString()), "web.xml")
                 .addAsWebInfResource("pages/facelet/customTag/pbr.taglib.xml", "pbr.taglib.xml");
-               
+
         TestDeployment.addPortletXml(wa);
         return wa;
     }
 
-    protected static final By HEADER = By.xpath("//h1[contains(@id,'header')]");
-    protected static final By BUTTON_CUSTOM = By.xpath("//input[contains(@id,'customButton')]");
-    
+    @FindBy(xpath = "//h1[contains(@id,'header')]")
+    private WebElement header;
+
+    @FindBy(xpath = "//input[contains(@id,'customButton')]")
+    private WebElement buttonCustom;
+
     protected static final String headerContent = "This is default header";
     protected static final String contentContent = "This is defined content";
     protected static final String footerContent = "This is defined footer";
-    
+
     @ArquillianResource
     @PortalURL
     URL portalURL;
     @Drone
     WebDriver driver;
-    
+
     @Test
     @RunAsClient
     public void testFaceletCompositionCustomTag() throws Exception {
         driver.get(portalURL.toString());
-        
-        assertNotNull("Check that page contains header element.", driver.findElement(HEADER));
-        assertNotNull("Check that page contains header element.", driver.findElement(BUTTON_CUSTOM));        
-    } 
+
+        assertTrue("Check that page contains header element.", Graphene.element(header).isVisible().apply(driver));
+        assertTrue("Check that page contains button element.", Graphene.element(buttonCustom).isVisible().apply(driver));
+    }
 }

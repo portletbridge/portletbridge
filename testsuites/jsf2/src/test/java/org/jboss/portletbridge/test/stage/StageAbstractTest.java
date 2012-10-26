@@ -21,29 +21,27 @@
  */
 package org.jboss.portletbridge.test.stage;
 
-import java.net.URL;
 import org.jboss.arquillian.drone.api.annotation.Drone;
-import org.jboss.arquillian.portal.api.PortalURL;
-import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.portletbridge.test.TestDeployment;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.descriptor.api.webapp30.WebAppDescriptor;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
 public abstract class StageAbstractTest {
 
     protected static String getWebXml(String value) {
-        WebAppDescriptor webConfig = TestDeployment.createWebXmlDescriptor();        
+        WebAppDescriptor webConfig = TestDeployment.createWebXmlDescriptor();
         webConfig.createContextParam()
                  .paramName("javax.faces.PROJECT_STAGE")
-                 .paramValue(value);                    
-            
+                 .paramValue(value);
+
         return webConfig.exportAsString();
     }
-    
-    protected static WebArchive createDeployment(String value) {        
+
+    protected static WebArchive createDeployment(String value) {
          WebArchive wa = TestDeployment.createDeployment()
                 .addAsWebResource("pages/stage/main.xhtml", "home.xhtml")
                 .addAsWebInfResource(new StringAsset(getWebXml(value)), "web.xml");
@@ -52,7 +50,8 @@ public abstract class StageAbstractTest {
         return wa;
     }
 
-    protected static final By LABEL = By.xpath("//span[contains(@id,'outStage')]");
+    @FindBy(xpath = "//span[contains(@id,'outStage')]")
+    protected WebElement label;
 
     @Drone
     WebDriver driver;

@@ -1,14 +1,14 @@
 package org.jboss.portletbridge.test.component.h.outputLabel;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.net.URL;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
+import org.jboss.arquillian.graphene.Graphene;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
@@ -17,9 +17,9 @@ import org.jboss.portletbridge.test.TestDeployment;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
 @RunWith(Arquillian.class)
 @PortalTest
@@ -37,17 +37,21 @@ public class OutputLabelTest {
     @PortalURL
     URL portalURL;
 
-    protected static final By OUTPUT_ONE = By.xpath("//label[contains(@id,':output1')]");
-    protected static final By OUTPUT_TWO = By.xpath("//label[contains(@id,':output2')]");
+    @FindBy(xpath = "//label[contains(@id,':output1')]")
+    private WebElement outputOne;
+
+    @FindBy(xpath = "//label[contains(@id,':output2')]")
+    private WebElement outputTwo;
 
     @Test
     @RunAsClient
     public void testOutputLabel(@Drone WebDriver driver) throws Exception {
         driver.get(portalURL.toString());
 
-        assertNotNull("Check that page contains OUTPUT ONE element.", driver.findElement(OUTPUT_ONE));
-        assertEquals("Check that OUTPUT ONE contains the expected text with HTML markup.",
-                OutputLabelBean.OUTPUT_LABEL_DEFAULT_HTML, driver.findElement(OUTPUT_ONE).getText());
+        assertTrue("Check that page contains OUTPUT ONE element.", Graphene.element(outputOne).isVisible().apply(driver));
+
+        assertTrue("Check that OUTPUT ONE contains the expected text with HTML markup.",
+                Graphene.element(outputOne).textEquals(OutputLabelBean.OUTPUT_LABEL_DEFAULT_HTML).apply(driver));
     }
 
     @Test
@@ -58,9 +62,10 @@ public class OutputLabelTest {
 
         driver.get(portalURL.toString());
 
-        assertNotNull("Check that page contains OUTPUT ONE element.", driver.findElement(OUTPUT_ONE));
-        assertEquals("Check that OUTPUT ONE contains the expected text without HTML markup.",
-                OutputLabelBean.OUTPUT_LABEL_DEFAULT_PLAINTEXT, driver.findElement(OUTPUT_ONE).getText());
+        assertTrue("Check that page contains OUTPUT ONE element.", Graphene.element(outputOne).isVisible().apply(driver));
+
+        assertTrue("Check that OUTPUT ONE contains the expected text without HTML markup.",
+                Graphene.element(outputOne).textEquals(OutputLabelBean.OUTPUT_LABEL_DEFAULT_PLAINTEXT).apply(driver));
     }
 
     @Test
@@ -71,11 +76,8 @@ public class OutputLabelTest {
 
         driver.get(portalURL.toString());
 
-        try {
-            assertNull("Check that page does not contains OUTPUT ONE element.", driver.findElement(OUTPUT_ONE));
-        } catch (NoSuchElementException e) {
-            // expected
-        }
+        assertFalse("Check that page does not contains OUTPUT ONE element.",
+                Graphene.element(outputOne).isVisible().apply(driver));
     }
 
     @Test
@@ -83,10 +85,11 @@ public class OutputLabelTest {
     public void testOutputLabelConverter(@Drone WebDriver driver) throws Exception {
         driver.get(portalURL.toString());
 
-        assertNotNull("Check that page contains OUTPUT TWO element.", driver.findElement(OUTPUT_TWO));
-        assertEquals("Check that OUTPUT TWO contains the text length in Float format.",
-                Float.valueOf(OutputLabelBean.OUTPUT_LABEL_DEFAULT_HTML.length()).toString(), driver.findElement(OUTPUT_TWO)
-                        .getText());
+        assertTrue("Check that page contains OUTPUT TWO element.", Graphene.element(outputTwo).isVisible().apply(driver));
+
+        assertTrue("Check that OUTPUT TWO contains the text length in Float format.",
+                Graphene.element(outputTwo).
+                textEquals(Float.valueOf(OutputLabelBean.OUTPUT_LABEL_DEFAULT_HTML.length()).toString()).apply(driver));
     }
 
 }

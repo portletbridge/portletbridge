@@ -11,7 +11,14 @@
 
     <extension qualifier="webdriver">
         <property name="browserCapabilities">htmlUnit</property>
-        <property name="javaScriptEnabled">true</property>
+        <property name="javascriptEnabled">true</property>
+    </extension>
+
+    <extension qualifier="graphene">
+        <!-- Increase default wait intervals -->
+        <property name="waitGuiInterval">5</property>
+        <property name="waitAjaxInterval">10</property>
+        <property name="waitModelInterval">25</property>
     </extension>
 
     <container qualifier="jbossas-managed-7">

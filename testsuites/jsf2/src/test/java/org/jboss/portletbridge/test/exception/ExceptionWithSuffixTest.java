@@ -32,6 +32,7 @@ import javax.faces.component.UpdateModelException;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
+import org.jboss.arquillian.graphene.Graphene;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
@@ -42,9 +43,9 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.descriptor.api.webapp30.WebAppDescriptor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
 @RunWith(Arquillian.class)
 @PortalTest
@@ -78,9 +79,14 @@ public class ExceptionWithSuffixTest {
         return webConfig.exportAsString();
     }
 
-    protected static final By INPUT_FIELD = By.xpath("//input[@type='text']");
-    protected static final By SUBMIT_BUTTON = By.xpath("//input[@type='submit']");
-    protected static final By HEADING = By.id("heading");
+    @FindBy(xpath = "//input[@type='text']")
+    private WebElement inputField;
+
+    @FindBy(xpath = "//input[@type='submit']")
+    private WebElement submitButton;
+
+    @FindBy(id = "heading")
+    private WebElement heading;
 
     @ArquillianResource
     @PortalURL
@@ -93,13 +99,13 @@ public class ExceptionWithSuffixTest {
     @RunAsClient
     public void testErrorPageWithDefaultSuffixSet() throws Exception {
         driver.get(portalURL.toString());
-        driver.findElement(INPUT_FIELD).sendKeys(NEW_VALUE);
-        driver.findElement(SUBMIT_BUTTON).click();
+        inputField.sendKeys(NEW_VALUE);
+        submitButton.click();
 
-        waitAjax(driver).until(element(HEADING).isPresent());
+        waitAjax(driver).until(element(heading).isPresent());
 
         assertTrue("Should have redirected to error page",
-                ExpectedConditions.textToBePresentInElement(HEADING, "UpdateModelException").apply(driver));
+                Graphene.element(heading).textContains("UpdateModelException").apply(driver));
     }
 
 }

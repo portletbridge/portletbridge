@@ -28,6 +28,7 @@ import java.net.URL;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
+import org.jboss.arquillian.graphene.Graphene;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
@@ -40,9 +41,9 @@ import org.jboss.shrinkwrap.descriptor.api.facesconfig20.FacesConfigVersionType;
 import org.jboss.shrinkwrap.descriptor.api.facesconfig21.WebFacesConfigDescriptor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
 @RunWith(Arquillian.class)
 @PortalTest
@@ -62,9 +63,17 @@ public class PortletTagTest {
         return facesConfig.exportAsString();
     }
 
-    protected static final By SPAN_FIELD = By.id("spanId");
-    protected static final By NAMESPACE_SPAN_FIELD = By.id("namespaceSpanId");
-    protected static final By MODE_NAME_FIELD = By.id("modeName");
+    @FindBy(id = "spanId")
+    private WebElement spanField;
+
+    @FindBy(id = "namespaceSpanId")
+    private WebElement namespaceSpanField;
+
+    @FindBy(id = "modeName")
+    private WebElement modeNameField;
+
+    @FindBy(linkText = "Render")
+    private WebElement renderLink;
 
     @ArquillianResource
     @PortalURL
@@ -78,12 +87,12 @@ public class PortletTagTest {
     public void testNamespace() throws Exception {
         driver.get(portalURL.toString());
 
-        assertTrue("spanId text should contain: spanId", ExpectedConditions.textToBePresentInElement(SPAN_FIELD, "spanId")
-                .apply(driver));
-        // TODO Figure out how to retrieve the namespace during driver.get call so that it can be compared against what is in
-        // field
-        assertTrue("namespaceSpanId text length should be greater than spanId", driver.findElement(NAMESPACE_SPAN_FIELD)
-                .getText().length() > "spanId".length());
+        assertTrue("spanId text should contain: spanId",
+                Graphene.element(spanField).textEquals("spanId").apply(driver));
+        // TODO Figure out how to retrieve the namespace during driver.get call
+        //      so that it can be compared against what is in field
+        assertTrue("namespaceSpanId text length should be greater than spanId",
+                namespaceSpanField.getText().length() > "spanId".length());
     }
 
     @Test
@@ -91,17 +100,17 @@ public class PortletTagTest {
     public void testRenderUrl() throws Exception {
         driver.get(portalURL.toString());
 
-        assertTrue("Should be in Portlet Mode view", ExpectedConditions.textToBePresentInElement(MODE_NAME_FIELD, "View")
-                .apply(driver));
+        assertTrue("Should be in Portlet Mode view",
+                Graphene.element(modeNameField).textEquals("View").apply(driver));
 
-        driver.findElement(By.linkText("Render")).click();
+        renderLink.click();
 
-        assertTrue("Should be in Portlet Mode edit", ExpectedConditions.textToBePresentInElement(MODE_NAME_FIELD, "Edit")
-                .apply(driver));
+        assertTrue("Should be in Portlet Mode view",
+                Graphene.element(modeNameField).textEquals("Edit").apply(driver));
 
-        driver.findElement(By.linkText("Render")).click();
+        renderLink.click();
 
-        assertTrue("Should be in Portlet Mode view", ExpectedConditions.textToBePresentInElement(MODE_NAME_FIELD, "View")
-                .apply(driver));
+        assertTrue("Should be in Portlet Mode view",
+                Graphene.element(modeNameField).textEquals("View").apply(driver));
     }
 }

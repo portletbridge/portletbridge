@@ -2,10 +2,7 @@ package org.jboss.portletbridge.test.component.h.selectCheckbox;
 
 import static org.jboss.arquillian.graphene.Graphene.element;
 import static org.jboss.arquillian.graphene.Graphene.waitAjax;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.net.URL;
@@ -14,6 +11,7 @@ import java.util.List;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
+import org.jboss.arquillian.graphene.Graphene;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
@@ -23,9 +21,9 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
 @RunWith(Arquillian.class)
 @PortalTest
@@ -40,30 +38,48 @@ public class SelectCheckboxTest {
                 .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css");
     }
 
-    protected static final By ACCEPT_CHECKBOX = By.xpath("//input[contains(@id,':sbcAccepted')]");
+    @FindBy(xpath = "//input[contains(@id,':sbcAccepted')]")
+    private WebElement acceptCheckbox;
 
-    protected static final By GENDER_CHECKBOX = By.xpath("//input[contains(@id,':smcGender')]");
-    protected static final By GENDER_OPTION_MALE = By.xpath("//input[contains(@id,':smcGender:0')]");
-    protected static final By GENDER_OPTION_FEMALE = By.xpath("//input[contains(@id,':smcGender:1')]");
+    @FindBy(xpath = "//input[contains(@id,':smcGender')]")
+    private WebElement genderCheckbox;
+    @FindBy(xpath = "//input[contains(@id,':smcGender:0')]")
+    private WebElement genderOptionMale;
+    @FindBy(xpath = "//input[contains(@id,':smcGender:1')]")
+    private WebElement genderOptionFemale;
 
-    protected static final By AGE_OPTION_YOUNG = By.xpath("//input[contains(@id,':sorAge:0')]");
-    protected static final By AGE_OPTION_ADULT = By.xpath("//input[contains(@id,':sorAge:1')]");
-    protected static final By AGE_OPTION_SENIOR = By.xpath("//input[contains(@id,':sorAge:2')]");
+    @FindBy(xpath = "//input[contains(@id,':sorAge:0')]")
+    private WebElement ageOptionYoung;
+    @FindBy(xpath = "//input[contains(@id,':sorAge:1')]")
+    private WebElement ageOptionAdult;
+    @FindBy(xpath = "//input[contains(@id,':sorAge:2')]")
+    private WebElement ageOptionSenior;
 
-    protected static final By CONTINENT_NO_SEL = By.xpath("//option[contains(@value,'no_continent')]");
-    protected static final By CONTINENT_AFRICA = By.xpath("//option[contains(@value,'africa')]");
-    protected static final By CONTINENT_AMERICA = By.xpath("//option[contains(@value,'america')]");
-    protected static final By CONTINENT_ASIA = By.xpath("//option[contains(@value,'asia')]");
-    protected static final By CONTINENT_AUSTRALIA = By.xpath("//option[contains(@value,'australia')]");
-    protected static final By CONTINENT_EUROPE = By.xpath("//option[contains(@value,'europe')]");
+    @FindBy(xpath = "//option[contains(@value,'no_continent')]")
+    private WebElement continentNoSel;
+    @FindBy(xpath = "//option[contains(@value,'africa')]")
+    private WebElement continentAfrica;
+    //@FindBy(xpath = "//option[contains(@value,'america')]")
+    //private WebElement continentAmerica;
+    @FindBy(xpath = "//option[contains(@value,'asia')]")
+    private WebElement continentAsia;
+    //@FindBy(xpath = "//option[contains(@value,'australia')]")
+    //private WebElement continentAustralia;
+    @FindBy(xpath = "//option[contains(@value,'europe')]")
+    private WebElement continentEurope;
 
-    protected static final By COLORS_CHECKBOX = By.xpath("//select[contains(@id,':smlColors')]");
+    @FindBy(xpath = "//select[contains(@id,':smlColors')]")
+    private WebElement colorsCheckbox;
 
-    protected static final By SUBMIT_BUTTON = By.xpath("//input[contains(@id,':submit')]");
-    protected static final By AJAX_BUTTON = By.xpath("//input[contains(@id,':ajax')]");
+    @FindBy(xpath = "//input[contains(@id,':submit')]")
+    private WebElement submitButton;
+    @FindBy(xpath = "//input[contains(@id,':ajax')]")
+    private WebElement ajaxButton;
 
-    protected static final By MESSAGES = By.xpath("//*[contains(@id,':messages')]");
-    protected static final By RESULT = By.xpath("//*[contains(@id,':result')]");
+    @FindBy(xpath = "//*[contains(@id,':messages')]")
+    private WebElement messages;
+    @FindBy(xpath = "//*[contains(@id,':result')]")
+    private WebElement result;
 
     @ArquillianResource
     @PortalURL
@@ -74,19 +90,14 @@ public class SelectCheckboxTest {
     public void testSelectCheckboxRender(@Drone WebDriver driver) throws Exception {
         driver.get(portalURL.toString());
 
-        assertNotNull("Check that page contains ACCEPT checkbox element.", driver.findElement(ACCEPT_CHECKBOX));
+        assertTrue("Check that page contains ACCEPT checkbox element.",
+                Graphene.element(acceptCheckbox).isVisible().apply(driver));
 
-        try {
-            assertNull("Check that page does not contains GENDER checkbox element.", driver.findElement(GENDER_CHECKBOX));
-        } catch (NoSuchElementException nsee) {
-            // expected
-        }
+        assertFalse("Check that page does not contains GENDER checkbox element.",
+                Graphene.element(genderCheckbox).isVisible().apply(driver));
 
-        try {
-            assertNull("Check that page does not contains COLORS checkbox element.", driver.findElement(COLORS_CHECKBOX));
-        } catch (NoSuchElementException nsee) {
-            // expected
-        }
+        assertFalse("Check that page does not contains COLORS checkbox element.",
+                Graphene.element(colorsCheckbox).isVisible().apply(driver));
     }
 
     @Test
@@ -95,12 +106,14 @@ public class SelectCheckboxTest {
         driver.get(portalURL.toString());
 
         // at first only accept is shown, must be clicked to show remaining
-        driver.findElement(ACCEPT_CHECKBOX).click();
+        acceptCheckbox.click();
 
-        waitAjax(driver).until(element(GENDER_CHECKBOX).isPresent());
+        waitAjax(driver).until(element(genderCheckbox).isPresent());
 
-        assertNotNull("Check that page contains GENDER checkbox element.", driver.findElement(GENDER_CHECKBOX));
-        assertNotNull("Check that page contains COLORS checkbox element.", driver.findElement(COLORS_CHECKBOX));
+        assertTrue("Check that page contains GENDER checkbox element.",
+                Graphene.element(genderCheckbox).isVisible().apply(driver));
+        assertTrue("Check that page contains COLORS checkbox element.",
+                Graphene.element(colorsCheckbox).isVisible().apply(driver));
     }
 
     @Test
@@ -109,16 +122,17 @@ public class SelectCheckboxTest {
         driver.get(portalURL.toString());
 
         // at first only accept is shown, must be clicked to show remaining
-        driver.findElement(ACCEPT_CHECKBOX).click();
+        acceptCheckbox.click();
 
-        waitAjax(driver).until(element(GENDER_CHECKBOX).isPresent());
+        waitAjax(driver).until(element(genderCheckbox).isPresent());
 
-        assertNotNull("Check that page contains GENDER checkbox element.", driver.findElement(GENDER_CHECKBOX));
+        assertTrue("Check that page contains GENDER checkbox element.",
+                Graphene.element(genderCheckbox).isVisible().apply(driver));
 
-        driver.findElement(SUBMIT_BUTTON).click();
+        submitButton.click();
 
         assertTrue("Check that MESSAGES has indication about missing gender.",
-                driver.findElement(MESSAGES).getText().contains("You must select a gender."));
+                Graphene.element(messages).textContains("You must select a gender.").apply(driver));
     }
 
     @Test
@@ -127,20 +141,21 @@ public class SelectCheckboxTest {
         driver.get(portalURL.toString());
 
         // at first only accept is shown, must be clicked to show remaining
-        driver.findElement(ACCEPT_CHECKBOX).click();
+        acceptCheckbox.click();
 
-        waitAjax(driver).until(element(GENDER_CHECKBOX).isPresent());
+        waitAjax(driver).until(element(genderCheckbox).isPresent());
 
-        assertNotNull("Check that page contains GENDER checkbox element.", driver.findElement(GENDER_CHECKBOX));
+        assertTrue("Check that page contains GENDER checkbox element.",
+                Graphene.element(genderCheckbox).isVisible().apply(driver));
 
         // Select both genders
-        driver.findElement(GENDER_OPTION_MALE).click();
-        driver.findElement(GENDER_OPTION_FEMALE).click();
+        genderOptionMale.click();
+        genderOptionFemale.click();
 
-        driver.findElement(SUBMIT_BUTTON).click();
+        submitButton.click();
 
-        assertTrue("Check that MESSAGES has indication about multiple gender selected.", driver.findElement(MESSAGES).getText()
-                .contains("Only one gender can be selected."));
+        assertTrue("Check that MESSAGES has indication about multiple gender selected.",
+                Graphene.element(messages).textContains("Only one gender can be selected.").apply(driver));
     }
 
     @Test
@@ -149,16 +164,17 @@ public class SelectCheckboxTest {
         driver.get(portalURL.toString());
 
         // at first only accept is shown, must be clicked to show remaining
-        driver.findElement(ACCEPT_CHECKBOX).click();
+        acceptCheckbox.click();
 
-        waitAjax(driver).until(element(GENDER_CHECKBOX).isPresent());
+        waitAjax(driver).until(element(genderCheckbox).isPresent());
 
-        assertNotNull("Check that page contains COLOR checkbox element.", driver.findElement(COLORS_CHECKBOX));
+        assertTrue("Check that page contains COLOR checkbox element.",
+                Graphene.element(colorsCheckbox).isVisible().apply(driver));
 
-        List<WebElement> options = driver.findElement(COLORS_CHECKBOX).findElements(By.xpath("option"));
+        List<WebElement> options = colorsCheckbox.findElements(By.xpath("option"));
         for (int i = 0; i < options.size(); i++) {
-            assertEquals("Check that item with value '" + SelectCheckboxBean.colors[i] + "' is present and in correct order.",
-                    SelectCheckboxBean.colors[i], options.get(i).getAttribute("value"));
+            assertTrue("Check that item with value '" + SelectCheckboxBean.colors[i] + "' is present and in correct order.",
+                    Graphene.attribute(options.get(i), "value").valueEquals(SelectCheckboxBean.colors[i]).apply(driver));
         }
     }
 
@@ -168,38 +184,38 @@ public class SelectCheckboxTest {
         driver.get(portalURL.toString());
 
         // at first only accept is shown, must be clicked to show remaining
-        driver.findElement(ACCEPT_CHECKBOX).click();
+        acceptCheckbox.click();
 
-        waitAjax(driver).until(element(AGE_OPTION_YOUNG).isPresent());
+        waitAjax(driver).until(element(ageOptionYoung).isPresent());
 
-        assertTrue("Check that no option in AGE RADIO is selected by default.", !driver.findElement(AGE_OPTION_YOUNG)
-                .isSelected()
-                && !driver.findElement(AGE_OPTION_ADULT).isSelected()
-                && !driver.findElement(AGE_OPTION_SENIOR).isSelected());
+        assertTrue("Check that no option in AGE RADIO is selected by default.",
+                Graphene.element(ageOptionYoung).not().isSelected().apply(driver) &&
+                Graphene.element(ageOptionAdult).not().isSelected().apply(driver) &&
+                Graphene.element(ageOptionSenior).not().isSelected().apply(driver));
 
         // Select "Young"
-        driver.findElement(AGE_OPTION_YOUNG).click();
+        ageOptionYoung.click();
 
         // Check that is the only option checked
-        assertTrue(driver.findElement(AGE_OPTION_YOUNG).isSelected());
-        assertFalse(driver.findElement(AGE_OPTION_ADULT).isSelected());
-        assertFalse(driver.findElement(AGE_OPTION_SENIOR).isSelected());
+        assertTrue(Graphene.element(ageOptionYoung).isSelected().apply(driver));
+        assertFalse(Graphene.element(ageOptionAdult).isSelected().apply(driver));
+        assertFalse(Graphene.element(ageOptionSenior).isSelected().apply(driver));
 
         // Select "Senior"
-        driver.findElement(AGE_OPTION_SENIOR).click();
+        ageOptionSenior.click();
 
         // Check that is the only option checked
-        assertFalse(driver.findElement(AGE_OPTION_YOUNG).isSelected());
-        assertFalse(driver.findElement(AGE_OPTION_ADULT).isSelected());
-        assertTrue(driver.findElement(AGE_OPTION_SENIOR).isSelected());
+        assertFalse(Graphene.element(ageOptionYoung).isSelected().apply(driver));
+        assertFalse(Graphene.element(ageOptionAdult).isSelected().apply(driver));
+        assertTrue(Graphene.element(ageOptionSenior).isSelected().apply(driver));
 
         // Select "Adult"
-        driver.findElement(AGE_OPTION_ADULT).click();
+        ageOptionAdult.click();
 
         // Check that is the only option checked
-        assertFalse(driver.findElement(AGE_OPTION_YOUNG).isSelected());
-        assertTrue(driver.findElement(AGE_OPTION_ADULT).isSelected());
-        assertFalse(driver.findElement(AGE_OPTION_SENIOR).isSelected());
+        assertFalse(Graphene.element(ageOptionYoung).isSelected().apply(driver));
+        assertTrue(Graphene.element(ageOptionAdult).isSelected().apply(driver));
+        assertFalse(Graphene.element(ageOptionSenior).isSelected().apply(driver));
     }
 
     @Test
@@ -208,20 +224,21 @@ public class SelectCheckboxTest {
         driver.get(portalURL.toString());
 
         // at first only accept is shown, must be clicked to show remaining
-        driver.findElement(ACCEPT_CHECKBOX).click();
+        acceptCheckbox.click();
 
-        waitAjax(driver).until(element(CONTINENT_AFRICA).isPresent());
+        waitAjax(driver).until(element(continentAfrica).isPresent());
 
-        assertTrue("Check that noSelectionOption is selected by default.", driver.findElement(CONTINENT_NO_SEL).isSelected());
+        assertTrue("Check that noSelectionOption is selected by default.",
+                Graphene.element(continentNoSel).isSelected().apply(driver));
 
-        driver.findElement(SUBMIT_BUTTON).click();
+        submitButton.click();
         assertTrue("Check that missing continent message is present.",
-                driver.findElement(MESSAGES).getText().contains("somContinent: Validation Error: Value is not valid"));
+                Graphene.element(messages).textContains("somContinent: Validation Error: Value is not valid").apply(driver));
 
-        driver.findElement(CONTINENT_ASIA).click();
-        driver.findElement(SUBMIT_BUTTON).click();
+        continentAsia.click();
+        submitButton.click();
         assertFalse("Check that missing continent message is not present.",
-                driver.findElement(MESSAGES).getText().contains("somContinent: Validation Error: Value is not valid"));
+                Graphene.element(messages).textContains("somContinent: Validation Error: Value is not valid").apply(driver));
     }
 
     @Test
@@ -230,20 +247,20 @@ public class SelectCheckboxTest {
         driver.get(portalURL.toString());
 
         // at first only accept is shown, must be clicked to show remaining
-        driver.findElement(ACCEPT_CHECKBOX).click();
+        acceptCheckbox.click();
 
-        waitAjax(driver).until(element(GENDER_CHECKBOX).isPresent());
+        waitAjax(driver).until(element(genderCheckbox).isPresent());
 
         // Select male gender
-        driver.findElement(GENDER_OPTION_MALE).click();
+        genderOptionMale.click();
 
         // Select "young" and correct to "adult"
-        driver.findElement(AGE_OPTION_YOUNG).click();
-        driver.findElement(AGE_OPTION_ADULT).click();
+        ageOptionYoung.click();
+        ageOptionAdult.click();
 
-        driver.findElement(CONTINENT_EUROPE).click();
+        continentEurope.click();
 
-        List<WebElement> options = driver.findElement(COLORS_CHECKBOX).findElements(By.xpath("option"));
+        List<WebElement> options = colorsCheckbox.findElements(By.xpath("option"));
         for (int i = 0; i < options.size(); i++) {
             if (i % 2 != 0) {
                 // Select even options
@@ -251,25 +268,27 @@ public class SelectCheckboxTest {
             }
         }
 
-        driver.findElement(SUBMIT_BUTTON).click();
+        submitButton.click();
 
-        assertTrue("Check that 'male' is present in result string.", driver.findElement(RESULT).getText().contains("male"));
+        assertTrue("Check that 'male' is present in result string.",
+                Graphene.element(result).textContains("male").apply(driver));
         assertFalse("Check that 'female' is not present in result string.",
-                driver.findElement(RESULT).getText().contains("female"));
+                Graphene.element(result).textContains("female").apply(driver));
 
         assertFalse("Check that 'young' is not present in result string.",
-                driver.findElement(RESULT).getText().contains("young"));
-        assertTrue("Check that 'adult' is present in result string.", driver.findElement(RESULT).getText().contains("adult"));
+                Graphene.element(result).textContains("young").apply(driver));
+        assertTrue("Check that 'adult' is present in result string.",
+                Graphene.element(result).textContains("adult").apply(driver));
         assertFalse("Check that 'senior' is not present in result string.",
-                driver.findElement(RESULT).getText().contains("senior"));
+                Graphene.element(result).textContains("senior").apply(driver));
 
         for (int i = 0; i < SelectCheckboxBean.colors.length; i++) {
             if (i % 2 != 0) {
-                assertTrue("Check that color '" + SelectCheckboxBean.colors[i] + "' is present in result string.", driver
-                        .findElement(RESULT).getText().contains(SelectCheckboxBean.colors[i]));
+                assertTrue("Check that color '" + SelectCheckboxBean.colors[i] + "' is present in result string.",
+                        Graphene.element(result).textContains(SelectCheckboxBean.colors[i]).apply(driver));
             } else {
-                assertFalse("Check that color '" + SelectCheckboxBean.colors[i] + "' is not present in result string.", driver
-                        .findElement(RESULT).getText().contains(SelectCheckboxBean.colors[i]));
+                assertFalse("Check that color '" + SelectCheckboxBean.colors[i] + "' is not present in result string.",
+                        Graphene.element(result).textContains(SelectCheckboxBean.colors[i]).apply(driver));
             }
         }
     }
@@ -280,20 +299,20 @@ public class SelectCheckboxTest {
         driver.get(portalURL.toString());
 
         // at first only accept is shown, must be clicked to show remaining
-        driver.findElement(ACCEPT_CHECKBOX).click();
+        acceptCheckbox.click();
 
-        waitAjax(driver).until(element(GENDER_CHECKBOX).isPresent());
+        waitAjax(driver).until(element(genderCheckbox).isPresent());
 
         // Select male gender
-        driver.findElement(GENDER_OPTION_MALE).click();
+        genderOptionMale.click();
 
         // Select "young" and correct to "adult"
-        driver.findElement(AGE_OPTION_YOUNG).click();
-        driver.findElement(AGE_OPTION_ADULT).click();
+        ageOptionYoung.click();
+        ageOptionAdult.click();
 
-        driver.findElement(CONTINENT_EUROPE).click();
+        continentEurope.click();
 
-        List<WebElement> options = driver.findElement(COLORS_CHECKBOX).findElements(By.xpath("option"));
+        List<WebElement> options = colorsCheckbox.findElements(By.xpath("option"));
         for (int i = 0; i < options.size(); i++) {
             if (i % 2 != 0) {
                 // Select even options
@@ -301,27 +320,29 @@ public class SelectCheckboxTest {
             }
         }
 
-        driver.findElement(AJAX_BUTTON).click();
+        ajaxButton.click();
 
-        waitAjax(driver).until(element(RESULT).textContains("You are"));
+        waitAjax(driver).until(element(result).textContains("You are"));
 
-        assertTrue("Check that 'male' is present in result string.", driver.findElement(RESULT).getText().contains("male"));
+        assertTrue("Check that 'male' is present in result string.",
+                Graphene.element(result).textContains("male").apply(driver));
         assertFalse("Check that 'female' is not present in result string.",
-                driver.findElement(RESULT).getText().contains("female"));
+                Graphene.element(result).textContains("female").apply(driver));
 
         assertFalse("Check that 'young' is not present in result string.",
-                driver.findElement(RESULT).getText().contains("young"));
-        assertTrue("Check that 'adult' is present in result string.", driver.findElement(RESULT).getText().contains("adult"));
+                Graphene.element(result).textContains("young").apply(driver));
+        assertTrue("Check that 'adult' is present in result string.",
+                Graphene.element(result).textContains("adult").apply(driver));
         assertFalse("Check that 'senior' is not present in result string.",
-                driver.findElement(RESULT).getText().contains("senior"));
+                Graphene.element(result).textContains("senior").apply(driver));
 
         for (int i = 0; i < SelectCheckboxBean.colors.length; i++) {
             if (i % 2 != 0) {
-                assertTrue("Check that color '" + SelectCheckboxBean.colors[i] + "' is present in result string.", driver
-                        .findElement(RESULT).getText().contains(SelectCheckboxBean.colors[i]));
+                assertTrue("Check that color '" + SelectCheckboxBean.colors[i] + "' is present in result string.",
+                        Graphene.element(result).textContains(SelectCheckboxBean.colors[i]).apply(driver));
             } else {
-                assertFalse("Check that color '" + SelectCheckboxBean.colors[i] + "' is not present in result string.", driver
-                        .findElement(RESULT).getText().contains(SelectCheckboxBean.colors[i]));
+                assertFalse("Check that color '" + SelectCheckboxBean.colors[i] + "' is not present in result string.",
+                        Graphene.element(result).textContains(SelectCheckboxBean.colors[i]).apply(driver));
             }
         }
     }

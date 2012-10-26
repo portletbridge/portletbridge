@@ -21,12 +21,16 @@
  */
 package org.jboss.portletbridge.test.i18n;
 
+import static org.jboss.arquillian.graphene.Graphene.element;
+import static org.jboss.arquillian.graphene.Graphene.waitAjax;
+import static org.junit.Assert.assertTrue;
+
 import java.net.URL;
+
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
-import static org.jboss.arquillian.graphene.Graphene.element;
-import static org.jboss.arquillian.graphene.Graphene.waitAjax;
+import org.jboss.arquillian.graphene.Graphene;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
@@ -37,13 +41,11 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.descriptor.api.facesconfig21.FacesConfigApplicationResourceBundleType;
 import org.jboss.shrinkwrap.descriptor.api.facesconfig21.FacesConfigApplicationType;
 import org.jboss.shrinkwrap.descriptor.api.facesconfig21.WebFacesConfigDescriptor;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.Select;
 
 @RunWith(Arquillian.class)
@@ -76,9 +78,14 @@ public class I18nResourceTest {
         return webConfig.exportAsString();
     }
 
-    protected static final By HEADER = By.xpath("//h1[contains(@id,'header')]");
-    protected static final By MESSAGE = By.xpath("//span[contains(@id,'output')]");
-    protected static final By SELECTOR = By.xpath("//select[contains(@id,'selector')]");
+    @FindBy(xpath = "//h1[contains(@id,'header')]")
+    private WebElement header;
+
+    @FindBy(xpath = "//span[contains(@id,'output')]")
+    private WebElement message;
+
+    @FindBy(xpath = "//select[contains(@id,'selector')]")
+    private WebElement selector;
 
     protected static final String headerContent = "I18n";
     protected static final String enContent = "english";
@@ -95,19 +102,22 @@ public class I18nResourceTest {
     public void testI18n() throws Exception {
         driver.get(portalURL.toString());
 
-        assertNotNull("Check that page contains header element.", driver.findElement(HEADER));
-        assertNotNull("Check that page contains message element.", driver.findElement(MESSAGE));
-        assertNotNull("Check that page contains select element.", driver.findElement(SELECTOR));
+        assertTrue("Check that page contains header element.", Graphene.element(header).isVisible().apply(driver));
+        assertTrue("Check that page contains message element.", Graphene.element(message).isVisible().apply(driver));
+        assertTrue("Check that page contains select element.", Graphene.element(selector).isVisible().apply(driver));
 
-        assertTrue("Header should be named: " + headerContent, ExpectedConditions.textToBePresentInElement(HEADER, headerContent).apply(driver));
+        assertTrue("Header should be named: " + headerContent,
+                Graphene.element(header).textEquals(headerContent).apply(driver));
 
-        Select select = new Select(driver.findElement(SELECTOR));
-        assertTrue("En language message should be present.", ExpectedConditions.textToBePresentInElement(MESSAGE, enContent).apply(driver));
+        Select select = new Select(selector);
+        assertTrue("En language message should be present.",
+                Graphene.element(message).textEquals(enContent).apply(driver));
 
         select.selectByValue("zh_CN");
 
-        waitAjax(driver).until(element(MESSAGE).textEquals(zhContent));
+        waitAjax(driver).until(element(message).textEquals(zhContent));
 
-        assertTrue("Zh_cn language message should be present.", ExpectedConditions.textToBePresentInElement(MESSAGE, zhContent).apply(driver));
+        assertTrue("Zh_cn language message should be present.",
+                Graphene.element(message).textEquals(zhContent).apply(driver));
     }
 }

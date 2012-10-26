@@ -38,7 +38,7 @@ public class LanguageBean implements Serializable {
     public void setLocaleCode(String localeCode) {
         this.localeCode = localeCode;
     }
-    
+
     public void countryLocaleCodeChanged(ValueChangeEvent e) {
         String newLocaleValue = e.getNewValue().toString();
         for (Map.Entry<String, Object> entry : countries.entrySet()) {

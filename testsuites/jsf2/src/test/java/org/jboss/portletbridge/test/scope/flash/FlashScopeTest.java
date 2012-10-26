@@ -21,7 +21,6 @@
  */
 package org.jboss.portletbridge.test.scope.flash;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.net.URL;
@@ -29,18 +28,18 @@ import java.net.URL;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
+import org.jboss.arquillian.graphene.Graphene;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
-import org.jboss.portletbridge.test.PortletExpectedConditions;
 import org.jboss.portletbridge.test.TestDeployment;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
 /**
  * @author <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
@@ -63,11 +62,20 @@ public class FlashScopeTest {
 
     protected static final String NEW_VALUE = "new";
 
-    protected static final By INPUT_FIELD = By.xpath("//input[@type='text']");
-    protected static final By SUBMIT_BUTTON_1 = By.xpath("//input[@type='submit' and @value='Click1']");
-    protected static final By SUBMIT_BUTTON_2 = By.xpath("//input[@type='submit' and @value='Click2']");
-    protected static final By OUTPUT_FIELD_1 = By.id("output1");
-    protected static final By OUTPUT_FIELD_2 = By.id("output2");
+    @FindBy(xpath = "//input[@type='text']")
+    private WebElement inputField;
+
+    @FindBy(xpath = "//input[@type='submit' and @value='Click1']")
+    private WebElement submitButton1;
+
+    @FindBy(xpath = "//input[@type='submit' and @value='Click2']")
+    private WebElement submitButton2;
+
+    @FindBy(id = "output1")
+    private WebElement outputField1;
+
+    @FindBy(id = "output2")
+    private WebElement outputField2;
 
     @ArquillianResource
     @PortalURL
@@ -81,18 +89,18 @@ public class FlashScopeTest {
     public void requestScopeShouldBeReset() throws Exception {
         driver.get(portalURL.toString());
 
-        assertNotNull("Check that page contains input element", driver.findElement(INPUT_FIELD));
+        assertTrue("Check that page contains input element", Graphene.element(inputField).isVisible().apply(driver));
 
         assertTrue("input field should contain: " + RequestBean.ORIG_VALUE,
-                ExpectedConditions.textToBePresentInElementValue(INPUT_FIELD, RequestBean.ORIG_VALUE).apply(driver));
+                Graphene.attribute(inputField, "value").valueEquals(RequestBean.ORIG_VALUE).apply(driver));
 
-        driver.findElement(INPUT_FIELD).sendKeys(NEW_VALUE);
-        driver.findElement(SUBMIT_BUTTON_1).click();
+        inputField.sendKeys(NEW_VALUE);
+        submitButton1.click();
 
         assertTrue("output1 field should contain: " + RequestBean.ORIG_VALUE,
-                ExpectedConditions.textToBePresentInElement(OUTPUT_FIELD_1, RequestBean.ORIG_VALUE).apply(driver));
+                Graphene.element(outputField1).textEquals(RequestBean.ORIG_VALUE).apply(driver));
         assertTrue("output2 field should be empty",
-                PortletExpectedConditions.emptyElement(OUTPUT_FIELD_2).apply(driver));
+                Graphene.element(outputField2).textEquals("").apply(driver));
     }
 
     @Test
@@ -100,18 +108,18 @@ public class FlashScopeTest {
     public void flashScopeShouldRetainBeanThroughRedirect() throws Exception {
         driver.get(portalURL.toString());
 
-        assertNotNull("Check that page contains input element", driver.findElement(INPUT_FIELD));
+        assertTrue("Check that page contains input element", Graphene.element(inputField).isVisible().apply(driver));
 
         assertTrue("input field should contain: " + RequestBean.ORIG_VALUE,
-                ExpectedConditions.textToBePresentInElementValue(INPUT_FIELD, RequestBean.ORIG_VALUE).apply(driver));
+                Graphene.attribute(inputField, "value").valueEquals(RequestBean.ORIG_VALUE).apply(driver));
 
-        driver.findElement(INPUT_FIELD).sendKeys(NEW_VALUE);
-        driver.findElement(SUBMIT_BUTTON_2).click();
+        inputField.sendKeys(NEW_VALUE);
+        submitButton2.click();
 
         assertTrue("output1 field should contain: " + RequestBean.ORIG_VALUE,
-                ExpectedConditions.textToBePresentInElement(OUTPUT_FIELD_1, RequestBean.ORIG_VALUE).apply(driver));
+                Graphene.element(outputField1).textEquals(RequestBean.ORIG_VALUE).apply(driver));
         assertTrue("output2 field should contain: " + NEW_VALUE,
-                ExpectedConditions.textToBePresentInElement(OUTPUT_FIELD_2, NEW_VALUE).apply(driver));
+                Graphene.element(outputField2).textContains(NEW_VALUE).apply(driver));
     }
 
 }

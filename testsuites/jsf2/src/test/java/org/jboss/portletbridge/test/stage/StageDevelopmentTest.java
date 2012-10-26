@@ -21,27 +21,27 @@
  */
 package org.jboss.portletbridge.test.stage;
 
+import static org.junit.Assert.assertTrue;
+
 import java.net.URL;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
+import org.jboss.arquillian.graphene.Graphene;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 
 @RunWith(Arquillian.class)
 @PortalTest
 public class StageDevelopmentTest extends StageAbstractTest{
 
     @Deployment()
-    public static WebArchive createDeployment() {        
+    public static WebArchive createDeployment() {
         return createDeployment("Development");
     }
 
@@ -55,9 +55,8 @@ public class StageDevelopmentTest extends StageAbstractTest{
     @RunAsClient
     public void testStageDevelopmentState() throws Exception {
         driver.get(portalURL.toString());
-        assertNotNull("Check that page contains output element.", driver.findElement(LABEL));
-        assertTrue("Portlet should return: " + outStage, ExpectedConditions.textToBePresentInElement(LABEL, outStage).apply(driver));                
+        assertTrue("Check that page contains output element.", Graphene.element(label).isVisible().apply(driver));
+        assertTrue("Portlet should return: " + outStage, Graphene.element(label).textEquals(outStage).apply(driver));
     }
-
 
 }
