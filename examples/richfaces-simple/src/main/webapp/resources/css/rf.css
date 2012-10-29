@@ -1,0 +1,16 @@
+fieldset {
+    margin: 0;
+}
+
+#content {
+    width: 700px;
+    padding: 13px 20px 5px;
+}
+
+.rf-edt-tbl td {
+    width: 101px;
+}
+
+input[type="text"][disabled],input[type="password"][disabled],select[disabled] {
+    -webkit-text-fill-color: #B6AD84;
+}

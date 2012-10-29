@@ -12,5 +12,6 @@
     <modules>
         <module>jsf2portlet</module>
         <module>richfaces-showcase</module>
+        <module>richfaces-simple</module>
     </modules>
 </project>

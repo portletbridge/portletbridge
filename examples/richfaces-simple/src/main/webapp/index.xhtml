@@ -1,0 +1,126 @@
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:a4j="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich">
+
+    <h:head></h:head>
+
+    <h:body>
+        <h:outputStylesheet library="css" name="rf.css" target="head" />
+        <div id="content">
+            <h:form>
+                <rich:panel>
+                    <f:facet name="header">
+                        <h:panelGroup>
+                            <h:outputText value="User information" />
+                        </h:panelGroup>
+                    </f:facet>
+                    <rich:messages globalOnly="true" />
+                    <h:panelGrid columns="3">
+                        <h:outputText value="First Name:" />
+                        <rich:inplaceInput id="firstName" required="true" value="#{createUser.user.firstName}"
+                            defaultLabel="click to enter your first name">
+                            <rich:validator />
+                        </rich:inplaceInput>
+                        <rich:message for="firstName" />
+
+                        <h:outputText value="Last Name:" />
+                        <rich:inplaceInput id="lastName" required="true" value="#{createUser.user.lastName}"
+                            defaultLabel="click to enter your last name">
+                            <rich:validator />
+                        </rich:inplaceInput>
+                        <rich:message for="lastName" />
+
+                        <h:outputText value="Email:" />
+                        <h:inputText value="#{createUser.user.email}" id="email" validatorMessage="bad email">
+                            <rich:validator />
+                        </h:inputText>
+                        <rich:message for="email" />
+
+                        <h:outputText value="User Type:" />
+                        <rich:inplaceSelect id="userType" openOnEdit="true"
+                            value="#{createUser.user.userType}" defaultLabel="Click here to edit">
+                            <f:selectItems value="#{userManager.userTypeOptions}" />
+                        </rich:inplaceSelect>
+                        <rich:message for="userType" />
+                    </h:panelGrid>
+                    <br/>
+                    <a4j:commandButton value="Save User" action="#{createUser.create()}" render="@form table" execute="@form" />
+                </rich:panel>
+            </h:form>
+            <br />
+            <a4j:outputPanel>
+                <h:form>
+                    <fieldset>
+                        <legend>Sorting Options</legend>
+                        <h:outputText value="Multiple Sorting:" />
+                        <h:selectBooleanCheckbox value="#{userSorter.multipleSorting}"
+                            valueChangeListener="#{userSorter.modeChanged}">
+                            <a4j:ajax event="click" render="table @this" />
+                        </h:selectBooleanCheckbox>
+                        <br />
+                        <a4j:commandButton execute="@this" value="Reset Sorting" action="#{userSorter.reset}" render="table" />
+                    </fieldset>
+                    <rich:extendedDataTable value="#{userManager.users}" var="aUser" id="table"
+                        sortPriority="#{userSorter.sortPriorities}" selectionMode="none">
+                        <f:facet name="header">
+                            <h:outputText value="Registered Users" />
+                        </f:facet>
+                        <rich:column sortBy="#{aUser.firstName}" sortOrder="#{userSorter.sortsOrders['firstName']}">
+                            <f:facet name="header">
+                                <h:panelGrid columns="2">
+                                    <a4j:commandLink execute="@this" value="FirstName" render="table"
+                                        action="#{userSorter.sort}">
+                                        <f:param name="sortProperty" value="firstName" />
+                                    </a4j:commandLink>
+                                    <h:graphicImage library="images" name="down_icon.gif"
+                                        rendered="#{userSorter.sortsOrders['firstName']=='descending'}" />
+                                    <h:graphicImage library="images" name="up_icon.gif.gif"
+                                        rendered="#{userSorter.sortsOrders['firstName']=='ascending'}" />
+                                </h:panelGrid>
+                            </f:facet>
+                            <h:outputText value="#{aUser.firstName}" />
+                        </rich:column>
+                        <rich:column sortBy="#{aUser.lastName}" sortOrder="#{userSorter.sortsOrders['lastName']}">
+                            <f:facet name="header">
+                                <h:panelGrid columns="2">
+                                    <a4j:commandLink execute="@this" value="LastName" render="table" action="#{userSorter.sort}">
+                                        <f:param name="sortProperty" value="lastName" />
+                                    </a4j:commandLink>
+                                    <h:graphicImage library="images" name="down_icon.gif"
+                                        rendered="#{userSorter.sortsOrders['lastName']=='descending'}" />
+                                    <h:graphicImage library="images" name="up_icon.gif.gif"
+                                        rendered="#{userSorter.sortsOrders['lastName']=='ascending'}" />
+                                </h:panelGrid>
+                            </f:facet>
+                            <h:outputText value="#{aUser.lastName}" />
+                        </rich:column>
+                        <rich:column>
+                            <f:facet name="header">
+                                <h:outputText value="Email" />
+                            </f:facet>
+                            <h:outputText value="#{aUser.email}" />
+                        </rich:column>
+                        <rich:column sortBy="#{aUser.userType}" sortOrder="#{userSorter.sortsOrders['userType']}">
+                            <f:facet name="header">
+                                <h:panelGrid columns="2">
+                                    <a4j:commandLink execute="@this" value="User Type" render="table"
+                                        action="#{userSorter.sort}">
+                                        <f:param name="sortProperty" value="userType" />
+                                    </a4j:commandLink>
+                                    <h:graphicImage library="images" name="down_icon.gif"
+                                        rendered="#{userSorter.sortsOrders['userType']=='descending'}" />
+                                    <h:graphicImage library="images" name="up_icon.gif.gif"
+                                        rendered="#{userSorter.sortsOrders['userType']=='ascending'}" />
+                                </h:panelGrid>
+                            </f:facet>
+                            <h:outputText value="#{aUser.userType}" />
+                        </rich:column>
+                    </rich:extendedDataTable>
+                </h:form>
+            </a4j:outputPanel>
+        </div>
+    </h:body>
+</f:view>
