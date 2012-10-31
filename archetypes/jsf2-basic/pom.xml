@@ -12,22 +12,6 @@
    <packaging>maven-archetype</packaging>
    <name>JSF 2 Portlet archetype</name>
 
-   <repositories>
-      <repository>
-        <id>snapshots</id>
-        <name>Snapshots Repository</name>
-        <url>https://repository.apache.org/content/repositories/snapshots/</url>
-      </repository>
-    </repositories>
-
-   <pluginRepositories>
-      <pluginRepository>
-        <id>snapshots plugins</id>
-        <name>Snapshots Repository</name>
-        <url>https://repository.apache.org/content/repositories/snapshots/</url>
-      </pluginRepository>
-   </pluginRepositories>
-
    <build>
     <extensions>
       <extension>

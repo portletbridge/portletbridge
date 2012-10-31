@@ -10,5 +10,6 @@
   <packaging>pom</packaging>
   <modules>
     <module>jsf2-basic</module>
+    <module>richfaces-simpleapp</module>
   </modules>
 </project>
