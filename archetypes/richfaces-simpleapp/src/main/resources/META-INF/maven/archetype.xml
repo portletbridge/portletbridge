@@ -1,0 +1,18 @@
+<archetype>
+    <id>portletbridge-archetype-richfaces-simpleapp</id>
+    <sources>
+        <source>src/main/java/RichBean.java</source>
+    </sources>
+
+    <resources>
+        <resource>pom.xml</resource>
+        <resource filtered="false">README.txt</resource>
+
+        <resource filtered="false">src/main/webapp/home.xhtml</resource>
+        <resource filtered="false">src/main/webapp/templates/template.xhtml</resource>
+
+        <resource>src/main/webapp/WEB-INF/faces-config.xml</resource>
+        <resource>src/main/webapp/WEB-INF/web.xml</resource>
+        <resource>src/main/webapp/WEB-INF/portlet.xml</resource>
+    </resources>
+</archetype>

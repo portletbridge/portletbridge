@@ -10,5 +10,6 @@
   <packaging>pom</packaging>
   <modules>
     <module>2.0-basic</module>
+    <module>richfaces-simpleapp</module>
   </modules>
 </project>
