@@ -1,7 +1,12 @@
-<portlet-app version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/portlet"
-    xmlns="http://java.sun.com/xml/ns/portlet">
+<?xml version="1.0" encoding="UTF-8"?>
+
+<portlet-app xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd" version="2.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd
+    http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd">
+
     <portlet>
-        <portlet-name>riPortlet</portlet-name>
+        <portlet-name>JSF2SamplePortlet</portlet-name>
         <portlet-class>
             javax.portlet.faces.GenericFacesPortlet
         </portlet-class>
@@ -26,15 +31,15 @@
             <value>true</value>
         </init-param>
         <expiration-cache>-0</expiration-cache>
-        <portlet-info>
-            <title>JSF RI Portlet</title>
-        </portlet-info>
         <supports>
             <mime-type>text/html</mime-type>
             <portlet-mode>VIEW</portlet-mode>
             <portlet-mode>EDIT</portlet-mode>
             <portlet-mode>HELP</portlet-mode>
         </supports>
+        <portlet-info>
+            <title>JSF2 Sample Portlet</title>
+        </portlet-info>
     </portlet>
 </portlet-app>
 

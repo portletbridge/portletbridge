@@ -9,11 +9,4 @@
         <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
 
-    <navigation-rule>
-        <navigation-case>
-            <from-action>home</from-action>
-            <to-view-id>/panelGrid/home.xhtml</to-view-id>
-        </navigation-case>
-    </navigation-rule>
-
 </faces-config>

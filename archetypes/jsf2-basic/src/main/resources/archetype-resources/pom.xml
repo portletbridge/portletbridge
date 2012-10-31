@@ -5,10 +5,10 @@
    <artifactId>${artifactId}</artifactId>
    <packaging>war</packaging>
    <version>${version}</version>
-   <name>JBoss Portlet Bridge - JSF 2.0 RI Application</name>
+   <name>JBoss Portlet Bridge - JSF 2.0 Basic Portlet</name>
 
    <description>
-      A application that demonstrates use of JSF 2.0 RI in a portlet
+      A application that demonstrates use of JSF 2.0 in a portlet
    </description>
 
    <properties>
@@ -43,7 +43,7 @@
    <build>
 
       <defaultGoal>package</defaultGoal>
-      <finalName>JSF2RIPortlet</finalName>
+      <finalName>jsf2-basic-portlet</finalName>
       <sourceDirectory>src/main/java</sourceDirectory>
       <resources>
 
@@ -140,15 +140,8 @@
             <artifactId>portlet-api</artifactId>
             <version>2.0</version>
             <scope>provided</scope>
-        </dependency><!--
-
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.1</version>
         </dependency>
-
-        --><dependency>
+        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
             <version>2.5</version>
