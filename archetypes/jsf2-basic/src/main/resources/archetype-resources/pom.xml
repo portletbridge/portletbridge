@@ -1,0 +1,108 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+   <groupId>${groupId}</groupId>
+   <artifactId>${artifactId}</artifactId>
+   <packaging>war</packaging>
+   <version>${version}</version>
+   <name>JBoss Portlet Bridge - JSF 2 Basic Portlet</name>
+
+   <description>
+      A application that demonstrates use of JSF 2 in a portlet
+   </description>
+
+   <properties>
+      <jsf.version>2.1.13</jsf.version>
+      <pbr.version>3.1.0.Final-SNAPSHOT</pbr.version>
+   </properties>
+
+   <licenses>
+      <license>
+         <name>LGPL 2.1</name>
+         <url>http://www.gnu.org/licenses/lgpl.html</url>
+         <distribution>repo</distribution>
+         <comments>
+            GNU LESSER GENERAL PUBLIC LICENSE Version 2.1
+         </comments>
+      </license>
+   </licenses>
+
+   <issueManagement>
+      <system>JIRA</system>
+      <url>https://issues.jboss.org/browse/PBR</url>
+   </issueManagement>
+
+   <developers>
+      <developer>
+         <id>yourname</id>
+         <name>Joe Developer</name>
+         <email>jd@yourbiz.com</email>
+         <timezone>0</timezone>
+      </developer>
+   </developers>
+
+   <build>
+      <defaultGoal>package</defaultGoal>
+      <finalName>jsf2-basic-portlet</finalName>
+
+      <plugins>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>2.5.1</version>
+            <configuration>
+               <source>1.6</source>
+               <target>1.6</target>
+            </configuration>
+         </plugin>
+      </plugins>
+
+   </build>
+
+   <dependencies>
+      <dependency>
+            <groupId>com.sun.faces</groupId>
+            <artifactId>jsf-api</artifactId>
+            <version>${jsf.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.faces</groupId>
+            <artifactId>jsf-impl</artifactId>
+            <version>${jsf.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.portlet</groupId>
+            <artifactId>portlet-api</artifactId>
+            <version>2.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.5</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.portletbridge</groupId>
+            <artifactId>portletbridge-api</artifactId>
+            <version>${pbr.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.portletbridge</groupId>
+            <artifactId>portletbridge-impl</artifactId>
+            <version>${pbr.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
+   </dependencies>
+</project>
