@@ -37,26 +37,69 @@ public final class FacesMessageWrapper implements Serializable {
 
     private static final long serialVersionUID = -4624330730994746304L;
 
-    private LinkedHashMap<String, List<FacesMessage>> messages = new LinkedHashMap<String, List<FacesMessage>>();
+    private LinkedHashMap<String, List<BridgeMessage>> messages = new LinkedHashMap<String, List<BridgeMessage>>();
 
     public void addMessage(String clientId, FacesMessage message) {
-        List<FacesMessage> list = messages.get(clientId);
+        List<BridgeMessage> list = messages.get(clientId);
         if (null == list) {
-            list = new ArrayList<FacesMessage>();
+            list = new ArrayList<BridgeMessage>();
             messages.put(clientId, list);
         }
-        list.add(message);
+        list.add(convertToBridgeMsg(message));
     }
 
     public List<FacesMessage> getMessages(String clientId) {
-        List<FacesMessage> list = messages.get(clientId);
+        List<BridgeMessage> list = messages.get(clientId);
         if (null != list) {
-            return list;
+            return convertToFacesMsgs(list);
         }
         return Collections.emptyList();
     }
 
     public Set<String> getClientIds() {
         return messages.keySet();
+    }
+
+    private BridgeMessage convertToBridgeMsg(FacesMessage message) {
+        BridgeMessage bridgeMsg = new BridgeMessage();
+        bridgeMsg.detail = message.getDetail();
+        bridgeMsg.summary = message.getSummary();
+        bridgeMsg.rendered = message.isRendered();
+        bridgeMsg.severityOrdinal = message.getSeverity().getOrdinal();
+        return bridgeMsg;
+    }
+
+    private List<FacesMessage> convertToFacesMsgs(List<BridgeMessage> list) {
+        List<FacesMessage> facesMsgs = new ArrayList<FacesMessage>(list.size());
+
+        for (BridgeMessage msg : list) {
+            FacesMessage facesMsg = new FacesMessage(msg.summary, msg.detail);
+
+            if (msg.rendered) {
+                facesMsg.rendered();
+            }
+
+            int ordinal = msg.severityOrdinal;
+            if (ordinal == FacesMessage.SEVERITY_INFO.getOrdinal()) {
+                facesMsg.setSeverity(FacesMessage.SEVERITY_INFO);
+            } else if (ordinal == FacesMessage.SEVERITY_WARN.getOrdinal()) {
+                facesMsg.setSeverity(FacesMessage.SEVERITY_WARN);
+            } else if (ordinal == FacesMessage.SEVERITY_ERROR.getOrdinal()) {
+                facesMsg.setSeverity(FacesMessage.SEVERITY_ERROR);
+            } else if (ordinal == FacesMessage.SEVERITY_FATAL.getOrdinal()) {
+                facesMsg.setSeverity(FacesMessage.SEVERITY_FATAL);
+            }
+        }
+        return facesMsgs;
+    }
+
+    class BridgeMessage implements Serializable {
+
+        private static final long serialVersionUID = 4801706664074825462L;
+
+        int severityOrdinal;
+        String summary = null;
+        String detail = null;
+        boolean rendered;
     }
 }
