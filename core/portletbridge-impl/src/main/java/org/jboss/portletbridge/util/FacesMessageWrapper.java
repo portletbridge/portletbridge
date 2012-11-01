@@ -89,6 +89,7 @@ public final class FacesMessageWrapper implements Serializable {
             } else if (ordinal == FacesMessage.SEVERITY_FATAL.getOrdinal()) {
                 facesMsg.setSeverity(FacesMessage.SEVERITY_FATAL);
             }
+            facesMsgs.add(facesMsg);
         }
         return facesMsgs;
     }
