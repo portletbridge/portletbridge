@@ -9,6 +9,6 @@
   <name>JBoss Portlet Bridge JSF 2 archetypes</name>
   <packaging>pom</packaging>
   <modules>
-    <module>2.0-basic</module>
+    <module>jsf2-basic</module>
   </modules>
 </project>
