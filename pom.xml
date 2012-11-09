@@ -207,11 +207,12 @@
                         <configLocation>code-style/checkstyle.xml</configLocation>
                         <logViolationsToConsole>true</logViolationsToConsole>
                         <violationSeverity>error</violationSeverity>
+                        <includeTestSourceDirectory>true</includeTestSourceDirectory>
                     </configuration>
                     <executions>
                         <execution>
-                            <id>checkstyle-report</id>
-                            <phase>compile</phase>
+                            <id>checkstyle</id>
+                            <phase>process-sources</phase>
                             <goals>
                                 <goal>check</goal>
                             </goals>
