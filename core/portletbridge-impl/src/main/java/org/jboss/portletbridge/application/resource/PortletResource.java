@@ -21,7 +21,6 @@
  */
 package org.jboss.portletbridge.application.resource;
 
-import java.net.URL;
 import java.util.List;
 
 import javax.faces.application.Resource;
@@ -103,16 +102,6 @@ public class PortletResource extends ResourceWrapper {
                             wrappedPath = wrappedPath.substring(0, pos) + wrappedPath.substring(pos + mapping.length());
                         }
                     }
-                }
-            }
-
-            if (getContentType().startsWith("image/") && wrappedPath.endsWith("org.richfaces")) {
-                // Special case for images that are in org.richfaces to allow ResourceHandler to process the request
-                String resourcePath = "META-INF/resources/org.richfaces/" + getResourceName();
-                URL imageUrl = getClass().getClassLoader().getResource(resourcePath);
-
-                if (null != imageUrl) {
-                    wrappedPath += ".images";
                 }
             }
         }

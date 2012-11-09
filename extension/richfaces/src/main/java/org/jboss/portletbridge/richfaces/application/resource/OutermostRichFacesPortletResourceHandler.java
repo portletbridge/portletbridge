@@ -29,7 +29,6 @@ import javax.faces.application.ResourceHandlerWrapper;
  * @author <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
  */
 public class OutermostRichFacesPortletResourceHandler extends ResourceHandlerWrapper {
-    private static final String ORG_RICHFACES_RESOURCE = "org.richfaces.resource";
 
     private ResourceHandler wrapped;
 
@@ -40,7 +39,7 @@ public class OutermostRichFacesPortletResourceHandler extends ResourceHandlerWra
     @Override
     public Resource createResource(String resourceName) {
         Resource resource = getWrapped().createResource(resourceName);
-        if (null != resource && resource.getClass().getName().startsWith(ORG_RICHFACES_RESOURCE)) {
+        if (null != resource) {
             resource = new RichFacesPortletResource(resource);
         }
         return resource;
@@ -49,7 +48,7 @@ public class OutermostRichFacesPortletResourceHandler extends ResourceHandlerWra
     @Override
     public Resource createResource(String resourceName, String libraryName) {
         Resource resource = getWrapped().createResource(resourceName, libraryName);
-        if (null != resource && resource.getClass().getName().startsWith(ORG_RICHFACES_RESOURCE)) {
+        if (null != resource) {
             resource = new RichFacesPortletResource(resource);
         }
         return resource;
@@ -58,8 +57,7 @@ public class OutermostRichFacesPortletResourceHandler extends ResourceHandlerWra
     @Override
     public Resource createResource(String resourceName, String libraryName, String contentType) {
         Resource resource = getWrapped().createResource(resourceName, libraryName, contentType);
-
-        if (null != resource && resource.getClass().getName().startsWith(ORG_RICHFACES_RESOURCE)) {
+        if (null != resource) {
             resource = new RichFacesPortletResource(resource);
         }
         return resource;
