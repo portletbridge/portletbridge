@@ -21,6 +21,11 @@
  */
 package org.jboss.portletbridge.richfaces.application.resource;
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+
 import javax.faces.application.Resource;
 import javax.faces.application.ResourceHandler;
 import javax.faces.application.ResourceWrapper;
@@ -30,7 +35,7 @@ import javax.faces.context.FacesContext;
 /**
  * @author <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
  */
-public class RichFacesPortletResource extends ResourceWrapper {
+public class RichFacesPortletResource extends ResourceWrapper implements Externalizable {
     public static final String RICHFACES_PATH_TOKEN = "/rfRes/";
 
     private Resource wrapped;
@@ -101,6 +106,20 @@ public class RichFacesPortletResource extends ResourceWrapper {
             }
         }
         return path;
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        out.writeObject(getResourceName());
+        out.writeObject(getLibraryName());
+        out.writeObject(getContentType());
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        setResourceName((String) in.readObject());
+        setLibraryName((String) in.readObject());
+        setContentType((String) in.readObject());
     }
 
 }

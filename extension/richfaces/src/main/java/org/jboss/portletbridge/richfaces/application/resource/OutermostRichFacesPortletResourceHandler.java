@@ -39,7 +39,7 @@ public class OutermostRichFacesPortletResourceHandler extends ResourceHandlerWra
     @Override
     public Resource createResource(String resourceName) {
         Resource resource = getWrapped().createResource(resourceName);
-        if (null != resource) {
+        if (!isRichFacesPortletResource(resource)) {
             resource = new RichFacesPortletResource(resource);
         }
         return resource;
@@ -48,7 +48,7 @@ public class OutermostRichFacesPortletResourceHandler extends ResourceHandlerWra
     @Override
     public Resource createResource(String resourceName, String libraryName) {
         Resource resource = getWrapped().createResource(resourceName, libraryName);
-        if (null != resource) {
+        if (!isRichFacesPortletResource(resource)) {
             resource = new RichFacesPortletResource(resource);
         }
         return resource;
@@ -57,10 +57,18 @@ public class OutermostRichFacesPortletResourceHandler extends ResourceHandlerWra
     @Override
     public Resource createResource(String resourceName, String libraryName, String contentType) {
         Resource resource = getWrapped().createResource(resourceName, libraryName, contentType);
-        if (null != resource) {
+        if (!isRichFacesPortletResource(resource)) {
             resource = new RichFacesPortletResource(resource);
         }
         return resource;
+    }
+
+    protected boolean isRichFacesPortletResource(Resource res) {
+        if (null == res || res instanceof RichFacesPortletResource) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**

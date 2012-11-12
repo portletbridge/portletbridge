@@ -21,6 +21,10 @@
  */
 package org.jboss.portletbridge.application.resource;
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.util.List;
 
 import javax.faces.application.Resource;
@@ -34,7 +38,7 @@ import org.jboss.portletbridge.bridge.context.BridgeContext;
 /**
  * @author leo, <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
  */
-public class PortletResource extends ResourceWrapper {
+public class PortletResource extends ResourceWrapper implements Externalizable {
 
     private final Resource wrapped;
 
@@ -106,6 +110,20 @@ public class PortletResource extends ResourceWrapper {
             }
         }
         return externalContext.encodeResourceURL(wrappedPath);
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        out.writeObject(getResourceName());
+        out.writeObject(getLibraryName());
+        out.writeObject(getContentType());
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        setResourceName((String) in.readObject());
+        setLibraryName((String) in.readObject());
+        setContentType((String) in.readObject());
     }
 
 }
