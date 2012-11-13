@@ -40,7 +40,13 @@ import org.jboss.portletbridge.bridge.context.BridgeContext;
  */
 public class PortletResource extends ResourceWrapper implements Externalizable {
 
-    private final Resource wrapped;
+    private Resource wrapped;
+
+    /**
+     * Necessary for serialization.
+     */
+    public PortletResource() {
+    }
 
     public PortletResource(Resource wrapped) {
         this.wrapped = wrapped;
@@ -114,6 +120,7 @@ public class PortletResource extends ResourceWrapper implements Externalizable {
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
+        out.writeObject(wrapped.getClass().getName());
         out.writeObject(getResourceName());
         out.writeObject(getLibraryName());
         out.writeObject(getContentType());
@@ -121,9 +128,15 @@ public class PortletResource extends ResourceWrapper implements Externalizable {
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        setResourceName((String) in.readObject());
-        setLibraryName((String) in.readObject());
-        setContentType((String) in.readObject());
+        Class<?> clazz = Class.forName((String)in.readObject());
+        try {
+            wrapped = (Resource) clazz.newInstance();
+            setResourceName((String) in.readObject());
+            setLibraryName((String) in.readObject());
+            setContentType((String) in.readObject());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

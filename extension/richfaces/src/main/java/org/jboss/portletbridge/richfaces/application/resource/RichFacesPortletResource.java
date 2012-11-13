@@ -32,6 +32,8 @@ import javax.faces.application.ResourceWrapper;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
+import org.jboss.portletbridge.application.resource.PortletResource;
+
 /**
  * @author <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
  */
@@ -39,6 +41,12 @@ public class RichFacesPortletResource extends ResourceWrapper implements Externa
     public static final String RICHFACES_PATH_TOKEN = "/rfRes/";
 
     private Resource wrapped;
+
+    /**
+     * Necessary for serialization.
+     */
+    public RichFacesPortletResource() {
+    }
 
     public RichFacesPortletResource(Resource resource) {
         wrapped = resource;
@@ -110,16 +118,31 @@ public class RichFacesPortletResource extends ResourceWrapper implements Externa
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
-        out.writeObject(getResourceName());
-        out.writeObject(getLibraryName());
-        out.writeObject(getContentType());
+        out.writeObject(wrapped.getClass().getName());
+        if (wrapped instanceof PortletResource) {
+            ((PortletResource) wrapped).writeExternal(out);
+        } else {
+            out.writeObject(getResourceName());
+            out.writeObject(getLibraryName());
+            out.writeObject(getContentType());
+        }
     }
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        setResourceName((String) in.readObject());
-        setLibraryName((String) in.readObject());
-        setContentType((String) in.readObject());
+        Class<?> clazz = Class.forName((String)in.readObject());
+        try {
+            wrapped = (Resource) clazz.newInstance();
+            if (wrapped instanceof PortletResource) {
+                ((PortletResource) wrapped).readExternal(in);
+            } else {
+                setResourceName((String) in.readObject());
+                setLibraryName((String) in.readObject());
+                setContentType((String) in.readObject());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }
