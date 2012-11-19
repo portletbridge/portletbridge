@@ -21,11 +21,12 @@
  */
 package org.richfaces.demo.common;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
+import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -35,20 +36,19 @@ import javax.portlet.ResourceURL;
 /**
  * @author <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
  */
+@ApplicationScoped
 @ManagedBean(name = "portletRes")
-public class PortletResource implements Map<String, String> {
+public class PortletResource extends ConcurrentHashMap<String, String> {
+
+    private static final long serialVersionUID = 1048488951791072974L;
 
     @Override
-    public void clear() {
-    }
-
-    @Override
-    public boolean containsKey(Object arg0) {
+    public boolean containsKey(Object key) {
         return true;
     }
 
     @Override
-    public boolean containsValue(Object arg0) {
+    public boolean containsValue(Object value) {
         return true;
     }
 
@@ -59,15 +59,16 @@ public class PortletResource implements Map<String, String> {
 
     @Override
     public String get(Object resourceKey) {
-        FacesContext context = FacesContext.getCurrentInstance();
-        String resourceUrl = null;
+        String resourceUrl = super.get(resourceKey);
 
-        if (null != resourceKey) {
+        if (null == resourceUrl && null != resourceKey) {
+            FacesContext context = FacesContext.getCurrentInstance();
             ExternalContext extCon = context.getExternalContext();
             MimeResponse response = (MimeResponse) extCon.getResponse();
             ResourceURL resUrl = response.createResourceURL();
             resUrl.setResourceID(resourceKey.toString());
             resourceUrl = resUrl.toString();
+            super.put((String) resourceKey, resourceUrl);
         }
         return resourceUrl;
     }
@@ -99,11 +100,6 @@ public class PortletResource implements Map<String, String> {
     @Override
     public int size() {
         return 0;
-    }
-
-    @Override
-    public Collection<String> values() {
-        return Collections.emptySet();
     }
 
 }
