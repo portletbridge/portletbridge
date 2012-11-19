@@ -42,7 +42,10 @@ import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.context.FacesContextFactory;
+import javax.faces.event.PostAddToViewEvent;
+import javax.faces.event.PreRemoveFromViewEvent;
 import javax.faces.event.SystemEvent;
+import javax.faces.event.SystemEventListener;
 import javax.faces.lifecycle.Lifecycle;
 import javax.faces.lifecycle.LifecycleFactory;
 import javax.faces.render.ResponseStateManager;
@@ -74,6 +77,9 @@ import org.jboss.portletbridge.util.BeanWrapper;
 import org.jboss.portletbridge.util.FacesMessageWrapper;
 import org.jboss.portletbridge.util.ParameterFunction;
 import org.jboss.portletbridge.util.PublicParameterUtil;
+
+import com.sun.faces.context.StateContext;
+import com.sun.faces.context.StateContext.AddRemoveListener;
 
 /**
  * @author kenfinnigan
@@ -425,6 +431,31 @@ public class Jsf20ControllerImpl implements BridgeController {
                 scope = newBridgeRequestScope(bridgeContext);
             }
         }
+
+        // ***** TO BE REMOVED AS PART OF PBR-468 WHEN JSF IMPL FIX AVAILABLE *******
+        // START
+        // Remove StateContext from FacesContext to prevent issues with Dynamic Actions being retained between Renders
+        facesContext.getAttributes().remove(StateContext.class.getName() + "_KEY");
+
+        // Unregister PostAddToViewEvent listener if it's StateContext.AddRemoveListener
+        List<SystemEventListener> postAddListeners = facesContext.getViewRoot().getViewListenersForEventClass(PostAddToViewEvent.class);
+        if (null != postAddListeners && !postAddListeners.isEmpty()) {
+            for (SystemEventListener listener : postAddListeners) {
+                if (listener instanceof AddRemoveListener) {
+                    facesContext.getViewRoot().unsubscribeFromViewEvent(PostAddToViewEvent.class, listener);
+                }
+            }
+        }
+        // Unregister PreRemoveFromViewEvent listener if it's StateContext.AddRemoveListener
+        List<SystemEventListener> preRemoveListeners = facesContext.getViewRoot().getViewListenersForEventClass(PreRemoveFromViewEvent.class);
+        if (null != preRemoveListeners && !preRemoveListeners.isEmpty()) {
+            for (SystemEventListener listener : preRemoveListeners) {
+                if (listener instanceof AddRemoveListener) {
+                    facesContext.getViewRoot().unsubscribeFromViewEvent(PreRemoveFromViewEvent.class, listener);
+                }
+            }
+        }
+        // END
 
         saveFacesView(scope, facesContext);
 
