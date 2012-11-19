@@ -94,14 +94,9 @@
 
         <dependency>
             <groupId>org.jboss.portletbridge</groupId>
-            <artifactId>portletbridge-api</artifactId>
+            <artifactId>jsf2-depchain</artifactId>
             <version>${pbr.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.portletbridge</groupId>
-            <artifactId>portletbridge-impl</artifactId>
-            <version>${pbr.version}</version>
-            <scope>runtime</scope>
+            <type>pom</type>
         </dependency>
 
    </dependencies>
