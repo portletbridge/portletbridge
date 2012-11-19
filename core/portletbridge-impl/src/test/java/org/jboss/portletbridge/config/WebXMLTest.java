@@ -23,6 +23,9 @@ package org.jboss.portletbridge.config;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.faces.FacesException;
@@ -42,6 +45,8 @@ public class WebXMLTest extends TestCase {
      * Test method for {@link org.jboss.portletbridge.config.WebXML#parse(java.io.InputStream)}.
      */
     public void testParse() throws Exception {
+        resetProcessor();
+
         InputStream inputStream = this.getClass().getResourceAsStream("/test-web.xml");
         WebXmlProcessor webXml = new WebXmlProcessor(inputStream);
         inputStream.close();
@@ -55,6 +60,8 @@ public class WebXMLTest extends TestCase {
     }
 
     public void testGetViewIdFromLocation() throws Exception {
+        resetProcessor();
+
         WebXmlProcessor.facesServlet = new ServletBean();
         WebXmlProcessor.facesServlet.getMappings().add("*.jsf");
         WebXmlProcessor.facesServlet.getMappings().add("/faces/*");
@@ -66,6 +73,8 @@ public class WebXMLTest extends TestCase {
     }
 
     public void testCreateErrorViews() throws Exception {
+        resetProcessor();
+
         WebXmlProcessor.facesServlet = new ServletBean();
         WebXmlProcessor.facesServlet.getMappings().add("*.jsf");
         WebXmlProcessor.errorPages.put(IOException.class.getName(), "/foo/bar.jsf");
@@ -74,10 +83,16 @@ public class WebXMLTest extends TestCase {
         WebXmlProcessor.errorPages.put("no.such.Exception", "/foo/baz.jsp");
         WebXmlProcessor webXml = new WebXmlProcessor((PortletContext) null);
         Map<Class<? extends Throwable>, String> errorViews = webXml.createErrorViews();
-        assertEquals(3, errorViews.size());
+        assertEquals(2, errorViews.size());
         assertEquals("/foo/bar", errorViews.get(IOException.class));
         assertEquals("/error/faces", errorViews.get(FacesException.class));
-        assertEquals("/error", errorViews.get(ViewExpiredException.class));
     }
 
+    private void resetProcessor() {
+        WebXmlProcessor.servlets = new ArrayList<ServletBean>();
+        WebXmlProcessor.urlMappings = new HashMap<String, ArrayList<String>>();
+        WebXmlProcessor.errorPages = new LinkedHashMap<String, String>();
+        WebXmlProcessor.facesServlet = null;
+        WebXmlProcessor.errorViews = null;
+    }
 }
