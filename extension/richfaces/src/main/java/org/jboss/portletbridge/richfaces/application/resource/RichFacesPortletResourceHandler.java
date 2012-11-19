@@ -76,8 +76,8 @@ public class RichFacesPortletResourceHandler extends PortletResourceHandler {
                 ResourceHandler handler = context.getApplication().getResourceHandler();
                 Resource resource = handler.createResource(resourceName, libraryId);
                 if (null != resource) {
-                    if (!isPortletResource(resource)) {
-                        resource = new PortletResource(resource);
+                    if (!isRichFacesPortletResource(resource)) {
+                        resource = new RichFacesPortletResource(resource);
                     }
                     handleResourceRequest(context, resource);
                 } else {
@@ -185,8 +185,8 @@ public class RichFacesPortletResourceHandler extends PortletResourceHandler {
                         String resourceName = cssContent.substring(fileNamePosStart, extEnd);
                         String libraryName = rfUrlType.getLibraryName();
                         Resource imageResource = handler.createResource(resourceName, libraryName);
-                        if (!isPortletResource(imageResource)) {
-                            imageResource = new PortletResource(imageResource);
+                        if (!isRichFacesPortletResource(imageResource)) {
+                            imageResource = new RichFacesPortletResource(imageResource);
                         }
                         if (null != imageResource) {
                             imageUrl = imageResource.getRequestPath();
@@ -218,6 +218,14 @@ public class RichFacesPortletResourceHandler extends PortletResourceHandler {
         }
 
         return cssContent;
+    }
+
+    protected boolean isRichFacesPortletResource(Resource res) {
+        if (null == res || res instanceof RichFacesPortletResource) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     protected enum RichFacesUrlType {
