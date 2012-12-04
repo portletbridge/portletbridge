@@ -44,9 +44,9 @@
     <url>http://www.jboss.org/portletbridge/</url>
 
     <scm>
-        <connection>scm:git:git://github.com/jbossportletbridge/jbossportletbridge.git</connection>
-        <developerConnection>scm:git:git://github.com/jbossportletbridge/jbossportletbridge.git</developerConnection>
-        <url>https://github.com/jbossportletbridge/jbossportletbridge</url>
+        <connection>scm:git:git://github.com/portletbridge/portletbridge.git</connection>
+        <developerConnection>scm:git:git://github.com/portletbridge/portletbridge.git</developerConnection>
+        <url>https://github.com/portletbridge/portletbridge</url>
     </scm>
 
     <dependencyManagement>
