@@ -13,7 +13,7 @@
     <artifactId>portletbridge-parent</artifactId>
     <version>3.1.2.Final-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>JBoss JSF2 Portlet Bridge for a portlet environment, parent pom</name>
+    <name>JSF2 Portlet Bridge for a portlet environment, parent pom</name>
 
     <properties>
         <!-- JSF2 Implementations -->

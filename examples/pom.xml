@@ -7,7 +7,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>examples</artifactId>
-    <name>JBoss Portlet Bridge JSF 2 examples</name>
+    <name>Portlet Bridge JSF 2 examples</name>
     <packaging>pom</packaging>
     <modules>
         <module>jsf2portlet</module>

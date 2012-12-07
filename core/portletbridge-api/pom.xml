@@ -6,7 +6,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>portletbridge-api</artifactId>
-    <name>JBoss Portlet Bridge JSF 2 API</name>
+    <name>Portlet Bridge JSF 2 API</name>
     <url>http://www.jboss.org/portletbridge/portletbridge/portletbridge-api</url>
     <build>
         <plugins>

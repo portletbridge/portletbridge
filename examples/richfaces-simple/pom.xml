@@ -12,7 +12,7 @@
     <groupId>org.jboss.portletbridge.examples</groupId>
     <artifactId>richfaces-simple</artifactId>
 
-    <name>JBoss Portlet Bridge RF Portlet</name>
+    <name>Portlet Bridge RF Portlet</name>
 
     <packaging>war</packaging>
 

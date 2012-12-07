@@ -6,7 +6,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>core</artifactId>
-    <name>JBoss Portlet Bridge JSF 2 Core</name>
+    <name>Portlet Bridge JSF 2 Core</name>
     <packaging>pom</packaging>
 
     <modules>
