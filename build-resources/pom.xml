@@ -9,7 +9,7 @@
     </parent>
 
     <artifactId>portletbridge-build-resources</artifactId>
-    <name>JBoss Portlet Bridge Build Resources</name>
+    <name>Portlet Bridge Build Resources</name>
 
     <build>
         <plugins>

@@ -14,7 +14,7 @@
 
     <!-- Artifact Configuration -->
     <artifactId>portletbridge-extension-richfaces</artifactId>
-    <name>JBoss Portlet Bridge Extension for RichFaces</name>
+    <name>Portlet Bridge Extension for RichFaces</name>
     <description>Portlet Bridge Extension for integrating with RichFaces</description>
 
     <build>

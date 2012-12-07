@@ -14,7 +14,7 @@
 
     <!-- Artifact Configuration -->
     <artifactId>richfaces4-depchain</artifactId>
-    <name>JBoss Portlet Bridge Dependency Chain for RichFaces 4</name>
+    <name>Portlet Bridge Dependency Chain for RichFaces 4</name>
     <description>Single-POM Definition to export the Portlet Bridge artifacts in proper scope for RichFaces 4 portlets</description>
     <packaging>pom</packaging>
 

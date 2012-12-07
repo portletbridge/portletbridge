@@ -6,8 +6,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>portletbridge-impl</artifactId>
-    <name>JBoss Portlet Bridge JSF 2 Implementation</name>
-    <url>http://www.jboss.org/portletbridge/portletbridge/portletbridge-impl</url>
+    <name>Portlet Bridge JSF 2 Implementation</name>
+    <url>http://www.jboss.org/portletbridge</url>
 
     <build>
         <plugins>
