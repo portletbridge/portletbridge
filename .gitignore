@@ -1,8 +1,11 @@
 .settings
 .project
 .classpath
+.idea
+*.iml
 bin
 target
+overlays
 .faces-config.xml.jsfdia
 .factorypath
 
