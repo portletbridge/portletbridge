@@ -52,15 +52,14 @@ public class IssueController implements Serializable {
     }
 
     public void deleteIssue(Issue issue) {
-        conversation.begin();
+        if (conversation.isTransient()) {
+            conversation.begin();
+        }
         mgr.deleteIssue(issue);
         message = "You just deleted Issue #" + issue.getId() + " with a title of '" + issue.getTitle() + "'";
     }
 
     public String getMessage() {
-        if (!conversation.isTransient()) {
-            conversation.end();
-        }
         return message;
     }
 }
