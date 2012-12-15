@@ -35,4 +35,17 @@
 		</container-runtime-option>
 	</portlet>
 
+    <filter>
+        <filter-name>PortletCDIFilter</filter-name>
+        <filter-class>org.gatein.cdi.PortletCDIFilter</filter-class>
+        <lifecycle>ACTION_PHASE</lifecycle>
+        <lifecycle>EVENT_PHASE</lifecycle>
+        <lifecycle>RENDER_PHASE</lifecycle>
+        <lifecycle>RESOURCE_PHASE</lifecycle>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>PortletCDIFilter</filter-name>
+        <portlet-name>richfaces-showcase</portlet-name>
+    </filter-mapping>
 </portlet-app>

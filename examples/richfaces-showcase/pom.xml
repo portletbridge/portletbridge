@@ -67,6 +67,12 @@
             <artifactId>richfaces4-depchain</artifactId>
             <type>pom</type>
         </dependency>
+
+        <dependency>
+            <groupId>org.gatein</groupId>
+            <artifactId>cdi-portlet-integration</artifactId>
+            <version>1.0.0.Alpha2</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -83,8 +89,6 @@
                             <excludes>
 								<!-- Not a cool dude, makes our portlet not work -->
                                 <exclude>WEB-INF/jboss-web.xml</exclude>
-								<!-- Because we want to disable CDI/Weld .. for now. -->
-                                <exclude>WEB-INF/beans.xml</exclude>
                             </excludes>
                         </overlay>
                     </overlays>
