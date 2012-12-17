@@ -189,6 +189,7 @@ public class RichFacesPortletResourceHandler extends PortletResourceHandler {
                             imageResource = new RichFacesPortletResource(imageResource);
                         }
                         if (null != imageResource) {
+                            imageResource.setLibraryName(rfUrlType.getLibraryName());
                             imageUrl = imageResource.getRequestPath();
                             imageUrl = imageUrl.replaceAll(libraryName, rfUrlType.getToken());
                             urlCache.put(relPath, imageUrl);
