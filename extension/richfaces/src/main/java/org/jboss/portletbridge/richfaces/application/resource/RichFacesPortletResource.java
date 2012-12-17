@@ -108,10 +108,9 @@ public class RichFacesPortletResource extends ResourceWrapper implements Externa
                     buf.append("/");
                     buf.append(path.substring(pos + RICHFACES_PATH_TOKEN.length()));
                 }
-                path = externalContext.encodeResourceURL(buf.toString());
-            } else {
-                path = externalContext.encodeResourceURL(path);
+                path = buf.toString();
             }
+            path = externalContext.encodeResourceURL(path);
         }
         return path;
     }
