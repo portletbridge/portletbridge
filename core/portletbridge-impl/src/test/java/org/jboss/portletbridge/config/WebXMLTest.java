@@ -21,78 +21,262 @@
  */
 package org.jboss.portletbridge.config;
 
+import static org.junit.Assert.assertEquals;
+
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.faces.FacesException;
 import javax.faces.application.ViewExpiredException;
 import javax.portlet.PortletContext;
+import javax.portlet.PortletRequestDispatcher;
 import javax.servlet.ServletException;
 
-import junit.framework.TestCase;
+import org.jboss.shrinkwrap.descriptor.api.Descriptors;
+import org.jboss.shrinkwrap.descriptor.api.webapp30.WebAppDescriptor;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * @author asmirnov
  *
  */
-public class WebXMLTest extends TestCase {
+@RunWith(JUnit4.class)
+public class WebXMLTest {
+
+    @Before
+    public void resetProcessor() {
+        WebXmlProcessor.scan = new AtomicBoolean(true);
+        WebXmlProcessor.setServlets(new ArrayList<ServletBean>());
+        WebXmlProcessor.setUrlMappings(new HashMap<String, ArrayList<String>>());
+        WebXmlProcessor.setErrorPages(new LinkedHashMap<String, String>());
+        WebXmlProcessor.facesServlet = null;
+        WebXmlProcessor.errorViews = new LinkedHashMap<Class<? extends Throwable>, String>();
+    }
 
     /**
-     * Test method for {@link org.jboss.portletbridge.config.WebXML#parse(java.io.InputStream)}.
+     * Test method for {@link org.jboss.portletbridge.config.WebXmlProcessor#parse(java.io.InputStream)}.
      */
-    public void testParse() throws Exception {
-        resetProcessor();
+    @Test
+    public void parse() throws Exception {
 
         InputStream inputStream = this.getClass().getResourceAsStream("/test-web.xml");
-        WebXmlProcessor webXml = new WebXmlProcessor(inputStream);
+        WebXmlProcessor webXml = new WebXmlProcessor(
+                getPortletContext(Descriptors.importAs(WebAppDescriptor.class)
+                                             .fromStream(inputStream))
+                );
         inputStream.close();
+
         assertEquals(2, webXml.getFacesServlet().getMappings().size());
         assertEquals("*.jsf", webXml.getFacesServlet().getMappings().get(1));
         assertEquals("/faces/*", webXml.getFacesServlet().getMappings().get(0));
-        Map<Class<? extends Throwable>, String> errorViews = webXml.createErrorViews();
-        assertEquals(2, errorViews.size());
-        assertEquals("/error.xhtml", errorViews.get(ServletException.class));
-        assertEquals("/error", errorViews.get(ViewExpiredException.class));
+        assertEquals(2, WebXmlProcessor.errorViews.size());
+        assertEquals("/error.xhtml", WebXmlProcessor.errorViews.get(ServletException.class));
+        assertEquals("/error", WebXmlProcessor.errorViews.get(ViewExpiredException.class));
     }
 
-    public void testGetViewIdFromLocation() throws Exception {
-        resetProcessor();
-
+    @Test
+    public void getViewIdFromLocation() throws Exception {
         WebXmlProcessor.facesServlet = new ServletBean();
         WebXmlProcessor.facesServlet.getMappings().add("*.jsf");
         WebXmlProcessor.facesServlet.getMappings().add("/faces/*");
         WebXmlProcessor.facesServlet.getMappings().add("/seam*");
         WebXmlProcessor webXml = new WebXmlProcessor((PortletContext) null);
+
         assertEquals("/foo/bar", webXml.getViewIdFromLocation("/foo/bar.jsf"));
         assertEquals("/foo/bar.jsp", webXml.getViewIdFromLocation("/faces/foo/bar.jsp"));
         assertEquals("/foo/bar.jsp", webXml.getViewIdFromLocation("/seam/foo/bar.jsp"));
     }
 
-    public void testCreateErrorViews() throws Exception {
-        resetProcessor();
-
+    @Test
+    public void createErrorViews() throws Exception {
         WebXmlProcessor.facesServlet = new ServletBean();
         WebXmlProcessor.facesServlet.getMappings().add("*.jsf");
-        WebXmlProcessor.errorPages.put(IOException.class.getName(), "/foo/bar.jsf");
-        WebXmlProcessor.errorPages.put(FacesException.class.getName(), "/error/faces.jsf");
-        WebXmlProcessor.errorPages.put(ServletException.class.getName(), "/foo/bar.jsp");
-        WebXmlProcessor.errorPages.put("no.such.Exception", "/foo/baz.jsp");
+        LinkedHashMap<String, String> pages = new LinkedHashMap<String, String>();
+        pages.put(IOException.class.getName(), "/foo/bar.jsf");
+        pages.put(FacesException.class.getName(), "/error/faces.jsf");
+        pages.put(ServletException.class.getName(), "/foo/bar.jsp");
+        pages.put("no.such.Exception", "/foo/baz.jsp");
+        WebXmlProcessor.setErrorPages(pages);
         WebXmlProcessor webXml = new WebXmlProcessor((PortletContext) null);
-        Map<Class<? extends Throwable>, String> errorViews = webXml.createErrorViews();
-        assertEquals(2, errorViews.size());
-        assertEquals("/foo/bar", errorViews.get(IOException.class));
-        assertEquals("/error/faces", errorViews.get(FacesException.class));
+        webXml.createErrorViews();
+
+        assertEquals(2, WebXmlProcessor.errorViews.size());
+        assertEquals("/foo/bar", WebXmlProcessor.errorViews.get(IOException.class));
+        assertEquals("/error/faces", WebXmlProcessor.errorViews.get(FacesException.class));
     }
 
-    private void resetProcessor() {
-        WebXmlProcessor.servlets = new ArrayList<ServletBean>();
-        WebXmlProcessor.urlMappings = new HashMap<String, ArrayList<String>>();
-        WebXmlProcessor.errorPages = new LinkedHashMap<String, String>();
-        WebXmlProcessor.facesServlet = null;
-        WebXmlProcessor.errorViews = null;
+    @Test
+    public void emptyErrorPages() throws Exception {
+        WebXmlProcessor webXml = new WebXmlProcessor(getPortletContext(buildWebXml()));
+
+        assertEquals(0, webXml.getErrorViews().size());
+        assertEquals(0, webXml.getErrorPages().size());
+    }
+
+    @Test
+    public void invalidExceptionClass() throws Exception {
+        WebAppDescriptor webApp = buildWebXml();
+        webApp.createErrorPage()
+                    .exceptionType("javax.servlet.ServletSillyException")
+                    .location("/faces/error.xhtml")
+                    .up()
+              .createErrorPage()
+                .exceptionType("javax.servlet.ServletException")
+                .location("/faces/error.xhtml")
+                .up();
+
+        WebXmlProcessor webXml = new WebXmlProcessor(getPortletContext(webApp));
+
+        assertEquals(1, webXml.getErrorViews().size());
+    }
+
+    @Test
+    public void invalidErrorPage() throws Exception {
+        WebAppDescriptor webApp = buildWebXml();
+        webApp.createErrorPage()
+                .exceptionType("java.lang.Exception")
+                .location("/face/error.xhtml")
+                .up()
+                .createErrorPage()
+                .exceptionType("javax.servlet.ServletException")
+                .location("/faces/error.xhtml")
+                .up();
+
+        WebXmlProcessor webXml = new WebXmlProcessor(getPortletContext(webApp));
+
+        assertEquals(1, webXml.getErrorViews().size());
+    }
+
+    private WebAppDescriptor buildWebXml() {
+        WebAppDescriptor webApp = Descriptors.create(WebAppDescriptor.class);
+        webApp.addDefaultNamespaces()
+                .version("3.0")
+                .displayName("WebAppXmlTest")
+                .createContextParam()
+                    .paramName("javax.faces.DEFAULT_SUFFIX")
+                    .paramValue(".xhtml")
+                    .up()
+                .createServlet()
+                .servletName("FacesServlet")
+                .servletClass("javax.faces.webapp.FacesServlet")
+                .loadOnStartup(1)
+                .up()
+                .createServletMapping()
+                .servletName("FacesServlet")
+                .urlPattern("/faces/*")
+                .up()
+                .createServletMapping()
+                .servletName("FacesServlet")
+                .urlPattern("*.jsf")
+                .up();
+        return webApp;
+    }
+
+    private PortletContext getPortletContext(final WebAppDescriptor webApp) {
+        return new PortletContext() {
+            @Override
+            public String getServerInfo() {
+                return null;
+            }
+
+            @Override
+            public PortletRequestDispatcher getRequestDispatcher(String path) {
+                return null;
+            }
+
+            @Override
+            public PortletRequestDispatcher getNamedDispatcher(String name) {
+                return null;
+            }
+
+            @Override
+            public InputStream getResourceAsStream(String path) {
+                return new ByteArrayInputStream(webApp.exportAsString().getBytes());
+            }
+
+            @Override
+            public int getMajorVersion() {
+                return 0;
+            }
+
+            @Override
+            public int getMinorVersion() {
+                return 0;
+            }
+
+            @Override
+            public String getMimeType(String file) {
+                return null;
+            }
+
+            @Override
+            public String getRealPath(String path) {
+                return null;
+            }
+
+            @Override
+            public Set<String> getResourcePaths(String path) {
+                return null;
+            }
+
+            @Override
+            public URL getResource(String path) throws MalformedURLException {
+                return null;
+            }
+
+            @Override
+            public Object getAttribute(String name) {
+                return null;
+            }
+
+            @Override
+            public Enumeration<String> getAttributeNames() {
+                return null;
+            }
+
+            @Override
+            public String getInitParameter(String name) {
+                return null;
+            }
+
+            @Override
+            public Enumeration<String> getInitParameterNames() {
+                return null;
+            }
+
+            @Override
+            public void log(String msg) {
+            }
+
+            @Override
+            public void log(String message, Throwable throwable) {
+            }
+
+            @Override
+            public void removeAttribute(String name) {
+            }
+
+            @Override
+            public void setAttribute(String name, Object object) {
+            }
+
+            @Override
+            public String getPortletContextName() {
+                return null;
+            }
+
+            @Override
+            public Enumeration<String> getContainerRuntimeOptions() {
+                return null;
+            }
+        };
     }
 }

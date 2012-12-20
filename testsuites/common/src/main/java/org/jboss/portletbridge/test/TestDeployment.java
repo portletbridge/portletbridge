@@ -27,6 +27,7 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.descriptor.api.Descriptors;
 import org.jboss.shrinkwrap.descriptor.api.facesconfig21.WebFacesConfigDescriptor;
+import org.jboss.shrinkwrap.descriptor.api.portletapp20.PortletDescriptor;
 import org.jboss.shrinkwrap.descriptor.api.webapp30.WebAppDescriptor;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 
@@ -47,6 +48,12 @@ public class TestDeployment {
         addWebXml(archive);
         addFacesConfig(archive);
         addPortletXml(archive);
+        return archive;
+    }
+
+    public static WebArchive createDeploymentWithFacesConfig() {
+        WebArchive archive = createDeployment();
+        addFacesConfig(archive);
         return archive;
     }
 
@@ -93,5 +100,33 @@ public class TestDeployment {
                    .version("2.1");
 
         return facesConfig;
+    }
+
+    public static PortletDescriptor createPortletXmlDescriptor(String portletName) {
+        PortletDescriptor portlet = Descriptors.create(PortletDescriptor.class);
+        portlet.addDefaultNamespaces()
+                .version("2.0")
+                .createPortlet()
+                    .portletName(portletName)
+                    .portletClass("javax.portlet.faces.GenericFacesPortlet")
+                    .createInitParam()
+                        .name("javax.portlet.faces.defaultViewId.view")
+                        .value("/home.xhtml")
+                        .up()
+                    .createInitParam()
+                        .name("javax.portlet.faces.preserveActionParams")
+                        .value("true")
+                        .up()
+                    .expirationCache(0)
+                    .createSupports()
+                        .mimeType("text/html")
+                        .portletMode("VIEW")
+                        .up()
+                    .getOrCreatePortletInfo()
+                        .title(portletName)
+                        .up()
+                    .up();
+
+        return portlet;
     }
 }

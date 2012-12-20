@@ -54,7 +54,7 @@ public final class WebXmlProcessor {
     private static final String WEB_XML_PATH = "/WEB-INF/web.xml";
 
     private static SAXParserFactory saxFactory = SAXParserFactory.newInstance();
-    private static AtomicBoolean scan = new AtomicBoolean(true);
+    static AtomicBoolean scan = new AtomicBoolean(true);
     private static boolean scanned = false;
 
     static {
@@ -62,48 +62,32 @@ public final class WebXmlProcessor {
         saxFactory.setNamespaceAware(true);
     }
 
-    static List<ServletBean> servlets = new ArrayList<ServletBean>();
-    static Map<String, ArrayList<String>> urlMappings = new HashMap<String, ArrayList<String>>();
-    static Map<String, String> errorPages = new LinkedHashMap<String, String>();
+    private static List<ServletBean> servlets = new ArrayList<ServletBean>();
+    private static Map<String, ArrayList<String>> urlMappings = new HashMap<String, ArrayList<String>>();
+    private static Map<String, String> errorPages = new LinkedHashMap<String, String>();
 
     static ServletBean facesServlet;
-    static Map<Class<? extends Throwable>, String> errorViews;
+    static Map<Class<? extends Throwable>, String> errorViews = new LinkedHashMap<Class<? extends Throwable>, String>();
 
     public WebXmlProcessor(PortletContext portletContext) {
         if (null != portletContext) {
             if (scan.compareAndSet(true, false)) {
                 InputStream inputStream = portletContext.getResourceAsStream(WEB_XML_PATH);
-                this.parse(inputStream);
 
-                errorViews = createErrorViews();
+                if (null != inputStream) {
+                    this.parse(inputStream);
 
-                try {
-                    inputStream.close();
-                } catch (IOException e) {
-                    portletContext.log("Portlet Bridge error parsing web.xml", e);
+                    try {
+                        inputStream.close();
+                    } catch (IOException e) {
+                        portletContext.log("Portlet Bridge error parsing web.xml", e);
+                    }
                 }
                 scanned = true;
             } else {
                 while (!scanned) {
                     try {
                         Thread.sleep(300);
-                    } catch (InterruptedException e) {
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
-    public WebXmlProcessor(InputStream webXml) {
-        if (null != webXml) {
-            if (scan.compareAndSet(true, false)) {
-                this.parse(webXml);
-                scanned = true;
-            } else {
-                while (!scanned) {
-                    try {
-                        Thread.sleep(150);
                     } catch (InterruptedException e) {
                         break;
                     }
@@ -148,19 +132,19 @@ public final class WebXmlProcessor {
             reader.setDTDHandler(webXmlHandler);
 
             reader.parse(new InputSource(webXml));
+
+            createErrorViews();
         } catch (Exception e) {
             throw new FacesException("XML parsing error", e);
         }
     }
 
     /**
-     * Create map between error class and corresponding JSF view id. Map created from the {@link #errorLocations}
+     * Create map between error class and corresponding JSF view id. Map created from the {@link #errorPages}
      * string-based map.
-     *
-     * @return map between exception class and view id.
      */
-    protected Map<Class<? extends Throwable>, String> createErrorViews() {
-        LinkedHashMap<Class<? extends Throwable>, String> viewsMap = new LinkedHashMap<Class<? extends Throwable>, String>();
+    protected void createErrorViews() {
+        errorViews = new LinkedHashMap<Class<? extends Throwable>, String>();
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
         if (null == classLoader) {
@@ -172,13 +156,12 @@ public final class WebXmlProcessor {
                 Class<? extends Throwable> clazz = classLoader.loadClass(entry.getKey()).asSubclass(Throwable.class);
                 String viewId = getViewIdFromLocation(entry.getValue());
                 if (null != viewId) {
-                    viewsMap.put(clazz, viewId);
+                    errorViews.put(clazz, viewId);
                 }
             } catch (ClassNotFoundException e) {
                 // Configuration error, just ignore.
             }
         }
-        return viewsMap;
     }
 
     /**
@@ -211,6 +194,19 @@ public final class WebXmlProcessor {
             }
         }
         return viewId;
+    }
+
+    // Methods used for testing only
+    static void setErrorPages(Map<String, String> pages) {
+        errorPages = pages;
+    }
+
+    static void setUrlMappings(Map<String, ArrayList<String>> mappings) {
+        urlMappings = mappings;
+    }
+
+    static void setServlets(List<ServletBean> srvlts) {
+        servlets = srvlts;
     }
 
     public static final EntityResolver2 NULL_RESOLVER = new EntityResolver2() {

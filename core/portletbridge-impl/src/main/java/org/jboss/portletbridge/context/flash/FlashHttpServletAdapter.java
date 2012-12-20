@@ -23,6 +23,7 @@ package org.jboss.portletbridge.context.flash;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Collection;
 import java.util.Locale;
 
 import javax.portlet.MimeResponse;
@@ -232,6 +233,26 @@ public class FlashHttpServletAdapter implements HttpServletResponse {
 
     @Override
     public void setStatus(int sc, String sm) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public int getStatus() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public String getHeader(String name) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Collection<String> getHeaders(String name) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Collection<String> getHeaderNames() {
         throw new UnsupportedOperationException();
     }
 

@@ -94,6 +94,9 @@
                         <configuration>
                             <useSystemClassLoader>false</useSystemClassLoader>
                             <useManifestOnlyJar>false</useManifestOnlyJar>
+                            <excludes>
+                                <exclude>**/config/*Test.java</exclude>
+                            </excludes>
                         </configuration>
                     </plugin>
                 </plugins>

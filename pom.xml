@@ -25,7 +25,8 @@
 
         <!-- Spec versions -->
         <version.portlet>2.0</version.portlet>
-        <version.servlet>2.5</version.servlet>
+        <version.servlet2>2.5</version.servlet2>
+        <version.servlet3>3.0.1</version.servlet3>
         <version.jsp>2.1</version.jsp>
         <version.inject>1</version.inject>
         <version.cdi>1.0-SP4</version.cdi>
@@ -97,7 +98,12 @@
             <dependency>
                 <groupId>javax.servlet</groupId>
                 <artifactId>servlet-api</artifactId>
-                <version>${version.servlet}</version>
+                <version>${version.servlet2}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>${version.servlet3}</version>
             </dependency>
             <dependency>
                 <groupId>javax.servlet.jsp</groupId>
