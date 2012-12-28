@@ -41,7 +41,6 @@ import org.jboss.portletbridge.el.ELContextImpl;
 public class PortletFacesContextFactoryImpl extends FacesContextFactory {
 
     private FacesContextFactory facesContextFactory;
-    private ELContext elContext;
 
     public PortletFacesContextFactoryImpl(FacesContextFactory wrappedFactory) {
         facesContextFactory = wrappedFactory;
@@ -70,6 +69,7 @@ public class PortletFacesContextFactoryImpl extends FacesContextFactory {
 
     private class PortletFacesContextImpl extends FacesContextWrapper {
         private FacesContext wrapped;
+        private ELContext elContext;
 
         public PortletFacesContextImpl(FacesContext facesContext) {
             wrapped = facesContext;
