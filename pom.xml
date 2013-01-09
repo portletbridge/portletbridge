@@ -34,11 +34,11 @@
         <version.junit>4.10</version.junit>
         <version.arquillian>1.0.2.Final</version.arquillian>
         <version.shrinkwrap.descriptor>2.0.0-alpha-4</version.shrinkwrap.descriptor>
-        <version.shrinkwrap.resolver>2.0.0-alpha-4</version.shrinkwrap.resolver>
+        <version.shrinkwrap.resolver>2.0.0-alpha-6</version.shrinkwrap.resolver>
         <version.arquillian.graphene>2.0.0.Alpha2</version.arquillian.graphene>
         <version.arquillian.extension.portal>1.0.0.Alpha2</version.arquillian.extension.portal>
         <version.gatein.portal.testing>1.0.0.Alpha3</version.gatein.portal.testing>
-        <version.pluto.portal.testing>1.0.0.Alpha3</version.pluto.portal.testing>
+        <version.pluto.portal.testing>1.0.0.Beta1</version.pluto.portal.testing>
         <version.jbossas7.container>7.1.1.Final</version.jbossas7.container>
 
         <!-- Plugin versions -->
