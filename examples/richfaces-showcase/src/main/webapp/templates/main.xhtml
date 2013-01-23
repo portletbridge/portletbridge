@@ -41,6 +41,14 @@
                 <div class="clear"></div>
             </div>
             <div id="footer">#{a4j}</div>
+
+            <div style="visibility: hidden">
+                <h:form id="portalForm">
+                    <h:inputText id="seleniumTestDemo" value="#{portalUrlBean.demo}" />
+                    <h:inputText id="seleniumTestSample" value="#{portalUrlBean.sample}" />
+                    <h:commandLink id="redirectToPortlet" action="#{portalUrlBean.redirect}"/>
+                </h:form>
+            </div>
         </div>
     </h:body>
 </f:view>
