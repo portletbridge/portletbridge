@@ -40,7 +40,7 @@ public class TestDeployment {
                         Maven.resolver().loadPomFromFile("pom.xml")
                                 .resolve("org.jboss.portletbridge:portletbridge-impl")
                                 .withTransitivity()
-                                .as(File.class));
+                                .asFile());
     }
 
     public static WebArchive createDeploymentWithAll() {

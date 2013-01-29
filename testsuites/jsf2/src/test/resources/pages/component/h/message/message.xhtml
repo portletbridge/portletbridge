@@ -1,26 +1,47 @@
 <f:view xmlns="http://www.w3.org/1999/xhtml"
     xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:ui="http://java.sun.com/jsf/facelets" xml:lang="en" lang="en">
+    xmlns:h="http://java.sun.com/jsf/html" xml:lang="en" lang="en">
 
     <h:head>
-        <h:outputStylesheet name="stylesheet.css" />
     </h:head>
 
     <h:body>
         <h:form>
-            <h:inputText id="input_one" value="${msgsBean.textOne}" validator="#{msgsBean.validateOne}" />
+            <h:inputText id="input_one" value="#{msgsBean.textOne}" validator="#{msgsBean.validateOne}" />
             <h:message id="message_one" for="input_one" rendered="#{msgsBean.renderOne}" showDetail="#{msgsBean.showDetailOne}"
-                showSummary="${msgsBean.showSummaryOne}" />
+                showSummary="#{msgsBean.showSummaryOne}" />
 
-            <h:inputSecret id="input_two" value="${msgsBean.textTwo}" validator="#{msgsBean.validateTwo}" />
+            <h:inputSecret id="input_two" value="#{msgsBean.textTwo}" validator="#{msgsBean.validateTwo}" />
             <h:message id="message_two" for="input_two" />
 
-            <h:outputText id="output" value="1: '${msgsBean.textOne}', 2: '${msgsBean.textTwo}'" />
+            <h:outputText id="output" value="1: '#{msgsBean.textOne}', 2: '#{msgsBean.textTwo}'" />
 
             <h:commandButton id="submit" value="OK" />
+
+            <!-- Used for updating booleans on backing bean that are used on components -->
+            <h:commandLink id="messageOneRenderFalse" action="#{renderActionBean.unrenderMessageOne}">
+                <f:ajax execute="@this" render="message_one" />
+            </h:commandLink>
+            <h:commandLink id="messageOneDetailFalse" action="#{renderActionBean.hideDetailMessageOne}">
+                <f:ajax execute="@this" render="message_one" />
+            </h:commandLink>
+            <h:commandLink id="messageOneSummaryTrue" action="#{renderActionBean.enableSummaryMessageOne}">
+                <f:ajax execute="@this" render="message_one" />
+            </h:commandLink>
+            <h:commandLink id="messagesDisable" action="#{renderActionBean.disableMessages}">
+                <f:ajax execute="@this" render=":messages" />
+            </h:commandLink>
+            <h:commandLink id="messagesEnableDetails" action="#{renderActionBean.showDetailMessages}">
+                <f:ajax execute="@this" render=":messages" />
+            </h:commandLink>
+            <h:commandLink id="messagesDisableSummary" action="#{renderActionBean.hideSummaryMessages}">
+                <f:ajax execute="@this" render=":messages" />
+            </h:commandLink>
+            <h:commandLink id="messagesEnableGlobal" action="#{renderActionBean.enableGlobalMessages}">
+                <f:ajax execute="@this" render=":messages" />
+            </h:commandLink>
         </h:form>
-        <h:messages id="messages" showDetail="#{msgsBean.showDetailMessages}" showSummary="${msgsBean.showSummaryMessages}"
+        <h:messages id="messages" showDetail="#{msgsBean.showDetailMessages}" showSummary="#{msgsBean.showSummaryMessages}"
             rendered="#{msgsBean.renderMessages}" globalOnly="#{msgsBean.globalOnlyMessages}" />
     </h:body>
 </f:view>

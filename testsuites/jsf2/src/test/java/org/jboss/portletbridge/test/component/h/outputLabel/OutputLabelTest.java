@@ -1,102 +1,82 @@
 package org.jboss.portletbridge.test.component.h.outputLabel;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.net.URL;
-
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
-import org.jboss.arquillian.graphene.Graphene;
+import org.jboss.arquillian.graphene.spi.annotations.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
-import org.jboss.portletbridge.test.TestDeployment;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.portletbridge.deployment.TestDeployment;
+import org.jboss.shrinkwrap.portal.api.PortletArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
+
+import java.net.URL;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
 @PortalTest
 public class OutputLabelTest {
 
     @Deployment()
-    public static WebArchive createDeployment() {
-        return TestDeployment.createDeploymentWithAll()
-                .addAsWebResource("pages/component/h/outputLabel/outputlabel.xhtml", "home.xhtml")
-                .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css")
+    public static PortletArchive createDeployment() {
+        TestDeployment deployment = new TestDeployment(OutputLabelTest.class, true);
+        deployment.archive()
+                .createFacesPortlet("OutputLabel", "Output Label Portlet", "outputLabel.xhtml")
+                .addAsWebResource("pages/component/h/outputLabel/outputlabel.xhtml", "outputLabel.xhtml")
                 .addClass(OutputLabelBean.class);
+        return deployment.getFinalArchive();
     }
 
     @ArquillianResource
     @PortalURL
     URL portalURL;
 
-    @FindBy(xpath = "//label[contains(@id,':output1')]")
-    private WebElement outputOne;
+    @Drone
+    WebDriver browser;
 
-    @FindBy(xpath = "//label[contains(@id,':output2')]")
-    private WebElement outputTwo;
+    @Page
+    OutputLabelPage page;
 
     @Test
     @RunAsClient
-    public void testOutputLabel(@Drone WebDriver driver) throws Exception {
-        OutputLabelBean.OUTPUT_LABEL_RENDER = true;
-        OutputLabelBean.OUTPUT_LABEL_ESCAPE = true;
+    public void testOutputLabelAndConverter() throws Exception {
+        browser.get(portalURL.toString());
 
-        driver.get(portalURL.toString());
+        assertTrue("Page contains escaped element.", page.getOutputLabelEscaped().isDisplayed());
 
-        assertTrue("Check that page contains OUTPUT ONE element.", Graphene.element(outputOne).isVisible().apply(driver));
+        assertEquals("Escaped element contains the expected text with HTML markup.",
+                OutputLabelBean.OUTPUT_LABEL_DEFAULT_HTML, page.getOutputLabelEscaped().getText());
 
-        assertTrue("Check that OUTPUT ONE contains the expected text with HTML markup.",
-                Graphene.element(outputOne).textEquals(OutputLabelBean.OUTPUT_LABEL_DEFAULT_HTML).apply(driver));
+        assertTrue("Page contains OUTPUT TWO element.", page.getOutputLabel2().isDisplayed());
+
+        assertEquals("OUTPUT TWO contains the text length in Float format.",
+                Float.valueOf(OutputLabelBean.OUTPUT_LABEL_DEFAULT_HTML.length()).toString(), page.getOutputLabel2().getText());
     }
 
     @Test
     @RunAsClient
-    public void testOutputLabelEscape(@Drone WebDriver driver) throws Exception {
-        // Set outputLabel not to escape XML/HTML
-        OutputLabelBean.OUTPUT_LABEL_ESCAPE = false;
-        OutputLabelBean.OUTPUT_LABEL_RENDER = true;
+    public void testOutputLabelEscape() throws Exception {
+        browser.get(portalURL.toString());
 
-        driver.get(portalURL.toString());
+        assertTrue("Page contains non escaped element.", page.getOutputLabelNotEscaped().isDisplayed());
 
-        assertTrue("Check that page contains OUTPUT ONE element.", Graphene.element(outputOne).isVisible().apply(driver));
-
-        assertTrue("Check that OUTPUT ONE contains the expected text without HTML markup.",
-                Graphene.element(outputOne).textEquals(OutputLabelBean.OUTPUT_LABEL_DEFAULT_PLAINTEXT).apply(driver));
+        assertEquals("Non escaped element contains the expected text without HTML markup.",
+                OutputLabelBean.OUTPUT_LABEL_DEFAULT_PLAINTEXT, page.getOutputLabelNotEscaped().getText());
     }
 
-    @Test
+    @Test(expected = NoSuchElementException.class)
     @RunAsClient
-    public void testOutputLabelRendered(@Drone WebDriver driver) throws Exception {
-        // Set outputLabel not to render
-        OutputLabelBean.OUTPUT_LABEL_RENDER = false;
-        OutputLabelBean.OUTPUT_LABEL_ESCAPE = true;
+    public void testOutputLabelRendered() throws Exception {
+        browser.get(portalURL.toString());
 
-        driver.get(portalURL.toString());
-
-        assertFalse("Check that page does not contains OUTPUT ONE element.",
-                Graphene.element(outputOne).isVisible().apply(driver));
-    }
-
-    @Test
-    @RunAsClient
-    public void testOutputLabelConverter(@Drone WebDriver driver) throws Exception {
-        OutputLabelBean.OUTPUT_LABEL_RENDER = true;
-        OutputLabelBean.OUTPUT_LABEL_ESCAPE = true;
-        driver.get(portalURL.toString());
-
-        assertTrue("Check that page contains OUTPUT TWO element.", Graphene.element(outputTwo).isVisible().apply(driver));
-
-        assertTrue("Check that OUTPUT TWO contains the text length in Float format.",
-                Graphene.element(outputTwo).
-                textEquals(Float.valueOf(OutputLabelBean.OUTPUT_LABEL_DEFAULT_HTML.length()).toString()).apply(driver));
+        page.getOutputLabelNotRendered().isDisplayed();
     }
 
 }

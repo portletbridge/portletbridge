@@ -1,6 +1,7 @@
 package org.jboss.portletbridge.test.component.h.selectCheckbox;
 
 import static org.jboss.arquillian.graphene.Graphene.element;
+import static org.jboss.arquillian.graphene.Graphene.guardXhr;
 import static org.jboss.arquillian.graphene.Graphene.waitAjax;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -34,8 +35,7 @@ public class SelectCheckboxTest {
         return TestDeployment.createDeploymentWithAll()
                 .addAsWebResource("pages/component/h/selectCheckbox/selectcheckbox.xhtml", "home.xhtml")
                 .addAsWebResource("resources/ajax.png", "ajax.png")
-                .addClass(SelectCheckboxBean.class)
-                .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css");
+                .addClass(SelectCheckboxBean.class);
     }
 
     @FindBy(xpath = "//input[contains(@id,':sbcAccepted')]")
@@ -299,7 +299,7 @@ public class SelectCheckboxTest {
         driver.get(portalURL.toString());
 
         // at first only accept is shown, must be clicked to show remaining
-        acceptCheckbox.click();
+        guardXhr(acceptCheckbox).click();
 
         waitAjax(driver).until(element(genderCheckbox).isPresent());
 
@@ -320,7 +320,7 @@ public class SelectCheckboxTest {
             }
         }
 
-        ajaxButton.click();
+        guardXhr(ajaxButton).click();
 
         waitAjax(driver).until(element(result).textContains("You are"));
 

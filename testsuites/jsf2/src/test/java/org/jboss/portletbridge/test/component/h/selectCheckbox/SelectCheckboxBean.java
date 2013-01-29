@@ -99,4 +99,7 @@ public class SelectCheckboxBean {
         }
         return result;
     }
+
+    public void submit() {
+    }
 }

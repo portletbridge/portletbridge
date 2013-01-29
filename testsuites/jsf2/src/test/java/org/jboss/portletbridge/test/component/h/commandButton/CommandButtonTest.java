@@ -1,194 +1,164 @@
 package org.jboss.portletbridge.test.component.h.commandButton;
 
-import static org.jboss.arquillian.graphene.Graphene.element;
-import static org.jboss.arquillian.graphene.Graphene.waitGui;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.net.URL;
-
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
-import org.jboss.arquillian.graphene.Graphene;
+import org.jboss.arquillian.graphene.spi.annotations.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
-import org.jboss.portletbridge.test.TestDeployment;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.portletbridge.deployment.TestDeployment;
+import org.jboss.shrinkwrap.portal.api.PortletArchive;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
-import org.openqa.selenium.support.FindBy;
+
+import java.net.URL;
+
+import static org.jboss.arquillian.graphene.Graphene.guardXhr;
+import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
 @PortalTest
 public class CommandButtonTest {
 
     @Deployment()
-    public static WebArchive createDeployment() {
-        return TestDeployment.createDeploymentWithAll()
-                .addAsWebResource("pages/component/h/commandButton/commandbutton.xhtml", "home.xhtml")
+    public static PortletArchive createDeployment() {
+        TestDeployment deployment = new TestDeployment(CommandButtonTest.class, true);
+        deployment.archive()
+                .createFacesPortlet("CommandButton", "Command Button Portlet", "commandButton.xhtml")
+                .addAsWebResource("pages/component/h/commandButton/commandbutton.xhtml", "commandButton.xhtml")
                 .addAsWebResource("resources/ajax.png", "ajax.png")
-                .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css")
                 .addClass(CommandButtonBean.class);
+        return deployment.getFinalArchive();
     }
 
     @ArquillianResource
     @PortalURL
     URL portalURL;
 
-    @FindBy(xpath = "//input[contains(@id,':submit')]")
-    private WebElement submitButton;
+    @Drone
+    WebDriver browser;
 
-    @FindBy(xpath = "//input[contains(@id,':reset')]")
-    private WebElement resetButton;
+    @Page
+    CommandButtonPage page;
 
-    @FindBy(xpath = "//input[contains(@id,':ajax')]")
-    private WebElement ajaxButton;
-
-    @FindBy(xpath = "//input[contains(@id,':alert')]")
-    private WebElement alertButton;
-
-    @FindBy(xpath = "//span[contains(@id,':output')]")
-    private WebElement outputText;
-
-    @FindBy(xpath = "//input[contains(@id,':input')]")
-    private WebElement inputText;
-
-    @Test
-    @RunAsClient
-    public void testCommandButtonTypes(@Drone WebDriver driver) throws Exception {
-        driver.get(portalURL.toString());
-
-        assertTrue("Check that page contains SUBMIT button element.",
-                Graphene.element(submitButton).isVisible().apply(driver));
-        assertTrue("Check that page contains RESET button element.",
-                Graphene.element(resetButton).isVisible().apply(driver));
-        assertTrue("Check that page contains AJAX button element.",
-                Graphene.element(ajaxButton).isVisible().apply(driver));
-        assertTrue("Check that page contains ALERT button element.",
-                Graphene.element(alertButton).isVisible().apply(driver));
-
-        assertTrue("Check that SUBMIT button type is submit (default).",
-                Graphene.attribute(submitButton, "type").valueEquals("submit").apply(driver));
-        assertTrue("Check that RESET button type is reset.",
-                Graphene.attribute(resetButton, "type").valueEquals("reset").apply(driver));
-        assertTrue("Check that AJAX button type is image.",
-                Graphene.attribute(ajaxButton, "type").valueEquals("image").apply(driver));
-        assertTrue("Check that ALERT button type is button.",
-                Graphene.attribute(alertButton, "type").valueEquals("button").apply(driver));
+    @Before
+    public void getNewSession() {
+        browser.manage().deleteAllCookies();
     }
 
     @Test
     @RunAsClient
-    public void testCommandButtonValue(@Drone WebDriver driver) throws Exception {
-        driver.get(portalURL.toString());
+    public void testCommandButtonTypes() throws Exception {
+        browser.get(portalURL.toString());
 
-        assertTrue("Check that SUBMIT button value is '" + CommandButtonBean.SUBMIT_LABEL + "'.",
-                Graphene.attribute(submitButton, "value").valueEquals(CommandButtonBean.SUBMIT_LABEL).apply(driver));
+        assertTrue("Page contains SUBMIT button.", page.getSubmitButton().isDisplayed());
+        assertTrue("Page contains RESET button element.", page.getResetButton().isDisplayed());
+        assertTrue("Page contains AJAX button element.", page.getAjaxButton().isDisplayed());
+        assertTrue("Page contains ALERT button element.", page.getAlertButton().isDisplayed());
+
+        assertEquals("SUBMIT button type is submit (default).", "submit", page.getSubmitButton().getAttribute("type"));
+        assertEquals("RESET button type is reset.", "reset", page.getResetButton().getAttribute("type"));
+        assertEquals("AJAX button type is image.", "image", page.getAjaxButton().getAttribute("type"));
+        assertEquals("ALERT button type is button.", "button", page.getAlertButton().getAttribute("type"));
     }
 
     @Test
     @RunAsClient
-    public void testCommandButtonAction(@Drone WebDriver driver) throws Exception {
-        driver.get(portalURL.toString());
+    public void testCommandButtonValue() throws Exception {
+        browser.get(portalURL.toString());
 
-        int oldValue = Integer.valueOf(outputText.getText());
-        int step = Integer.valueOf(inputText.getAttribute("value"));
-        submitButton.click();
-
-        assertTrue("New value should be " + oldValue + "+" + step + " = " + (oldValue + step),
-                Graphene.element(outputText).textEquals(new Integer(oldValue + step).toString()).apply(driver));
+        assertEquals("SUBMIT button value set", CommandButtonBean.SUBMIT_LABEL, page.getSubmitButton().getAttribute("value"));
     }
 
     @Test
     @RunAsClient
-    public void testCommandButtonReset(@Drone WebDriver driver) throws Exception {
-        driver.get(portalURL.toString());
+    public void testCommandButtonAction() throws Exception {
+        browser.get(portalURL.toString());
 
-        String oldText = inputText.getAttribute("value");
-        assertFalse("Check that INPUT text has a value at start.", oldText.equals(""));
+        int oldValue = Integer.valueOf(page.getOutputText().getText());
+        int step = Integer.valueOf(page.getInputText().getAttribute("value"));
+        page.getSubmitButton().click();
+
+        assertEquals("New value set", new Integer(oldValue + step).toString(), page.getOutputText().getText());
+    }
+
+    @Test
+    @RunAsClient
+    public void testCommandButtonReset() throws Exception {
+        browser.get(portalURL.toString());
+
+        String oldText = page.getInputText().getAttribute("value");
+        assertFalse("INPUT text has a value at start.", oldText.equals(""));
 
         String addedText = "00";
-        inputText.sendKeys(addedText);
-        assertTrue("Check that INPUT text has a changed value after inputting '" + addedText + "'.",
-                Graphene.attribute(inputText, "value").valueEquals(oldText + addedText).apply(driver));
+        page.getInputText().sendKeys(addedText);
+        assertEquals("INPUT text has changed after inputting ", oldText + addedText, page.getInputText().getAttribute("value"));
 
-        resetButton.click();
-        assertTrue("Check that INPUT text has old value after RESET.",
-                Graphene.attribute(inputText, "value").valueEquals(oldText).apply(driver));
+        page.getResetButton().click();
+        assertEquals("INPUT text has old value after RESET.", oldText, page.getInputText().getAttribute("value"));
     }
 
     @Test
     @RunAsClient
-    public void testCommandButtonSubmit(@Drone WebDriver driver) throws Exception {
-        driver.get(portalURL.toString());
+    public void testCommandButtonSubmit() throws Exception {
+        browser.get(portalURL.toString());
 
-        int oldStep = Integer.valueOf(inputText.getAttribute("value"));
+        int oldStep = Integer.valueOf(page.getInputText().getAttribute("value"));
         int newStep = oldStep + 2; // just to make sure it's not the same
-        inputText.sendKeys("\u0008"); // delete
-        inputText.sendKeys(String.valueOf(newStep)); // set to new value
+        page.getInputText().clear();
+        page.getInputText().sendKeys(String.valueOf(newStep)); // set to new value
 
-        int oldValue = Integer.valueOf(outputText.getText());
-        submitButton.click();
+        int oldValue = Integer.valueOf(page.getOutputText().getText());
+        page.getSubmitButton().click();
 
-        assertTrue("New value for Step should be " + newStep,
-                Graphene.attribute(inputText, "value").valueEquals(String.valueOf(newStep)).apply(driver));
-        assertTrue("New value should be " + oldValue + "+" + newStep + " = " + (oldValue + newStep),
-                Graphene.element(outputText).textEquals(String.valueOf(oldValue + newStep)).apply(driver));
+        assertEquals("New value on input text.", String.valueOf(newStep), page.getInputText().getAttribute("value"));
+        assertEquals("New value on output text", String.valueOf(oldValue + newStep), page.getOutputText().getText());
     }
 
     @Test
     @RunAsClient
-    public void testCommandButtonOnClickJS(@Drone WebDriver driver) throws Exception {
+    public void testCommandButtonOnClickJS() throws Exception {
         // this test fails with HtmlUnitDriver as there's no alert() support
-        if(driver instanceof HtmlUnitDriver) {
+        if (browser instanceof HtmlUnitDriver) {
             return;
         }
 
-        driver.get(portalURL.toString());
+        browser.get(portalURL.toString());
 
         // click the submit a few times ...
-        for(int i = 0; i < 3; i++) {
-            submitButton.click();
+        for (int i = 0; i < 3; i++) {
+            page.getSubmitButton().click();
         }
 
-        String curValue = outputText.getText();
-        alertButton.click();
+        String curValue = page.getOutputText().getText();
+        page.getAlertButton().click();
 
-        assertEquals("Check that Alert text is: " + "Current Value is " + curValue,
-                "Current Value is " + curValue, driver.switchTo().alert().getText());
+        assertEquals("Alert text correct", curValue, browser.switchTo().alert().getText());
     }
 
     @Test
     @RunAsClient
-    public void testCommandButtonAjax(@Drone WebDriver driver) throws Exception {
-        driver.get(portalURL.toString());
+    public void testCommandButtonAjax() throws Exception {
+        browser.get(portalURL.toString());
 
-        // FIXME: Ajax only works after one *real* submit...
-        submitButton.click();
-
-        String curURL = driver.getCurrentUrl();
-
-        int oldValue = Integer.valueOf(outputText.getText());
-        int step = Integer.valueOf(inputText.getAttribute("value"));
+        int oldValue = Integer.valueOf(page.getOutputText().getText());
+        int step = Integer.valueOf(page.getInputText().getAttribute("value"));
 
         // click the ajax button a few times ...
         int nTimes = 4;
         for (int i = 0; i < nTimes; i++) {
-            String oldText = outputText.getText();
-            ajaxButton.click();
-            waitGui(driver).until(element(outputText).not().textEquals(oldText));
+            String oldText = page.getOutputText().getText();
+            guardXhr(page.getAjaxButton()).click();
+            assertNotSame("Output Text set to new value", oldText, page.getOutputText().getText());
         }
 
-        assertTrue("New value should be " + oldValue + "+" + step + "*" + nTimes + " = " + (oldValue + step * nTimes),
-                Graphene.element(outputText).textEquals(String.valueOf(oldValue + step * nTimes)).apply(driver));
+        assertEquals("New value set after loop", String.valueOf(oldValue + step * nTimes), page.getOutputText().getText());
 
-        assertEquals("Check that URL is the same as this is an ajax request.", curURL, driver.getCurrentUrl());
+        assertEquals("Verify url the same.", portalURL.toString(), browser.getCurrentUrl());
     }
 }

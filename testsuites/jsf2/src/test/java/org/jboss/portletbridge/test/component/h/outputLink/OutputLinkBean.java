@@ -2,6 +2,7 @@ package org.jboss.portletbridge.test.component.h.outputLink;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 
 @ManagedBean(name = "outputLinkBean")
 @SessionScoped
@@ -9,8 +10,6 @@ public class OutputLinkBean {
 
     public static final String OUTPUT_LINK_ONE = "exit.xhtml";
     public static final String OUTPUT_LINK_ONE_TEXT = "Exit";
-
-    public static boolean OUTPUT_LINK_RENDER = true;
 
     private String linkOne = OUTPUT_LINK_ONE;
     private String linkOneText = OUTPUT_LINK_ONE_TEXT;
@@ -20,7 +19,7 @@ public class OutputLinkBean {
     }
 
     public String getLinkOne() {
-        return linkOne;
+        return FacesContext.getCurrentInstance().getExternalContext().encodeActionURL(linkOne);
     }
 
     public int getLinkOneLength() {
@@ -35,8 +34,8 @@ public class OutputLinkBean {
         this.linkOneText = linkOneText;
     }
 
-    public boolean getOutputLinkRender() {
-        return OUTPUT_LINK_RENDER;
+    public String getLinkThree() {
+        return FacesContext.getCurrentInstance().getExternalContext().encodeActionURL("outputLink.xhtml");
     }
 
 }

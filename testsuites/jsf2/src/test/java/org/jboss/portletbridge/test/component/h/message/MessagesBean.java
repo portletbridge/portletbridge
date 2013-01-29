@@ -6,24 +6,25 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
+import java.io.Serializable;
 
 @ManagedBean(name = "msgsBean")
 @SessionScoped
-public class MessagesBean {
+public class MessagesBean implements Serializable {
 
     private String textOne = "";
     private String textTwo = "";
 
     // Message One Control (Defaults)
-    public static boolean RENDER_ONE = true;
-    public static boolean SHOW_DETAIL_ONE = true;
-    public static boolean SHOW_SUMMARY_ONE = false;
+    private boolean renderOne = true;
+    private boolean showDetailOne = true;
+    private boolean showSummaryOne = false;
 
     // Messages Control (Defaults)
-    public static boolean RENDER_MESSAGES = true;
-    public static boolean SHOW_DETAIL_MESSAGES = false;
-    public static boolean SHOW_SUMMARY_MESSAGES = true;
-    public static boolean GLOBAL_ONLY_MESSAGES = false;
+    private boolean renderMessages = true;
+    private boolean showDetailMessages = false;
+    private boolean showSummaryMessages = true;
+    private boolean globalOnlyMessages = false;
 
     public static final String ONE = "One";
     public static final String TWO = "Two";
@@ -41,10 +42,6 @@ public class MessagesBean {
 
     public static final String GLOBAL_SUMMARY = "Hello, Global World!";
     public static final String GLOBAL_DETAIL = "Global Detail";
-
-    public static final String HIDE = "HIDE ME";
-
-    public static final String NAMESPACE = FacesContext.getCurrentInstance().getExternalContext().encodeNamespace("");
 
     public String getTextOne() {
         return textOne;
@@ -64,32 +61,60 @@ public class MessagesBean {
 
     // Message Control Getters
     public boolean getRenderOne() {
-        return RENDER_ONE;
+        return renderOne;
+    }
+
+    public void setRenderOne(boolean renderOne) {
+        this.renderOne = renderOne;
     }
 
     public boolean getShowDetailOne() {
-        return SHOW_DETAIL_ONE;
+        return showDetailOne;
+    }
+
+    public void setShowDetailOne(boolean showDetailOne) {
+        this.showDetailOne = showDetailOne;
     }
 
     public boolean getShowSummaryOne() {
-        return SHOW_SUMMARY_ONE;
+        return showSummaryOne;
+    }
+
+    public void setShowSummaryOne(boolean showSummaryOne) {
+        this.showSummaryOne = showSummaryOne;
     }
 
     // Messages Control Getters
     public boolean getRenderMessages() {
-        return RENDER_MESSAGES;
+        return renderMessages;
+    }
+
+    public void setRenderMessages(boolean renderMessages) {
+        this.renderMessages = renderMessages;
     }
 
     public boolean getShowDetailMessages() {
-        return SHOW_DETAIL_MESSAGES;
+        return showDetailMessages;
+    }
+
+    public void setShowDetailMessages(boolean showDetailMessages) {
+        this.showDetailMessages = showDetailMessages;
     }
 
     public boolean getShowSummaryMessages() {
-        return SHOW_SUMMARY_MESSAGES;
+        return showSummaryMessages;
+    }
+
+    public void setShowSummaryMessages(boolean showSummaryMessages) {
+        this.showSummaryMessages = showSummaryMessages;
     }
 
     public boolean getGlobalOnlyMessages() {
-        return GLOBAL_ONLY_MESSAGES;
+        return globalOnlyMessages;
+    }
+
+    public void setGlobalOnlyMessages(boolean globalOnlyMessages) {
+        this.globalOnlyMessages = globalOnlyMessages;
     }
 
     public void validateOne(FacesContext context, UIComponent input, Object newValue) throws ValidatorException {
@@ -118,17 +143,6 @@ public class MessagesBean {
             FacesMessage msg = new FacesMessage(GLOBAL_SUMMARY, GLOBAL_DETAIL);
             context.addMessage(null, msg);
         }
-    }
-
-    public static void setDefaults() {
-        RENDER_ONE = true;
-        SHOW_DETAIL_ONE = true;
-        SHOW_SUMMARY_ONE = false;
-
-        RENDER_MESSAGES = true;
-        SHOW_DETAIL_MESSAGES = false;
-        SHOW_SUMMARY_MESSAGES = true;
-        GLOBAL_ONLY_MESSAGES = false;
     }
 
 }

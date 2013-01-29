@@ -29,6 +29,11 @@
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.gatein.pc</groupId>
+            <artifactId>pc-embed</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -40,7 +45,7 @@
 <!--           <argLine>-Djava.util.logging.config.file=${project.build.testOutputDirectory}/logging.properties</argLine> -->
                     <useSystemClassLoader>true</useSystemClassLoader>
                     <useManifestOnlyJar>false</useManifestOnlyJar>
-                    <forkMode>always</forkMode>
+                    <forkMode>once</forkMode>
                 </configuration>
             </plugin>
         </plugins>

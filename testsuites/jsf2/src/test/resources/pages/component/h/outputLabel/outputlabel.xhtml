@@ -1,15 +1,14 @@
 <f:view xmlns="http://www.w3.org/1999/xhtml"
     xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:ui="http://java.sun.com/jsf/facelets" xml:lang="en" lang="en">
+    xmlns:h="http://java.sun.com/jsf/html" xml:lang="en" lang="en">
 
     <h:head>
-        <h:outputStylesheet name="stylesheet.css" />
     </h:head>
 
     <h:body>
-        <h:outputLabel id="output1" value="${outputBean.textOne}" escape="#{outputBean.outputTextEscape}"
-            rendered="#{outputBean.outputTextRender}" />
+        <h:outputLabel id="outputEscaped" value="${outputBean.textOne}" escape="true" />
+        <h:outputLabel id="outputNotEscaped" value="${outputBean.textOne}" escape="false" />
+        <h:outputLabel id="outputNotRendered" value="${outputBean.textOne}" rendered="false" />
         <h:outputLabel id="output2" value="${outputBean.textOneLength}" converter="javax.faces.Float" />
     </h:body>
 </f:view>

@@ -21,14 +21,9 @@
  */
 package org.jboss.portletbridge.test;
 
-import static org.junit.Assert.assertTrue;
-
-import java.net.URL;
-
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
-import org.jboss.arquillian.graphene.Graphene;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
@@ -40,11 +35,16 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
+import java.net.URL;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 @RunWith(Arquillian.class)
 @PortalTest
 public class HelloJsfPortletTest {
 
-    @Deployment()
+    @Deployment
     public static WebArchive createDeployment() {
         return TestDeployment.createDeploymentWithAll()
                 .addAsWebResource("output.xhtml", "home.xhtml")
@@ -66,9 +66,8 @@ public class HelloJsfPortletTest {
     @RunAsClient
     public void renderFacesPortlet() throws Exception {
         driver.get(portalURL.toString());
-        assertTrue("Check that page contains output element", Graphene.element(outputField).isVisible().apply(driver));
-        assertTrue("Portlet should return: " + Bean.HELLO_JSF_PORTLET,
-                Graphene.element(outputField).textEquals(Bean.HELLO_JSF_PORTLET).apply(driver));
+        assertTrue("Check that page contains output element", outputField.isDisplayed());
+        assertEquals("Field has correct value set", Bean.HELLO_JSF_PORTLET, outputField.getText());
     }
 
 }

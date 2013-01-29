@@ -1,51 +1,50 @@
 <f:view xmlns="http://www.w3.org/1999/xhtml"
     xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:ui="http://java.sun.com/jsf/facelets" xml:lang="en" lang="en">
+    xmlns:h="http://java.sun.com/jsf/html" xml:lang="en" lang="en">
 
     <h:head>
-        <h:outputStylesheet name="stylesheet.css" />
     </h:head>
 
     <h:body>
         <h:form id="form1">
             <h:selectBooleanCheckbox id="sbcAccepted" value="#{selCheckboxBean.accepted}">
-                <f:ajax event="click" render=":form2" />
+                <f:ajax event="click" render="formData" />
             </h:selectBooleanCheckbox>
 			I have read and accept the conditions.<br />
-        </h:form>
-        <h:form id="form2">
-            <h:selectManyCheckbox id="smcGender" rendered="#{selCheckboxBean.accepted}" value="#{selCheckboxBean.gender}"
-                validator="#{selCheckboxBean.vGender}" required="true" requiredMessage="You must select a gender.">
-                <f:selectItem itemValue="male" itemLabel="Male" />
-                <f:selectItem itemValue="female" itemLabel="Female" />
-            </h:selectManyCheckbox>
 
-            <h:selectOneRadio id="sorAge" rendered="#{selCheckboxBean.accepted}" value="#{selCheckboxBean.ageGroup}">
-                <f:selectItems value="#{selCheckboxBean.ages}" />
-            </h:selectOneRadio>
+            <h:panelGrid id="formData">
+                <h:selectManyCheckbox id="smcGender" rendered="#{selCheckboxBean.accepted}" value="#{selCheckboxBean.gender}"
+                                      validator="#{selCheckboxBean.vGender}" required="true" requiredMessage="You must select a gender.">
+                    <f:selectItem itemValue="male" itemLabel="Male" />
+                    <f:selectItem itemValue="female" itemLabel="Female" />
+                </h:selectManyCheckbox>
 
-            <h:selectOneMenu id="somContinent" rendered="#{selCheckboxBean.accepted}" value="#{selCheckboxBean.continent}"
-                required="true" requiredMessage="Please select a valid continent."
-                validatorMessage="Please select a valid continent..">
-                <f:selectItem itemValue="no_continent" itemLabel="Select the continent you live at..." noSelectionOption="true" />
-                <f:selectItem itemValue="africa" itemLabel="Africa" />
-                <f:selectItem itemValue="america" itemLabel="America" />
-                <f:selectItem itemValue="asia" itemLabel="Asia" />
-                <f:selectItem itemValue="australia" itemLabel="Australia" />
-                <f:selectItem itemValue="europe" itemLabel="Europe" />
-            </h:selectOneMenu>
+                <h:selectOneRadio id="sorAge" rendered="#{selCheckboxBean.accepted}" value="#{selCheckboxBean.ageGroup}">
+                    <f:selectItems value="#{selCheckboxBean.ages}" />
+                </h:selectOneRadio>
 
-            <h:selectManyListbox id="smlColors" rendered="#{selCheckboxBean.accepted}" value="#{selCheckboxBean.favColors}">
-                <f:selectItems value="#{selCheckboxBean.colors}" />
-            </h:selectManyListbox>
+                <h:selectOneMenu id="somContinent" rendered="#{selCheckboxBean.accepted}" value="#{selCheckboxBean.continent}"
+                                 required="true" requiredMessage="Please select a valid continent."
+                                 validatorMessage="Please select a valid continent..">
+                    <f:selectItem itemValue="no_continent" itemLabel="Select the continent you live at..." noSelectionOption="true" />
+                    <f:selectItem itemValue="africa" itemLabel="Africa" />
+                    <f:selectItem itemValue="america" itemLabel="America" />
+                    <f:selectItem itemValue="asia" itemLabel="Asia" />
+                    <f:selectItem itemValue="australia" itemLabel="Australia" />
+                    <f:selectItem itemValue="europe" itemLabel="Europe" />
+                </h:selectOneMenu>
 
-            <h:commandButton id="submit" value="Submit" rendered="#{selCheckboxBean.accepted}" />
-            <h:commandButton id="ajax" value="Ajax" rendered="#{selCheckboxBean.accepted}">
-                <f:ajax execute="@all" render=":messages result" />
-            </h:commandButton>
-            <br />
-            <h:outputText id="result" value="#{selCheckboxBean.selectionString}" />
+                <h:selectManyListbox id="smlColors" rendered="#{selCheckboxBean.accepted}" value="#{selCheckboxBean.favColors}">
+                    <f:selectItems value="#{selCheckboxBean.colors}" />
+                </h:selectManyListbox>
+
+                <h:commandButton id="submit" value="Submit" rendered="#{selCheckboxBean.accepted}" action="#{selCheckboxBean.submit}" />
+                <h:commandButton id="ajax" value="Ajax" rendered="#{selCheckboxBean.accepted}" action="#{selCheckboxBean.submit}">
+                    <f:ajax execute="@form" render=":messages result" />
+                </h:commandButton>
+                <br />
+                <h:outputText id="result" value="#{selCheckboxBean.selectionString}" />
+            </h:panelGrid>
         </h:form>
         <h:messages id="messages" />
     </h:body>

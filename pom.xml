@@ -22,6 +22,9 @@
         <!-- RichFaces 4 versions -->
         <version.richfaces4>4.3.0.20121214-M3</version.richfaces4>
 
+        <!-- GateIn PC version -->
+        <version.gatein.pc>2.4.0.CR01</version.gatein.pc>
+
         <!-- Spec versions -->
         <version.portlet>2.0</version.portlet>
         <version.servlet2>2.5</version.servlet2>
@@ -32,12 +35,12 @@
 
         <!-- Testing versions -->
         <version.junit>4.10</version.junit>
-        <version.arquillian>1.0.2.Final</version.arquillian>
+        <version.arquillian>1.0.3.Final</version.arquillian>
         <version.shrinkwrap.descriptor>2.0.0-alpha-4</version.shrinkwrap.descriptor>
-        <version.shrinkwrap.resolver>2.0.0-alpha-6</version.shrinkwrap.resolver>
-        <version.arquillian.graphene>2.0.0.Alpha2</version.arquillian.graphene>
-        <version.arquillian.extension.portal>1.0.0.Alpha2</version.arquillian.extension.portal>
-        <version.gatein.portal.testing>1.0.0.Beta1</version.gatein.portal.testing>
+        <version.shrinkwrap.resolver>2.0.0-alpha-7</version.shrinkwrap.resolver>
+        <version.arquillian.graphene>2.0.0.Alpha3</version.arquillian.graphene>
+        <version.arquillian.extension.portal>1.0.0.Beta1</version.arquillian.extension.portal>
+        <version.gatein.portal.testing>1.0.0.Beta2</version.gatein.portal.testing>
         <version.pluto.portal.testing>1.0.0.Beta1</version.pluto.portal.testing>
         <version.jbossas7.container>7.1.1.Final</version.jbossas7.container>
 
@@ -179,12 +182,22 @@
                 <artifactId>arquillian-portal-impl</artifactId>
                 <version>${version.arquillian.extension.portal}</version>
             </dependency>
+            <dependency>
+                <groupId>org.jboss.arquillian.extension</groupId>
+                <artifactId>arquillian-portal-shrinkwrap-impl</artifactId>
+                <version>${version.arquillian.extension.portal}</version>
+            </dependency>
 
             <!-- GateIn Testing dependencies -->
             <dependency>
                 <groupId>org.jboss.portletbridge.testing.gatein</groupId>
                 <artifactId>gatein-arquillian-extension</artifactId>
                 <version>${version.gatein.portal.testing}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.gatein.pc</groupId>
+                <artifactId>pc-embed</artifactId>
+                <version>${version.gatein.pc}</version>
             </dependency>
 
             <!-- Pluto Testing dependencies -->
@@ -328,35 +341,39 @@
         </plugins>
     </build>
 
-  <!-- Reporting -->
-  <reporting>
-    <plugins>
+    <!-- Reporting -->
+    <reporting>
+        <plugins>
 
-      <!-- Cobertura (Code Coverage) -->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>cobertura-maven-plugin</artifactId>
-        <version>2.5.1</version>
-        <configuration>
-          <formats>
-            <format>html</format>
-            <format>xml</format>
-          </formats>
-        </configuration>
-      </plugin>
+            <!-- Cobertura (Code Coverage) -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <version>2.5.1</version>
+                <configuration>
+                    <check>
+                        <branchRate>85</branchRate>
+                        <lineRate>85</lineRate>
+                    </check>
+                    <formats>
+                        <format>html</format>
+                        <format>xml</format>
+                    </formats>
+                </configuration>
+            </plugin>
 
-      <!-- FindBugs -->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>findbugs-maven-plugin</artifactId>
-        <version>2.5.2</version>
-        <configuration>
-          <xmlOutput>true</xmlOutput>
-          <findbugsXmlOutputDirectory>target/site</findbugsXmlOutputDirectory>
-        </configuration>
-      </plugin>
+            <!-- FindBugs -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>2.5.2</version>
+                <configuration>
+                    <xmlOutput>true</xmlOutput>
+                    <findbugsXmlOutputDirectory>target/site</findbugsXmlOutputDirectory>
+                </configuration>
+            </plugin>
 
-    </plugins>
-  </reporting>
+        </plugins>
+    </reporting>
 
 </project>
