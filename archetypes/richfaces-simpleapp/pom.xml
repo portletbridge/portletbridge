@@ -3,7 +3,7 @@
 
     <parent>
         <groupId>org.jboss.portletbridge</groupId>
-        <version>3.2.0.Final-SNAPSHOT</version>
+        <version>3.2.0.Alpha2</version>
         <artifactId>archetypes</artifactId>
     </parent>
 
