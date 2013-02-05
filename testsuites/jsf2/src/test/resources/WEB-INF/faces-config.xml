@@ -12,9 +12,4 @@
             <var>messages</var>
         </resource-bundle>
     </application>
-    <managed-bean>
-        <managed-bean-name>bean</managed-bean-name>
-        <managed-bean-class>org.jboss.portletbridge.test.Bean</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
-    </managed-bean>
 </faces-config>

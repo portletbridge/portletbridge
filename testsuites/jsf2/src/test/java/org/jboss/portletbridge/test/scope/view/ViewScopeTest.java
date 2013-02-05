@@ -1,59 +1,70 @@
 package org.jboss.portletbridge.test.scope.view;
 
-import static org.junit.Assert.assertEquals;
-
-import java.net.URL;
-
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
+import org.jboss.arquillian.graphene.enricher.findby.FindBy;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
-import org.jboss.portletbridge.test.TestDeployment;
+import org.jboss.portletbridge.deployment.TestDeployment;
 import org.jboss.portletbridge.test.scopes.UserList;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.shrinkwrap.portal.api.PortletArchive;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
+
+import java.net.URL;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 @RunWith(Arquillian.class)
 @PortalTest
 public class ViewScopeTest {
 
-    @Deployment()
-    public static WebArchive createDeployment() {
-        return TestDeployment.createDeploymentWithAll()
-                .addAsWebResource("pages/scope/view/users.xhtml", "home.xhtml")
-                .addClass(UserList.class)
-                .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css");
+    @Deployment
+    public static PortletArchive createDeployment() {
+        TestDeployment deployment = new TestDeployment(ViewScopeTest.class, true);
+        deployment.archive()
+                .createFacesPortlet("ViewScope", "View Scope Portlet", "users.xhtml")
+                .addAsWebResource("pages/scope/view/users.xhtml", "users.xhtml")
+                .addClass(UserList.class);
+        return deployment.getFinalArchive();
     }
 
     @FindBy(xpath = "//tr[2]")
     private WebElement secondRow;
 
-    // FIXME: Only available in Graphene > 2.0.0.Alpha2
-    // @FindBy(xpath = "//tr")
-    // private List<WebElement> rows;
+    @FindBy(xpath = "//tr")
+    private List<WebElement> rows;
 
     @ArquillianResource
     @PortalURL
     URL portalURL;
 
     @Drone
-    WebDriver driver;
+    WebDriver browser;
+
+    @Before
+    public void getNewSession() {
+        browser.manage().deleteAllCookies();
+    }
 
     @Test
     @RunAsClient
     public void renderPostBackWithViewScope() throws Exception {
-        driver.get(portalURL.toString());
-        assertEquals("Check that table contains 6 rows", 6, /*rows*/driver.findElements(By.xpath("//tr")).size());
+        browser.get(portalURL.toString());
+
+        assertEquals("Check that table contains 6 rows.", 6, rows.size());
+
         secondRow.findElement(By.xpath("td/input")).click();
-        assertEquals("Check that table contains 5 rows", 5, /*rows*/driver.findElements(By.xpath("//tr")).size());
+
+        assertEquals("Check that table contains 5 rows.", 5, rows.size());
     }
 
 }

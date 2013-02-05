@@ -21,46 +21,48 @@
  */
 package org.jboss.portletbridge.test.facelet;
 
-import static org.junit.Assert.assertTrue;
-
-import java.net.URL;
-
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
-import org.jboss.arquillian.graphene.Graphene;
+import org.jboss.arquillian.graphene.enricher.findby.FindBy;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
-import org.jboss.portletbridge.test.TestDeployment;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.portletbridge.deployment.TestDeployment;
+import org.jboss.shrinkwrap.portal.api.PortletArchive;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
+
+import java.net.URL;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
 @PortalTest
 public class FaceletCompositionRemoveTest {
 
-    @Deployment()
-    public static WebArchive createDeployment() {
-        WebArchive wa = TestDeployment.createDeployment()
-                .addAsWebResource("pages/facelet/remove/main.xhtml", "home.xhtml");
-        TestDeployment.addWebXml(wa);
-        TestDeployment.addPortletXml(wa);
-        return wa;
+    @Deployment
+    public static PortletArchive createDeployment() {
+        TestDeployment deployment = new TestDeployment(FaceletCompositionRemoveTest.class, true);
+        deployment.archive()
+                .createFacesPortlet("FaceletCompositionRemove", "Facelet Composition Portlet", "main.xhtml")
+                .addAsWebResource("pages/facelet/remove/main.xhtml", "main.xhtml");
+        return deployment.getFinalArchive();
     }
 
-    @FindBy(xpath = "//h1[contains(@id,'header')]")
+    @FindBy(jquery = "[id$='portletHeader']")
     private WebElement header;
 
-    @FindBy(xpath = "//input[contains(@id,'unremoved')]")
+    @FindBy(jquery = "[id$='unremoved']")
     private WebElement buttonUnremoved;
 
-    @FindBy(xpath = "//input[contains(@id,'deleted')]")
+    @FindBy(jquery = "[id$='deleted']")
     private WebElement buttonRemoved;
 
     protected static final String headerContent = "UI:Remove";
@@ -68,24 +70,26 @@ public class FaceletCompositionRemoveTest {
     @ArquillianResource
     @PortalURL
     URL portalURL;
-    @Drone
-    WebDriver driver;
 
-    @Test
+    @Drone
+    WebDriver browser;
+
+    @Before
+    public void getNewSession() {
+        browser.manage().deleteAllCookies();
+    }
+
+    @Test(expected = NoSuchElementException.class)
     @RunAsClient
     public void testFaceletCompositionRemove() throws Exception {
-        driver.get(portalURL.toString());
+        browser.get(portalURL.toString());
 
-        assertTrue("Check that page contains header element.",
-                Graphene.element(header).isPresent().apply(driver));
+        assertTrue("Check that page contains header element.", header.isDisplayed());
 
-        assertTrue("Header should contain: " + headerContent,
-                Graphene.element(header).textEquals(headerContent).apply(driver));
+        assertEquals("Header valid content.", headerContent, header.getText());
 
-        assertTrue("Check that page contains unremoved element.",
-                Graphene.element(buttonUnremoved).isPresent().apply(driver));
+        assertTrue("Check that page contains unremoved element.", buttonUnremoved.isDisplayed());
 
-        assertTrue("Check that page does not contain removed element.",
-                Graphene.element(buttonRemoved).not().isPresent().apply(driver));
+        buttonRemoved.isDisplayed();
     }
 }

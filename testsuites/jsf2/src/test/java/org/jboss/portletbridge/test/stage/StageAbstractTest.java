@@ -22,38 +22,36 @@
 package org.jboss.portletbridge.test.stage;
 
 import org.jboss.arquillian.drone.api.annotation.Drone;
-import org.jboss.portletbridge.test.TestDeployment;
-import org.jboss.shrinkwrap.api.asset.StringAsset;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.arquillian.graphene.enricher.findby.FindBy;
+import org.jboss.portletbridge.deployment.TestDeployment;
 import org.jboss.shrinkwrap.descriptor.api.webapp30.WebAppDescriptor;
+import org.jboss.shrinkwrap.portal.api.PortletArchive;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
 
 public abstract class StageAbstractTest {
 
-    protected static String getWebXml(String value) {
-        WebAppDescriptor webConfig = TestDeployment.createWebXmlDescriptor();
+    protected static void getWebXml(WebAppDescriptor webConfig, String value) {
         webConfig.createContextParam()
                  .paramName("javax.faces.PROJECT_STAGE")
                  .paramValue(value);
-
-        return webConfig.exportAsString();
     }
 
-    protected static WebArchive createDeployment(String value) {
-         WebArchive wa = TestDeployment.createDeployment()
-                .addAsWebResource("pages/stage/main.xhtml", "home.xhtml")
-                .addAsWebInfResource(new StringAsset(getWebXml(value)), "web.xml");
-        TestDeployment.addFacesConfig(wa);
-        TestDeployment.addPortletXml(wa);
-        return wa;
+    public static PortletArchive createDeployment(Class<?> testClass, String value) {
+        TestDeployment deployment = new TestDeployment(testClass, true);
+
+        getWebXml(deployment.webXml(), value);
+
+        deployment.archive()
+                .createFacesPortlet(testClass.getSimpleName(), testClass.getSimpleName() + " Portlet", "main.xhtml")
+                .addAsWebResource("pages/stage/main.xhtml", "main.xhtml");
+        return deployment.getFinalArchive();
     }
 
     @FindBy(xpath = "//span[contains(@id,'outStage')]")
     protected WebElement label;
 
     @Drone
-    WebDriver driver;
+    WebDriver browser;
 
 }

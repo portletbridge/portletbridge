@@ -101,6 +101,7 @@
                             <useManifestOnlyJar>false</useManifestOnlyJar>
                             <excludes>
                                 <exclude>**/config/*Test.java</exclude>
+                                <exclude>**/exception/*Test.java</exclude>
                             </excludes>
                         </configuration>
                     </plugin>

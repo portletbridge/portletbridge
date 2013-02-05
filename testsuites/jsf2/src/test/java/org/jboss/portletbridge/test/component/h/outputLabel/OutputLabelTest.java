@@ -10,6 +10,7 @@ import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.portletbridge.deployment.TestDeployment;
 import org.jboss.shrinkwrap.portal.api.PortletArchive;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.NoSuchElementException;
@@ -43,6 +44,11 @@ public class OutputLabelTest {
 
     @Page
     OutputLabelPage page;
+
+    @Before
+    public void getNewSession() {
+        browser.manage().deleteAllCookies();
+    }
 
     @Test
     @RunAsClient

@@ -24,12 +24,16 @@ package org.jboss.portletbridge.test;
 import java.util.Date;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.validator.ValidatorException;
 
+@ManagedBean
+@RequestScoped
 public class Bean {
 
     public static final String ON_CHANGE_CALLED = "#{bean.onChange} called";

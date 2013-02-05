@@ -21,24 +21,23 @@
  */
 package org.jboss.portletbridge.test.component.h.message;
 
-import java.net.URL;
-
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
-import org.jboss.arquillian.graphene.Graphene;
 import org.jboss.arquillian.graphene.spi.annotations.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
-import org.jboss.portletbridge.test.TestDeployment;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.portletbridge.deployment.TestDeployment;
+import org.jboss.shrinkwrap.portal.api.PortletArchive;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
+
+import java.net.URL;
 
 import static org.junit.Assert.*;
 
@@ -46,12 +45,15 @@ import static org.junit.Assert.*;
 @PortalTest
 public class MessagesTest {
 
-    @Deployment()
-    public static WebArchive createDeployment() {
-        return TestDeployment.createDeploymentWithAll()
-                .addAsWebResource("pages/component/h/message/message.xhtml", "home.xhtml")
+    @Deployment
+    public static PortletArchive createDeployment() {
+        TestDeployment deployment = new TestDeployment(MessagesTest.class, true);
+        deployment.archive()
+                .createFacesPortlet("Messages", "Messages Portlet", "message.xhtml")
+                .addAsWebResource("pages/component/h/message/message.xhtml", "message.xhtml")
                 .addClass(MessagesBean.class)
                 .addClass(RenderActionBean.class);
+        return deployment.getFinalArchive();
     }
 
     @ArquillianResource

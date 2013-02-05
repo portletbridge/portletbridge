@@ -10,7 +10,7 @@ public class LinkBean {
     public static final String LINK_ONE = "exit";
     public static final String LINK_ONE_TEXT = "Exit";
 
-    public static boolean LINK_RENDER = true;
+    private boolean linkRender = true;
 
     private String linkOne = LINK_ONE;
     private String linkOneText = LINK_ONE_TEXT;
@@ -36,7 +36,10 @@ public class LinkBean {
     }
 
     public boolean getLinkRender() {
-        return LINK_RENDER;
+        return linkRender;
     }
 
+    public void setLinkRender(boolean linkRender) {
+        this.linkRender = linkRender;
+    }
 }

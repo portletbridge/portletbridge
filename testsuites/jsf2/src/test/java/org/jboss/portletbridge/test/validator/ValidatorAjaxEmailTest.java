@@ -21,37 +21,41 @@
  */
 package org.jboss.portletbridge.test.validator;
 
-import static org.jboss.arquillian.graphene.Graphene.element;
-import static org.jboss.arquillian.graphene.Graphene.waitAjax;
-import static org.junit.Assert.assertTrue;
-
-import java.net.URL;
-
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
-import org.jboss.arquillian.graphene.Graphene;
+import org.jboss.arquillian.graphene.enricher.findby.FindBy;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
-import org.jboss.portletbridge.test.TestDeployment;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.portletbridge.deployment.TestDeployment;
+import org.jboss.shrinkwrap.portal.api.PortletArchive;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
+
+import java.net.URL;
+
+import static org.jboss.arquillian.graphene.Graphene.guardHttp;
+import static org.jboss.arquillian.graphene.Graphene.guardXhr;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
 @PortalTest
 public class ValidatorAjaxEmailTest {
 
-    @Deployment()
-    public static WebArchive createDeployment() {
-        return TestDeployment.createDeploymentWithAll()
-                .addClass(LoginRegisterBean.class)
-                .addAsWebResource("pages/validator/mainAjax.xhtml", "home.xhtml");
+    @Deployment
+    public static PortletArchive createDeployment() {
+        TestDeployment deployment = new TestDeployment(ValidatorAjaxEmailTest.class, true);
+        deployment.archive()
+                .createFacesPortlet("ValidatorAjaxEmail", "Validator Ajax Email Portlet", "mainAjax.xhtml")
+                .addAsWebResource("pages/validator/mainAjax.xhtml", "mainAjax.xhtml")
+                .addClass(LoginRegisterBean.class);
+        return deployment.getFinalArchive();
     }
 
     protected static final String INPUT1 = "userEmail";
@@ -67,7 +71,12 @@ public class ValidatorAjaxEmailTest {
     URL portalURL;
 
     @Drone
-    WebDriver driver;
+    WebDriver browser;
+
+    @Before
+    public void getNewSession() {
+        browser.manage().deleteAllCookies();
+    }
 
     @FindBy(xpath = "//input[contains(@id,'userEmail')]")
     private WebElement inputField;
@@ -84,52 +93,45 @@ public class ValidatorAjaxEmailTest {
     @Test
     @RunAsClient
     public void testValidatorAjax() throws Exception {
-        driver.get(portalURL.toString());
+        browser.get(portalURL.toString());
 
-        assertTrue("Check that page contains output element", Graphene.element(label).isVisible().apply(driver));
-        assertTrue("Portlet should return: " + outLabelValue, Graphene.element(label).textEquals(outLabelValue).apply(driver));
+        assertTrue("Check that page contains output element!", label.isDisplayed());
+        assertEquals("Portlet output set.", outLabelValue, label.getText());
 
-        inputField.clear();
-        waitAjax(driver).until(element(outputField).textEquals("req"));
+        guardXhr(inputField).clear();
+        assertEquals("Output Field has required message", "req", outputField.getText());
 
         inputField.sendKeys(INPUT1);
         submitButton.click();
-        waitAjax(driver).until(element(outputField).textEquals(outInvalid));
-        assertTrue("Check that page after 1st submit contains output element",
-                Graphene.element(outputField).isVisible().apply(driver));
-        assertTrue("Portlet should 1st return: " + outInvalid,
-                Graphene.element(outputField).textEquals(outInvalid).apply(driver));
 
-        inputField.clear();
-        waitAjax(driver).until(element(outputField).textEquals("req"));
+        assertTrue("Check that page after 1st submit contains output element", outputField.isDisplayed());
+        assertEquals("Invalid message set.", outInvalid, outputField.getText());
+
+        guardXhr(inputField).clear();
+        assertEquals("Output Field has required message", "req", outputField.getText());
 
         inputField.sendKeys(INPUT2);
         submitButton.click();
-        waitAjax(driver).until(element(outputField).textEquals(outInvalid));
-        assertTrue("Check that page after 2nd submit contains output element",
-                Graphene.element(outputField).isVisible().apply(driver));
-        assertTrue("Portlet should 2nd return: " + outInvalid,
-                Graphene.element(outputField).textEquals(outInvalid).apply(driver));
 
-        inputField.clear();
-        waitAjax(driver).until(element(outputField).textEquals("req"));
+        assertTrue("Check that page after 2nd submit contains output element", outputField.isDisplayed());
+        assertEquals("Invalid message set.", outInvalid, outputField.getText());
+
+        guardXhr(inputField).clear();
+        assertEquals("Output Field has required message", "req", outputField.getText());
 
         inputField.sendKeys(INPUT3);
         submitButton.click();
-        waitAjax(driver).until(element(outputField).textEquals(outInvalid));
-        assertTrue("Check that page after 3rd submit contains output element",
-                Graphene.element(outputField).isVisible().apply(driver));
-        assertTrue("Portlet should 3rd return: " + outInvalid,
-                Graphene.element(outputField).textEquals(outInvalid).apply(driver));
 
-        inputField.clear();
-        waitAjax(driver).until(element(outputField).textEquals("req"));
+        assertTrue("Check that page after 3rd submit contains output element", outputField.isDisplayed());
+        assertEquals("Invalid message set.", outInvalid, outputField.getText());
+
+        guardXhr(inputField).clear();
+        assertEquals("Output Field has required message", "req", outputField.getText());
+
         inputField.sendKeys(INPUT4);
         submitButton.click();
-        waitAjax(driver).until(element(outputField).textEquals(""));
-        assertTrue("Check that page after 4th submit contains output element",
-                Graphene.element(outputField).isVisible().apply(driver));
-        assertTrue("Portlet should 4th return empty string",
-                Graphene.element(outputField).textEquals("").apply(driver));
+
+        assertTrue("Check that page after 4th submit contains output element", outputField.isDisplayed());
+        assertEquals("Empty string set.", "", outputField.getText());
     }
 }

@@ -4,9 +4,9 @@
  */
 package org.jboss.portletbridge.test.navigation;
 
-import java.io.Serializable;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import java.io.Serializable;
 
 /**
  *

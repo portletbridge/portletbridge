@@ -24,23 +24,23 @@ package org.jboss.portletbridge.test.config;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
-import org.jboss.arquillian.graphene.Graphene;
+import org.jboss.arquillian.graphene.enricher.findby.FindBy;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
-import org.jboss.portletbridge.test.TestDeployment;
-import org.jboss.shrinkwrap.api.asset.StringAsset;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.portletbridge.deployment.TestDeployment;
 import org.jboss.shrinkwrap.descriptor.api.webapp30.WebAppDescriptor;
+import org.jboss.shrinkwrap.portal.api.PortletArchive;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
 
 import java.net.URL;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -51,8 +51,10 @@ import static org.junit.Assert.assertTrue;
 public class WebXmlWithErrorPagesTest {
 
     @Deployment
-    public static WebArchive createFullWithErrorPagesDeployment() {
-        WebAppDescriptor webApp = TestDeployment.createWebXmlDescriptor();
+    public static PortletArchive createDeployment() {
+        TestDeployment deployment = new TestDeployment(WebXmlWithErrorPagesTest.class, true);
+
+        WebAppDescriptor webApp = deployment.webXml();
         webApp.createErrorPage()
                 .exceptionType("java.lang.Exception")
                 .location("/faces/error.xhtml")
@@ -62,10 +64,10 @@ public class WebXmlWithErrorPagesTest {
                 .location("/faces/error.xhtml")
                 .up();
 
-        return TestDeployment.createDeploymentWithFacesConfig()
-                .addAsWebInfResource(new StringAsset(TestDeployment.createPortletXmlDescriptor("fullAndErrorPages").exportAsString()), "portlet.xml")
-                .addAsWebInfResource(new StringAsset(webApp.exportAsString()), "web.xml")
-                .addAsWebResource("pages/config/header.xhtml", "home.xhtml");
+        deployment.archive()
+                .createFacesPortlet("WebXmlWithErrorPages", "WebXml With Error Pages Portlet", "header.xhtml")
+                .addAsWebResource("pages/config/header.xhtml", "header.xhtml");
+        return deployment.getFinalArchive();
     }
 
     @FindBy(id = "output")
@@ -78,14 +80,18 @@ public class WebXmlWithErrorPagesTest {
     @Drone
     WebDriver browser;
 
+    @Before
+    public void getNewSession() {
+        browser.manage().deleteAllCookies();
+    }
+
     @Test
     @RunAsClient
     public void webXmlFullWithErrorPages() throws Exception {
         browser.get(portalURL.toString());
 
-        assertTrue("Check that page contains output element", Graphene.element(output).isVisible().apply(browser));
+        assertTrue("Check that page contains output element.", output.isDisplayed());
 
-        assertTrue("output text should contain: Portlet",
-                Graphene.element(output).textEquals("Portlet").apply(browser));
+        assertEquals("Output text set.", "Portlet", output.getText());
     }
 }

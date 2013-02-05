@@ -21,25 +21,26 @@
  */
 package org.jboss.portletbridge.test;
 
-import static org.junit.Assert.assertTrue;
-
-import java.net.URL;
-
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
-import org.jboss.arquillian.graphene.Graphene;
+import org.jboss.arquillian.graphene.enricher.findby.FindBy;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.arquillian.junit.InSequence;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.portletbridge.deployment.TestDeployment;
+import org.jboss.shrinkwrap.portal.api.PortletArchive;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
+
+import java.net.URL;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
 @PortalTest
@@ -47,12 +48,14 @@ public class JsfFormSubmitTest {
 
     public static final String NEW_VALUE = "New Value";
 
-    @Deployment()
-    public static WebArchive createDeployment() {
-        return TestDeployment.createDeploymentWithAll()
-                .addClass(Bean.class)
-                .addAsWebResource("form.xhtml", "home.xhtml")
-                .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css");
+    @Deployment
+    public static PortletArchive createDeployment() {
+        TestDeployment deployment = new TestDeployment(JsfFormSubmitTest.class, true);
+        deployment.archive()
+                .createFacesPortlet("JsfFormSubmit", "JSF Form Portlet", "form.xhtml")
+                .addAsWebResource("pages/form.xhtml", "form.xhtml")
+                .addClass(Bean.class);
+        return deployment.getFinalArchive();
     }
 
     @FindBy(id = "output")
@@ -69,45 +72,43 @@ public class JsfFormSubmitTest {
     URL portalURL;
 
     @Drone
-    WebDriver driver;
+    WebDriver browser;
 
-    @Test
-    @InSequence(1)
-    @RunAsClient
-    public void renderFormPortlet() throws Exception {
-        driver.get(portalURL.toString());
-
-        assertTrue("output text should contain: " + Bean.HELLO_JSF_PORTLET,
-                Graphene.element(outputField).textEquals(Bean.HELLO_JSF_PORTLET).apply(driver));
-
-        assertTrue("input text should contain: " + Bean.HELLO_JSF_PORTLET,
-                Graphene.attribute(inputField, "value").valueEquals(Bean.HELLO_JSF_PORTLET).apply(driver));
-
-        assertTrue("Submit button value should be 'Ok'",
-                Graphene.attribute(submitButton, "value").valueEquals("Ok").apply(driver));
+    @Before
+    public void getNewSession() {
+        browser.manage().deleteAllCookies();
     }
 
     @Test
-    @InSequence(2)
+    @RunAsClient
+    public void renderFormPortlet() throws Exception {
+        browser.get(portalURL.toString());
+
+        assertEquals("Output text set.", Bean.HELLO_JSF_PORTLET, outputField.getText());
+
+        assertEquals("Input text set.", Bean.HELLO_JSF_PORTLET, inputField.getAttribute("value"));
+
+        assertEquals("Submit button value should be 'Ok'", "Ok", submitButton.getAttribute("value"));
+    }
+
+    @Test
     @RunAsClient
     public void testSubmitAndRemainOnPage() throws Exception {
-        driver.get(portalURL.toString());
+        browser.get(portalURL.toString());
+
         inputField.sendKeys(NEW_VALUE);
         submitButton.click();
 
-        assertTrue("output text should contain: " + NEW_VALUE,
-                Graphene.element(outputField).textContains(NEW_VALUE).apply(driver));
+        assertTrue("Output text updated.", outputField.getText().contains(NEW_VALUE));
 
-        assertTrue("input text should contain: " + NEW_VALUE,
-                Graphene.attribute(inputField, "value").valueContains(NEW_VALUE).apply(driver));
+        assertTrue("Input text updated.", inputField.getAttribute("value").contains(NEW_VALUE));
 
         // Re-render page
-        driver.get(portalURL.toString());
-        assertTrue("output text should contain: " + NEW_VALUE,
-                Graphene.element(outputField).textContains(NEW_VALUE).apply(driver));
+        browser.get(portalURL.toString());
 
-        assertTrue("input text should contain: " + NEW_VALUE,
-                Graphene.attribute(inputField, "value").valueContains(NEW_VALUE).apply(driver));
+        assertTrue("Output text unchanged.", outputField.getText().contains(NEW_VALUE));
+
+        assertTrue("Input text unchanged.", inputField.getAttribute("value").contains(NEW_VALUE));
     }
 
 }

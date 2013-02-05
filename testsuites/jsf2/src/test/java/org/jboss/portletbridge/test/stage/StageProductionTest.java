@@ -21,28 +21,28 @@
  */
 package org.jboss.portletbridge.test.stage;
 
-import static org.junit.Assert.assertTrue;
-
-import java.net.URL;
-
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
-import org.jboss.arquillian.graphene.Graphene;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.shrinkwrap.portal.api.PortletArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.net.URL;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
 @PortalTest
 public class StageProductionTest extends StageAbstractTest {
 
-    @Deployment()
-    public static WebArchive createDeployment() {
-        return createDeployment("Production");
+    @Deployment
+    public static PortletArchive createDeployment() {
+        return createDeployment(StageProductionTest.class, "Production");
     }
 
     @ArquillianResource
@@ -54,9 +54,10 @@ public class StageProductionTest extends StageAbstractTest {
     @Test
     @RunAsClient
     public void testStageProductionState() throws Exception {
-        driver.get(portalURL.toString());
-        assertTrue("Check that page contains output element.", Graphene.element(label).isVisible().apply(driver));
-        assertTrue("Portlet should return: " + outStage, Graphene.element(label).textEquals(outStage).apply(driver));
+        browser.get(portalURL.toString());
+
+        assertTrue("Check that page contains output element.", label.isDisplayed());
+        assertEquals("Portlet output set.", outStage, label.getText());
     }
 
 }

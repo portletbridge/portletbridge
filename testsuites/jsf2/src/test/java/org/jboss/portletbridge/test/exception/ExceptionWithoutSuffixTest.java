@@ -21,31 +21,28 @@
  */
 package org.jboss.portletbridge.test.exception;
 
-import static org.jboss.arquillian.graphene.Graphene.element;
-import static org.jboss.arquillian.graphene.Graphene.waitAjax;
-import static org.junit.Assert.assertTrue;
-
-import java.net.URL;
-
-import javax.faces.component.UpdateModelException;
-
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
-import org.jboss.arquillian.graphene.Graphene;
+import org.jboss.arquillian.graphene.enricher.findby.FindBy;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
-import org.jboss.portletbridge.test.TestDeployment;
-import org.jboss.shrinkwrap.api.asset.StringAsset;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.portletbridge.deployment.TestDeployment;
 import org.jboss.shrinkwrap.descriptor.api.webapp30.WebAppDescriptor;
+import org.jboss.shrinkwrap.portal.api.PortletArchive;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
+
+import javax.faces.component.UpdateModelException;
+import java.net.URL;
+
+import static org.jboss.arquillian.graphene.Graphene.*;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
 @PortalTest
@@ -54,34 +51,31 @@ public class ExceptionWithoutSuffixTest {
     public static final String NEW_VALUE = "New Value";
 
     @Deployment
-    public static WebArchive createDeployment() {
-        WebArchive wa = TestDeployment.createDeployment()
-                .addAsWebResource("pages/exception/test.xhtml", "home.xhtml")
+    public static PortletArchive createDeployment() {
+        TestDeployment deployment = new TestDeployment(ExceptionWithoutSuffixTest.class, true);
+        getWebXml(deployment.webXml());
+        deployment.archive()
+                .createFacesPortlet("ExceptionWithoutSuffix", "Exception With Suffix Portlet", "test.xhtml")
+                .addAsWebResource("pages/exception/test.xhtml", "test.xhtml")
                 .addAsWebResource("pages/exception/error.xhtml", "updateModelException.xhtml")
-                .addAsWebInfResource(new StringAsset(getWebXml()), "web.xml")
                 .addClass(ExceptionBean.class);
-        TestDeployment.addFacesConfig(wa);
-        TestDeployment.addPortletXml(wa);
-        return wa;
+        return deployment.getFinalArchive();
     }
 
-    private static String getWebXml() {
-        WebAppDescriptor webConfig = TestDeployment.createWebXmlDescriptor();
+    private static void getWebXml(WebAppDescriptor webConfig) {
         webConfig.createErrorPage()
-        .exceptionType(UpdateModelException.class.getName())
-        .location("/updateModelException.jsf")
-        .up();
-
-        return webConfig.exportAsString();
+            .exceptionType(UpdateModelException.class.getName())
+            .location("/updateModelException.jsf")
+            .up();
     }
 
-    @FindBy(xpath = "//input[@type='text']")
+    @FindBy(jquery = "[id$=':in']")
     private WebElement inputField;
 
-    @FindBy(xpath = "//input[@type='submit']")
+    @FindBy(jquery = "[id$=':sub']")
     private WebElement submitButton;
 
-    @FindBy(id = "heading")
+    @FindBy(id = "errorHeading")
     private WebElement heading;
 
     @ArquillianResource
@@ -89,19 +83,23 @@ public class ExceptionWithoutSuffixTest {
     URL portalURL;
 
     @Drone
-    WebDriver driver;
+    WebDriver browser;
 
+    @Before
+    public void getNewSession() {
+        browser.manage().deleteAllCookies();
+    }
+
+    //FIXME Although testing the deployment separately results in the page being displayed, for some reason
+    // we're not able to see the updated content in test method
     @Test
     @RunAsClient
     public void testErrorPageWithoutDefaultSuffixSet() throws Exception {
-        driver.get(portalURL.toString());
+        browser.get(portalURL.toString());
         inputField.sendKeys(NEW_VALUE);
         submitButton.click();
 
-        waitAjax(driver).until(element(heading).isPresent());
-
-        assertTrue("Should have redirected to error page",
-                Graphene.element(heading).textContains("UpdateModelException").apply(driver));
+        assertTrue("Should have redirected to error page.", heading.getText().contains("UpdateModelException"));
     }
 
 }

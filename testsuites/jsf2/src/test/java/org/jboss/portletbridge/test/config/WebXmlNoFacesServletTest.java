@@ -24,24 +24,22 @@ package org.jboss.portletbridge.test.config;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
-import org.jboss.arquillian.graphene.Graphene;
+import org.jboss.arquillian.graphene.enricher.findby.FindBy;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
-import org.jboss.portletbridge.test.TestDeployment;
-import org.jboss.shrinkwrap.api.asset.StringAsset;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.descriptor.api.Descriptors;
-import org.jboss.shrinkwrap.descriptor.api.webapp30.WebAppDescriptor;
+import org.jboss.portletbridge.deployment.TestDeployment;
+import org.jboss.shrinkwrap.portal.api.PortletArchive;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
 
 import java.net.URL;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -52,11 +50,13 @@ import static org.junit.Assert.assertTrue;
 public class WebXmlNoFacesServletTest {
 
     @Deployment
-    public static WebArchive createWebXmlNoFacesDeployment() {
-        return TestDeployment.createDeploymentWithFacesConfig()
-                .addAsWebInfResource(new StringAsset(TestDeployment.createPortletXmlDescriptor("webXmlNoFacesServlet").exportAsString()), "portlet.xml")
-                .addAsWebInfResource(new StringAsset(buildPlainWebXml().exportAsString()), "web.xml")
-                .addAsWebResource("pages/config/header.xhtml", "home.xhtml");
+    public static PortletArchive createDeployment() {
+        TestDeployment deployment = new TestDeployment(WebXmlNoFacesServletTest.class, false);
+        deployment.webXml();
+        deployment.archive()
+                .createFacesPortlet("WebXmlNoFacesServlet", "Web Xml No Faces Servlet Portlet", "header.xhtml")
+                .addAsWebResource("pages/config/header.xhtml", "header.xhtml");
+        return deployment.getFinalArchive();
     }
 
     @FindBy(id = "output")
@@ -69,21 +69,18 @@ public class WebXmlNoFacesServletTest {
     @Drone
     WebDriver browser;
 
+    @Before
+    public void getNewSession() {
+        browser.manage().deleteAllCookies();
+    }
+
     @Test
     @RunAsClient
     public void webXmlWithNoFacesServlet() throws Exception {
         browser.get(portalURL.toString());
 
-        assertTrue("Check that page contains output element", Graphene.element(output).isVisible().apply(browser));
+        assertTrue("Check that page contains output element", output.isDisplayed());
 
-        assertTrue("output text should contain: Portlet",
-                Graphene.element(output).textEquals("Portlet").apply(browser));
-    }
-
-    private static WebAppDescriptor buildPlainWebXml() {
-        WebAppDescriptor webApp = Descriptors.create(WebAppDescriptor.class);
-        webApp.addDefaultNamespaces()
-              .version("3.0");
-        return webApp;
+        assertEquals("Output text set.", "Portlet", output.getText());
     }
 }

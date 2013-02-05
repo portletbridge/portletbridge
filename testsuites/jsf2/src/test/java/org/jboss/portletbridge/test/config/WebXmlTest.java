@@ -24,21 +24,22 @@ package org.jboss.portletbridge.test.config;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
-import org.jboss.arquillian.graphene.Graphene;
+import org.jboss.arquillian.graphene.enricher.findby.FindBy;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
-import org.jboss.portletbridge.test.TestDeployment;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.portletbridge.deployment.TestDeployment;
+import org.jboss.shrinkwrap.portal.api.PortletArchive;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
 
 import java.net.URL;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -49,9 +50,12 @@ import static org.junit.Assert.assertTrue;
 public class WebXmlTest {
 
     @Deployment
-    public static WebArchive createDeploymentWithFacesConfigAndPortletXml() {
-        return TestDeployment.createDeploymentWithAll()
-                .addAsWebResource("pages/config/header.xhtml", "home.xhtml");
+    public static PortletArchive createDeployment() {
+        TestDeployment deployment = new TestDeployment(WebXmlTest.class, true);
+        deployment.archive()
+                .createFacesPortlet("WebXml", "WebXml Portlet", "header.xhtml")
+                .addAsWebResource("pages/config/header.xhtml", "header.xhtml");
+        return deployment.getFinalArchive();
     }
 
     @FindBy(id = "output")
@@ -64,14 +68,18 @@ public class WebXmlTest {
     @Drone
     private WebDriver browser;
 
+    @Before
+    public void getNewSession() {
+        browser.manage().deleteAllCookies();
+    }
+
     @Test
     @RunAsClient
     public void webXmlFull() throws Exception {
         browser.get(portalURL.toString());
 
-        assertTrue("Check that page contains output element", Graphene.element(output).isVisible().apply(browser));
+        assertTrue("Check that page contains output element", output.isDisplayed());
 
-        assertTrue("output text should contain: Portlet",
-                Graphene.element(output).textEquals("Portlet").apply(browser));
+        assertEquals("Output text set", "Portlet", output.getText());
     }
 }

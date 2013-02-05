@@ -21,35 +21,39 @@
  */
 package org.jboss.portletbridge.test.validator;
 
-import static org.junit.Assert.assertTrue;
-
-import java.net.URL;
-
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
-import org.jboss.arquillian.graphene.Graphene;
+import org.jboss.arquillian.graphene.enricher.findby.FindBy;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
-import org.jboss.portletbridge.test.TestDeployment;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.portletbridge.deployment.TestDeployment;
+import org.jboss.shrinkwrap.portal.api.PortletArchive;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
+
+import java.net.URL;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
 @PortalTest
 public class ValidatorEmailTest {
 
-    @Deployment()
-    public static WebArchive createDeployment() {
-        return TestDeployment.createDeploymentWithAll()
-                .addClass(LoginRegisterBean.class)
-                .addAsWebResource("pages/validator/main.xhtml", "home.xhtml");
+    @Deployment
+    public static PortletArchive createDeployment() {
+        TestDeployment deployment = new TestDeployment(ValidatorEmailTest.class, true);
+        deployment.archive()
+                .createFacesPortlet("ValidatorEmail", "Validator Email Portlet", "main.xhtml")
+                .addAsWebResource("pages/validator/main.xhtml", "main.xhtml")
+                .addClass(LoginRegisterBean.class);
+        return deployment.getFinalArchive();
     }
 
     protected static final String INPUT1 = "userEmail";
@@ -65,7 +69,12 @@ public class ValidatorEmailTest {
     URL portalURL;
 
     @Drone
-    WebDriver driver;
+    WebDriver browser;
+
+    @Before
+    public void getNewSession() {
+        browser.manage().deleteAllCookies();
+    }
 
     @FindBy(xpath = "//input[contains(@id,'userEmail')]")
     private WebElement inputField;
@@ -82,44 +91,38 @@ public class ValidatorEmailTest {
     @Test
     @RunAsClient
     public void testValidator() throws Exception {
-        driver.get(portalURL.toString());
+        browser.get(portalURL.toString());
 
-        assertTrue("Check that page contains output element!",
-                Graphene.element(label).isVisible().apply(driver));
-        assertTrue("Portlet should return: " + outLabelValue,
-                Graphene.element(label).textEquals(outLabelValue).apply(driver));
+        assertTrue("Check that page contains output element!", label.isDisplayed());
+        assertEquals("Portlet output set.", outLabelValue, label.getText());
 
         inputField.clear();
         inputField.sendKeys(INPUT1);
         submitButton.click();
-        assertTrue("Check that page after 1st submit contains output element",
-                Graphene.element(outputField).isVisible().apply(driver));
-        assertTrue("Portlet should 1st return: " + outInvalid,
-                Graphene.element(outputField).textEquals(outInvalid).apply(driver));
+
+        assertTrue("Check that page after 1st submit contains output element", outputField.isDisplayed());
+        assertEquals("Invalid message set.", outInvalid, outputField.getText());
 
         inputField.clear();
         inputField.sendKeys(INPUT2);
         submitButton.click();
-        assertTrue("Check that page after 2nd submit contains output element",
-                Graphene.element(outputField).isVisible().apply(driver));
-        assertTrue("Portlet should 2nd return: " + outInvalid,
-                Graphene.element(outputField).textEquals(outInvalid).apply(driver));
+
+        assertTrue("Check that page after 2nd submit contains output element", outputField.isDisplayed());
+        assertEquals("Invalid message set.", outInvalid, outputField.getText());
 
         inputField.clear();
         inputField.sendKeys(INPUT3);
         submitButton.click();
-        assertTrue("Check that page after 3rd submit contains output element",
-                Graphene.element(outputField).isVisible().apply(driver));
-        assertTrue("Portlet should 3rd return: " + outInvalid,
-                Graphene.element(outputField).textEquals(outInvalid).apply(driver));
+
+        assertTrue("Check that page after 3rd submit contains output element", outputField.isDisplayed());
+        assertEquals("Invalid message set.", outInvalid, outputField.getText());
 
         inputField.clear();
         inputField.sendKeys(INPUT4);
         submitButton.click();
-        assertTrue("Check that page after 4th submit contains output element",
-                Graphene.element(outputField).isVisible().apply(driver));
-        assertTrue("Portlet should 4th return empty string",
-                Graphene.element(outputField).textEquals("").apply(driver));
+
+        assertTrue("Check that page after 4th submit contains output element", outputField.isDisplayed());
+        assertEquals("Empty string set.", "", outputField.getText());
     }
 
 

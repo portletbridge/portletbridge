@@ -24,16 +24,18 @@ package org.jboss.portletbridge.test;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
+import org.jboss.arquillian.graphene.enricher.findby.FindBy;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.portletbridge.deployment.TestDeployment;
+import org.jboss.shrinkwrap.portal.api.PortletArchive;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
 
 import java.net.URL;
 
@@ -45,11 +47,13 @@ import static org.junit.Assert.assertTrue;
 public class HelloJsfPortletTest {
 
     @Deployment
-    public static WebArchive createDeployment() {
-        return TestDeployment.createDeploymentWithAll()
-                .addAsWebResource("output.xhtml", "home.xhtml")
-                .addClass(Bean.class)
-                .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css");
+    public static PortletArchive createDeployment() {
+        TestDeployment deployment = new TestDeployment(HelloJsfPortletTest.class, true);
+        deployment.archive()
+                .createFacesPortlet("HelloJsfPortlet", "Hello JSF Portlet", "output.xhtml")
+                .addAsWebResource("pages/output.xhtml", "output.xhtml")
+                .addClass(Bean.class);
+        return deployment.getFinalArchive();
     }
 
     @FindBy(id = "output")
@@ -60,12 +64,18 @@ public class HelloJsfPortletTest {
     URL portalURL;
 
     @Drone
-    WebDriver driver;
+    WebDriver browser;
+
+    @Before
+    public void getNewSession() {
+        browser.manage().deleteAllCookies();
+    }
 
     @Test
     @RunAsClient
     public void renderFacesPortlet() throws Exception {
-        driver.get(portalURL.toString());
+        browser.get(portalURL.toString());
+
         assertTrue("Check that page contains output element", outputField.isDisplayed());
         assertEquals("Field has correct value set", Bean.HELLO_JSF_PORTLET, outputField.getText());
     }

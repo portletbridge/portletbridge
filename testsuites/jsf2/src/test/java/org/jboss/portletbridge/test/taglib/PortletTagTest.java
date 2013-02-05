@@ -21,46 +21,40 @@
  */
 package org.jboss.portletbridge.test.taglib;
 
-import static org.junit.Assert.assertTrue;
-
-import java.net.URL;
-
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
-import org.jboss.arquillian.graphene.Graphene;
+import org.jboss.arquillian.graphene.enricher.findby.FindBy;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
-import org.jboss.portletbridge.test.TestDeployment;
-import org.jboss.shrinkwrap.api.asset.StringAsset;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.descriptor.api.Descriptors;
-import org.jboss.shrinkwrap.descriptor.api.facesconfig20.FacesConfigVersionType;
-import org.jboss.shrinkwrap.descriptor.api.facesconfig21.WebFacesConfigDescriptor;
+import org.jboss.portletbridge.deployment.TestDeployment;
+import org.jboss.shrinkwrap.portal.api.PortletArchive;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
+
+import java.net.URL;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
 @PortalTest
 public class PortletTagTest {
 
-    @Deployment()
-    public static WebArchive createDeployment() {
-        return TestDeployment.createDeploymentWithWebXmlAndPortletXml()
-                .addAsWebResource("taglib/tags.xhtml", "home.xhtml")
-                .addAsWebResource("taglib/edit.xhtml", "edit.xhtml")
-                .addAsWebInfResource(new StringAsset(getFacesConfig()), "faces-config.xml");
-    }
+    @Deployment
+    public static PortletArchive createDeployment() {
+        TestDeployment deployment = new TestDeployment(PortletTagTest.class, true);
 
-    private static String getFacesConfig() {
-        WebFacesConfigDescriptor facesConfig = Descriptors.create(WebFacesConfigDescriptor.class);
-        facesConfig.addDefaultNamespaces().version(FacesConfigVersionType._2_1).name("TagTest");
-        return facesConfig.exportAsString();
+        deployment.archive()
+                .createFacesPortlet("PortletTags", "Tags Portlet", "tags.xhtml", "edit.xhtml")
+                .addAsWebResource("taglib/tags.xhtml", "tags.xhtml")
+                .addAsWebResource("taglib/edit.xhtml", "edit.xhtml");
+        return deployment.getFinalArchive();
     }
 
     @FindBy(id = "spanId")
@@ -80,16 +74,21 @@ public class PortletTagTest {
     URL portalURL;
 
     @Drone
-    WebDriver driver;
+    WebDriver browser;
+
+    @Before
+    public void getNewSession() {
+        browser.manage().deleteAllCookies();
+    }
 
     @Test
     @RunAsClient
     public void testNamespace() throws Exception {
-        driver.get(portalURL.toString());
+        browser.get(portalURL.toString());
 
-        assertTrue("spanId text should contain: spanId",
-                Graphene.element(spanField).textEquals("spanId").apply(driver));
-        // TODO Figure out how to retrieve the namespace during driver.get call
+        assertEquals("spanId text set.", "spanId", spanField.getText());
+
+        // TODO Figure out how to retrieve the namespace during browser.get call
         //      so that it can be compared against what is in field
         assertTrue("namespaceSpanId text length should be greater than spanId",
                 namespaceSpanField.getText().length() > "spanId".length());
@@ -98,19 +97,16 @@ public class PortletTagTest {
     @Test
     @RunAsClient
     public void testRenderUrl() throws Exception {
-        driver.get(portalURL.toString());
+        browser.get(portalURL.toString());
 
-        assertTrue("Should be in Portlet Mode view",
-                Graphene.element(modeNameField).textEquals("View").apply(driver));
-
-        renderLink.click();
-
-        assertTrue("Should be in Portlet Mode view",
-                Graphene.element(modeNameField).textEquals("Edit").apply(driver));
+        assertEquals("Should be in Portlet Mode view.", "View", modeNameField.getText());
 
         renderLink.click();
 
-        assertTrue("Should be in Portlet Mode view",
-                Graphene.element(modeNameField).textEquals("View").apply(driver));
+        assertEquals("Should be in Portlet Mode edit.", "Edit", modeNameField.getText());
+
+        renderLink.click();
+
+        assertEquals("Should be in Portlet Mode view.", "View", modeNameField.getText());
     }
 }

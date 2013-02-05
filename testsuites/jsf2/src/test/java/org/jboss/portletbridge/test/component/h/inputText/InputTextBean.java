@@ -2,6 +2,7 @@ package org.jboss.portletbridge.test.component.h.inputText;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ValueChangeEvent;
 
 @ManagedBean(name = "inputBean")
@@ -37,6 +38,10 @@ public class InputTextBean {
 
     public void onChange(ValueChangeEvent e) {
         textOneCount = textOne.length();
+        textTwoCount = textTwo.length();
+    }
+
+    public void ajaxListener(AjaxBehaviorEvent event) {
         textTwoCount = textTwo.length();
     }
 

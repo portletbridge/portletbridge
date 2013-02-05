@@ -21,25 +21,26 @@
  */
 package org.jboss.portletbridge.test.scope.flash;
 
-import static org.junit.Assert.assertTrue;
-
-import java.net.URL;
-
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
-import org.jboss.arquillian.graphene.Graphene;
+import org.jboss.arquillian.graphene.enricher.findby.FindBy;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
-import org.jboss.portletbridge.test.TestDeployment;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.portletbridge.deployment.TestDeployment;
+import org.jboss.shrinkwrap.portal.api.PortletArchive;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
+
+import java.net.URL;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
@@ -48,27 +49,26 @@ import org.openqa.selenium.support.FindBy;
 @PortalTest
 public class FlashScopeTest {
 
-    @Deployment()
-    public static WebArchive createDeployment() {
-        WebArchive wa = TestDeployment.createDeployment()
+    @Deployment
+    public static PortletArchive createDeployment() {
+        TestDeployment deployment = new TestDeployment(FlashScopeTest.class, true);
+        deployment.archive()
+                .createFacesPortlet("FlashScope", "Flash Scope Portlet", "home.xhtml")
                 .addAsWebResource("pages/scope/flash/home.xhtml", "home.xhtml")
                 .addAsWebResource("pages/scope/flash/done.xhtml", "done.xhtml")
                 .addClass(RequestBean.class);
-        TestDeployment.addWebXml(wa);
-        TestDeployment.addFacesConfig(wa);
-        TestDeployment.addPortletXml(wa);
-        return wa;
+        return deployment.getFinalArchive();
     }
 
     protected static final String NEW_VALUE = "new";
 
-    @FindBy(xpath = "//input[@type='text']")
+    @FindBy(jquery = "[id$=':in']")
     private WebElement inputField;
 
-    @FindBy(xpath = "//input[@type='submit' and @value='Click1']")
+    @FindBy(jquery = "[id$=':sub1']")
     private WebElement submitButton1;
 
-    @FindBy(xpath = "//input[@type='submit' and @value='Click2']")
+    @FindBy(jquery = "[id$=':sub2']")
     private WebElement submitButton2;
 
     @FindBy(id = "output1")
@@ -82,44 +82,43 @@ public class FlashScopeTest {
     URL portalURL;
 
     @Drone
-    WebDriver driver;
+    WebDriver browser;
+
+    @Before
+    public void getNewSession() {
+        browser.manage().deleteAllCookies();
+    }
 
     @Test
     @RunAsClient
     public void requestScopeShouldBeReset() throws Exception {
-        driver.get(portalURL.toString());
+        browser.get(portalURL.toString());
 
-        assertTrue("Check that page contains input element", Graphene.element(inputField).isVisible().apply(driver));
+        assertTrue("Check that page contains input element", inputField.isDisplayed());
 
-        assertTrue("input field should contain: " + RequestBean.ORIG_VALUE,
-                Graphene.attribute(inputField, "value").valueEquals(RequestBean.ORIG_VALUE).apply(driver));
+        assertEquals("input field set.", RequestBean.ORIG_VALUE, inputField.getAttribute("value"));
 
         inputField.sendKeys(NEW_VALUE);
         submitButton1.click();
 
-        assertTrue("output1 field should contain: " + RequestBean.ORIG_VALUE,
-                Graphene.element(outputField1).textEquals(RequestBean.ORIG_VALUE).apply(driver));
-        assertTrue("output2 field should be empty",
-                Graphene.element(outputField2).textEquals("").apply(driver));
+        assertEquals("output1 field set to original.", RequestBean.ORIG_VALUE, outputField1.getText());
+        assertEquals("output2 field should be empty", "", outputField2.getText());
     }
 
     @Test
     @RunAsClient
     public void flashScopeShouldRetainBeanThroughRedirect() throws Exception {
-        driver.get(portalURL.toString());
+        browser.get(portalURL.toString());
 
-        assertTrue("Check that page contains input element", Graphene.element(inputField).isVisible().apply(driver));
+        assertTrue("Check that page contains input element", inputField.isDisplayed());
 
-        assertTrue("input field should contain: " + RequestBean.ORIG_VALUE,
-                Graphene.attribute(inputField, "value").valueEquals(RequestBean.ORIG_VALUE).apply(driver));
+        assertEquals("input field set.", RequestBean.ORIG_VALUE, inputField.getAttribute("value"));
 
         inputField.sendKeys(NEW_VALUE);
         submitButton2.click();
 
-        assertTrue("output1 field should contain: " + RequestBean.ORIG_VALUE,
-                Graphene.element(outputField1).textEquals(RequestBean.ORIG_VALUE).apply(driver));
-        assertTrue("output2 field should contain: " + NEW_VALUE,
-                Graphene.element(outputField2).textContains(NEW_VALUE).apply(driver));
+        assertEquals("output1 field set to original.", RequestBean.ORIG_VALUE, outputField1.getText());
+        assertTrue("output2 field updated.", outputField2.getText().contains(NEW_VALUE));
     }
 
 }

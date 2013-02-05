@@ -21,29 +21,29 @@
  */
 package org.jboss.portletbridge.test.redirect;
 
-import static org.jboss.arquillian.graphene.Graphene.element;
-import static org.jboss.arquillian.graphene.Graphene.waitAjax;
-import static org.junit.Assert.assertTrue;
-
-import java.net.URL;
-
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
-import org.jboss.arquillian.graphene.Graphene;
+import org.jboss.arquillian.graphene.enricher.findby.FindBy;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
-import org.jboss.portletbridge.test.TestDeployment;
-import org.jboss.shrinkwrap.api.asset.StringAsset;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.portletbridge.deployment.TestDeployment;
 import org.jboss.shrinkwrap.descriptor.api.facesconfig21.WebFacesConfigDescriptor;
+import org.jboss.shrinkwrap.portal.api.PortletArchive;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
+
+import java.net.URL;
+
+import static org.jboss.arquillian.graphene.Graphene.guardHttp;
+import static org.jboss.arquillian.graphene.Graphene.guardXhr;
+import static org.jboss.arquillian.graphene.Graphene.waitAjax;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
@@ -52,22 +52,23 @@ import org.openqa.selenium.support.FindBy;
 @PortalTest
 public class AjaxRedirectTest {
 
-    @Deployment()
-    public static WebArchive createDeployment() {
-        WebArchive wa = TestDeployment.createDeployment()
-                .addAsWebResource("pages/redirect/ajax.xhtml", "home.xhtml")
+    @Deployment
+    public static PortletArchive createDeployment() {
+        TestDeployment deployment = new TestDeployment(AjaxRedirectTest.class, true);
+
+        getFacesConfigXml(deployment.facesConfig());
+
+        deployment.archive()
+                .createFacesPortlet("AjaxRedirect", "Ajax Redirect Portlet", "ajax.xhtml")
+                .addAsWebResource("pages/redirect/ajax.xhtml", "ajax.xhtml")
                 .addAsWebResource("pages/redirect/done1.xhtml", "done1.xhtml")
-                .addAsWebResource("pages/redirect/done2.xhtml", "done2.xhtml")
-                .addAsWebInfResource(new StringAsset(getFacesConfigXml()), "faces-config.xml");
-        TestDeployment.addWebXml(wa);
-        TestDeployment.addPortletXml(wa);
-        return wa;
+                .addAsWebResource("pages/redirect/done2.xhtml", "done2.xhtml");
+        return deployment.getFinalArchive();
     }
 
-    private static String getFacesConfigXml() {
-        WebFacesConfigDescriptor facesConfig = TestDeployment.createFacesConfigXmlDescriptor();
+    private static void getFacesConfigXml(WebFacesConfigDescriptor facesConfig) {
         facesConfig.createNavigationRule()
-                       .fromViewId("/home.xhtml")
+                       .fromViewId("/ajax.xhtml")
                        .createNavigationCase()
                            .fromOutcome("doneRedirect")
                            .toViewId("/done1.xhtml")
@@ -75,8 +76,6 @@ public class AjaxRedirectTest {
                                .up()
                            .up()
                        .up();
-
-        return facesConfig.exportAsString();
     }
 
     protected static final String DONE1 = "Done1";
@@ -85,10 +84,10 @@ public class AjaxRedirectTest {
     @FindBy(id = "output")
     private WebElement outputField;
 
-    @FindBy(xpath = "//input[@value='done1']")
+    @FindBy(jquery = "[id$=':submit1']")
     private WebElement submitButton1;
 
-    @FindBy(xpath = "//input[@value='done2']")
+    @FindBy(jquery = "[id$=':submit2']")
     private WebElement submitButton2;
 
     @ArquillianResource
@@ -96,28 +95,35 @@ public class AjaxRedirectTest {
     URL portalURL;
 
     @Drone
-    WebDriver driver;
+    WebDriver browser;
+
+    @Before
+    public void getNewSession() {
+        browser.manage().deleteAllCookies();
+    }
 
     @Test
     @RunAsClient
     public void redirectInFacesConfig() throws Exception {
-        driver.get(portalURL.toString());
+        browser.get(portalURL.toString());
+
         submitButton1.click();
 
-        waitAjax(driver).until(element(outputField).isPresent());;
+        waitAjax().until().element(outputField).is().present();
 
-        assertTrue("output text should contain: " + DONE1, Graphene.element(outputField).textEquals(DONE1).apply(driver));
+        assertEquals("Output text should contain: " + DONE1, DONE1, outputField.getText());
     }
 
     @Test
     @RunAsClient
     public void redirectInButtonAction() throws Exception {
-        driver.get(portalURL.toString());
+        browser.get(portalURL.toString());
+
         submitButton2.click();
 
-        waitAjax(driver).until(element(outputField).isPresent());;
+        waitAjax().until().element(outputField).is().present();
 
-        assertTrue("output text should contain: " + DONE2, Graphene.element(outputField).textEquals(DONE2).apply(driver));
+        assertEquals("Output text should contain: " + DONE2, DONE2, outputField.getText());
     }
 
 }

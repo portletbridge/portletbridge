@@ -21,43 +21,42 @@
  */
 package org.jboss.portletbridge.test.facelet;
 
-import static org.junit.Assert.assertTrue;
-
-import java.net.URL;
-
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
-import org.jboss.arquillian.graphene.Graphene;
+import org.jboss.arquillian.graphene.enricher.findby.FindBy;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
-import org.jboss.portletbridge.test.TestDeployment;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.portletbridge.deployment.TestDeployment;
+import org.jboss.shrinkwrap.portal.api.PortletArchive;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
+
+import java.net.URL;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
 @PortalTest
 public class FaceletCompositionTest {
 
-    public static final String NEW_VALUE = "New Value";
-
-    @Deployment()
-    public static WebArchive createDeployment() {
-        WebArchive wa = TestDeployment.createDeployment()
-                .addAsWebResource("pages/facelet/composition.xhtml", "home.xhtml")
+    @Deployment
+    public static PortletArchive createDeployment() {
+        TestDeployment deployment = new TestDeployment(FaceletCompositionTest.class, true);
+        deployment.archive()
+                .createFacesPortlet("FaceletComposition", "Facelet Composition Portlet", "composition.xhtml")
+                .addAsWebResource("pages/facelet/composition.xhtml", "composition.xhtml")
                 .addAsWebResource("pages/facelet/commonContent.xhtml", "commonContent.xhtml")
                 .addAsWebResource("pages/facelet/commonFooter.xhtml", "commonFooter.xhtml")
                 .addAsWebResource("pages/facelet/commonHeader.xhtml", "commonHeader.xhtml")
                 .addAsWebResource("pages/facelet/commonLayout.xhtml", "commonLayout.xhtml");
-        TestDeployment.addWebXml(wa);
-        TestDeployment.addPortletXml(wa);
-        return wa;
+        return deployment.getFinalArchive();
     }
 
     @FindBy(xpath = "//h1[contains(@id,'header')]")
@@ -76,23 +75,26 @@ public class FaceletCompositionTest {
     @ArquillianResource
     @PortalURL
     URL portalURL;
+
     @Drone
-    WebDriver driver;
+    WebDriver browser;
+
+    @Before
+    public void getNewSession() {
+        browser.manage().deleteAllCookies();
+    }
 
     @Test
     @RunAsClient
     public void testNavigationConditionalOrder() throws Exception {
-        driver.get(portalURL.toString());
+        browser.get(portalURL.toString());
 
-        assertTrue("Check that page contains header element.", Graphene.element(header).isVisible().apply(driver));
-        assertTrue("Check that page contains content element.", Graphene.element(content).isVisible().apply(driver));
-        assertTrue("Check that page contains footer element.", Graphene.element(footer).isVisible().apply(driver));
+        assertTrue("Check that page contains header element.", header.isDisplayed());
+        assertTrue("Check that page contains content element.", content.isDisplayed());
+        assertTrue("Check that page contains footer element.", footer.isDisplayed());
 
-        assertTrue("Header should contain: " + headerContent,
-                Graphene.element(header).textEquals(headerContent).apply(driver));
-        assertTrue("Content should contain: " + contentContent,
-                Graphene.element(content).textEquals(contentContent).apply(driver));
-        assertTrue("Footer should contain: " + footerContent,
-                Graphene.element(footer).textEquals(footerContent).apply(driver));
+        assertEquals("Header has valid content.", headerContent, header.getText());
+        assertEquals("Content has valid content.", contentContent, content.getText());
+        assertEquals("Footer has valid content.", footerContent, footer.getText());
     }
 }

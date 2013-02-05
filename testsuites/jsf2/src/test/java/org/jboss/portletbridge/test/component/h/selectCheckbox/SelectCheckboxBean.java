@@ -1,15 +1,14 @@
 package org.jboss.portletbridge.test.component.h.selectCheckbox;
 
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @ManagedBean(name = "selCheckboxBean")
 @SessionScoped

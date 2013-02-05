@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2012, Red Hat, Inc., and individual contributors
+ * Copyright 2013, Red Hat, Inc., and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -19,22 +19,27 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.portletbridge.test.exception;
+package org.jboss.portletbridge.test.component.h.link;
 
 import javax.faces.bean.ManagedBean;
-import java.io.Serializable;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.RequestScoped;
 
 /**
  * @author <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
  */
-@ManagedBean
-public class ExceptionBean implements Serializable {
+@ManagedBean(name = "renderActionBean")
+@RequestScoped
+public class RenderActionBean {
 
-    private static final long serialVersionUID = 8709695888577549155L;
+    @ManagedProperty(value = "#{linkBean}")
+    private LinkBean linkBean;
 
-    private String testField;
+    public void hideLink() {
+        linkBean.setLinkRender(false);
+    }
 
-    public String getTestField() {
-        return testField;
+    public void setLinkBean(LinkBean linkBean) {
+        this.linkBean = linkBean;
     }
 }

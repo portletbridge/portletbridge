@@ -25,7 +25,7 @@ import static org.junit.Assert.*;
 @PortalTest
 public class CommandButtonTest {
 
-    @Deployment()
+    @Deployment
     public static PortletArchive createDeployment() {
         TestDeployment deployment = new TestDeployment(CommandButtonTest.class, true);
         deployment.archive()

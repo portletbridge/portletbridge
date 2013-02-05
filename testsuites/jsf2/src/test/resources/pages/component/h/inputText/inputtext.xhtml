@@ -4,18 +4,17 @@
     xmlns:ui="http://java.sun.com/jsf/facelets" xml:lang="en" lang="en">
 
     <h:head>
-        <h:outputStylesheet name="stylesheet.css" />
     </h:head>
 
     <h:body>
         <h:form id="form1">
-            <h:inputText id="input1" required="true" requiredMessage="${inputBean.requiredMessage}"
-                validatorMessage="${inputBean.minLengthMessage}" value="${inputBean.textOne}"
-                valueChangeListener="${inputBean.onChange}">
+            <h:inputText id="input1" required="true" requiredMessage="#{inputBean.requiredMessage}"
+                validatorMessage="#{inputBean.minLengthMessage}" value="#{inputBean.textOne}"
+                valueChangeListener="#{inputBean.onChange}">
                 <f:validateLength minimum="3" />
             </h:inputText>
-            <h:outputText id="output1" value="${inputBean.textOne}" /> | 
-			<h:outputText id="output1count" value="${inputBean.textOneCount}" />
+            <h:outputText id="output1" value="#{inputBean.textOne}" /> |
+			<h:outputText id="output1count" value="#{inputBean.textOneCount}" />
             <h:commandButton id="submit1" value="OK" />
         </h:form>
 
@@ -23,8 +22,8 @@
             <h:inputText id="input2" value="${inputBean.textTwo}" valueChangeListener="${inputBean.onChange}">
                 <f:ajax event="keyup" render="output2 output2count :form1:output1count" />
             </h:inputText>
-            <h:outputText id="output2" value="${inputBean.textTwo}" /> | 
-			<h:outputText id="output2count" value="${inputBean.textTwoCount}" />
+            <h:outputText id="output2" value="#{inputBean.textTwo}" /> |
+			<h:outputText id="output2count" value="#{inputBean.textTwoCount}" />
         </h:form>
         <h:messages id="messages" />
     </h:body>

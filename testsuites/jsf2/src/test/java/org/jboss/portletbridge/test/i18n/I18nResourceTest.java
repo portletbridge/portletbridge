@@ -21,70 +21,67 @@
  */
 package org.jboss.portletbridge.test.i18n;
 
-import static org.jboss.arquillian.graphene.Graphene.element;
-import static org.jboss.arquillian.graphene.Graphene.waitAjax;
-import static org.junit.Assert.assertTrue;
-
-import java.net.URL;
-
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
-import org.jboss.arquillian.graphene.Graphene;
+import org.jboss.arquillian.graphene.enricher.findby.FindBy;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
-import org.jboss.portletbridge.test.TestDeployment;
-import org.jboss.shrinkwrap.api.asset.StringAsset;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.portletbridge.deployment.TestDeployment;
 import org.jboss.shrinkwrap.descriptor.api.facesconfig21.FacesConfigApplicationResourceBundleType;
 import org.jboss.shrinkwrap.descriptor.api.facesconfig21.FacesConfigApplicationType;
 import org.jboss.shrinkwrap.descriptor.api.facesconfig21.WebFacesConfigDescriptor;
+import org.jboss.shrinkwrap.portal.api.PortletArchive;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.Select;
+
+import java.net.URL;
+
+import static org.jboss.arquillian.graphene.Graphene.guardXhr;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
 @PortalTest
 public class I18nResourceTest {
 
-    @Deployment()
-    public static WebArchive createDeployment() {
-        WebArchive wa = TestDeployment.createDeployment()
-                .addClass(LanguageBean.class)
-                .addAsWebResource("pages/i18n/main.xhtml", "home.xhtml")
+    @Deployment
+    public static PortletArchive createDeployment() {
+        TestDeployment deployment = new TestDeployment(I18nResourceTest.class, true);
+
+        getFacesXml(deployment.facesConfig());
+
+        deployment.archive()
+                .createFacesPortlet("I18nResource", "I18n Resource Portlet", "main.xhtml")
+                .addAsWebResource("pages/i18n/main.xhtml", "main.xhtml")
                 .addAsResource("resources/welcome.properties", "org/jboss/resources/welcome.properties")
                 .addAsResource("resources/welcome_zh_CN.properties", "org/jboss/resources/welcome_zh_CN.properties")
-                .addAsWebInfResource(new StringAsset(getFacesXml()), "faces-config.xml");
-        TestDeployment.addWebXml(wa);
-        TestDeployment.addPortletXml(wa);
-        return wa;
+                .addClass(LanguageBean.class);
+        return deployment.getFinalArchive();
     }
 
-    protected static String getFacesXml() {
-        WebFacesConfigDescriptor webConfig = TestDeployment.createFacesConfigXmlDescriptor();
-
+    protected static void getFacesXml(WebFacesConfigDescriptor webConfig) {
         FacesConfigApplicationType<WebFacesConfigDescriptor> fcat = webConfig.createApplication();
         fcat.createLocaleConfig().defaultLocale("en");
 
         FacesConfigApplicationResourceBundleType<FacesConfigApplicationType<WebFacesConfigDescriptor>> resourceBundle = fcat.createResourceBundle();
         resourceBundle.baseName("org.jboss.resources.welcome");
         resourceBundle.var("i18n");
-
-        return webConfig.exportAsString();
     }
 
-    @FindBy(xpath = "//h1[contains(@id,'header')]")
+    @FindBy(jquery = "[id$='portletHeader']")
     private WebElement header;
 
-    @FindBy(xpath = "//span[contains(@id,'output')]")
+    @FindBy(jquery = "[id$='output']")
     private WebElement message;
 
-    @FindBy(xpath = "//select[contains(@id,'selector')]")
+    @FindBy(jquery = "[id$='selector']")
     private WebElement selector;
 
     protected static final String headerContent = "I18n";
@@ -94,30 +91,31 @@ public class I18nResourceTest {
     @ArquillianResource
     @PortalURL
     URL portalURL;
+
     @Drone
-    WebDriver driver;
+    WebDriver browser;
+
+    @Before
+    public void getNewSession() {
+        browser.manage().deleteAllCookies();
+    }
 
     @Test
     @RunAsClient
     public void testI18n() throws Exception {
-        driver.get(portalURL.toString());
+        browser.get(portalURL.toString());
 
-        assertTrue("Check that page contains header element.", Graphene.element(header).isVisible().apply(driver));
-        assertTrue("Check that page contains message element.", Graphene.element(message).isVisible().apply(driver));
-        assertTrue("Check that page contains select element.", Graphene.element(selector).isVisible().apply(driver));
+        assertTrue("Check that page contains header element.", header.isDisplayed());
+        assertTrue("Check that page contains message element.", message.isDisplayed());
+        assertTrue("Check that page contains select element.", selector.isDisplayed());
 
-        assertTrue("Header should be named: " + headerContent,
-                Graphene.element(header).textEquals(headerContent).apply(driver));
+        assertEquals("Header has valid content.", headerContent, header.getText());
 
         Select select = new Select(selector);
-        assertTrue("En language message should be present.",
-                Graphene.element(message).textEquals(enContent).apply(driver));
+        assertEquals("En language message should be present.", enContent, message.getText());
 
-        select.selectByValue("zh_CN");
+        guardXhr(select).selectByValue("zh_CN");
 
-        waitAjax(driver).until(element(message).textEquals(zhContent));
-
-        assertTrue("Zh_cn language message should be present.",
-                Graphene.element(message).textEquals(zhContent).apply(driver));
+        assertEquals("Zh_cn language message should be present.", zhContent, message.getText());
     }
 }

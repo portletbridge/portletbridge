@@ -4,14 +4,14 @@
  */
 package org.jboss.portletbridge.test.i18n;
 
-import java.io.Serializable;
-import java.util.LinkedHashMap;
-import java.util.Locale;
-import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
+import java.io.Serializable;
+import java.util.LinkedHashMap;
+import java.util.Locale;
+import java.util.Map;
 
 @ManagedBean(name = "language")
 @SessionScoped

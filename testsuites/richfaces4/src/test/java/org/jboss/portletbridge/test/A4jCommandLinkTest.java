@@ -23,7 +23,6 @@ package org.jboss.portletbridge.test;
 
 import static org.junit.Assert.assertTrue;
 
-import java.io.File;
 import java.net.URL;
 
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -32,8 +31,9 @@ import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.resolver.api.maven.Maven;
+import org.jboss.portletbridge.deployment.TestDeployment;
+import org.jboss.shrinkwrap.portal.api.PortletArchive;
+import org.junit.Before;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -44,22 +44,18 @@ public class A4jCommandLinkTest {
 
     public static final String NEW_VALUE = "New Value";
 
-    @Deployment()
-    public static WebArchive createDeployment() {
-        return TestDeployment
-                .createDeploymentWithAll()
-                .addClass(Bean.class)
-                .addAsWebResource("a4jLink.xhtml", "home.xhtml")
-                .addAsWebResource("resources/stylesheet.css", "resources/stylesheet.css")
-                .addAsLibraries(
-                        Maven.resolver().loadPomFromFile("pom.xml")
-                            .resolve("org.richfaces.core:richfaces-core-impl").withTransitivity().as(File.class))
-                .addAsLibraries(
-                        Maven.resolver().loadPomFromFile("pom.xml")
-                        .resolve("org.richfaces.core:richfaces-components-api").withTransitivity().as(File.class))
-                .addAsLibraries(
-                        Maven.resolver().loadPomFromFile("pom.xml")
-                        .resolve("org.richfaces.core:richfaces-components-ui").withTransitivity().as(File.class));
+    @Deployment
+    public static PortletArchive createDeployment() {
+        TestDeployment deployment = new TestDeployment(A4jCommandLinkTest.class, true);
+        deployment.archive()
+                .createFacesPortlet("A4jCommandLink", "A4J Command Link Portlet", "a4jLink.xhtml")
+                .addAsWebResource("a4jLink.xhtml", "a4jLink.xhtml")
+                .addClass(Bean.class);
+
+        deployment.addMavenDependency("org.richfaces.core:richfaces-core-impl",
+                "org.richfaces.core:richfaces-components-api",
+                "org.richfaces.core:richfaces-components-ui");
+        return deployment.getFinalArchive();
     }
 
     protected static final By OUTPUT_FIELD = By.id("output");
@@ -71,41 +67,46 @@ public class A4jCommandLinkTest {
     URL portalURL;
 
     @Drone
-    WebDriver driver;
+    WebDriver browser;
+
+    @Before
+    public void getNewSession() {
+        browser.manage().deleteAllCookies();
+    }
 
     //@Test
     @RunAsClient
     public void renderFormPortlet() throws Exception {
-        driver.get(portalURL.toString());
+        browser.get(portalURL.toString());
 
         assertTrue("output text should contain: " + Bean.HELLO_JSF_PORTLET,
-                ExpectedConditions.textToBePresentInElement(OUTPUT_FIELD, Bean.HELLO_JSF_PORTLET).apply(driver));
+                ExpectedConditions.textToBePresentInElement(OUTPUT_FIELD, Bean.HELLO_JSF_PORTLET).apply(browser));
 
         assertTrue("input text should contain: " + Bean.HELLO_JSF_PORTLET,
-                ExpectedConditions.textToBePresentInElementValue(INPUT_FIELD, Bean.HELLO_JSF_PORTLET).apply(driver));
+                ExpectedConditions.textToBePresentInElementValue(INPUT_FIELD, Bean.HELLO_JSF_PORTLET).apply(browser));
 
-        assertTrue("Submit button text should be 'Ok'", driver.findElement(SUBMIT_BUTTON).getText().equals("Ok"));
+        assertTrue("Submit button text should be 'Ok'", browser.findElement(SUBMIT_BUTTON).getText().equals("Ok"));
     }
 
     // @Test
     public void testSubmitAndRemainOnPage() throws Exception {
-        driver.get(portalURL.toString());
-        driver.findElement(INPUT_FIELD).sendKeys(NEW_VALUE);
-        driver.findElement(SUBMIT_BUTTON).click();
+        browser.get(portalURL.toString());
+        browser.findElement(INPUT_FIELD).sendKeys(NEW_VALUE);
+        browser.findElement(SUBMIT_BUTTON).click();
 
         assertTrue("output text should contain: " + NEW_VALUE,
-                ExpectedConditions.textToBePresentInElement(OUTPUT_FIELD, NEW_VALUE).apply(driver));
+                ExpectedConditions.textToBePresentInElement(OUTPUT_FIELD, NEW_VALUE).apply(browser));
 
         assertTrue("input text should contain: " + NEW_VALUE,
-                ExpectedConditions.textToBePresentInElementValue(INPUT_FIELD, NEW_VALUE).apply(driver));
+                ExpectedConditions.textToBePresentInElementValue(INPUT_FIELD, NEW_VALUE).apply(browser));
 
         // Re-render page
-        driver.get(portalURL.toString());
+        browser.get(portalURL.toString());
         assertTrue("output text should contain: " + NEW_VALUE,
-                ExpectedConditions.textToBePresentInElement(OUTPUT_FIELD, NEW_VALUE).apply(driver));
+                ExpectedConditions.textToBePresentInElement(OUTPUT_FIELD, NEW_VALUE).apply(browser));
 
         assertTrue("input text should contain: " + NEW_VALUE,
-                ExpectedConditions.textToBePresentInElementValue(INPUT_FIELD, NEW_VALUE).apply(driver));
+                ExpectedConditions.textToBePresentInElementValue(INPUT_FIELD, NEW_VALUE).apply(browser));
     }
 
 }

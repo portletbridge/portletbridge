@@ -1,15 +1,15 @@
 <f:view xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:ui="http://java.sun.com/jsf/facelets" xml:lang="en" lang="en">
+    xml:lang="en" lang="en">
     <h:head>
     </h:head>
 
     <h:body>
         <h:form>
             <p id="submit">
-                <h:commandButton value="done1" action="doneRedirect">
+                <h:commandButton id="submit1" value="done1" action="doneRedirect">
                     <f:ajax execute="@this" />
                 </h:commandButton>
-                <h:commandButton value="done2" action="/done2.xhtml?faces-redirect=true">
+                <h:commandButton id="submit2" value="done2" action="/done2.xhtml?faces-redirect=true">
                     <f:ajax execute="@this" />
                 </h:commandButton>
             </p>

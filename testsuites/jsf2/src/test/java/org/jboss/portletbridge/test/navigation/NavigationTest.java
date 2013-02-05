@@ -21,52 +21,52 @@
  */
 package org.jboss.portletbridge.test.navigation;
 
-import static org.junit.Assert.assertTrue;
-
-import java.net.URL;
-
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
-import org.jboss.arquillian.graphene.Graphene;
+import org.jboss.arquillian.graphene.enricher.findby.FindBy;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
-import org.jboss.portletbridge.test.TestDeployment;
-import org.jboss.shrinkwrap.api.asset.StringAsset;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.portletbridge.deployment.TestDeployment;
 import org.jboss.shrinkwrap.descriptor.api.facesconfig21.WebFacesConfigDescriptor;
+import org.jboss.shrinkwrap.portal.api.PortletArchive;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
+
+import java.net.URL;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
 @PortalTest
 public class NavigationTest {
 
-    @Deployment()
-    public static WebArchive createDeployment() {
-        WebArchive wa = TestDeployment.createDeployment()
+    @Deployment
+    public static PortletArchive createDeployment() {
+        TestDeployment deployment = new TestDeployment(NavigationTest.class, true);
+
+        getFacesXml(deployment.facesConfig());
+
+        deployment.archive()
+                .createFacesPortlet("Navigation", "Navigation Portlet", "main.xhtml")
                 .addClass(PageController.class)
-                .addAsWebResource("pages/navigation/main.xhtml", "home.xhtml")
+                .addAsWebResource("pages/navigation/main.xhtml", "main.xhtml")
                 .addAsWebResource("pages/navigation/page1.xhtml", "page1.xhtml")
                 .addAsWebResource("pages/navigation/page2.xhtml", "page2.xhtml")
-                .addAsWebResource("pages/navigation/target.xhtml", "target.xhtml")
-                .addAsWebInfResource(new StringAsset(getFacesXml()), "faces-config.xml");
-        TestDeployment.addWebXml(wa);
-        TestDeployment.addPortletXml(wa);
-        return wa;
+                .addAsWebResource("pages/navigation/target.xhtml", "target.xhtml");
+        return deployment.getFinalArchive();
     }
 
-    protected static String getFacesXml() {
-        WebFacesConfigDescriptor webConfig = TestDeployment.createFacesConfigXmlDescriptor();
-        addNavigationRule(webConfig, "/home.xhtml", "/target.xhtml");
+    protected static void getFacesXml(WebFacesConfigDescriptor webConfig) {
+        addNavigationRule(webConfig, "/main.xhtml", "/target.xhtml");
         addNavigationRuleFromAction(webConfig, "#{pageController.processPage1}","success", "/page1.xhtml");
         addNavigationRuleFromAction(webConfig, "#{pageController.processPage2}","success", "/page2.xhtml");
-        return webConfig.exportAsString();
     }
 
     private static void addNavigationRule(WebFacesConfigDescriptor webConfig, String fromOutcome, String toViewId) {
@@ -101,91 +101,88 @@ public class NavigationTest {
     @ArquillianResource
     @PortalURL
     URL portalURL;
+
     @Drone
-    WebDriver driver;
+    WebDriver browser;
+
+    @Before
+    public void getNewSession() {
+        browser.manage().deleteAllCookies();
+    }
 
     @Test
     @RunAsClient
     public void testNavigationImplicit() throws Exception {
-        driver.get(portalURL.toString());
+        browser.get(portalURL.toString());
 
-        assertTrue("Check that page contains header element.", Graphene.element(header).isVisible().apply(driver));
-        assertTrue("Check that page contains button element.", Graphene.element(buttonTarget).isVisible().apply(driver));
+        assertTrue("Check that page contains header element.", header.isDisplayed());
+        assertTrue("Check that page contains button element.", buttonTarget.isDisplayed());
 
-        assertTrue("Header should be named: " + headerName,
-                Graphene.element(header).textEquals(headerName).apply(driver));
+        assertEquals("Header value set.", headerName, header.getText());
 
         buttonTarget.click();
-        assertTrue("Portlet should be on target page.",
-                Graphene.element(header).textEquals(targetPage).apply(driver));
+
+        assertEquals("Portlet should be on target page.", targetPage, header.getText());
     }
 
     @Test
     @RunAsClient
     public void testANavigationImplicitByMBean() throws Exception {
-        driver.get(portalURL.toString());
+        browser.get(portalURL.toString());
 
-        assertTrue("Check that page contains header element.", Graphene.element(header).isVisible().apply(driver));
-        assertTrue("Check that page contains button element.",
-                Graphene.element(buttonTargetController).isVisible().apply(driver));
+        assertTrue("Check that page contains header element.", header.isDisplayed());
+        assertTrue("Check that page contains button element.", buttonTarget.isDisplayed());
 
-        assertTrue("Header should be named: " + headerName,
-                Graphene.element(header).textEquals(headerName).apply(driver));
+        assertEquals("Header value set.", headerName, header.getText());
 
         buttonTargetController.click();
-        assertTrue("Portlet should be on target page.",
-                Graphene.element(header).textEquals(targetPage).apply(driver));
+
+        assertEquals("Portlet should be on target page.", targetPage, header.getText());
     }
 
     @Test
     @RunAsClient
     public void testNavigationImplicitWithRedirect() throws Exception {
-        driver.get(portalURL.toString());
+        browser.get(portalURL.toString());
 
-        assertTrue("Check that page contains header element.", Graphene.element(header).isVisible().apply(driver));
-        assertTrue("Check that page contains button element.",
-                Graphene.element(buttonTargetRedirect).isVisible().apply(driver));
+        assertTrue("Check that page contains header element.", header.isDisplayed());
+        assertTrue("Check that page contains button element.", buttonTarget.isDisplayed());
 
-        assertTrue("Header should be named: " + headerName,
-                Graphene.element(header).textEquals(headerName).apply(driver));
+        assertEquals("Header value set.", headerName, header.getText());
 
         buttonTargetRedirect.click();
-        assertTrue("Portlet should be on target page.",
-                Graphene.element(header).textEquals(targetPage).apply(driver));
+
+        assertEquals("Portlet should be on target page.", targetPage, header.getText());
     }
 
     @Test
     @RunAsClient
     public void testNavigationRule1() throws Exception {
-        driver.get(portalURL.toString());
+        browser.get(portalURL.toString());
 
-        assertTrue("Check that page contains header element.", Graphene.element(header).isVisible().apply(driver));
-        assertTrue("Check that page contains button element.", Graphene.element(buttonTargetNav1).isVisible().apply(driver));
+        assertTrue("Check that page contains header element.", header.isDisplayed());
+        assertTrue("Check that page contains button element.", buttonTarget.isDisplayed());
 
-        assertTrue("Header should be named: " + headerName,
-                Graphene.element(header).textEquals(headerName).apply(driver));
+        assertEquals("Header value set.", headerName, header.getText());
 
         buttonTargetNav1.click();
 
-        assertTrue("Portlet should be on page1 page.",
-                Graphene.element(header).textEquals("page1").apply(driver));
+        assertEquals("Portlet should be on page1 page.", "page1", header.getText());
     }
 
     @Test
     @RunAsClient
     public void testNavigationRule2() throws Exception {
-        driver.get(portalURL.toString());
+        browser.get(portalURL.toString());
 
-        assertTrue("Check that page contains header element.", Graphene.element(header).isVisible().apply(driver));
-        assertTrue("Check that page contains button element.", Graphene.element(buttonTargetNav2).isVisible().apply(driver));
+        assertTrue("Check that page contains header element.", header.isDisplayed());
+        assertTrue("Check that page contains button element.", buttonTarget.isDisplayed());
 
-        assertTrue("Header should be named: " + headerName,
-                Graphene.element(header).textEquals(headerName).apply(driver));
+        assertEquals("Header value set.", headerName, header.getText());
 
         buttonTargetNav2.click();
 
-        assertTrue("Portlet should be on page2 page.",
-                Graphene.element(header).textEquals("page2").apply(driver));
+        assertEquals("Portlet should be on page2 page.", "page2", header.getText());
     }
 
 }
