@@ -9,6 +9,11 @@
     <artifactId>examples</artifactId>
     <name>Portlet Bridge JSF 2 examples</name>
     <packaging>pom</packaging>
+
+    <properties>
+        <version.cdi.portlet.integration>1.0.0.Alpha2</version.cdi.portlet.integration>
+    </properties>
+
     <modules>
         <module>jsf2portlet</module>
         <module>richfaces-showcase</module>
