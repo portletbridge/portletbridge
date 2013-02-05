@@ -13,13 +13,7 @@
                 <h:graphicImage id="link3img" value="ajax.png" />
                 <f:param name="from" value="L3" />
             </h:link>
+            <h:link id="link4" value="#{linkBean.linkOneText}" outcome="${linkBean.linkOne}" rendered="false" /> |
         </h:panelGroup>
-
-        <!-- Used for updating booleans on backing bean that are used on components -->
-        <h:form>
-            <h:commandLink id="hideLink1" action="#{renderActionBean.hideLink}">
-                <f:ajax execute="@this" render=":links" />
-            </h:commandLink>
-        </h:form>
     </h:body>
 </f:view>

@@ -38,8 +38,4 @@ public class LinkBean {
     public boolean getLinkRender() {
         return linkRender;
     }
-
-    public void setLinkRender(boolean linkRender) {
-        this.linkRender = linkRender;
-    }
 }

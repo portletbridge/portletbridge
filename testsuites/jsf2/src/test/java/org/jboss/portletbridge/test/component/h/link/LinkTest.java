@@ -36,8 +36,7 @@ public class LinkTest {
                 .addAsWebResource("pages/component/h/link/link.xhtml", "linkTest.xhtml")
                 .addAsWebResource("pages/component/h/link/link.xhtml", "exit.xhtml")
                 .addAsWebResource("resources/ajax.png", "ajax.png")
-                .addClass(LinkBean.class)
-                .addClass(RenderActionBean.class);
+                .addClass(LinkBean.class);
         return deployment.getFinalArchive();
     }
 
@@ -61,6 +60,9 @@ public class LinkTest {
 
     @FindBy(jquery = "[id$=':link3']")
     private WebElement linkThree;
+
+    @FindBy(jquery = "[id$=':link4']")
+    private WebElement linkFour;
 
     @FindBy(jquery = "[id$=':hideLink1']")
     private WebElement hideLink1;
@@ -128,12 +130,7 @@ public class LinkTest {
     public void testLinkRendered() throws Exception {
         browser.get(portalURL.toString());
 
-        // Set outputLink not to render
-        hideLink1.click();
-
-        browser.get(portalURL.toString());
-
-        linkOne.isDisplayed();
+        linkFour.isDisplayed();
     }
 
     // TODO: Add more tests, clicking on links, but only after fixing the above FIXMEs.

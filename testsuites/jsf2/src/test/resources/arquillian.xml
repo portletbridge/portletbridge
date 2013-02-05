@@ -21,6 +21,9 @@
         <property name="waitModelInterval">25</property>
     </extension>
 
+    <container qualifier="pluto-embedded">
+    </container>
+
     <container qualifier="jbossas-managed-7">
         <configuration>
             <property name="jbossHome">target/jboss-as-7.1.1.Final</property>
