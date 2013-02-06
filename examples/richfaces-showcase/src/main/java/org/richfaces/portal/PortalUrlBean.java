@@ -27,7 +27,7 @@ public class PortalUrlBean {
 
     private String demo;
     private String sample;
-    
+
     @ManagedProperty("#{skinBean.skin}")
     private String skin;
 
@@ -41,12 +41,24 @@ public class PortalUrlBean {
         ex.redirect(url + "?" + params);
     }
 
+    public String getDemo() {
+        return demo;
+    }
+
     public void setDemo(String demo) {
         this.demo = demo;
     }
 
+    public String getSample() {
+        return sample;
+    }
+
     public void setSample(String sample) {
         this.sample = sample;
+    }
+
+    public String getSkin() {
+        return skin;
     }
 
     public void setSkin(String skin) {
