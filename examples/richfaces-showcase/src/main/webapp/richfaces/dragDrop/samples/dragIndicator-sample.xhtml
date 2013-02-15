@@ -1,30 +1,43 @@
-<!--
-  ~ JBoss, Home of Professional Open Source.
-  ~ Copyright 2013, Red Hat, Inc., and individual contributors
-  ~ as indicated by the @author tags. See the copyright.txt file in the
-  ~ distribution for a full listing of individual contributors.
-  ~
-  ~ This is free software; you can redistribute it and/or modify it
-  ~ under the terms of the GNU Lesser General Public License as
-  ~ published by the Free Software Foundation; either version 2.1 of
-  ~ the License, or (at your option) any later version.
-  ~
-  ~ This software is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-  ~ Lesser General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU Lesser General Public
-  ~ License along with this software; if not, write to the Free
-  ~ Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-  ~ 02110-1301 USA, or see the FSF site: http://www.fsf.org.
-  -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
     xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:a4j="http://richfaces.org/a4j"
     xmlns:rich="http://richfaces.org/rich">
 
-    <h:outputStylesheet library="css" name="dragdrop.css" />
+    <h:outputStylesheet>
+        .panelc { width:25%; }
+        .valign { vertical-align:top; }
+        .dropTargetPanel { width: 90%; }
+        .footerClass {
+            text-align: center;
+            padding-top: 5px;
+        }
+
+        .default{
+            font-size:11px;
+            cursor:pointer;
+            width:100px;
+            border:1px solid gray;
+            padding:2px
+        }
+        .rf-ind-drag.default{
+            padding-left:30px;
+            background-image: url(#{portletRes['/images/dnd/default.gif']});
+            background-position: 5px;
+            background-repeat: no-repeat;
+                }
+            .rf-ind-drag.accept{
+                background-image: url(#{portletRes['/images/dnd/accept.gif']});
+            background-position: 5px;
+            background-repeat: no-repeat;
+            border:2px solid green
+                }
+            .rf-ind-drag.reject{
+                border:2px solid red;
+                background-image: url(#{portletRes['/images/dnd/reject.gif']});
+            background-position: 5px;
+            background-repeat: no-repeat;
+        }
+    </h:outputStylesheet>
     <rich:dragIndicator id="ind" acceptClass="accept" rejectClass="reject" draggingClass="default">
         Drag the item to proper area..
     </rich:dragIndicator>
