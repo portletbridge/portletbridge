@@ -21,17 +21,20 @@
  */
 package org.jboss.portletbridge.renderkit.portlet;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.StringWriter;
+import org.w3c.dom.CDATASection;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Text;
 
+import javax.faces.component.UIComponent;
 import javax.faces.context.ResponseWriter;
 import javax.faces.context.ResponseWriterWrapper;
 import javax.portlet.MimeResponse;
 import javax.portlet.PortletResponse;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.w3c.dom.Element;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.Stack;
 
 /**
  * @author <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
@@ -40,12 +43,13 @@ public class PortletHeadResponseWriter extends ResponseWriterWrapper {
 
     ResponseWriter wrapped;
     PortletResponse response;
-    StringWriter writer;
+
+    private Stack<Element> elements;
 
     public PortletHeadResponseWriter(ResponseWriter parent, PortletResponse portletResponse) {
-        this.writer = new StringWriter();
-        this.wrapped = parent.cloneWithWriter(writer);
+        this.wrapped = parent;
         this.response = portletResponse;
+        this.elements = new Stack<Element>();
     }
 
     /**
@@ -57,21 +61,147 @@ public class PortletHeadResponseWriter extends ResponseWriterWrapper {
     }
 
     @Override
+    public void startElement(String name, UIComponent component) throws IOException {
+        elements.push(response.createElement(name));
+    }
+
+    @Override
     public void endElement(String name) throws IOException {
-        super.endElement(name);
+        if (elements.size() > 1) {
+            Element child = elements.pop();
+            elements.peek().appendChild(child);
+        } else {
+            Element elem = elements.pop();
 
-        StringBuffer temp = writer.getBuffer();
+            if (("script".equals(name) || "style".equals(name)) && !elem.hasAttribute("src")) {
+                Text text1;
+                Text text2 = null;
+                CDATASection cdata;
+                String content = elem.getTextContent();
+                Document owner = elem.getOwnerDocument();
 
-        try {
-            Element elem = DocumentBuilderFactory.newInstance()
-                                .newDocumentBuilder()
-                                .parse(new ByteArrayInputStream(temp.toString().getBytes())).getDocumentElement();
+                if ("script".equals(name)) {
+                    text1 = owner.createTextNode("\n//");
+                    cdata = owner.createCDATASection("\n" + content + "\n//");
+                } else {
+                    text1 = owner.createTextNode("\n/*");
+                    cdata = owner.createCDATASection("*/\n" + content + "\n/*");
+                    text2 = owner.createTextNode("*/");
+                }
+
+                elem.setTextContent("");
+                elem.appendChild(text1);
+                elem.appendChild(cdata);
+                if (null != text2) {
+                    elem.appendChild(text2);
+                }
+            }
             response.addProperty(MimeResponse.MARKUP_HEAD_ELEMENT, elem);
-        } catch (Exception e) {
-            throw new IOException(e);
-        } finally {
-            temp.setLength(0);
         }
+    }
+
+    private void append(String content) {
+        Element elem = elements.peek();
+        elem.setTextContent(elem.getTextContent() + content);
+    }
+
+    @Override
+    public void writeAttribute(String name, Object value, String property) throws IOException {
+        if (null != value) {
+            elements.peek().setAttribute(name, value.toString());
+        } else {
+            elements.peek().setAttribute(name, null);
+        }
+    }
+
+    @Override
+    public void writeComment(Object comment) throws IOException {
+        if (null != comment) {
+            append(comment.toString());
+        }
+    }
+
+    @Override
+    public void writeText(char[] text, int off, int len) throws IOException {
+        write(text, off, len);
+    }
+
+    @Override
+    public void writeText(Object text, UIComponent component, String property) throws IOException {
+        if (null != text) {
+            append(text.toString());
+        }
+    }
+
+    @Override
+    public void writeText(Object text, String property) throws IOException {
+        if (null != text) {
+            append(text.toString());
+        }
+    }
+
+    @Override
+    public void writeURIAttribute(String name, Object value, String property) throws IOException {
+        writeAttribute(name, value, property);
+    }
+
+    @Override
+    public Writer append(char c) throws IOException {
+        StringWriter writer = new StringWriter();
+        writer.write(c);
+        append(writer.getBuffer().toString());
+        return this;
+    }
+
+    @Override
+    public Writer append(CharSequence csq, int start, int end) throws IOException {
+        StringWriter writer = new StringWriter();
+        writer.append(csq, start, end);
+        append(writer.getBuffer().toString());
+        return this;
+    }
+
+    @Override
+    public Writer append(CharSequence csq) throws IOException {
+        StringWriter writer = new StringWriter();
+        writer.append(csq);
+        append(writer.getBuffer().toString());
+        return this;
+    }
+
+    @Override
+    public void write(int c) throws IOException {
+        StringWriter writer = new StringWriter();
+        writer.write(c);
+        append(writer.getBuffer().toString());
+    }
+
+    @Override
+    public void write(char[] cbuf) throws IOException {
+        StringWriter writer = new StringWriter();
+        writer.write(cbuf);
+        append(writer.getBuffer().toString());
+    }
+
+    @Override
+    public void write(String str) throws IOException {
+        if (null != str) {
+            append(str);
+        }
+    }
+
+    @Override
+    public void write(String str, int off, int len) throws IOException {
+        StringWriter writer = new StringWriter();
+        writer.write(str, off, len);
+        append(writer.getBuffer().toString());
+    }
+
+    @Override
+    public void write(char[] cbuf, int off, int len) throws IOException {
+        StringWriter writer = new StringWriter();
+        writer.write(cbuf, off, len);
+        append(writer.getBuffer().toString());
     }
 
 }
