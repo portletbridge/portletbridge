@@ -6,14 +6,14 @@
 	xmlns:a4j="http://richfaces.org/a4j"
 	xmlns:rich="http://richfaces.org/rich">
 	<h:form>
-		<fieldset><legend>Sorting Options</legend> 
+		<fieldset><legend>Sorting Options</legend>
 			<h:panelGrid columns="2">
 				<h:outputText value="Multiple Sorting:" />
 				<h:selectBooleanCheckbox value="#{carsSortingBean.multipleSorting}"
 					valueChangeListener="#{carsSortingBean.modeChanged}">
 					<a4j:ajax event="click" render="table @this" />
 				</h:selectBooleanCheckbox>
-			</h:panelGrid> 
+			</h:panelGrid>
 		<a4j:commandButton execute="@this" value="Reset Sorting"
 			action="#{carsSortingBean.reset}" render="table" /></fieldset>
 		<rich:extendedDataTable value="#{carsBean.allInventoryItems}"
@@ -24,7 +24,8 @@
 				<h:outputText value="Cars marketplace" />
 			</f:facet>
 			<rich:column sortBy="#{car.vendor}"
-				sortOrder="#{carsSortingBean.sortsOrders['vendor']}">
+				         sortOrder="#{carsSortingBean.sortsOrders['vendor']}"
+                         sortType="custom">
 				<f:facet name="header">
 					<h:panelGrid columns="2">
 						<a4j:commandLink execute="@this" value="Vendor" render="table"
@@ -40,7 +41,8 @@
 				<h:outputText value="#{car.vendor}" />
 			</rich:column>
 			<rich:column sortBy="#{car.model}"
-				sortOrder="#{carsSortingBean.sortsOrders['model']}">
+                         sortOrder="#{carsSortingBean.sortsOrders['model']}"
+                         sortType="custom">
 				<f:facet name="header">
 					<h:panelGrid columns="2">
 						<a4j:commandLink execute="@this" value="Model" render="table"
@@ -56,7 +58,8 @@
 				<h:outputText value="#{car.model}" />
 			</rich:column>
 			<rich:column sortBy="#{car.price}"
-				sortOrder="#{carsSortingBean.sortsOrders['price']}">
+                         sortOrder="#{carsSortingBean.sortsOrders['price']}"
+                         sortType="custom">
 				<f:facet name="header">
 					<h:panelGrid columns="2">
 						<a4j:commandLink execute="@this" value="Price" render="table"
@@ -72,7 +75,8 @@
 				<h:outputText value="#{car.price}" />
 			</rich:column>
 			<rich:column sortBy="#{car.mileage}"
-				sortOrder="#{carsSortingBean.sortsOrders['mileage']}">
+                         sortOrder="#{carsSortingBean.sortsOrders['mileage']}"
+                         sortType="custom">
 				<f:facet name="header">
 					<h:panelGrid columns="2">
 						<a4j:commandLink execute="@this" value="Mileage" render="table"
