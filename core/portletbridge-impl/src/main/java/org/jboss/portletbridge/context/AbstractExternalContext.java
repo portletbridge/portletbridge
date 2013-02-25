@@ -110,7 +110,12 @@ public abstract class AbstractExternalContext extends ExternalContext {
 
     private Object context;
 
-    protected PortletFlash portletFlash = null;
+    protected static ThreadLocal<PortletFlash> portletFlashInstance = new ThreadLocal<PortletFlash>() {
+        @Override
+        protected PortletFlash initialValue() {
+            return null;
+        }
+    };
 
     public static final String CONVERSATION_ID_PARAMETER = "conversationId";
     private Map<String, String> fallbackContentTypeMap = null;
@@ -125,7 +130,6 @@ public abstract class AbstractExternalContext extends ExternalContext {
      * @param context
      * @param request
      * @param response
-     * @param defaultContext
      *            -
      *
      *            default implementation of <code>ExternalFacesContext</code>.
@@ -427,7 +431,7 @@ public abstract class AbstractExternalContext extends ExternalContext {
     }
 
     protected boolean isBridgeFlashServletResponse() {
-        return ((null != portletFlash) && portletFlash.isServletResponse());
+        return ((null != portletFlashInstance.get()) && portletFlashInstance.get().isServletResponse());
     }
 
     /**
@@ -502,10 +506,18 @@ public abstract class AbstractExternalContext extends ExternalContext {
     }
 
     protected PortletFlash getPortletFlash() {
-        if (null == portletFlash) {
-            portletFlash = PortletFlash.getFlash(this, true);
+        if (null == portletFlashInstance.get()) {
+            portletFlashInstance.set(PortletFlash.getFlash(this, true));
         }
-        return portletFlash;
+        return portletFlashInstance.get();
+    }
+
+    public static void setPortletFlash(PortletFlash flash) {
+        if (null == flash) {
+            portletFlashInstance.remove();
+        } else {
+            portletFlashInstance.set(flash);
+        }
     }
 
     public String getFallbackMimeType(String file) {
