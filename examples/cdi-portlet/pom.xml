@@ -5,9 +5,13 @@
         <version>3.2.0.Final-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.jboss.portletbridge.examples</groupId>
     <artifactId>cdi-portlet</artifactId>
-    <packaging>war</packaging>
+
     <name>Portlet Bridge - JSF 2 and CDI Application</name>
+
+    <packaging>war</packaging>
 
     <description>
       A application that demonstrates use of JSF 2 RI and CDI in a portlet
