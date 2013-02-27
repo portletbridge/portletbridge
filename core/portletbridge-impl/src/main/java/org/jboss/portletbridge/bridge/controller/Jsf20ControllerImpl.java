@@ -668,6 +668,7 @@ public class Jsf20ControllerImpl implements BridgeController {
     protected void releaseFacesContext(BridgeContext bridgeContext, FacesContext facesContext) {
         fireFacesSystemEvent(bridgeContext, BridgePreReleaseFacesContextSystemEvent.class);
 
+        AbstractExternalContext.setPortletFlash(null);
         facesContext.release();
     }
 
