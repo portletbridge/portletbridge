@@ -1,0 +1,17 @@
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html" xml:lang="en" lang="en">
+    <h:head>
+    </h:head>
+
+    <h:body>
+        <h:form>
+            <h:inputText id="input" value="#{pbr500.input}" />
+            <h:commandButton id="submit" action="#{pbr500.action}" value="Click">
+                <f:ajax execute="@form" render="result" />
+            </h:commandButton>
+
+            <h:outputText id="result" value="#{pbr500.output}" />
+        </h:form>
+    </h:body>
+</f:view>

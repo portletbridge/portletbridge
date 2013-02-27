@@ -500,11 +500,7 @@ public class BridgeContextImpl extends BridgeContext implements ELContextListene
         }
 
         // Now remove up through the ContextPath
-        String ctxPath = getPortletRequest().getContextPath();
-        index = path.indexOf(ctxPath);
-        if (index != -1) {
-            path = path.substring(index + ctxPath.length());
-        }
+        path = getPathWithoutContext(path, getPortletRequest().getContextPath());
 
         String viewId = null;
         List<String> facesMappings = getBridgeConfig().getFacesServletMappings();
@@ -519,6 +515,20 @@ public class BridgeContextImpl extends BridgeContext implements ELContextListene
             viewId = null;
         }
         return viewId;
+    }
+
+    private String getPathWithoutContext(String path, String contextPath) {
+        int pos = path.indexOf(contextPath);
+
+        if (pos != -1) {
+            if (path.lastIndexOf('/') == (pos + contextPath.length())) {
+                if (pos + contextPath.length() != path.length()) {
+                    path = path.substring(pos + contextPath.length());
+                }
+            }
+        }
+
+        return path;
     }
 
     /**
