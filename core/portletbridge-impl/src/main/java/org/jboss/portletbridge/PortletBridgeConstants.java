@@ -33,4 +33,6 @@ public interface PortletBridgeConstants {
     String AJAX_PARAM = "_pbrAjax";
 
     String WSRP_REQUEST_PARAM = "org.gatein.invocation.fromWSRP";
+
+    String PREVENT_SELF_CLOSING_SCRIPT_TAG_PARAM = "org.jboss.portletbridge.PREVENT_SELF_CLOSING_SCRIPT_TAG";
 }

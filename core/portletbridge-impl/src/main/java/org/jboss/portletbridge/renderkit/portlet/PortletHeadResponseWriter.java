@@ -21,6 +21,7 @@
  */
 package org.jboss.portletbridge.renderkit.portlet;
 
+import org.jboss.portletbridge.bridge.context.BridgeContext;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -45,11 +46,13 @@ public class PortletHeadResponseWriter extends ResponseWriterWrapper {
     PortletResponse response;
 
     private Stack<Element> elements;
+    private boolean preventSelfClosing = false;
 
     public PortletHeadResponseWriter(ResponseWriter parent, PortletResponse portletResponse) {
         this.wrapped = parent;
         this.response = portletResponse;
         this.elements = new Stack<Element>();
+        this.preventSelfClosing = BridgeContext.getCurrentInstance().getBridgeConfig().doPreventSelfClosingScriptTag();
     }
 
     /**
@@ -73,14 +76,14 @@ public class PortletHeadResponseWriter extends ResponseWriterWrapper {
         } else {
             Element elem = elements.pop();
 
-            if (("script".equals(name) || "style".equals(name)) && !elem.hasAttribute("src")) {
+            if (("script".equalsIgnoreCase(name) || "style".equalsIgnoreCase(name)) && !elem.hasAttribute("src")) {
                 Text text1;
                 Text text2 = null;
                 CDATASection cdata;
                 String content = elem.getTextContent();
                 Document owner = elem.getOwnerDocument();
 
-                if ("script".equals(name)) {
+                if ("script".equalsIgnoreCase(name)) {
                     text1 = owner.createTextNode("\n//");
                     cdata = owner.createCDATASection("\n" + content + "\n//");
                 } else {
@@ -94,6 +97,10 @@ public class PortletHeadResponseWriter extends ResponseWriterWrapper {
                 elem.appendChild(cdata);
                 if (null != text2) {
                     elem.appendChild(text2);
+                }
+            } else if (preventSelfClosing) {
+                if (("script".equalsIgnoreCase(name)) && (null == elem.getTextContent() || elem.getTextContent().length() == 0)) {
+                    elem.appendChild(elem.getOwnerDocument().createComment(" "));
                 }
             }
             response.addProperty(MimeResponse.MARKUP_HEAD_ELEMENT, elem);

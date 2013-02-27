@@ -274,7 +274,7 @@ public interface BridgeConfig {
      * Sets the <code>Class</code> that the bridge uses to wrap the response when rendering a <code>JSP</code> to implement the
      * Faces implementation specific support for handling interleaved response writing.
      *
-     * @param wbrClass <code>Class</code> that implements the <code>BridgeWritebehindResponse</code> interface and is a proper
+     * @param renderResponseWrapper <code>Class</code> that implements the <code>BridgeWritebehindResponse</code> interface and is a proper
      *        portlet render response wrapper.
      */
     void setWriteBehindRenderResponseWrapper(Class<? extends BridgeWriteBehindResponse> renderResponseWrapper);
@@ -292,7 +292,7 @@ public interface BridgeConfig {
      * Sets the <code>Class</code> that the bridge uses to wrap the response when rendering a <code>JSP</code> resource to
      * implement the Faces implementation specific support for handling interleaved response writing.
      *
-     * @param wbrClass <code>Class</code> that implements the <code>BridgeWritebehindResponse</code> interface and is a proper
+     * @param resourceResponseWrapper <code>Class</code> that implements the <code>BridgeWritebehindResponse</code> interface and is a proper
      *        portlet resource response wrapper.
      */
     void setWriteBehindResourceResponseWrapper(Class<? extends BridgeWriteBehindResponse> resourceResponseWrapper);
@@ -354,4 +354,19 @@ public interface BridgeConfig {
      */
     String getDefaultRenderKitId();
 
+    /**
+     * Sets whether or not the bridge should prevent script tags from being rendered as self-closing in the page HEAD.
+     *
+     * @param preventSelfClosingScriptTag <code>Boolean.TRUE</code> indicates the script tag will not be self-closing.
+     *                                    <code>Boolean.FALSE</code> indicates they are self-closing.
+     */
+    void setPreventSelfClosingScriptTag(boolean preventSelfClosingScriptTag);
+
+    /**
+     * Gets whether or not the bridge should prevent script tags from being rendered as self-closing in the page HEAD.
+     * If not previously set, it returns <code>false</code>.
+     *
+     * @return <code>true</code> the script tag will not be self-closing. <code>false</code> indicates they are self-closing.
+     */
+    boolean doPreventSelfClosingScriptTag();
 }

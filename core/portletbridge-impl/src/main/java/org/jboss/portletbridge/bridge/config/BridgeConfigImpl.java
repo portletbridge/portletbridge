@@ -67,6 +67,7 @@ public class BridgeConfigImpl implements BridgeConfig {
     private String viewIdParameterName = Bridge.FACES_VIEW_ID_PARAMETER;
     private String viewIdResourceParameterName = VIEWID_RESOURCE_PARAMETER_NAME;
     private Map<String, Object> attributes;
+    private boolean preventSelfClosingScriptTag = false;
 
     public BridgeConfigImpl() {
     }
@@ -370,4 +371,19 @@ public class BridgeConfigImpl implements BridgeConfig {
                 Bridge.BRIDGE_PACKAGE_PREFIX + portletConfig.getPortletName() + "." + Bridge.DEFAULT_RENDERKIT_ID);
     }
 
+    /**
+     * @see org.jboss.portletbridge.bridge.config.BridgeConfig#doPreventSelfClosingScriptTag()
+     */
+    @Override
+    public boolean doPreventSelfClosingScriptTag() {
+        return preventSelfClosingScriptTag;
+    }
+
+    /**
+     * @see org.jboss.portletbridge.bridge.config.BridgeConfig#setPreventSelfClosingScriptTag(boolean)
+     */
+    @Override
+    public void setPreventSelfClosingScriptTag(boolean preventSelfClosingScriptTag) {
+        this.preventSelfClosingScriptTag = preventSelfClosingScriptTag;
+    }
 }

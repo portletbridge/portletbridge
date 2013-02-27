@@ -194,6 +194,10 @@ public class PortletBridgeImpl implements Bridge {
             throw new BridgeException("No JSF view id's defined in portlet.xml for " + portletConfig.getPortletName());
         }
 
+        // PBR-495 - Parameter to determine whether HeadRenderer forces non self-closing script tags
+        String preventSelfClosing = portletContext.getInitParameter(PortletBridgeConstants.PREVENT_SELF_CLOSING_SCRIPT_TAG_PARAM);
+        bridgeConfig.setPreventSelfClosingScriptTag(Boolean.parseBoolean(preventSelfClosing) ? true : false);
+
         return bridgeConfig;
     }
 
