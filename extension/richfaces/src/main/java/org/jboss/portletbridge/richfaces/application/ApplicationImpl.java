@@ -26,6 +26,7 @@ import javax.faces.application.ApplicationWrapper;
 import javax.faces.application.ResourceHandler;
 
 import org.jboss.portletbridge.richfaces.application.resource.OutermostRichFacesPortletResourceHandler;
+import org.richfaces.resource.ResourceHandlerImpl;
 
 /**
  * @author <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
@@ -50,7 +51,7 @@ public class ApplicationImpl extends ApplicationWrapper {
     public ResourceHandler getResourceHandler() {
         ResourceHandler resourceHandler = wrapped.getResourceHandler();
 
-        if (null != resourceHandler) {
+        if (null != resourceHandler && resourceHandler instanceof ResourceHandlerImpl) {
             resourceHandler = new OutermostRichFacesPortletResourceHandler(resourceHandler);
         }
         return resourceHandler;
