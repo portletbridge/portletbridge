@@ -56,6 +56,7 @@ public class PBR500Test {
         deployment.archive()
                 .createFacesPortlet("pbr500", "PBR500 Portlet", "/pages/PBR500Test.xhtml")
                 .addAsWebResource("pages/fixes/pbr500/pbr500.xhtml", "/pages/PBR500Test.xhtml")
+                .addAsWebResource("pages/fixes/pbr500/pbr500.xhtml", "/pages/page.xhtml")
                 .addClass(PBR500Bean.class);
         return deployment.getFinalArchive();
     }
@@ -70,6 +71,12 @@ public class PBR500Test {
 
     @FindBy(jquery = "[id$=':result']")
     private WebElement resultField;
+
+    @FindBy(jquery = "[id$=':link1']")
+    private WebElement linkWithContext;
+
+    @FindBy(jquery = "[id$=':link2']")
+    private WebElement linkWithoutContext;
 
     @ArquillianResource
     @PortalURL
@@ -94,4 +101,12 @@ public class PBR500Test {
         assertEquals("Output Field set.", TEXT, resultField.getText());
     }
 
+    @Test
+    @RunAsClient
+    public void generateActionUrlWithContextPathInUrl() throws Exception {
+        browser.get(portalURL.toString());
+
+        assertEquals("Link with and without context should be identical.",
+                linkWithoutContext.getAttribute("href"), linkWithContext.getAttribute("href"));
+    }
 }

@@ -521,7 +521,7 @@ public class BridgeContextImpl extends BridgeContext implements ELContextListene
         int pos = path.indexOf(contextPath);
 
         if (pos != -1) {
-            if (path.lastIndexOf('/') == (pos + contextPath.length())) {
+            if (path.indexOf('/', pos + 1) > 0) {
                 if (pos + contextPath.length() != path.length()) {
                     path = path.substring(pos + contextPath.length());
                 }

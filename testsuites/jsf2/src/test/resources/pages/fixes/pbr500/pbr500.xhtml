@@ -11,6 +11,16 @@
                 <f:ajax execute="@form" render="result" />
             </h:commandButton>
 
+            <h:outputLink id="link1" value="#{facesContext.externalContext.requestContextPath}/pages/page.jsf" >
+                <f:param name="javax.portlet.faces.ViewLink" value="true"/>
+                Link1
+            </h:outputLink>
+
+            <h:outputLink id="link2" value="page.jsf" >
+                <f:param name="javax.portlet.faces.ViewLink" value="true"/>
+                Link2
+            </h:outputLink>
+
             <h:outputText id="result" value="#{pbr500.output}" />
         </h:form>
     </h:body>
