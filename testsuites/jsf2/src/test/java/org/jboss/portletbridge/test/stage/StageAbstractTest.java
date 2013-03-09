@@ -24,12 +24,13 @@ package org.jboss.portletbridge.test.stage;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.enricher.findby.FindBy;
 import org.jboss.portletbridge.deployment.TestDeployment;
+import org.jboss.portletbridge.test.AbstractPortletTest;
 import org.jboss.shrinkwrap.descriptor.api.webapp30.WebAppDescriptor;
 import org.jboss.shrinkwrap.portal.api.PortletArchive;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-public abstract class StageAbstractTest {
+public abstract class StageAbstractTest extends AbstractPortletTest {
 
     protected static void getWebXml(WebAppDescriptor webConfig, String value) {
         webConfig.createContextParam()
@@ -53,5 +54,9 @@ public abstract class StageAbstractTest {
 
     @Drone
     WebDriver browser;
+
+    protected WebDriver getBrowser() {
+        return browser;
+    }
 
 }

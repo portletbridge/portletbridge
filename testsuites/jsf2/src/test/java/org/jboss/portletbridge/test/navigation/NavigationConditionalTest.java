@@ -30,6 +30,7 @@ import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.portletbridge.deployment.TestDeployment;
+import org.jboss.portletbridge.test.AbstractPortletTest;
 import org.jboss.shrinkwrap.descriptor.api.facesconfig21.FacesConfigNavigationRuleType;
 import org.jboss.shrinkwrap.descriptor.api.facesconfig21.WebFacesConfigDescriptor;
 import org.jboss.shrinkwrap.portal.api.PortletArchive;
@@ -46,7 +47,7 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
 @PortalTest
-public class NavigationConditionalTest {
+public class NavigationConditionalTest extends AbstractPortletTest {
 
     @Deployment
     public static PortletArchive createDeployment() {
@@ -93,9 +94,8 @@ public class NavigationConditionalTest {
     @Drone
     WebDriver browser;
 
-    @Before
-    public void getNewSession() {
-        browser.manage().deleteAllCookies();
+    protected WebDriver getBrowser() {
+        return browser;
     }
 
     @Test

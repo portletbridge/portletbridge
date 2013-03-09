@@ -9,6 +9,7 @@ import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.portletbridge.deployment.TestDeployment;
+import org.jboss.portletbridge.test.AbstractPortletTest;
 import org.jboss.shrinkwrap.portal.api.PortletArchive;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +24,7 @@ import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
 @PortalTest
-public class CommandButtonTest {
+public class CommandButtonTest extends AbstractPortletTest {
 
     @Deployment
     public static PortletArchive createDeployment() {
@@ -46,9 +47,8 @@ public class CommandButtonTest {
     @Page
     CommandButtonPage page;
 
-    @Before
-    public void getNewSession() {
-        browser.manage().deleteAllCookies();
+    protected WebDriver getBrowser() {
+        return browser;
     }
 
     @Test

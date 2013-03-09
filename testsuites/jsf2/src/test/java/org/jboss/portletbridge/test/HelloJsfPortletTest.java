@@ -44,7 +44,7 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
 @PortalTest
-public class HelloJsfPortletTest {
+public class HelloJsfPortletTest extends AbstractPortletTest {
 
     @Deployment
     public static PortletArchive createDeployment() {
@@ -66,9 +66,8 @@ public class HelloJsfPortletTest {
     @Drone
     WebDriver browser;
 
-    @Before
-    public void getNewSession() {
-        browser.manage().deleteAllCookies();
+    protected WebDriver getBrowser() {
+        return browser;
     }
 
     @Test

@@ -44,7 +44,7 @@ import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
 @PortalTest
-public class AjaxSubmitTest {
+public class AjaxSubmitTest extends AbstractPortletTest {
 
     public static final String NEW_VALUE = "New Value";
 
@@ -74,9 +74,8 @@ public class AjaxSubmitTest {
     @Drone
     WebDriver browser;
 
-    @Before
-    public void getNewSession() {
-        browser.manage().deleteAllCookies();
+    protected WebDriver getBrowser() {
+        return browser;
     }
 
     @Test

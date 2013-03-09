@@ -30,6 +30,7 @@ import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.portletbridge.deployment.TestDeployment;
+import org.jboss.portletbridge.test.AbstractPortletTest;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.descriptor.api.webapp30.WebAppDescriptor;
 import org.jboss.shrinkwrap.portal.api.PortletArchive;
@@ -49,7 +50,7 @@ import static org.junit.Assert.assertTrue;
  */
 @RunWith(Arquillian.class)
 @PortalTest
-public class WebXmlNoFacesServletWithErrorPagesTest {
+public class WebXmlNoFacesServletWithErrorPagesTest extends AbstractPortletTest {
 
     @Deployment
     public static PortletArchive createDeployment() {
@@ -82,9 +83,8 @@ public class WebXmlNoFacesServletWithErrorPagesTest {
     @Drone
     WebDriver browser;
 
-    @Before
-    public void getNewSession() {
-        browser.manage().deleteAllCookies();
+    protected WebDriver getBrowser() {
+        return browser;
     }
 
     @Test
