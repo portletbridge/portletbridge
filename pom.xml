@@ -20,7 +20,7 @@
         <version.mojarra2>2.1.13</version.mojarra2>
 
         <!-- RichFaces 4 versions -->
-        <version.richfaces4>4.3.0.Final</version.richfaces4>
+        <version.richfaces4>4.3.1.Final</version.richfaces4>
 
         <!-- GateIn PC version -->
         <version.gatein.pc>2.4.0.CR01</version.gatein.pc>

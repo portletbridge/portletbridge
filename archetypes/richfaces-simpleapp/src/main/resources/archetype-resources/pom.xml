@@ -15,7 +15,7 @@
     <properties>
         <jsf.version>2.1.13</jsf.version>
         <jboss.portletbridge.version>3.2.0.Final-SNAPSHOT</jboss.portletbridge.version>
-        <richfaces.version>4.3.0.Final</richfaces.version>
+        <richfaces.version>4.3.1.Final</richfaces.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
