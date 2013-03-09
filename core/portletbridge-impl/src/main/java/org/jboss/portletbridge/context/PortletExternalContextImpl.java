@@ -1171,12 +1171,46 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
     }
 
     protected boolean isFacesPath(String pathInContext) {
+        List<String> mappings = bridgeContext.getBridgeConfig().getFacesServletMappings();
+
         if (null != getServletMappingPrefix()) {
-            return pathInContext.startsWith(getServletMappingPrefix());
+            boolean isPrefixMapped = pathInContext.startsWith(getServletMappingPrefix());
+
+            if (!isPrefixMapped) {
+                for(String mapping : mappings) {
+                    if (mapping.startsWith("*.")) {
+                        // Check for Suffix Mapping
+                        isPrefixMapped = pathInContext.endsWith(mapping.substring(2));
+                        if (isPrefixMapped) {
+                            return isPrefixMapped;
+                        }
+                    }
+                }
+            }
+
+            return isPrefixMapped;
         } else if (null != getServletMappingSuffix()) {
-            return pathInContext.endsWith(getServletMappingSuffix());
+            boolean isSuffixMapped = pathInContext.endsWith(getServletMappingSuffix());
+
+            if (!isSuffixMapped) {
+                for(String mapping : mappings) {
+                    if (mapping.endsWith("*")) {
+                        // Check for Prefix Mapping
+                        mapping = mapping.substring(0, mapping.length() - 1);
+                        if (mapping.endsWith("/")) {
+                            mapping = mapping.substring(0, mapping.length() - 1);
+                        }
+                        isSuffixMapped = pathInContext.startsWith(mapping);
+                        if (isSuffixMapped) {
+                            return isSuffixMapped;
+                        }
+                    }
+                }
+            }
+
+            return isSuffixMapped;
         }
-        // No Faces preffix/suffix defined, all request came to JSF
+
         return true;
     }
 

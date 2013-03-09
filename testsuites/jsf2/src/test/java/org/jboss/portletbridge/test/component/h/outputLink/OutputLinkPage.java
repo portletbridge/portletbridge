@@ -44,6 +44,12 @@ public class OutputLinkPage {
     @FindBy(jquery = "[id$=':link3img']")
     private WebElement linkThreeImage;
 
+    @FindBy(jquery = "[id$=':viewLink1']")
+    private WebElement viewLinkOne;
+
+    @FindBy(jquery = "[id$=':viewLink2']")
+    private WebElement viewLinkTwo;
+
     public WebElement getLinkZero() {
         return linkZero;
     }
@@ -62,5 +68,13 @@ public class OutputLinkPage {
 
     public WebElement getLinkThreeImage() {
         return linkThreeImage;
+    }
+
+    public WebElement getViewLinkOne() {
+        return viewLinkOne;
+    }
+
+    public WebElement getViewLinkTwo() {
+        return viewLinkTwo;
     }
 }

@@ -9,6 +9,7 @@ import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.portletbridge.deployment.TestDeployment;
+import org.jboss.portletbridge.test.AbstractPortletTest;
 import org.jboss.shrinkwrap.portal.api.PortletArchive;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +24,7 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
 @PortalTest
-public class OutputLinkTest {
+public class OutputLinkTest extends AbstractPortletTest {
 
     @Deployment()
     public static PortletArchive createDeployment() {
@@ -33,6 +34,10 @@ public class OutputLinkTest {
                 .addAsWebResource("pages/component/h/outputLink/outputlink.xhtml", "outputLink.xhtml")
                 .addAsWebResource("resources/ajax.png", "ajax.png")
                 .addClass(OutputLinkBean.class);
+        deployment.webXml().createServletMapping()
+                            .servletName("Faces Servlet")
+                            .urlPattern("/faces/*")
+                            .up();
         return deployment.getFinalArchive();
     }
 
@@ -46,9 +51,8 @@ public class OutputLinkTest {
     @Page
     OutputLinkPage page;
 
-    @Before
-    public void getNewSession() {
-        browser.manage().deleteAllCookies();
+    protected WebDriver getBrowser() {
+        return browser;
     }
 
     @Test
@@ -110,6 +114,15 @@ public class OutputLinkTest {
         browser.get(portalURL.toString());
 
         page.getLinkZero().isDisplayed();
+    }
+
+    @Test
+    @RunAsClient
+    public void testViewLinksWithDifferentFacesServletMapping() throws Exception {
+        browser.get(portalURL.toString());
+
+        assertEquals("Whether Faces Suffix or Prefix mapping is used it should generate same url.",
+                page.getViewLinkOne().getAttribute("href"), page.getViewLinkTwo().getAttribute("href"));
     }
 
     // TODO: Add more tests, clicking on links, but only after fixing the above FIXMEs.

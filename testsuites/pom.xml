@@ -149,7 +149,8 @@
                             <!--           <argLine>-Djava.util.logging.config.file=${project.build.testOutputDirectory}/logging.properties</argLine> -->
                             <useSystemClassLoader>true</useSystemClassLoader>
                             <useManifestOnlyJar>false</useManifestOnlyJar>
-                            <forkMode>once</forkMode>
+                            <!-- Need to fork always as classloader for Pluto and tests is the same, and we need statics to be reset -->
+                            <forkMode>always</forkMode>
                         </configuration>
                     </plugin>
                 </plugins>

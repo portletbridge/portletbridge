@@ -13,5 +13,14 @@
             <h:graphicImage id="link3img" value="ajax.png" />
             <f:param name="from" value="L3" />
         </h:outputLink>
+
+        <h:outputLink id="viewLink1" value="#{facesContext.externalContext.requestContextPath}/outputLink.jsf">
+            <f:param name="javax.portlet.faces.ViewLink" value="true" />
+            View Link 1
+        </h:outputLink>
+        <h:outputLink id="viewLink2" value="#{facesContext.externalContext.requestContextPath}/faces/outputLink.xhtml">
+            <f:param name="javax.portlet.faces.ViewLink" value="true" />
+            View Link 2
+        </h:outputLink>
     </h:body>
 </f:view>
