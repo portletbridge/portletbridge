@@ -12,7 +12,7 @@
    </description>
 
    <properties>
-      <jsf.version>2.1.13</jsf.version>
+      <jsf.version>2.1.19</jsf.version>
       <pbr.version>3.2.0.Final-SNAPSHOT</pbr.version>
    </properties>
 
