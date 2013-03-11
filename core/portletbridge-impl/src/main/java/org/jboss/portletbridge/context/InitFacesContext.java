@@ -64,13 +64,13 @@ public class InitFacesContext extends FacesContext {
         originalContext = FacesContext.getCurrentInstance();
         setCurrentInstance(this);
         this.application = application;
-        viewRoot = new UIViewRoot();
-        viewRoot.setLocale(Locale.getDefault());
         if (null != originalContext) {
             externalContext = originalContext.getExternalContext();
         } else {
             externalContext = new InitExternalContext(portletContext);
         }
+        viewRoot = new UIViewRoot();
+        viewRoot.setLocale(Locale.getDefault());
     }
 
     /*
