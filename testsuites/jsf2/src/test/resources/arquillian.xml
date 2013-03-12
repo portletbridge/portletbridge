@@ -8,6 +8,7 @@
         <property name="deploymentExportPath">target/</property>
     </engine>
     -->
+    <defaultProtocol type="Servlet 3.0" />
 
     <extension qualifier="webdriver">
         <property name="browserCapabilities">htmlUnit</property>
