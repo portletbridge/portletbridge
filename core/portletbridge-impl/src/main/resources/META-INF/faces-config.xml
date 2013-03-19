@@ -18,6 +18,7 @@
     </application>
     <lifecycle>
         <phase-listener>org.jboss.portletbridge.lifecycle.HeadResourcesPhaseListener</phase-listener>
+        <phase-listener>org.jboss.portletbridge.lifecycle.ManagedBeanPhaseListener</phase-listener>
     </lifecycle>
     <factory>
         <application-factory>org.jboss.portletbridge.application.PortletApplicationFactoryImpl</application-factory>

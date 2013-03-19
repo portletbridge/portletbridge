@@ -34,6 +34,7 @@ import javax.portlet.faces.annotation.BridgePreDestroy;
 import org.jboss.portletbridge.bridge.factory.BridgeLoggerFactoryImpl;
 import org.jboss.portletbridge.bridge.logger.BridgeLogger;
 import org.jboss.portletbridge.bridge.logger.BridgeLogger.Level;
+import org.jboss.portletbridge.listener.PortletBridgeListener;
 
 /**
  * This class keeps all request attributes that are required to be stored between portlet requests. These parameters are
@@ -139,7 +140,7 @@ public class BridgeRequestScopeImpl extends ConcurrentHashMap<String, Object> im
     @Override
     public Object putIfAbsent(String key, Object value) {
         if (!isExcluded(key, value)) {
-            return callPreDestroy(super.putIfAbsent(key, value));
+            return callPreDestroy(key, super.putIfAbsent(key, value));
         }
         return null;
     }
@@ -150,7 +151,7 @@ public class BridgeRequestScopeImpl extends ConcurrentHashMap<String, Object> im
     @Override
     public Object put(String key, Object value) {
         if (!isExcluded(key, value)) {
-            return callPreDestroy(super.put(key, value));
+            return callPreDestroy(key, super.put(key, value));
         }
         return null;
     }
@@ -166,17 +167,17 @@ public class BridgeRequestScopeImpl extends ConcurrentHashMap<String, Object> im
     }
 
     public Object remove(String key) {
-        return callPreDestroy(super.remove(key));
+        return callPreDestroy(key, super.remove(key));
     }
 
     public boolean remove(String key, Object value) {
-        callPreDestroy(value);
+        callPreDestroy(key, value);
         return super.remove(key, value);
     }
 
     @Override
     public Object replace(String key, Object value) {
-        return callPreDestroy(super.replace(key, value));
+        return callPreDestroy(key, super.replace(key, value));
     }
 
     @Override
@@ -184,14 +185,14 @@ public class BridgeRequestScopeImpl extends ConcurrentHashMap<String, Object> im
         if (!super.replace(key, oldValue, newValue)) {
             return false;
         }
-        callPreDestroy(oldValue);
+        callPreDestroy(key, oldValue);
         return true;
     }
 
     @Override
     public void clear() {
-        for (Object obj : values()) {
-            callPreDestroy(obj);
+        for (String key : keySet()) {
+            callPreDestroy(key, get(key));
         }
         super.clear();
     }
@@ -204,7 +205,7 @@ public class BridgeRequestScopeImpl extends ConcurrentHashMap<String, Object> im
      *            Object requiring call to PreDestroy annotated methods
      * @return Original Object
      */
-    private Object callPreDestroy(Object obj) {
+    private Object callPreDestroy(String key, Object obj) {
         if (null != obj) {
             for (Method method : obj.getClass().getMethods()) {
                 // Check for Method with BridgePreDestroy annotation
@@ -228,10 +229,15 @@ public class BridgeRequestScopeImpl extends ConcurrentHashMap<String, Object> im
                         // Invoke pre destroy method
                         method.invoke(obj, (Object) null);
                     } catch (Exception e) {
-                        logger.log(Level.ERROR, "Error invoking @PreDestroy method: " + method.getName() + " on: "
+                        logger.log(Level.ERROR, "Error invoking @BridgePreDestroy method: " + method.getName() + " on: "
                             + obj.getClass().getName(), e);
                     }
                 }
+            }
+
+            PortletBridgeListener listener = PortletBridgeListener.getCurrentInstance();
+            if (null != listener) {
+                listener.handleAttributeEvent(key, obj);
             }
         }
         return obj;

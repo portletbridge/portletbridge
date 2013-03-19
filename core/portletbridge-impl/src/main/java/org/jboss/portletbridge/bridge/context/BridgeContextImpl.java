@@ -94,6 +94,19 @@ public class BridgeContextImpl extends BridgeContext implements ELContextListene
      */
     @Override
     public void release() {
+        portletContext = null;
+        portletRequest = null;
+        portletResponse = null;
+        bridgeConfig = null;
+        portletPhase = null;
+        attributes = null;
+        savedViewStateParam = null;
+        navigationQueryString = null;
+        renderRedirectQueryString = null;
+        redirectViewId = null;
+        preExistingRequestAttributeNames = null;
+        preservedActionParams = null;
+
         BridgeContext.setCurrentInstance(null);
 
         // Remove as ELContextListener from the Faces App

@@ -26,6 +26,8 @@ import javax.faces.application.Application;
 import javax.faces.application.ApplicationWrapper;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;
+import javax.faces.event.SystemEvent;
+import javax.faces.event.SystemEventListener;
 import javax.portlet.faces.BridgeUtil;
 import javax.portlet.faces.annotation.PortletNamingContainer;
 import javax.portlet.faces.component.PortletNamingContainerUIViewRoot;
@@ -62,6 +64,22 @@ public class PortletApplicationImpl extends ApplicationWrapper {
             component = portletRoot;
         }
         return component;
+    }
+
+    @Override
+    public void subscribeToEvent(Class<? extends SystemEvent> systemEventClass, Class<?> sourceClass, SystemEventListener listener) {
+        if (null != sourceClass && UIViewRoot.class.getName().equals(sourceClass.getName())) {
+            sourceClass = PortletNamingContainerUIViewRoot.class;
+        }
+        super.subscribeToEvent(systemEventClass, sourceClass, listener);
+    }
+
+    @Override
+    public void unsubscribeFromEvent(Class<? extends SystemEvent> systemEventClass, Class<?> sourceClass, SystemEventListener listener) {
+        if (null != sourceClass && UIViewRoot.class.getName().equals(sourceClass.getName())) {
+            sourceClass = PortletNamingContainerUIViewRoot.class;
+        }
+        super.unsubscribeFromEvent(systemEventClass, sourceClass, listener);
     }
 
     @Override
