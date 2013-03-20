@@ -110,6 +110,8 @@ public abstract class AbstractExternalContext extends ExternalContext {
 
     private Object context;
 
+    protected boolean overrideFlashHttpResponse = false;
+
     protected static ThreadLocal<PortletFlash> portletFlashInstance = new ThreadLocal<PortletFlash>() {
         @Override
         protected PortletFlash initialValue() {
@@ -431,7 +433,7 @@ public abstract class AbstractExternalContext extends ExternalContext {
     }
 
     protected boolean isBridgeFlashServletResponse() {
-        return ((null != portletFlashInstance.get()) && portletFlashInstance.get().isServletResponse());
+        return ((null != portletFlashInstance.get()) && !overrideFlashHttpResponse && portletFlashInstance.get().isServletResponse());
     }
 
     /**

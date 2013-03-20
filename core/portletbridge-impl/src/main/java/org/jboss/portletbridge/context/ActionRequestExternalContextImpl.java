@@ -284,7 +284,7 @@ public class ActionRequestExternalContextImpl extends PortletExternalContextImpl
 
     @Override
     public boolean isResponseCommitted() {
-        return true;
+        return false;
     }
 
     @Override
