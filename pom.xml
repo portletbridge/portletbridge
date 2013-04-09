@@ -25,6 +25,9 @@
         <!-- GateIn PC version -->
         <version.gatein.pc>2.4.0.CR01</version.gatein.pc>
 
+        <!-- CDI/JSF Portlet Integration -->
+        <version.cdi.portlet.integration>1.0.0.Final</version.cdi.portlet.integration>
+
         <!-- Spec versions -->
         <version.portlet>2.0</version.portlet>
         <version.servlet2>2.5</version.servlet2>
@@ -140,6 +143,13 @@
                 <version>${version.richfaces4}</version>
                 <scope>import</scope>
                 <type>pom</type>
+            </dependency>
+
+            <!-- CDI/Portlet Integration Library -->
+            <dependency>
+                <groupId>org.gatein</groupId>
+                <artifactId>cdi-portlet-integration</artifactId>
+                <version>${version.cdi.portlet.integration}</version>
             </dependency>
 
             <!-- Test dependencies -->

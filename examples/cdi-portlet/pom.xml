@@ -80,7 +80,6 @@
         <dependency>
             <groupId>org.gatein</groupId>
             <artifactId>cdi-portlet-integration</artifactId>
-            <version>${version.cdi.portlet.integration}</version>
         </dependency>
     </dependencies>
 </project>
