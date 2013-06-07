@@ -454,31 +454,6 @@ public class Jsf20ControllerImpl implements BridgeController {
             }
         }
 
-        // ***** TO BE REMOVED AS PART OF PBR-468 WHEN JSF IMPL FIX AVAILABLE *******
-        // START
-        // Remove StateContext from FacesContext to prevent issues with Dynamic Actions being retained between Renders
-        facesContext.getAttributes().remove(StateContext.class.getName() + "_KEY");
-
-        // Unregister PostAddToViewEvent listener if it's StateContext.AddRemoveListener
-        List<SystemEventListener> postAddListeners = facesContext.getViewRoot().getViewListenersForEventClass(PostAddToViewEvent.class);
-        if (null != postAddListeners && !postAddListeners.isEmpty()) {
-            for (SystemEventListener listener : postAddListeners) {
-                if (listener instanceof AddRemoveListener) {
-                    facesContext.getViewRoot().unsubscribeFromViewEvent(PostAddToViewEvent.class, listener);
-                }
-            }
-        }
-        // Unregister PreRemoveFromViewEvent listener if it's StateContext.AddRemoveListener
-        List<SystemEventListener> preRemoveListeners = facesContext.getViewRoot().getViewListenersForEventClass(PreRemoveFromViewEvent.class);
-        if (null != preRemoveListeners && !preRemoveListeners.isEmpty()) {
-            for (SystemEventListener listener : preRemoveListeners) {
-                if (listener instanceof AddRemoveListener) {
-                    facesContext.getViewRoot().unsubscribeFromViewEvent(PreRemoveFromViewEvent.class, listener);
-                }
-            }
-        }
-        // END
-
         saveFacesView(scope, facesContext);
 
         if (Bridge.PortletPhase.RESOURCE_PHASE == bridgeContext.getPortletRequestPhase()) {
