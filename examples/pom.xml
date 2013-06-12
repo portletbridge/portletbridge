@@ -15,5 +15,6 @@
         <module>richfaces-showcase</module>
         <module>richfaces-simple</module>
         <module>cdi-portlet</module>
+        <module>deltaspike-portlet</module>
     </modules>
 </project>
