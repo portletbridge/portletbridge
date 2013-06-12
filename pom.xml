@@ -26,7 +26,7 @@
         <version.gatein.pc>2.4.0.CR01</version.gatein.pc>
 
         <!-- CDI/JSF Portlet Integration -->
-        <version.cdi.portlet.integration>1.0.0.Final</version.cdi.portlet.integration>
+        <version.cdi.portlet.integration>1.0.1.Final</version.cdi.portlet.integration>
 
         <!-- Spec versions -->
         <version.portlet>2.0</version.portlet>
