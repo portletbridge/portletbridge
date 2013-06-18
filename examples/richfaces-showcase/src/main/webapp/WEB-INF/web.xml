@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" 
-	xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="richfaces-showcase" version="3.0">
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="richfaces-showcase" version="3.0">
 
 	<display-name>richfaces-showcase</display-name>
 
@@ -80,5 +80,14 @@
 		<param-name>org.richfaces.push.jms.connectionPassword</param-name>
 		<param-value>password</param-value>
 	</context-param>
+    <context-param>
+        <param-name>org.richfaces.push.session.maxInactiveInterval</param-name>
+        <!-- interval in miliseconds; default value: 5 minutes -->
+        <param-value>300000</param-value>
+    </context-param>
+    <context-param>
+        <param-name>org.atmosphere.cpr.CometSupport.maxInactiveActivity</param-name>
+        <param-value>35000</param-value>
+    </context-param>
 	<!-- added / end -->
 </web-app>
