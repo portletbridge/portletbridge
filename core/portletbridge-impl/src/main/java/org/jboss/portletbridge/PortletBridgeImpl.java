@@ -198,6 +198,14 @@ public class PortletBridgeImpl implements Bridge {
         String preventSelfClosing = portletContext.getInitParameter(PortletBridgeConstants.PREVENT_SELF_CLOSING_SCRIPT_TAG_PARAM);
         bridgeConfig.setPreventSelfClosingScriptTag(Boolean.parseBoolean(preventSelfClosing) ? true : false);
 
+        // Determine whether we're running with JSF 2.2 Runtime or not
+        // Use FlashFactory presence to determine it
+        try {
+            this.getClass().getClassLoader().loadClass("javax.faces.context.FlashFactory");
+            bridgeConfig.setJsf22Runtime(true);
+        } catch (ClassNotFoundException e) {
+            // Default is already non JSF 2.2 runtime, so don't need to set again.
+        }
         return bridgeConfig;
     }
 

@@ -369,4 +369,20 @@ public interface BridgeConfig {
      * @return <code>true</code> the script tag will not be self-closing. <code>false</code> indicates they are self-closing.
      */
     boolean doPreventSelfClosingScriptTag();
+
+    /**
+     * Sets whether or not the bridge is running with a JSF 2.2 runtime.
+     *
+     * @param jsf22Runtime <code>Boolean.TRUE</code> indicates we are running with a JSF 2.2 runtime.
+     *                     <code>Boolean.FALSE</code> indicates we are NOT running with a JSF 2.2 runtime.
+     */
+    void setJsf22Runtime(boolean jsf22Runtime);
+
+    /**
+     * Gets whether or not the bridge is running with a JSF 2.2 runtime.
+     * If not previously set, it returns <code>false</code>.
+     *
+     * @return <code>true</code> if its a JSF 2.2 runtime. <code>false</code> indicates it is not.
+     */
+    boolean isJsf22Runtime();
 }

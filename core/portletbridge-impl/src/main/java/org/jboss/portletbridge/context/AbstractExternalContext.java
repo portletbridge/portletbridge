@@ -58,12 +58,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import javax.faces.FactoryFinder;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.Flash;
+import javax.faces.context.FlashFactory;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.Cookie;
 
-import org.jboss.portletbridge.context.flash.FlashHttpServletAdapter;
+import org.jboss.portletbridge.bridge.context.BridgeContext;
 import org.jboss.portletbridge.context.flash.PortletFlash;
 import org.jboss.portletbridge.context.map.ContextAttributesMap;
 import org.jboss.portletbridge.context.map.EnumerationIterator;
@@ -110,21 +112,14 @@ public abstract class AbstractExternalContext extends ExternalContext {
 
     private Object context;
 
-    protected boolean overrideFlashHttpResponse = false;
-
-    protected static ThreadLocal<PortletFlash> portletFlashInstance = new ThreadLocal<PortletFlash>() {
-        @Override
-        protected PortletFlash initialValue() {
-            return null;
-        }
-    };
+    private Flash flash = null;
 
     public static final String CONVERSATION_ID_PARAMETER = "conversationId";
     private Map<String, String> fallbackContentTypeMap = null;
 
     private enum ALLOWABLE_COOKIE_PROPERTIES {
 
-        domain, maxAge, path, secure
+        domain, httpOnly, maxAge, path, secure
     }
 
     /**
@@ -426,14 +421,7 @@ public abstract class AbstractExternalContext extends ExternalContext {
     }
 
     public Object getResponse() {
-        if (isBridgeFlashServletResponse()) {
-            return new FlashHttpServletAdapter((PortletResponse)response);
-        }
         return this.response;
-    }
-
-    protected boolean isBridgeFlashServletResponse() {
-        return ((null != portletFlashInstance.get()) && !overrideFlashHttpResponse && portletFlashInstance.get().isServletResponse());
     }
 
     /**
@@ -485,6 +473,9 @@ public abstract class AbstractExternalContext extends ExternalContext {
                     case domain:
                         cookie.setDomain((String) v);
                         break;
+                    case httpOnly:
+                        cookie.setHttpOnly((Boolean) v);
+                        break;
                     case maxAge:
                         cookie.setMaxAge((Integer) v);
                         break;
@@ -504,22 +495,26 @@ public abstract class AbstractExternalContext extends ExternalContext {
 
     @Override
     public Flash getFlash() {
-        return getPortletFlash();
+        if (null == flash) {
+            if (BridgeContext.getCurrentInstance().getBridgeConfig().isJsf22Runtime()) {
+                FlashFactory ff = (FlashFactory) FactoryFinder.getFactory(FactoryFinder.FLASH_FACTORY);
+                flash = ff.getFlash(true);
+            } else {
+                flash = PortletFlash.getFlash(this, true, null);
+            }
+        }
+        return flash;
     }
 
     protected PortletFlash getPortletFlash() {
-        if (null == portletFlashInstance.get()) {
-            portletFlashInstance.set(PortletFlash.getFlash(this, true));
-        }
-        return portletFlashInstance.get();
-    }
-
-    public static void setPortletFlash(PortletFlash flash) {
         if (null == flash) {
-            portletFlashInstance.remove();
-        } else {
-            portletFlashInstance.set(flash);
+            getFlash();
         }
+
+        if (flash instanceof PortletFlash) {
+            return (PortletFlash) flash;
+        }
+        return null;
     }
 
     public String getFallbackMimeType(String file) {
@@ -537,5 +532,4 @@ public abstract class AbstractExternalContext extends ExternalContext {
         }
         return fallbackContentTypeMap.get(extension);
     }
-
 }

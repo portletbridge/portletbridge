@@ -68,6 +68,7 @@ public class BridgeConfigImpl implements BridgeConfig {
     private String viewIdResourceParameterName = VIEWID_RESOURCE_PARAMETER_NAME;
     private Map<String, Object> attributes;
     private boolean preventSelfClosingScriptTag = false;
+    private boolean insideJsf22Runtime = false;
 
     public BridgeConfigImpl() {
     }
@@ -385,5 +386,21 @@ public class BridgeConfigImpl implements BridgeConfig {
     @Override
     public void setPreventSelfClosingScriptTag(boolean preventSelfClosingScriptTag) {
         this.preventSelfClosingScriptTag = preventSelfClosingScriptTag;
+    }
+
+    /**
+     * @see org.jboss.portletbridge.bridge.config.BridgeConfig#isJsf22Runtime()
+     */
+    @Override
+    public boolean isJsf22Runtime() {
+        return insideJsf22Runtime;
+    }
+
+    /**
+     * @see org.jboss.portletbridge.bridge.config.BridgeConfig#setJsf22Runtime(boolean)
+     */
+    @Override
+    public void setJsf22Runtime(boolean jsf22Runtime) {
+        this.insideJsf22Runtime = jsf22Runtime;
     }
 }

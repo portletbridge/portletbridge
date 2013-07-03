@@ -36,9 +36,11 @@ import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 import javax.portlet.faces.Bridge;
 
+import org.jboss.portletbridge.bridge.context.BridgeContext;
 import org.jboss.portletbridge.bridge.logger.BridgeLogger;
 import org.jboss.portletbridge.bridge.logger.BridgeLogger.Level;
 import org.jboss.portletbridge.bridge.logger.JULLoggerImpl;
+import org.jboss.portletbridge.context.jsf2_0.Jsf20PortletExternalContextWrapper;
 
 public class PortletExternalContextFactoryImpl extends ExternalContextFactory {
 
@@ -84,6 +86,14 @@ public class PortletExternalContextFactoryImpl extends ExternalContextFactory {
             } else {
                 throw new FacesException("Invalid objects passed to getExternalContext() for portlet phase "
                         + portletPhase.toString());
+            }
+
+            // Create ExternalContext based on JSF version being used, pass in phase specific one to be wrapped.
+            boolean isJsf22 = BridgeContext.getCurrentInstance().getBridgeConfig().isJsf22Runtime();
+            if (isJsf22) {
+                externalContext = new Jsf22PortletExternalContextWrapper(externalContext);
+            } else {
+                externalContext = new Jsf20PortletExternalContextWrapper(externalContext);
             }
         } else {
             externalContext = getWrapped().getExternalContext(context, request, response);

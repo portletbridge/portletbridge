@@ -26,6 +26,7 @@
         <external-context-factory>org.jboss.portletbridge.context.PortletExternalContextFactoryImpl</external-context-factory>
         <view-declaration-language-factory>org.jboss.portletbridge.application.view.PortletVdlFactoryImpl</view-declaration-language-factory>
         <partial-view-context-factory>org.jboss.portletbridge.context.PortletPartialViewContextFactoryImpl</partial-view-context-factory>
+        <flash-factory>org.jboss.portletbridge.context.flash.PortletFlashFactoryImpl</flash-factory>
         <factory-extension>
             <bridge:bridge-config-factory>org.jboss.portletbridge.bridge.factory.BridgeConfigFactoryImpl
             </bridge:bridge-config-factory>
