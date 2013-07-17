@@ -26,6 +26,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.ServletRegistration;
+import javax.servlet.annotation.WebListener;
 import java.util.Map;
 
 /**
@@ -34,6 +35,7 @@ import java.util.Map;
  *
  * @author <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
  */
+@WebListener
 public class BridgeConfigureListener implements ServletContextListener {
 
     private static final String FACES_SERVLET_CLASS = FacesServlet.class.getName();

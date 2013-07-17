@@ -66,7 +66,9 @@ public class BridgeInitializer implements ServletContainerInitializer {
     @Override
     public void onStartup(Set<Class<?>> classes, ServletContext ctx) throws ServletException {
         if (null != classes && !classes.isEmpty()) {
-            ctx.addListener(BridgeConfigureListener.class);
+            if (ctx.getMajorVersion() < 3) {
+                ctx.addListener(BridgeConfigureListener.class);
+            }
         }
     }
 
