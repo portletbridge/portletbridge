@@ -32,7 +32,7 @@
 
     <profiles>
         <profile>
-            <id>all</id>
+            <id>full-testsuite</id>
             <modules>
                 <module>jboss7</module>
                 <module>jetty8</module>
