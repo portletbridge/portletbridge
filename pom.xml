@@ -388,6 +388,14 @@
                 <configuration>
                     <configLocation>code-style/checkstyle.xml</configLocation>
                 </configuration>
+                <reportSets>
+                    <reportSet>
+                        <inherited>false</inherited>
+                        <reports>
+                            <report>aggregate</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
             </plugin>
 
             <!-- Cobertura (Code Coverage) -->
