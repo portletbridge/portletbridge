@@ -31,7 +31,7 @@ public class ErrorGeneratorBean implements ErrorGenerator {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see ErrorGenerator#customException()
      */
     public String customException() throws ApplicationException {
@@ -40,7 +40,7 @@ public class ErrorGeneratorBean implements ErrorGenerator {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see ErrorGenerator#facesError()
      */
     public String facesError() {
@@ -49,7 +49,7 @@ public class ErrorGeneratorBean implements ErrorGenerator {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see ErrorGenerator#viewExpired()
      */
     public String viewExpired() {

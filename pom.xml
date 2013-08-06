@@ -239,32 +239,6 @@
     <build>
         <pluginManagement>
             <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-checkstyle-plugin</artifactId>
-                    <configuration>
-                        <configLocation>code-style/checkstyle.xml</configLocation>
-                        <logViolationsToConsole>true</logViolationsToConsole>
-                        <violationSeverity>error</violationSeverity>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>checkstyle</id>
-                            <phase>compile</phase>
-                            <goals>
-                                <goal>check</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                    <dependencies>
-                        <dependency>
-                            <groupId>org.jboss.portletbridge</groupId>
-                            <artifactId>portletbridge-build-resources</artifactId>
-                            <version>${project.version}</version>
-                        </dependency>
-                    </dependencies>
-                </plugin>
-
                 <!-- So m2e doesn't throw errors for features it doesn't support in the POM -->
                 <plugin>
                     <groupId>org.eclipse.m2e</groupId>
@@ -366,9 +340,34 @@
                 </configuration>
             </plugin>
 
+            <!-- Checkstyle -->
+            <plugin>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <configLocation>code-style/checkstyle.xml</configLocation>
+                    <logViolationsToConsole>true</logViolationsToConsole>
+                    <violationSeverity>error</violationSeverity>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>checkstyle</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.jboss.portletbridge</groupId>
+                        <artifactId>portletbridge-build-resources</artifactId>
+                        <version>${project.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
             <!-- Surefire -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${version.plugin.surefire}</version>
                 <configuration>
@@ -383,6 +382,13 @@
     <!-- Reporting -->
     <reporting>
         <plugins>
+            <!-- Checkstyle -->
+            <plugin>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <configLocation>code-style/checkstyle.xml</configLocation>
+                </configuration>
+            </plugin>
 
             <!-- Cobertura (Code Coverage) -->
             <plugin>

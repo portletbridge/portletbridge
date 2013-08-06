@@ -26,10 +26,10 @@ package org.jboss.portletbridge.example;
  */
 public interface ErrorGenerator {
 
-    public String viewExpired();
+    String viewExpired();
 
-    public String facesError();
+    String facesError();
 
-    public String customException() throws ApplicationException;
+    String customException() throws ApplicationException;
 
 }
