@@ -54,7 +54,7 @@ public class WebXmlNoFacesServletWithErrorPagesTest extends AbstractPortletTest 
 
     @Deployment
     public static PortletArchive createDeployment() {
-        TestDeployment deployment = new TestDeployment(WebXmlNoFacesServletWithErrorPagesTest.class, true);
+        TestDeployment deployment = new TestDeployment(WebXmlNoFacesServletWithErrorPagesTest.class, false);
 
         WebAppDescriptor webApp = deployment.webXml();
         webApp.createErrorPage()
@@ -62,13 +62,12 @@ public class WebXmlNoFacesServletWithErrorPagesTest extends AbstractPortletTest 
                 .location("/faces/error.xhtml")
                 .up()
                 .createErrorPage()
-                .exceptionType("java.lang.ServletException")
+                .exceptionType("javax.servlet.ServletException")
                 .location("/faces/error.xhtml")
                 .up();
 
         deployment.archive()
                 .createFacesPortlet("WebXmlNoFacesServletWithErrorPages", "WebXmlNoFacesServletWithErrorPages Portlet", "header.xhtml")
-                .setWebXML(new StringAsset(webApp.exportAsString()))
                 .addAsWebResource("pages/config/header.xhtml", "header.xhtml");
         return deployment.getFinalArchive();
     }

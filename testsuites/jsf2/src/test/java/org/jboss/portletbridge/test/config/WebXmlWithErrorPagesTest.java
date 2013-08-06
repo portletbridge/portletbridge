@@ -61,7 +61,7 @@ public class WebXmlWithErrorPagesTest extends AbstractPortletTest {
                 .location("/faces/error.xhtml")
                 .up()
                 .createErrorPage()
-                .exceptionType("java.lang.ServletException")
+                .exceptionType("javax.servlet.ServletException")
                 .location("/faces/error.xhtml")
                 .up();
 

@@ -23,7 +23,7 @@
         <version.richfaces4>4.3.2.Final</version.richfaces4>
 
         <!-- GateIn PC version -->
-        <version.gatein.pc>2.4.0.CR01</version.gatein.pc>
+        <version.gatein.pc>2.4.2.Final</version.gatein.pc>
 
         <!-- CDI/JSF Portlet Integration -->
         <version.cdi.portlet.integration>1.0.2.Final</version.cdi.portlet.integration>
@@ -46,6 +46,7 @@
         <version.gatein.portal.testing>1.0.0.Beta2</version.gatein.portal.testing>
         <version.pluto.portal.testing>1.0.0.Beta1</version.pluto.portal.testing>
         <version.jbossas7.container>7.1.1.Final</version.jbossas7.container>
+        <version.wildfly8.container>8.0.0.Alpha3</version.wildfly8.container>
 
         <!-- Plugin versions -->
         <version.plugin.surefire>2.15</version.plugin.surefire>

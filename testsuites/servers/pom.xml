@@ -36,14 +36,14 @@
             <modules>
                 <module>jboss7</module>
                 <module>jetty8</module>
-                <!--<module>wildfly8</module>-->
+                <module>wildfly8</module>
             </modules>
         </profile>
 
         <profile>
             <id>jsf21</id>
             <properties>
-                <version.mojarra2>2.1.19</version.mojarra2>
+                <version.mojarra2>2.1.24</version.mojarra2>
             </properties>
             <modules>
                 <module>jboss7</module>
@@ -55,7 +55,7 @@
             <id>jsf22</id>
             <modules>
                 <module>jetty8</module>
-                <!--<module>wildfly8</module>-->
+                <module>wildfly8</module>
             </modules>
         </profile>
     </profiles>
