@@ -34,8 +34,8 @@
         <profile>
             <id>full-testsuite</id>
             <modules>
-                <module>jboss7</module>
                 <module>jetty8</module>
+                <module>jboss7</module>
                 <module>wildfly8</module>
             </modules>
         </profile>
@@ -46,8 +46,8 @@
                 <version.mojarra2>2.1.24</version.mojarra2>
             </properties>
             <modules>
-                <module>jboss7</module>
                 <module>jetty8</module>
+                <module>jboss7</module>
             </modules>
         </profile>
 
