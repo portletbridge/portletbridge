@@ -1,5 +1,7 @@
 ## Portlet Bridge
 
+[![Build Status](https://buildhive.cloudbees.com/job/portletbridge/job/portletbridge/badge/icon)](https://buildhive.cloudbees.com/job/portletbridge/job/portletbridge/)
+
 ### What is this?
 
 **Portlet Bridge** is an implementation of JSR-301 and JSR-329 to support JSF within a portlet, with additional enhancements to support other web frameworks or component libraries.
