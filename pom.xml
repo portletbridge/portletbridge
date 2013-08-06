@@ -37,7 +37,7 @@
         <version.cdi>1.0-SP4</version.cdi>
 
         <!-- Testing versions -->
-        <version.junit>4.10</version.junit>
+        <version.junit>4.11</version.junit>
         <version.arquillian>1.0.3.Final</version.arquillian>
         <version.shrinkwrap.descriptor>2.0.0-alpha-4</version.shrinkwrap.descriptor>
         <version.shrinkwrap.resolver>2.0.0-alpha-7</version.shrinkwrap.resolver>
@@ -48,7 +48,7 @@
         <version.jbossas7.container>7.1.1.Final</version.jbossas7.container>
 
         <!-- Plugin versions -->
-        <version.plugin.surefire>2.12</version.plugin.surefire>
+        <version.plugin.surefire>2.15</version.plugin.surefire>
         <version.plugin.checkstyle>2.9.1</version.plugin.checkstyle>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -251,7 +251,7 @@
                     <executions>
                         <execution>
                             <id>checkstyle</id>
-                            <phase>process-sources</phase>
+                            <phase>compile</phase>
                             <goals>
                                 <goal>check</goal>
                             </goals>
@@ -305,12 +305,6 @@
                         </lifecycleMappingMetadata>
                     </configuration>
                 </plugin>
-
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>${version.plugin.surefire}</version>
-                </plugin>
             </plugins>
         </pluginManagement>
 
@@ -331,11 +325,35 @@
                         <requireMavenVersion>
                             <version>[3.0.0,)</version>
                         </requireMavenVersion>
+                        <requireJavaVersion>
+                            <version>1.7.0</version> <!-- Must be JDK7 -->
+                        </requireJavaVersion>
                         <requireProperty>
                             <property>env.JAVA_HOME</property>
-                            <message>"JAVA_HOME needs to be set to compile"</message>
+                            <message>"JAVA_HOME needs to be set (to Java7)"</message>
                         </requireProperty>
                     </rules>
+                </configuration>
+            </plugin>
+
+            <!-- Compiler -->
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <inherited>true</inherited>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                    <showDeprecation>false</showDeprecation>
+                    <showWarnings>true</showWarnings>
+                    <optimize>true</optimize>
+                    <compilerVersion>1.7</compilerVersion>
+                    <fork>true</fork>
+                    <compilerArguments>
+                        <source>1.6</source>
+                        <target>1.6</target>
+                    </compilerArguments>
+                    <argLine>-Xmx512M</argLine>
+                    <executable>${JAVA_HOME}/bin/javac</executable>
                 </configuration>
             </plugin>
 
@@ -346,6 +364,18 @@
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <pushChanges>false</pushChanges>
                     <localCheckout>true</localCheckout>
+                </configuration>
+            </plugin>
+
+            <!-- Surefire -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${version.plugin.surefire}</version>
+                <configuration>
+                    <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                    <trimStackTrace>false</trimStackTrace>
+                    <printSummary>true</printSummary>
                 </configuration>
             </plugin>
         </plugins>

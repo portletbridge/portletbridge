@@ -11,10 +11,6 @@
     <name>Portlet Bridge Testsuites</name>
     <packaging>pom</packaging>
 
-    <properties>
-        <dependency.unpack.skip>true</dependency.unpack.skip>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>javax.portlet</groupId>
@@ -73,7 +69,7 @@
     <modules>
         <module>common</module>
         <module>jsf2</module>
-        <module>richfaces4</module>
+        <module>servers</module>
     </modules>
 
     <build>
@@ -85,155 +81,6 @@
                     <skip>true</skip>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <configuration>
-                    <skip>${dependency.unpack.skip}</skip>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <id>default</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <configuration>
-                            <skipTests>true</skipTests>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-        <profile>
-            <id>pluto-embedded</id>
-
-            <dependencies>
-                <dependency>
-                    <groupId>org.jboss.portletbridge.testing.pluto</groupId>
-                    <artifactId>pluto-jetty-bom</artifactId>
-                    <type>pom</type>
-                    <scope>test</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.jboss.portletbridge.testing.pluto</groupId>
-                    <artifactId>pluto-extension-jsf</artifactId>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
-
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <configuration>
-                            <systemProperties>
-                                <arquillian.launch>pluto-embedded</arquillian.launch>
-                            </systemProperties>
-
-                            <excludes>
-                                <exclude>**/config/*Test.java</exclude>
-                                <exclude>**/exception/*Test.java</exclude>
-                            </excludes>
-
-                            <!--           <argLine>-Djava.util.logging.config.file=${project.build.testOutputDirectory}/logging.properties</argLine> -->
-                            <useSystemClassLoader>true</useSystemClassLoader>
-                            <useManifestOnlyJar>false</useManifestOnlyJar>
-                            <!-- Need to fork always as classloader for Pluto and tests is the same, and we need statics to be reset -->
-                            <forkMode>always</forkMode>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-        <profile>
-            <id>jbossas-managed-7</id>
-
-            <dependencies>
-                <dependency>
-                    <groupId>org.jboss.as</groupId>
-                    <artifactId>jboss-as-arquillian-container-managed</artifactId>
-                    <version>${version.jbossas7.container}</version>
-                    <scope>test</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.jboss.arquillian.protocol</groupId>
-                    <artifactId>arquillian-protocol-servlet</artifactId>
-                    <scope>test</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.jboss.portletbridge.testing.gatein</groupId>
-                    <artifactId>gatein-arquillian-extension</artifactId>
-                    <scope>test</scope>
-                </dependency>
-                <dependency>
-                    <groupId>javax.portlet</groupId>
-                    <artifactId>portlet-api</artifactId>
-                    <scope>provided</scope>
-                </dependency>
-                <dependency>
-                    <groupId>com.sun.faces</groupId>
-                    <artifactId>jsf-api</artifactId>
-                    <scope>provided</scope>
-                </dependency>
-            </dependencies>
-
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <configuration>
-                            <systemProperties>
-                                <arquillian.launch>jbossas-managed-7</arquillian.launch>
-                                <arquillian.jboss_home>${project.build.directory}/jboss-as-${version.jbossas7.container}</arquillian.jboss_home>
-                            </systemProperties>
-
-                            <!--           <argLine>-Djava.util.logging.config.file=${project.build.testOutputDirectory}/logging.properties</argLine> -->
-                            <useSystemClassLoader>true</useSystemClassLoader>
-                            <useManifestOnlyJar>false</useManifestOnlyJar>
-                            <forkMode>once</forkMode>
-                        </configuration>
-                    </plugin>
-
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-dependency-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>unpack-as7</id>
-                                <phase>process-test-classes</phase>
-                                <goals>
-                                    <goal>unpack</goal>
-                                </goals>
-                                <configuration>
-                                    <artifactItems>
-                                        <artifactItem>
-                                            <groupId>org.jboss.as</groupId>
-                                            <artifactId>jboss-as-dist</artifactId>
-                                            <version>${version.jbossas7.container}</version>
-                                            <outputDirectory>${project.build.directory}</outputDirectory>
-                                            <type>zip</type>
-                                            <overWrite>false</overWrite>
-                                        </artifactItem>
-                                    </artifactItems>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>
