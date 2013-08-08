@@ -57,9 +57,45 @@
 
     <url>http://www.jboss.org/portletbridge/</url>
 
+    <licenses>
+        <license>
+            <name>GNU Lesser General Public License, Version 2.1</name>
+            <distribution>repo</distribution>
+            <url>http://www.gnu.org/licenses/lgpl-2.1.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>kenfinnigan</id>
+            <name>Ken Finnigan</name>
+        </developer>
+    </developers>
+
+    <issueManagement>
+        <system>jira</system>
+        <url>https://issues.jboss.org/browse/PBR</url>
+    </issueManagement>
+
+    <mailingLists>
+        <mailingList>
+            <name>Portlet Bridge User Forums</name>
+            <archive>http://community.jboss.org/en/portletbridge</archive>
+        </mailingList>
+        <mailingList>
+            <name>Portlet Bridge Developer Forums</name>
+            <archive>http://community.jboss.org/en/portletbridge/dev</archive>
+        </mailingList>
+    </mailingLists>
+
+    <distributionManagement>
+        <!-- Other items inherited from jboss-parent -->
+        <downloadUrl>http://www.jboss.org/portletbridge/downloads</downloadUrl>
+    </distributionManagement>
+
     <scm>
         <connection>scm:git:git://github.com/portletbridge/portletbridge.git</connection>
-        <developerConnection>scm:git:git://github.com/portletbridge/portletbridge.git</developerConnection>
+        <developerConnection>scm:git:git@github.com:portletbridge/portletbridge.git</developerConnection>
         <url>https://github.com/portletbridge/portletbridge</url>
     </scm>
 
