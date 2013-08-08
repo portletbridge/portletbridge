@@ -39,6 +39,13 @@ public class PortletFlash extends PortletFlashWrapper {
 
     static final String FLASH_ATTRIBUTE_NAME = "pbrf";
 
+    public static ThreadLocal<Boolean> needHttpResponse = new ThreadLocal<Boolean>() {
+        @Override
+        protected Boolean initialValue() {
+            return Boolean.FALSE;
+        }
+    };
+
     private ELFlash wrappedFlash = null;
 
     private PortletFlash(ELFlash mojarraFlash) {
@@ -103,13 +110,17 @@ public class PortletFlash extends PortletFlashWrapper {
 
     @Override
     public void doPostPhaseActions(FacesContext ctx) {
-//        if (Bridge.PortletPhase.RENDER_PHASE == BridgeUtil.getPortletRequestPhase()) {
+        if (Bridge.PortletPhase.RENDER_PHASE == BridgeUtil.getPortletRequestPhase()) {
+            needHttpResponse.set(Boolean.TRUE);
             wrappedFlash.doLastPhaseActions(ctx, false);
-//        }
+            needHttpResponse.set(Boolean.FALSE);
+        }
     }
 
     public void doLastPhaseActions(FacesContext context, boolean isRedirect) {
+        needHttpResponse.set(Boolean.TRUE);
         wrappedFlash.doLastPhaseActions(context, isRedirect);
+        needHttpResponse.set(Boolean.FALSE);
     }
 
 }

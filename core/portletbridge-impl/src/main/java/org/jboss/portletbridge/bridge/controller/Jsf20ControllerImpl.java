@@ -71,6 +71,7 @@ import org.jboss.portletbridge.bridge.logger.BridgeLogger.Level;
 import org.jboss.portletbridge.bridge.scope.BridgeRequestScope;
 import org.jboss.portletbridge.bridge.scope.BridgeRequestScopeManager;
 import org.jboss.portletbridge.context.AbstractExternalContext;
+import org.jboss.portletbridge.context.flash.PortletFlash;
 import org.jboss.portletbridge.lifecycle.PortalPhaseListener;
 import org.jboss.portletbridge.lifecycle.PublicParameterPhaseListener;
 import org.jboss.portletbridge.util.BeanWrapper;
@@ -642,6 +643,8 @@ public class Jsf20ControllerImpl implements BridgeController {
 
     protected void releaseFacesContext(BridgeContext bridgeContext, FacesContext facesContext) {
         fireFacesSystemEvent(bridgeContext, BridgePreReleaseFacesContextSystemEvent.class);
+
+        PortletFlash.needHttpResponse.remove();
 
         facesContext.release();
     }

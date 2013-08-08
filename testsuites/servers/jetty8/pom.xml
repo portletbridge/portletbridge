@@ -92,6 +92,7 @@
                             <excludes>
                                 <exclude>**/config/*Test.java</exclude>
                                 <exclude>**/exception/*Test.java</exclude>
+                                <exclude>**/scope/flash/*Test.java</exclude>
                             </excludes>
 
                             <!--

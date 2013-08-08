@@ -66,6 +66,7 @@ import javax.portlet.PortletResponse;
 import javax.servlet.http.Cookie;
 
 import org.jboss.portletbridge.bridge.context.BridgeContext;
+import org.jboss.portletbridge.context.flash.FlashHttpServletAdapter;
 import org.jboss.portletbridge.context.flash.PortletFlash;
 import org.jboss.portletbridge.context.map.ContextAttributesMap;
 import org.jboss.portletbridge.context.map.EnumerationIterator;
@@ -421,7 +422,15 @@ public abstract class AbstractExternalContext extends ExternalContext {
     }
 
     public Object getResponse() {
+        if (isServletResponseRequiredForFlash()) {
+            return new FlashHttpServletAdapter((PortletResponse) response);
+        }
+
         return this.response;
+    }
+
+    protected boolean isServletResponseRequiredForFlash() {
+        return (!BridgeContext.getCurrentInstance().getBridgeConfig().isJsf22Runtime() && PortletFlash.needHttpResponse.get());
     }
 
     /**
