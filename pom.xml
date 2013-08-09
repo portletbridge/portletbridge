@@ -16,37 +16,11 @@
     <name>JSF2 Portlet Bridge for a portlet environment, parent pom</name>
 
     <properties>
-        <!-- JSF2 Implementations -->
-        <version.mojarra2>2.2.0</version.mojarra2>
+        <version.pbr>3.3.0.Final-SNAPSHOT</version.pbr>
 
-        <!-- RichFaces 4 versions -->
-        <version.richfaces4>4.3.2.Final</version.richfaces4>
-
-        <!-- GateIn PC version -->
-        <version.gatein.pc>2.4.2.Final</version.gatein.pc>
-
-        <!-- CDI/JSF Portlet Integration -->
-        <version.cdi.portlet.integration>1.0.2.Final</version.cdi.portlet.integration>
-
-        <!-- Spec versions -->
-        <version.portlet>2.0</version.portlet>
-        <version.servlet2>2.5</version.servlet2>
-        <version.servlet3>3.0.1</version.servlet3>
-        <version.jsp>2.1</version.jsp>
-        <version.inject>1</version.inject>
-        <version.cdi>1.0-SP4</version.cdi>
-
-        <!-- Testing versions -->
-        <version.junit>4.11</version.junit>
-        <version.arquillian>1.1.1.Final</version.arquillian>
-        <version.shrinkwrap.descriptor>2.0.0-alpha-5</version.shrinkwrap.descriptor>
-        <version.shrinkwrap.resolver>2.0.0</version.shrinkwrap.resolver>
-        <version.arquillian.graphene>2.0.0.Alpha3</version.arquillian.graphene>
-        <version.arquillian.extension.portal>1.0.0.Beta1</version.arquillian.extension.portal>
-        <version.gatein.portal.testing>1.0.0.Beta2</version.gatein.portal.testing>
-        <version.pluto.portal.testing>1.0.0.Beta1</version.pluto.portal.testing>
-        <version.jbossas7.container>7.1.1.Final</version.jbossas7.container>
-        <version.wildfly8.container>8.0.0.Alpha3</version.wildfly8.container>
+        <!-- Container versions -->
+        <version.jbossas7>7.1.1.Final</version.jbossas7>
+        <version.wildfly8>8.0.0.Alpha3</version.wildfly8>
 
         <!-- Plugin versions -->
         <version.plugin.surefire>2.15</version.plugin.surefire>
@@ -101,173 +75,23 @@
 
     <dependencyManagement>
         <dependencies>
-            <!-- Project dependencies -->
             <dependency>
                 <groupId>org.jboss.portletbridge</groupId>
-                <artifactId>portletbridge-api</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.portletbridge</groupId>
-                <artifactId>portletbridge-impl</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.portletbridge</groupId>
-                <artifactId>portletbridge-extension-richfaces</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.portletbridge</groupId>
-                <artifactId>jsf2-depchain</artifactId>
-                <version>${project.version}</version>
+                <artifactId>portletbridge-build</artifactId>
+                <version>${version.pbr}</version>
                 <type>pom</type>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.portletbridge</groupId>
-                <artifactId>richfaces4-depchain</artifactId>
-                <version>${project.version}</version>
-                <type>pom</type>
-            </dependency>
-
-            <!-- Spec dependencies -->
-            <dependency>
-                <groupId>javax.portlet</groupId>
-                <artifactId>portlet-api</artifactId>
-                <version>${version.portlet}</version>
-            </dependency>
-            <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>servlet-api</artifactId>
-                <version>${version.servlet2}</version>
-            </dependency>
-            <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>javax.servlet-api</artifactId>
-                <version>${version.servlet3}</version>
-            </dependency>
-            <dependency>
-                <groupId>javax.servlet.jsp</groupId>
-                <artifactId>jsp-api</artifactId>
-                <version>${version.jsp}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.sun.faces</groupId>
-                <artifactId>jsf-api</artifactId>
-                <version>${version.mojarra2}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.sun.faces</groupId>
-                <artifactId>jsf-impl</artifactId>
-                <version>${version.mojarra2}</version>
-            </dependency>
-            <dependency>
-                <groupId>javax.inject</groupId>
-                <artifactId>javax.inject</artifactId>
-                <version>${version.inject}</version>
-            </dependency>
-            <dependency>
-                <groupId>javax.enterprise</groupId>
-                <artifactId>cdi-api</artifactId>
-                <version>${version.cdi}</version>
-            </dependency>
-
-            <!-- RichFaces 4 dependencies -->
-            <dependency>
-                <groupId>org.richfaces</groupId>
-                <artifactId>richfaces-bom</artifactId>
-                <version>${version.richfaces4}</version>
                 <scope>import</scope>
-                <type>pom</type>
-            </dependency>
-
-            <!-- CDI/Portlet Integration Library -->
-            <dependency>
-                <groupId>org.gatein</groupId>
-                <artifactId>cdi-portlet-integration</artifactId>
-                <version>${version.cdi.portlet.integration}</version>
-            </dependency>
-
-            <!-- Test dependencies -->
-            <dependency>
-                <groupId>org.jboss.shrinkwrap.descriptors</groupId>
-                <artifactId>shrinkwrap-descriptors-bom</artifactId>
-                <version>${version.shrinkwrap.descriptor}</version>
-                <scope>import</scope>
-                <type>pom</type>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.shrinkwrap.resolver</groupId>
-                <artifactId>shrinkwrap-resolver-bom</artifactId>
-                <version>${version.shrinkwrap.resolver}</version>
-                <scope>import</scope>
-                <type>pom</type>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.arquillian</groupId>
-                <artifactId>arquillian-bom</artifactId>
-                <version>${version.arquillian}</version>
-                <scope>import</scope>
-                <type>pom</type>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.arquillian.graphene</groupId>
-                <artifactId>graphene-webdriver</artifactId>
-                <version>${version.arquillian.graphene}</version>
-                <scope>test</scope>
-                <type>pom</type>
-            </dependency>
-
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>${version.junit}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.arquillian.extension</groupId>
-                <artifactId>arquillian-portal-impl</artifactId>
-                <version>${version.arquillian.extension.portal}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.arquillian.extension</groupId>
-                <artifactId>arquillian-portal-shrinkwrap-impl</artifactId>
-                <version>${version.arquillian.extension.portal}</version>
-            </dependency>
-
-            <!-- GateIn Testing dependencies -->
-            <dependency>
-                <groupId>org.jboss.portletbridge.testing.gatein</groupId>
-                <artifactId>gatein-arquillian-extension</artifactId>
-                <version>${version.gatein.portal.testing}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.gatein.pc</groupId>
-                <artifactId>pc-embed</artifactId>
-                <version>${version.gatein.pc}</version>
-            </dependency>
-
-            <!-- Pluto Testing dependencies -->
-            <dependency>
-                <groupId>org.jboss.portletbridge.testing.pluto</groupId>
-                <artifactId>pluto-jetty-bom</artifactId>
-                <version>${version.pluto.portal.testing}</version>
-                <type>pom</type>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.portletbridge.testing.pluto</groupId>
-                <artifactId>pluto-extension-jsf</artifactId>
-                <version>${version.pluto.portal.testing}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
 
     <modules>
-        <module>build-resources</module>
+        <module>build</module>
+        <module>build/build-resources</module>
         <module>core</module>
         <module>extension/richfaces</module>
         <module>depchain/jsf2</module>
         <module>depchain/richfaces4</module>
-        <module>testsuites</module>
         <module>examples</module>
         <module>archetypes</module>
     </modules>
@@ -462,5 +286,361 @@
 
         </plugins>
     </reporting>
+
+    <profiles>
+
+        <profile>
+            <id>integration-tests</id>
+            <activation>
+                <property>
+                    <name>integration</name>
+                </property>
+            </activation>
+            <properties>
+                <integration.test.source>src/test/integration</integration.test.source>
+                <integration.test.pattern>**/it/**/*.java</integration.test.pattern>
+
+                <!-- Arquillian Configuration -->
+                <arquillian.debug>false</arquillian.debug>
+                <arquillian.drone.browser>phantomjs</arquillian.drone.browser>
+                <arquillian.drone.reusable>false</arquillian.drone.reusable>
+                <arquillian.container.home />
+                <arquillian.container.distribution />
+                <arquillian.container.configuration />
+                <arquillian.container.uninstall>true</arquillian.container.uninstall>
+                <arquillian.container.vmargs>-Xmx768m -XX:MaxPermSize=256m</arquillian.container.vmargs>
+                <!--<arquillian.container.vmargs>-Xmx768m -XX:MaxPermSize=256m -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=y</arquillian.container.vmargs>-->
+                <arquillian.maven.settings></arquillian.maven.settings>
+
+                <!-- Container Selection -->
+                <arquillian.launch.jbossas71>false</arquillian.launch.jbossas71>
+                <arquillian.launch.wildfly8>false</arquillian.launch.wildfly8>
+                <arquillian.launch.jetty8>false</arquillian.launch.jetty8>
+
+                <!-- JUnit Categories Selection -->
+                <testCategory.included.default>NOT category.None</testCategory.included.default>
+                <testCategory.excluded.default>category.Failing</testCategory.excluded.default>
+                <testCategory.excluded.container />
+                <testCategory.excluded.browser />
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.jboss.portletbridge</groupId>
+                    <artifactId>portletbridge-build-resources</artifactId>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.jboss.arquillian.junit</groupId>
+                    <artifactId>arquillian-junit-container</artifactId>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.jboss.arquillian.protocol</groupId>
+                    <artifactId>arquillian-protocol-servlet</artifactId>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.jboss.shrinkwrap.resolver</groupId>
+                    <artifactId>shrinkwrap-resolver-depchain</artifactId>
+                    <type>pom</type>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.jboss.shrinkwrap.descriptors</groupId>
+                    <artifactId>shrinkwrap-descriptors-depchain</artifactId>
+                    <type>pom</type>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.jboss.arquillian.graphene</groupId>
+                    <artifactId>graphene-webdriver</artifactId>
+                    <type>pom</type>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+            <build>
+                <testResources>
+                    <testResource>
+                        <directory>src/test/resources</directory>
+                        <filtering>false</filtering>
+                    </testResource>
+                    <testResource>
+                        <directory>${integration.test.source}</directory>
+                        <filtering>false</filtering>
+                    </testResource>
+                    <testResource>
+                        <directory>src/test/arquillian-settings/</directory>
+                        <filtering>true</filtering>
+                    </testResource>
+                </testResources>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>unpack-arquillian-settings</id>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.jboss.portletbridge</groupId>
+                                            <artifactId>portletbridge-build-resources</artifactId>
+                                            <version>${version.pbr}</version>
+                                            <type>jar</type>
+                                            <overWrite>true</overWrite>
+                                        </artifactItem>
+                                    </artifactItems>
+                                    <includes>arquillian.xml</includes>
+                                    <outputDirectory>src/test/arquillian-settings</outputDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>add-integration-test-sources</id>
+                                <phase>process-test-sources</phase>
+                                <goals>
+                                    <goal>add-test-source</goal>
+                                </goals>
+                                <configuration>
+                                    <sources>
+                                        <source>${integration.test.source}</source>
+                                    </sources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${version.plugin.surefire}</version>
+                        <executions>
+                            <execution>
+                                <id>default-test</id>
+                                <configuration>
+                                    <skipTests>${skipTests}</skipTests>
+                                    <test>${test}</test>
+                                    <excludes>
+                                        <exclude>${integration.test.pattern}</exclude>
+                                    </excludes>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>integration-tests</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>test</goal>
+                                </goals>
+                                <configuration>
+                                    <skipTests>${skipITs}</skipTests>
+                                    <test>${test}</test>
+                                    <includes>
+                                        <include>${integration.test.pattern}</include>
+                                    </includes>
+                                    <groups>${testCategory.included.default} ${testCategory.excluded.browser}
+                                        ${testCategory.excluded.container}</groups>
+                                    <excludedGroups>${testCategory.excluded.default}</excludedGroups>
+                                    <systemPropertyVariables>
+                                        <arquillian.debug>${arquillian.debug}</arquillian.debug>
+                                    </systemPropertyVariables>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.jboss.portletbridge</groupId>
+                                <artifactId>portletbridge-build-resources</artifactId>
+                                <version>${version.pbr}</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- Browsers -->
+        <profile>
+            <id>browser-phantomjs</id>
+            <activation>
+                <property>
+                    <name>browser</name>
+                    <value>phantomjs</value>
+                </property>
+            </activation>
+            <properties>
+                <arquillian.drone.browser>phantomjs</arquillian.drone.browser>
+            </properties>
+        </profile>
+        <profile>
+            <id>browser-chrome</id>
+            <activation>
+                <property>
+                    <name>browser</name>
+                    <value>chrome</value>
+                </property>
+            </activation>
+            <properties>
+                <arquillian.drone.browser>chrome</arquillian.drone.browser>
+            </properties>
+        </profile>
+        <profile>
+            <id>browser-firefox</id>
+            <activation>
+                <property>
+                    <name>browser</name>
+                    <value>firefox</value>
+                </property>
+            </activation>
+            <properties>
+                <arquillian.drone.browser>firefox</arquillian.drone.browser>
+            </properties>
+        </profile>
+
+        <!-- Containers -->
+        <profile>
+            <id>jbossas-managed-7</id>
+            <activation>
+                <property>
+                    <name>integration</name>
+                    <value>jbossas71</value>
+                </property>
+            </activation>
+            <properties>
+                <arquillian.launch.jbossas71>true</arquillian.launch.jbossas71>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.jboss.as</groupId>
+                    <artifactId>jboss-as-arquillian-container-managed</artifactId>
+                    <scope>test</scope>
+                </dependency>
+
+                <!-- GateIn Embed PC -->
+                <dependency>
+                    <groupId>org.gatein.pc</groupId>
+                    <artifactId>pc-embed</artifactId>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.jboss.portletbridge.testing.gatein</groupId>
+                    <artifactId>gatein-arquillian-extension</artifactId>
+                    <scope>test</scope>
+                </dependency>
+
+                <!-- Container -->
+                <dependency>
+                    <groupId>org.jboss.as</groupId>
+                    <artifactId>jboss-as-dist</artifactId>
+                    <version>${version.jbossas7}</version>
+                    <type>zip</type>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>unpack-as7</id>
+                                <phase>process-test-classes</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.jboss.as</groupId>
+                                            <artifactId>jboss-as-dist</artifactId>
+                                            <version>${version.jbossas7}</version>
+                                            <outputDirectory>${project.build.directory}</outputDirectory>
+                                            <type>zip</type>
+                                            <overWrite>false</overWrite>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>wildfly-managed-8</id>
+            <activation>
+                <property>
+                    <name>integration</name>
+                    <value>wildfly8</value>
+                </property>
+            </activation>
+            <properties>
+                <arquillian.launch.wildfly8>true</arquillian.launch.wildfly8>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.wildfly</groupId>
+                    <artifactId>wildfly-arquillian-container-managed</artifactId>
+                    <scope>test</scope>
+                </dependency>
+
+                <!-- GateIn Embed PC -->
+                <dependency>
+                    <groupId>org.gatein.pc</groupId>
+                    <artifactId>pc-embed</artifactId>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.jboss.portletbridge.testing.gatein</groupId>
+                    <artifactId>gatein-arquillian-extension</artifactId>
+                    <scope>test</scope>
+                </dependency>
+
+                <!-- Container -->
+                <dependency>
+                    <groupId>org.wildfly</groupId>
+                    <artifactId>wildfly-dist</artifactId>
+                    <version>${version.wildfly8}</version>
+                    <type>tar.gz</type>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>unpack-wildfly8</id>
+                                <phase>process-test-classes</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.wildfly</groupId>
+                                            <artifactId>wildfly-dist</artifactId>
+                                            <version>${version.wildfly8}</version>
+                                            <outputDirectory>${project.build.directory}</outputDirectory>
+                                            <type>tar.gz</type>
+                                            <overWrite>false</overWrite>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

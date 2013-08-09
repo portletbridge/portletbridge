@@ -25,7 +25,6 @@
         <dependency>
             <groupId>org.richfaces.examples</groupId>
             <artifactId>richfaces-showcase</artifactId>
-            <version>${version.richfaces4}</version>
             <classifier>${org.richfaces.qualifier}</classifier>
             <type>war</type>
             <scope>compile</scope>
@@ -71,7 +70,6 @@
         <dependency>
             <groupId>org.gatein</groupId>
             <artifactId>cdi-portlet-integration</artifactId>
-            <version>${version.cdi.portlet.integration}</version>
         </dependency>
     </dependencies>
 
