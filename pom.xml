@@ -444,9 +444,9 @@
                                     <includes>
                                         <include>${integration.test.pattern}</include>
                                     </includes>
-                                    <groups>${testCategory.included.default} ${testCategory.excluded.browser}
-                                        ${testCategory.excluded.container}</groups>
-                                    <excludedGroups>${testCategory.excluded.default}</excludedGroups>
+                                    <groups>${testCategory.included.default}</groups>
+                                    <excludedGroups>${testCategory.excluded.default} ${testCategory.excluded.browser}
+                                        ${testCategory.excluded.container}</excludedGroups>
                                     <systemPropertyVariables>
                                         <arquillian.debug>${arquillian.debug}</arquillian.debug>
                                     </systemPropertyVariables>
@@ -634,6 +634,56 @@
                                             <overWrite>false</overWrite>
                                         </artifactItem>
                                     </artifactItems>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>jetty8-jsf22</id>
+            <activation>
+                <property>
+                    <name>integration</name>
+                    <value>jetty8</value>
+                </property>
+            </activation>
+            <properties>
+                <arquillian.launch.jetty8>true</arquillian.launch.jetty8>
+                <testCategory.excluded.container>,category.GateInOnly</testCategory.excluded.container>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.jboss.portletbridge.testing.pluto</groupId>
+                    <artifactId>pluto-jetty-bom</artifactId>
+                    <type>pom</type>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.jboss.portletbridge.testing.pluto</groupId>
+                    <artifactId>pluto-extension-jsf</artifactId>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${version.plugin.surefire}</version>
+                        <executions>
+                            <execution>
+                                <id>integration-tests</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>test</goal>
+                                </goals>
+                                <configuration>
+                                    <useSystemClassLoader>true</useSystemClassLoader>
+                                    <useManifestOnlyJar>false</useManifestOnlyJar>
+                                    <forkCount>1</forkCount>
+                                    <reuseForks>false</reuseForks>
                                 </configuration>
                             </execution>
                         </executions>
