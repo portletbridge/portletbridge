@@ -8,4 +8,5 @@ target
 overlays
 .faces-config.xml.jsfdia
 .factorypath
+arquillian-settings
 
