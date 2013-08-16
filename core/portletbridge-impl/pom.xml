@@ -2,7 +2,7 @@
     <parent>
         <groupId>org.jboss.portletbridge</groupId>
         <version>3.3.0.Final-SNAPSHOT</version>
-        <artifactId>core</artifactId>
+        <artifactId>portletbridge-parent</artifactId>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>portletbridge-impl</artifactId>
@@ -20,6 +20,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>javax.portlet</groupId>
+            <artifactId>portlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>com.sun.faces</groupId>
             <artifactId>jsf-api</artifactId>
             <scope>provided</scope>
@@ -32,6 +37,11 @@
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>jsp-api</artifactId>
             <scope>provided</scope>
         </dependency>
 

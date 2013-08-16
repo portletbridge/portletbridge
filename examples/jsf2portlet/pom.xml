@@ -2,7 +2,7 @@
     <parent>
         <groupId>org.jboss.portletbridge</groupId>
         <version>3.3.0.Final-SNAPSHOT</version>
-        <artifactId>examples</artifactId>
+        <artifactId>portletbridge-parent</artifactId>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.jboss.portletbridge.examples</groupId>

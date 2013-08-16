@@ -16,7 +16,36 @@
     <name>JSF2 Portlet Bridge for a portlet environment, parent pom</name>
 
     <properties>
-        <version.pbr>3.3.0.Final-SNAPSHOT</version.pbr>
+        <!-- JSF2 Implementations -->
+        <version.mojarra2>2.2.0</version.mojarra2>
+
+        <!-- RichFaces 4 versions -->
+        <version.richfaces4>4.3.2.Final</version.richfaces4>
+        <org.richfaces.qualifier>jbas71</org.richfaces.qualifier>
+
+        <!-- GateIn PC version -->
+        <version.gatein.pc>2.4.2.Final</version.gatein.pc>
+
+        <!-- CDI/JSF Portlet Integration -->
+        <version.cdi.portlet.integration>1.0.2.Final</version.cdi.portlet.integration>
+
+        <!-- Spec versions -->
+        <version.portlet>2.0</version.portlet>
+        <version.servlet2>2.5</version.servlet2>
+        <version.servlet3>3.0.1</version.servlet3>
+        <version.jsp>2.1</version.jsp>
+        <version.inject>1</version.inject>
+        <version.cdi>1.0-SP4</version.cdi>
+
+        <!-- Testing versions -->
+        <version.junit>4.11</version.junit>
+        <version.arquillian.core>1.1.1.Final</version.arquillian.core>
+        <version.arquillian.graphene>2.0.0.Alpha4</version.arquillian.graphene>
+        <version.arquillian.portal>1.0.0.Beta1</version.arquillian.portal>
+        <version.shrinkwrap.descriptors>2.0.0-alpha-5</version.shrinkwrap.descriptors>
+        <version.shrinkwrap.resolver>2.0.0</version.shrinkwrap.resolver>
+        <version.gatein.portal.testing>1.0.0.Beta2</version.gatein.portal.testing>
+        <version.pluto.portal.testing>1.0.0.Beta1</version.pluto.portal.testing>
 
         <!-- Container versions -->
         <version.jbossas7>7.1.1.Final</version.jbossas7>
@@ -75,25 +104,206 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- Portlet Bridge -->
             <dependency>
                 <groupId>org.jboss.portletbridge</groupId>
-                <artifactId>portletbridge-build</artifactId>
-                <version>${version.pbr}</version>
+                <artifactId>portletbridge-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.portletbridge</groupId>
+                <artifactId>portletbridge-impl</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.portletbridge</groupId>
+                <artifactId>portletbridge-extension-richfaces</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.portletbridge</groupId>
+                <artifactId>jsf2-depchain</artifactId>
+                <version>${project.version}</version>
                 <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.portletbridge</groupId>
+                <artifactId>richfaces4-depchain</artifactId>
+                <version>${project.version}</version>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.portletbridge</groupId>
+                <artifactId>portletbridge-build-resources</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- Spec dependencies -->
+            <dependency>
+                <groupId>javax.portlet</groupId>
+                <artifactId>portlet-api</artifactId>
+                <version>${version.portlet}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>servlet-api</artifactId>
+                <version>${version.servlet2}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>${version.servlet3}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.servlet.jsp</groupId>
+                <artifactId>jsp-api</artifactId>
+                <version>${version.jsp}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.faces</groupId>
+                <artifactId>jsf-api</artifactId>
+                <version>${version.mojarra2}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.faces</groupId>
+                <artifactId>jsf-impl</artifactId>
+                <version>${version.mojarra2}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.inject</groupId>
+                <artifactId>javax.inject</artifactId>
+                <version>${version.inject}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.enterprise</groupId>
+                <artifactId>cdi-api</artifactId>
+                <version>${version.cdi}</version>
+            </dependency>
+
+            <!-- RichFaces 4 dependencies -->
+            <dependency>
+                <groupId>org.richfaces</groupId>
+                <artifactId>richfaces-bom</artifactId>
+                <version>${version.richfaces4}</version>
                 <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>org.richfaces.examples</groupId>
+                <artifactId>richfaces-showcase</artifactId>
+                <version>${version.richfaces4}</version>
+                <classifier>${org.richfaces.qualifier}</classifier>
+                <type>war</type>
+                <scope>compile</scope>
+            </dependency>
+
+            <!-- CDI/Portlet Integration Library -->
+            <dependency>
+                <groupId>org.gatein</groupId>
+                <artifactId>cdi-portlet-integration</artifactId>
+                <version>${version.cdi.portlet.integration}</version>
+            </dependency>
+
+            <!-- Test dependencies -->
+            <dependency>
+                <groupId>org.jboss.shrinkwrap.descriptors</groupId>
+                <artifactId>shrinkwrap-descriptors-depchain</artifactId>
+                <version>${version.shrinkwrap.descriptors}</version>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.shrinkwrap.resolver</groupId>
+                <artifactId>shrinkwrap-resolver-depchain</artifactId>
+                <version>${version.shrinkwrap.resolver}</version>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.arquillian</groupId>
+                <artifactId>arquillian-bom</artifactId>
+                <version>${version.arquillian.core}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.arquillian.graphene</groupId>
+                <artifactId>graphene-webdriver</artifactId>
+                <version>${version.arquillian.graphene}</version>
+                <type>pom</type>
+            </dependency>
+
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${version.junit}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.arquillian.extension</groupId>
+                <artifactId>arquillian-portal-impl</artifactId>
+                <version>${version.arquillian.portal}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.arquillian.extension</groupId>
+                <artifactId>arquillian-portal-shrinkwrap-impl</artifactId>
+                <version>${version.arquillian.portal}</version>
+            </dependency>
+
+            <!-- GateIn Testing dependencies -->
+            <dependency>
+                <groupId>org.jboss.portletbridge.testing.gatein</groupId>
+                <artifactId>gatein-arquillian-extension</artifactId>
+                <version>${version.gatein.portal.testing}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.gatein.pc</groupId>
+                <artifactId>pc-embed</artifactId>
+                <version>${version.gatein.pc}</version>
+            </dependency>
+
+            <!-- Pluto Testing dependencies -->
+            <dependency>
+                <groupId>org.jboss.portletbridge.testing.pluto</groupId>
+                <artifactId>pluto-jetty-bom</artifactId>
+                <version>${version.pluto.portal.testing}</version>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.portletbridge.testing.pluto</groupId>
+                <artifactId>pluto-extension-jsf</artifactId>
+                <version>${version.pluto.portal.testing}</version>
+            </dependency>
+
+            <!-- JBoss AS7 -->
+            <dependency>
+                <groupId>org.jboss.as</groupId>
+                <artifactId>jboss-as-arquillian-container-managed</artifactId>
+                <version>7.1.1.Final</version>
+                <scope>test</scope>
+            </dependency>
+
+            <!-- Wildfly 8 -->
+            <dependency>
+                <groupId>org.wildfly</groupId>
+                <artifactId>wildfly-arquillian-container-managed</artifactId>
+                <version>8.0.0.Alpha3</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
 
     <modules>
-        <module>build</module>
-        <module>build/build-resources</module>
-        <module>core</module>
+        <module>build-resources</module>
+        <module>core/portletbridge-api</module>
+        <module>core/portletbridge-impl</module>
         <module>extension/richfaces</module>
         <module>depchain/jsf2</module>
         <module>depchain/richfaces4</module>
-        <module>examples</module>
-        <module>archetypes</module>
+        <module>examples/jsf2portlet</module>
+        <module>examples/richfaces-showcase</module>
+        <module>examples/richfaces-simple</module>
+        <module>examples/cdi-portlet</module>
+        <module>examples/deltaspike-portlet</module>
+        <module>archetypes/jsf2-basic</module>
+        <module>archetypes/richfaces-simpleapp</module>
     </modules>
 
     <build>
@@ -389,7 +599,6 @@
                                         <artifactItem>
                                             <groupId>org.jboss.portletbridge</groupId>
                                             <artifactId>portletbridge-build-resources</artifactId>
-                                            <version>${version.pbr}</version>
                                             <type>jar</type>
                                             <overWrite>true</overWrite>
                                         </artifactItem>
@@ -457,7 +666,7 @@
                             <dependency>
                                 <groupId>org.jboss.portletbridge</groupId>
                                 <artifactId>portletbridge-build-resources</artifactId>
-                                <version>${version.pbr}</version>
+                                <version>${project.version}</version>
                             </dependency>
                         </dependencies>
                     </plugin>
