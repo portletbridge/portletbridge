@@ -3,6 +3,7 @@
         <groupId>org.jboss.portletbridge</groupId>
         <version>3.3.0.Final-SNAPSHOT</version>
         <artifactId>portletbridge-parent</artifactId>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.jboss.portletbridge.examples</groupId>

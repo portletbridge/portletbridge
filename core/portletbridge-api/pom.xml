@@ -3,13 +3,18 @@
         <groupId>org.jboss.portletbridge</groupId>
         <version>3.3.0.Final-SNAPSHOT</version>
         <artifactId>portletbridge-parent</artifactId>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
+
     <modelVersion>4.0.0</modelVersion>
     <artifactId>portletbridge-api</artifactId>
     <name>Portlet Bridge JSF 2 API</name>
     <url>http://www.jboss.org/portletbridge/portletbridge/portletbridge-api</url>
     <build>
         <plugins>
+            <plugin>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
