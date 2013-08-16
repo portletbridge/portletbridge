@@ -210,7 +210,18 @@ public abstract class MimeExternalContextImpl extends PortletExternalContextImpl
 
     @Override
     public boolean isResponseCommitted() {
-        return getMimeResponse().isCommitted();
+        boolean committed;
+
+        // Override ServletResponse for Flash to ensure getMimeResponse() does throw ClassCastException
+        if (isServletResponseRequiredForFlash()) {
+            overrideHttpResponseForFlash = true;
+            committed = getMimeResponse().isCommitted();
+            overrideHttpResponseForFlash = false;
+        } else {
+            committed = getMimeResponse().isCommitted();
+        }
+
+        return committed;
     }
 
     @Override

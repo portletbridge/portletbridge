@@ -900,6 +900,57 @@
                 </plugins>
             </build>
         </profile>
+
+        <profile>
+            <id>jetty8-jsf21</id>
+            <activation>
+                <property>
+                    <name>integration</name>
+                    <value>jetty8-jsf21</value>
+                </property>
+            </activation>
+            <properties>
+                <arquillian.launch.jetty8>true</arquillian.launch.jetty8>
+                <testCategory.excluded.container>,category.GateInOnly</testCategory.excluded.container>
+                <version.mojarra2>2.1.19</version.mojarra2>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.jboss.portletbridge.testing.pluto</groupId>
+                    <artifactId>pluto-jetty-bom</artifactId>
+                    <type>pom</type>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.jboss.portletbridge.testing.pluto</groupId>
+                    <artifactId>pluto-extension-jsf</artifactId>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${version.plugin.surefire}</version>
+                        <executions>
+                            <execution>
+                                <id>integration-tests</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>test</goal>
+                                </goals>
+                                <configuration>
+                                    <useSystemClassLoader>true</useSystemClassLoader>
+                                    <useManifestOnlyJar>false</useManifestOnlyJar>
+                                    <forkCount>1</forkCount>
+                                    <reuseForks>false</reuseForks>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 
 </project>

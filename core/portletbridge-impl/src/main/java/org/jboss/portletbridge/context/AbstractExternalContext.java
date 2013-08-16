@@ -113,6 +113,8 @@ public abstract class AbstractExternalContext extends ExternalContext {
 
     private Object context;
 
+    protected boolean overrideHttpResponseForFlash = false;
+
     private Flash flash = null;
 
     public static final String CONVERSATION_ID_PARAMETER = "conversationId";
@@ -430,7 +432,7 @@ public abstract class AbstractExternalContext extends ExternalContext {
     }
 
     protected boolean isServletResponseRequiredForFlash() {
-        return (!BridgeContext.getCurrentInstance().getBridgeConfig().isJsf22Runtime() && PortletFlash.needHttpResponse.get());
+        return (!BridgeContext.getCurrentInstance().getBridgeConfig().isJsf22Runtime() && !overrideHttpResponseForFlash && PortletFlash.needHttpResponse.get());
     }
 
     /**
