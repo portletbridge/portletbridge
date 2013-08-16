@@ -292,8 +292,8 @@
 
     <modules>
         <module>build-resources</module>
-        <module>core/portletbridge-api</module>
-        <module>core/portletbridge-impl</module>
+        <module>core/api</module>
+        <module>core/impl</module>
         <module>extension/richfaces</module>
         <module>depchain/jsf2</module>
         <module>depchain/richfaces4</module>
