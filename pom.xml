@@ -11,7 +11,7 @@
 
     <groupId>org.jboss.portletbridge</groupId>
     <artifactId>portletbridge-parent</artifactId>
-    <version>3.3.0.Final-SNAPSHOT</version>
+    <version>3.3.0.Alpha1</version>
     <packaging>pom</packaging>
     <name>JSF2 Portlet Bridge for a portlet environment, parent pom</name>
 
@@ -100,7 +100,8 @@
         <connection>scm:git:git://github.com/portletbridge/portletbridge.git</connection>
         <developerConnection>scm:git:git@github.com:portletbridge/portletbridge.git</developerConnection>
         <url>https://github.com/portletbridge/portletbridge</url>
-    </scm>
+      <tag>3.3.0.Alpha1</tag>
+  </scm>
 
     <dependencyManagement>
         <dependencies>
@@ -520,7 +521,7 @@
                 <arquillian.container.uninstall>true</arquillian.container.uninstall>
                 <arquillian.container.vmargs>-Xmx768m -XX:MaxPermSize=256m</arquillian.container.vmargs>
                 <!--<arquillian.container.vmargs>-Xmx768m -XX:MaxPermSize=256m -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=y</arquillian.container.vmargs>-->
-                <arquillian.maven.settings></arquillian.maven.settings>
+                <arquillian.maven.settings />
 
                 <!-- Container Selection -->
                 <arquillian.launch.jbossas71>false</arquillian.launch.jbossas71>
