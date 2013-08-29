@@ -456,6 +456,7 @@
             <!-- Checkstyle -->
             <plugin>
                 <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>2.10</version>
                 <configuration>
                     <configLocation>code-style/checkstyle.xml</configLocation>
                 </configuration>
@@ -473,6 +474,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>cobertura-maven-plugin</artifactId>
+                <version>2.5.2</version>
                 <configuration>
                     <check>
                         <branchRate>85</branchRate>
@@ -489,6 +491,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>findbugs-maven-plugin</artifactId>
+                <version>2.5.2</version>
                 <configuration>
                     <xmlOutput>true</xmlOutput>
                     <findbugsXmlOutputDirectory>target/site</findbugsXmlOutputDirectory>
