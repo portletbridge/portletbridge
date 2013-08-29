@@ -101,7 +101,7 @@
         <developerConnection>scm:git:git@github.com:portletbridge/portletbridge.git</developerConnection>
         <url>https://github.com/portletbridge/portletbridge</url>
       <tag>HEAD</tag>
-  </scm>
+    </scm>
 
     <dependencyManagement>
         <dependencies>
