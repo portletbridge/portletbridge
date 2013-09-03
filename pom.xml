@@ -375,6 +375,17 @@
                         </lifecycleMappingMetadata>
                     </configuration>
                 </plugin>
+
+                <!-- Surefire -->
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${version.plugin.surefire}</version>
+                    <configuration>
+                        <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                        <trimStackTrace>false</trimStackTrace>
+                        <printSummary>true</printSummary>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
 
@@ -434,17 +445,6 @@
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <pushChanges>false</pushChanges>
                     <localCheckout>true</localCheckout>
-                </configuration>
-            </plugin>
-
-            <!-- Surefire -->
-            <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${version.plugin.surefire}</version>
-                <configuration>
-                    <redirectTestOutputToFile>true</redirectTestOutputToFile>
-                    <trimStackTrace>false</trimStackTrace>
-                    <printSummary>true</printSummary>
                 </configuration>
             </plugin>
         </plugins>
@@ -633,7 +633,6 @@
                     </plugin>
                     <plugin>
                         <artifactId>maven-surefire-plugin</artifactId>
-                        <version>${version.plugin.surefire}</version>
                         <executions>
                             <execution>
                                 <id>default-test</id>
