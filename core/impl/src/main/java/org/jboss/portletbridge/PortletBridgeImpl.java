@@ -199,7 +199,7 @@ public class PortletBridgeImpl implements Bridge {
         bridgeConfig.setPreventSelfClosingScriptTag(Boolean.parseBoolean(preventSelfClosing) ? true : false);
 
         // PBR-510 - Parameter to determine whether f:viewParam will work during Render Response
-        String disableViewParam = portletContext.getInitParameter(PortletBridgeConstants.VIEW_PARAM_ENABLED);
+        String disableViewParam = portletContext.getInitParameter(PortletBridgeConstants.VIEW_PARAM_DISABLED);
         bridgeConfig.setViewParamHandlingDisabled(Boolean.parseBoolean(disableViewParam) ? true : false);
 
         // Determine whether we're running with JSF 2.2 Runtime or not

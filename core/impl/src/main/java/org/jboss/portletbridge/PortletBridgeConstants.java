@@ -41,5 +41,5 @@ public interface PortletBridgeConstants {
      * Disabling will prevent FacesLifecycle.execute() from performing more than RESTORE_VIEW during
      * portlet RENDER_RESPONSE. (See PBR-510).
      */
-    String VIEW_PARAM_ENABLED = "org.jboss.portletbridge.VIEW_PARAMETERS_ENABLED";
+    String VIEW_PARAM_DISABLED = "org.jboss.portletbridge.VIEW_PARAMETERS_DISABLED";
 }
