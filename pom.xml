@@ -883,7 +883,6 @@
                 <plugins>
                     <plugin>
                         <artifactId>maven-surefire-plugin</artifactId>
-                        <version>${version.plugin.surefire}</version>
                         <executions>
                             <execution>
                                 <id>integration-tests</id>
@@ -934,7 +933,6 @@
                 <plugins>
                     <plugin>
                         <artifactId>maven-surefire-plugin</artifactId>
-                        <version>${version.plugin.surefire}</version>
                         <executions>
                             <execution>
                                 <id>integration-tests</id>
