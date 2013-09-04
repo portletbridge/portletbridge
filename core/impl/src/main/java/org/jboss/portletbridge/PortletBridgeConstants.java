@@ -35,4 +35,11 @@ public interface PortletBridgeConstants {
     String WSRP_REQUEST_PARAM = "org.gatein.invocation.fromWSRP";
 
     String PREVENT_SELF_CLOSING_SCRIPT_TAG_PARAM = "org.jboss.portletbridge.PREVENT_SELF_CLOSING_SCRIPT_TAG";
+
+    /**
+     * Parameter to disable the functionality of f:viewParam. Default value is enabled.
+     * Disabling will prevent FacesLifecycle.execute() from performing more than RESTORE_VIEW during
+     * portlet RENDER_RESPONSE. (See PBR-510).
+     */
+    String VIEW_PARAM_ENABLED = "org.jboss.portletbridge.VIEW_PARAMETERS_ENABLED";
 }

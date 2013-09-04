@@ -198,6 +198,10 @@ public class PortletBridgeImpl implements Bridge {
         String preventSelfClosing = portletContext.getInitParameter(PortletBridgeConstants.PREVENT_SELF_CLOSING_SCRIPT_TAG_PARAM);
         bridgeConfig.setPreventSelfClosingScriptTag(Boolean.parseBoolean(preventSelfClosing) ? true : false);
 
+        // PBR-510 - Parameter to determine whether f:viewParam will work during Render Response
+        String disableViewParam = portletContext.getInitParameter(PortletBridgeConstants.VIEW_PARAM_ENABLED);
+        bridgeConfig.setViewParamHandlingDisabled(Boolean.parseBoolean(disableViewParam) ? true : false);
+
         // Determine whether we're running with JSF 2.2 Runtime or not
         // Use FlashFactory presence to determine it
         try {

@@ -385,4 +385,19 @@ public interface BridgeConfig {
      * @return <code>true</code> if its a JSF 2.2 runtime. <code>false</code> indicates it is not.
      */
     boolean isJsf22Runtime();
+
+    /**
+     * Sets whether or not the bridge should disable support for <code>f:viewParam</code> execution.
+     *
+     * @param viewParamHandlingDisabled <code>Boolean.TRUE</code> indicates <code>f:viewParam</code> will be disabled.
+     *                                  <code>Boolean.FALSE</code> indicates <code>f:viewParam</code> is enabled.
+     */
+    void setViewParamHandlingDisabled(boolean viewParamHandlingDisabled);
+
+    /**
+     * Gets whether or not the bridge should disable support for <code>f:viewParam</code> execution.
+     *
+     * @return <code>true</code> if <code>f:viewParam</code> is disabled. <code>false</code> indicates it is enabled.
+     */
+    boolean isViewParamHandlingDisabled();
 }

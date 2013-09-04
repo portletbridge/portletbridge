@@ -47,18 +47,10 @@ public class PortalPhaseListener implements PhaseListener {
             return;
         }
 
-        PhaseId phaseId = event.getPhaseId();
         Object portletPhase = context.getExternalContext().getRequestMap().get(Bridge.PORTLET_LIFECYCLE_PHASE);
 
-        if (phaseId.equals(PhaseId.RESTORE_VIEW)) {
-            if (Bridge.PortletPhase.RENDER_PHASE.equals(portletPhase)) {
-                context.renderResponse();
-            }
-
-        } else if (phaseId.equals(PhaseId.PROCESS_VALIDATIONS)) {
-            if (Bridge.PortletPhase.EVENT_PHASE.equals(portletPhase)) {
-                context.responseComplete();
-            }
+        if (Bridge.PortletPhase.EVENT_PHASE.equals(portletPhase)) {
+            context.responseComplete();
         }
 
     }
@@ -74,8 +66,7 @@ public class PortalPhaseListener implements PhaseListener {
      * @see javax.faces.event.PhaseListener#getPhaseId()
      */
     public PhaseId getPhaseId() {
-        // This listener process all phases.
-        return PhaseId.ANY_PHASE;
+        return PhaseId.PROCESS_VALIDATIONS;
     }
 
 }

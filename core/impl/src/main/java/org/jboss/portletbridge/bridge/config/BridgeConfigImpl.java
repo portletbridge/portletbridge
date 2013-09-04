@@ -69,6 +69,7 @@ public class BridgeConfigImpl implements BridgeConfig {
     private Map<String, Object> attributes;
     private boolean preventSelfClosingScriptTag = false;
     private boolean insideJsf22Runtime = false;
+    private boolean viewParamHandlingDisabled = false;
 
     public BridgeConfigImpl() {
     }
@@ -402,5 +403,21 @@ public class BridgeConfigImpl implements BridgeConfig {
     @Override
     public void setJsf22Runtime(boolean jsf22Runtime) {
         this.insideJsf22Runtime = jsf22Runtime;
+    }
+
+    /**
+     * @see org.jboss.portletbridge.bridge.config.BridgeConfig#isViewParamHandlingDisabled()
+     */
+    @Override
+    public boolean isViewParamHandlingDisabled() {
+        return viewParamHandlingDisabled;
+    }
+
+    /**
+     * @see org.jboss.portletbridge.bridge.config.BridgeConfig#setViewParamHandlingDisabled(boolean)
+     */
+    @Override
+    public void setViewParamHandlingDisabled(boolean viewParamHandlingDisabled) {
+        this.viewParamHandlingDisabled = viewParamHandlingDisabled;
     }
 }

@@ -74,6 +74,7 @@ import org.jboss.portletbridge.context.AbstractExternalContext;
 import org.jboss.portletbridge.context.flash.PortletFlash;
 import org.jboss.portletbridge.lifecycle.PortalPhaseListener;
 import org.jboss.portletbridge.lifecycle.PublicParameterPhaseListener;
+import org.jboss.portletbridge.lifecycle.RenderResponsePhaseListener;
 import org.jboss.portletbridge.util.BeanWrapper;
 import org.jboss.portletbridge.util.FacesMessageWrapper;
 import org.jboss.portletbridge.util.ParameterFunction;
@@ -387,6 +388,7 @@ public class Jsf20ControllerImpl implements BridgeController {
             BridgeRequestScope scope, String redirectViewId) throws BridgeException, NullPointerException {
         PublicParameterPhaseListener ppPhaseListener = null;
         PortalPhaseListener portalPhaseListener = null;
+        RenderResponsePhaseListener renderResponsePhaseListener = null;
 
         if (!bridgeContext.hasRenderRedirect()) {
             try {
@@ -394,6 +396,12 @@ public class Jsf20ControllerImpl implements BridgeController {
                 portalPhaseListener = new PortalPhaseListener();
                 facesLifecycle.addPhaseListener(ppPhaseListener);
                 facesLifecycle.addPhaseListener(portalPhaseListener);
+
+                // PBR-510 - Only end facesLifecycle.execute() after RESTORE_VIEW if we don't want f:viewParam to work
+                if (bridgeConfig.isViewParamHandlingDisabled()) {
+                    renderResponsePhaseListener = new RenderResponsePhaseListener();
+                    facesLifecycle.addPhaseListener(renderResponsePhaseListener);
+                }
 
                 facesLifecycle.execute(facesContext);
             } finally {
@@ -403,6 +411,9 @@ public class Jsf20ControllerImpl implements BridgeController {
                     }
                     if (null != portalPhaseListener) {
                         facesLifecycle.removePhaseListener(portalPhaseListener);
+                    }
+                    if (null != renderResponsePhaseListener) {
+                        facesLifecycle.removePhaseListener(renderResponsePhaseListener);
                     }
                 }
             }
