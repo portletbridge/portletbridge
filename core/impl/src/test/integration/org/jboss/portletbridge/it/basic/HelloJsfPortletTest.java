@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.portletbridge.it;
+package org.jboss.portletbridge.it.basic;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
@@ -29,8 +29,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
-import org.jboss.portletbridge.it.common.AbstractPortletTest;
-import org.jboss.portletbridge.it.common.Bean;
+import org.jboss.portletbridge.it.AbstractPortletTest;
 import org.jboss.shrinkwrap.portal.api.PortletArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,28 +44,20 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
 @PortalTest
-public class JsfFormSubmitTest extends AbstractPortletTest {
-
-    public static final String NEW_VALUE = "New Value";
+public class HelloJsfPortletTest extends AbstractPortletTest {
 
     @Deployment
     public static PortletArchive createDeployment() {
-        TestDeployment deployment = new TestDeployment(JsfFormSubmitTest.class, true);
+        TestDeployment deployment = new TestDeployment(HelloJsfPortletTest.class, true);
         deployment.archive()
-                .createFacesPortlet("JsfFormSubmit", "JSF Form Portlet", "form.xhtml")
-                .addAsWebResource("pages/form.xhtml", "form.xhtml")
+                .createFacesPortlet("HelloJsfPortlet", "Hello JSF Portlet", "output.xhtml")
+                .addAsWebResource("pages/basic/output.xhtml", "output.xhtml")
                 .addClass(Bean.class);
         return deployment.getFinalArchive();
     }
 
     @FindBy(id = "output")
     private WebElement outputField;
-
-    @FindBy(xpath = "//input[@type='text']")
-    private WebElement inputField;
-
-    @FindBy(xpath = "//input[@type='submit']")
-    private WebElement submitButton;
 
     @ArquillianResource
     @PortalURL
@@ -81,34 +72,11 @@ public class JsfFormSubmitTest extends AbstractPortletTest {
 
     @Test
     @RunAsClient
-    public void renderFormPortlet() throws Exception {
+    public void renderFacesPortlet() throws Exception {
         browser.get(portalURL.toString());
 
-        assertEquals("Output text set.", Bean.HELLO_JSF_PORTLET, outputField.getText());
-
-        assertEquals("Input text set.", Bean.HELLO_JSF_PORTLET, inputField.getAttribute("value"));
-
-        assertEquals("Submit button value should be 'Ok'", "Ok", submitButton.getAttribute("value"));
-    }
-
-    @Test
-    @RunAsClient
-    public void testSubmitAndRemainOnPage() throws Exception {
-        browser.get(portalURL.toString());
-
-        inputField.sendKeys(NEW_VALUE);
-        submitButton.click();
-
-        assertTrue("Output text updated.", outputField.getText().contains(NEW_VALUE));
-
-        assertTrue("Input text updated.", inputField.getAttribute("value").contains(NEW_VALUE));
-
-        // Re-render page
-        browser.get(portalURL.toString());
-
-        assertTrue("Output text unchanged.", outputField.getText().contains(NEW_VALUE));
-
-        assertTrue("Input text unchanged.", inputField.getAttribute("value").contains(NEW_VALUE));
+        assertTrue("Check that page contains output element", outputField.isDisplayed());
+        assertEquals("Field has correct value set", Bean.HELLO_JSF_PORTLET, outputField.getText());
     }
 
 }

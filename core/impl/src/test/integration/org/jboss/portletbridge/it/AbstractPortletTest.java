@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.portletbridge.it.common;
+package org.jboss.portletbridge.it;
 
 import org.junit.Before;
 import org.openqa.selenium.WebDriver;

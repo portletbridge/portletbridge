@@ -29,7 +29,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
-import org.jboss.portletbridge.it.common.AbstractPortletTest;
+import org.jboss.portletbridge.it.AbstractPortletTest;
 import org.jboss.shrinkwrap.descriptor.api.facesconfig21.WebFacesConfigDescriptor;
 import org.jboss.shrinkwrap.portal.api.PortletArchive;
 import org.junit.Test;

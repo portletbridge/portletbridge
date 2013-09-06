@@ -23,7 +23,7 @@ package org.jboss.portletbridge.it.stage;
 
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.enricher.findby.FindBy;
-import org.jboss.portletbridge.it.common.AbstractPortletTest;
+import org.jboss.portletbridge.it.AbstractPortletTest;
 import org.jboss.shrinkwrap.descriptor.api.webapp30.WebAppDescriptor;
 import org.jboss.shrinkwrap.portal.api.PortletArchive;
 import org.openqa.selenium.WebDriver;

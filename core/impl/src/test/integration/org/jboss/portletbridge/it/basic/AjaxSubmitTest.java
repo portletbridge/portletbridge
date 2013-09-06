@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.portletbridge.it;
+package org.jboss.portletbridge.it.basic;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
@@ -29,8 +29,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
-import org.jboss.portletbridge.it.common.AbstractPortletTest;
-import org.jboss.portletbridge.it.common.Bean;
+import org.jboss.portletbridge.it.AbstractPortletTest;
 import org.jboss.shrinkwrap.portal.api.PortletArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,7 +53,7 @@ public class AjaxSubmitTest extends AbstractPortletTest {
         TestDeployment deployment = new TestDeployment(AjaxSubmitTest.class, true);
         deployment.archive()
                 .createFacesPortlet("AjaxSubmit", "Ajax Submit Portlet", "ajax.xhtml")
-                .addAsWebResource("pages/ajax.xhtml", "ajax.xhtml")
+                .addAsWebResource("pages/basic/ajax.xhtml", "ajax.xhtml")
                 .addClass(Bean.class);
         return deployment.getFinalArchive();
     }
