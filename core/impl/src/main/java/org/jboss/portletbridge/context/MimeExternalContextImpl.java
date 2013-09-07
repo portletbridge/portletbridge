@@ -166,7 +166,7 @@ public abstract class MimeExternalContextImpl extends PortletExternalContextImpl
         resourceURL.setParameters(portalUrl.getParameters());
         resourceURL.setParameter(Bridge.FACES_VIEW_ID_PARAMETER, getViewIdFromUrl(portalUrl));
         resourceURL.setParameter(PortletBridgeConstants.AJAX_PARAM, Boolean.TRUE.toString());
-        return resourceURL.toString();
+        return encodeURL(resourceURL.toString());
     }
 
     @Override

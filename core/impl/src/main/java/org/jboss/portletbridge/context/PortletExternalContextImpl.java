@@ -1313,7 +1313,7 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
         StringWriter out = new StringWriter();
         try {
             portletURL.write(out, escape);
-            return out.toString();
+            return encodeURL(out.toString());
         } catch (IOException e) {
             throw new FacesException(e);
         }
