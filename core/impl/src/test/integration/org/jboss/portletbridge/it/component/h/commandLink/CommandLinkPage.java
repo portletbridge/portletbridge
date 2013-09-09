@@ -22,6 +22,7 @@
 package org.jboss.portletbridge.it.component.h.commandLink;
 
 import org.jboss.arquillian.graphene.enricher.findby.FindBy;
+import org.jboss.arquillian.graphene.findby.FindByJQuery;
 import org.openqa.selenium.WebElement;
 
 /**
@@ -29,22 +30,22 @@ import org.openqa.selenium.WebElement;
  */
 public class CommandLinkPage {
 
-    @FindBy(jquery = "[id$=':submit']")
+    @FindByJQuery("[id$=':submit']")
     private WebElement submitLink;
 
-    @FindBy(jquery = "[id$=':reset_counter']")
+    @FindByJQuery("[id$=':reset_counter']")
     private WebElement resetCounterLink;
 
-    @FindBy(jquery = "[id$=':ajax']")
+    @FindByJQuery("[id$=':ajax']")
     private WebElement ajaxLink;
 
-    @FindBy(jquery = "[id$=':alert']")
+    @FindByJQuery("[id$=':alert']")
     private WebElement alertLink;
 
-    @FindBy(jquery = "[id$=':output']")
+    @FindByJQuery("[id$=':output']")
     private WebElement outputText;
 
-    @FindBy(jquery = "[id$=':input']")
+    @FindByJQuery("[id$=':input']")
     private WebElement inputText;
 
     public WebElement getAjaxLink() {

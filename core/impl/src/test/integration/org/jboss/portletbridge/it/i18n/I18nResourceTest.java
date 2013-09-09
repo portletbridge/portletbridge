@@ -25,6 +25,7 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.enricher.findby.FindBy;
+import org.jboss.arquillian.graphene.findby.FindByJQuery;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
@@ -43,7 +44,7 @@ import org.portletbridge.arquillian.deployment.TestDeployment;
 
 import java.net.URL;
 
-import static org.jboss.arquillian.graphene.Graphene.guardXhr;
+import static org.jboss.arquillian.graphene.Graphene.guardAjax;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -75,13 +76,13 @@ public class I18nResourceTest extends AbstractPortletTest {
         resourceBundle.var("i18n");
     }
 
-    @FindBy(jquery = "[id$='portletHeader']")
+    @FindByJQuery("[id$='portletHeader']")
     private WebElement header;
 
-    @FindBy(jquery = "[id$='output']")
+    @FindByJQuery("[id$='output']")
     private WebElement message;
 
-    @FindBy(jquery = "[id$='selector']")
+    @FindByJQuery("[id$='selector']")
     private WebElement selector;
 
     protected static final String headerContent = "I18n";
@@ -113,7 +114,7 @@ public class I18nResourceTest extends AbstractPortletTest {
         Select select = new Select(selector);
         assertEquals("En language message should be present.", enContent, message.getText());
 
-        guardXhr(select).selectByValue("zh_CN");
+        guardAjax(select).selectByValue("zh_CN");
 
         assertEquals("Zh_cn language message should be present.", zhContent, message.getText());
     }

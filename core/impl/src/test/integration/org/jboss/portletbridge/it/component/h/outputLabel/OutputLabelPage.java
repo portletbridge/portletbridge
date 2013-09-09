@@ -22,6 +22,7 @@
 package org.jboss.portletbridge.it.component.h.outputLabel;
 
 import org.jboss.arquillian.graphene.enricher.findby.FindBy;
+import org.jboss.arquillian.graphene.findby.FindByJQuery;
 import org.openqa.selenium.WebElement;
 
 /**
@@ -29,16 +30,16 @@ import org.openqa.selenium.WebElement;
  */
 public class OutputLabelPage {
 
-    @FindBy(jquery = "[id$=':outputEscaped']")
+    @FindByJQuery("[id$=':outputEscaped']")
     private WebElement outputLabelEscaped;
 
-    @FindBy(jquery = "[id$=':outputNotEscaped']")
+    @FindByJQuery("[id$=':outputNotEscaped']")
     private WebElement outputLabelNotEscaped;
 
-    @FindBy(jquery = "[id$=':outputNotRendered']")
+    @FindByJQuery("[id$=':outputNotRendered']")
     private WebElement outputLabelNotRendered;
 
-    @FindBy(jquery = "[id$=':output2']")
+    @FindByJQuery("[id$=':output2']")
     private WebElement outputLabel2;
 
     public WebElement getOutputLabel2() {

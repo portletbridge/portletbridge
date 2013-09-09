@@ -24,7 +24,6 @@ package org.jboss.portletbridge.it.validator;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
-import org.jboss.arquillian.graphene.enricher.findby.FindBy;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
@@ -35,11 +34,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 import org.portletbridge.arquillian.deployment.TestDeployment;
 
 import java.net.URL;
 
-import static org.jboss.arquillian.graphene.Graphene.guardXhr;
+import static org.jboss.arquillian.graphene.Graphene.guardAjax;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -96,7 +96,7 @@ public class ValidatorAjaxEmailTest extends AbstractPortletTest {
         assertTrue("Check that page contains output element!", label.isDisplayed());
         assertEquals("Portlet output set.", outLabelValue, label.getText());
 
-        guardXhr(inputField).clear();
+        guardAjax(inputField).clear();
         assertEquals("Output Field has required message", "req", outputField.getText());
 
         inputField.sendKeys(INPUT1);
@@ -105,7 +105,7 @@ public class ValidatorAjaxEmailTest extends AbstractPortletTest {
         assertTrue("Check that page after 1st submit contains output element", outputField.isDisplayed());
         assertEquals("Invalid message set.", outInvalid, outputField.getText());
 
-        guardXhr(inputField).clear();
+        guardAjax(inputField).clear();
         assertEquals("Output Field has required message", "req", outputField.getText());
 
         inputField.sendKeys(INPUT2);
@@ -114,7 +114,7 @@ public class ValidatorAjaxEmailTest extends AbstractPortletTest {
         assertTrue("Check that page after 2nd submit contains output element", outputField.isDisplayed());
         assertEquals("Invalid message set.", outInvalid, outputField.getText());
 
-        guardXhr(inputField).clear();
+        guardAjax(inputField).clear();
         assertEquals("Output Field has required message", "req", outputField.getText());
 
         inputField.sendKeys(INPUT3);
@@ -123,7 +123,7 @@ public class ValidatorAjaxEmailTest extends AbstractPortletTest {
         assertTrue("Check that page after 3rd submit contains output element", outputField.isDisplayed());
         assertEquals("Invalid message set.", outInvalid, outputField.getText());
 
-        guardXhr(inputField).clear();
+        guardAjax(inputField).clear();
         assertEquals("Output Field has required message", "req", outputField.getText());
 
         inputField.sendKeys(INPUT4);

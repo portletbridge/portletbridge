@@ -24,7 +24,6 @@ package org.jboss.portletbridge.it.basic;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
-import org.jboss.arquillian.graphene.enricher.findby.FindBy;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
@@ -35,11 +34,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 import org.portletbridge.arquillian.deployment.TestDeployment;
 
 import java.net.URL;
 
-import static org.jboss.arquillian.graphene.Graphene.guardXhr;
+import static org.jboss.arquillian.graphene.Graphene.guardAjax;
 import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
@@ -99,7 +99,7 @@ public class AjaxSubmitTest extends AbstractPortletTest {
         browser.get(portalURL.toString());
 
         inputField.sendKeys(NEW_VALUE);
-        guardXhr(submitButton).click();
+        guardAjax(submitButton).click();
 
         assertTrue("Output text updated.", outputField.getText().contains(NEW_VALUE));
 

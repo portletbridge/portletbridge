@@ -24,7 +24,7 @@ package org.jboss.portletbridge.it.redirect;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
-import org.jboss.arquillian.graphene.enricher.findby.FindBy;
+import org.jboss.arquillian.graphene.findby.FindByJQuery;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
@@ -36,6 +36,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 import org.portletbridge.arquillian.deployment.TestDeployment;
 
 import java.net.URL;
@@ -82,10 +83,10 @@ public class AjaxRedirectTest extends AbstractPortletTest {
     @FindBy(id = "output")
     private WebElement outputField;
 
-    @FindBy(jquery = "[id$=':submit1']")
+    @FindByJQuery("[id$=':submit1']")
     private WebElement submitButton1;
 
-    @FindBy(jquery = "[id$=':submit2']")
+    @FindByJQuery("[id$=':submit2']")
     private WebElement submitButton2;
 
     @ArquillianResource

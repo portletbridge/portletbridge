@@ -22,6 +22,7 @@
 package org.jboss.portletbridge.it.component.h.message;
 
 import org.jboss.arquillian.graphene.enricher.findby.FindBy;
+import org.jboss.arquillian.graphene.findby.FindByJQuery;
 import org.openqa.selenium.WebElement;
 
 /**
@@ -29,43 +30,43 @@ import org.openqa.selenium.WebElement;
  */
 public class MessagesPage {
 
-    @FindBy(jquery = "[id$=':messages']")
+    @FindByJQuery("[id$=':messages']")
     private WebElement messages;
 
-    @FindBy(jquery = "[id$=':message_one']")
+    @FindByJQuery("[id$=':message_one']")
     private WebElement messageOne;
 
-    @FindBy(jquery = "[id$=':message_two']")
+    @FindByJQuery("[id$=':message_two']")
     private WebElement messageTwo;
 
-    @FindBy(jquery = "[id$=':input_one']")
+    @FindByJQuery("[id$=':input_one']")
     private WebElement inputOne;
 
-    @FindBy(jquery = "[id$=':input_two']")
+    @FindByJQuery("[id$=':input_two']")
     private WebElement inputTwo;
 
-    @FindBy(jquery = "[id$=':submit']")
+    @FindByJQuery("[id$=':submit']")
     private WebElement submitButton;
 
-    @FindBy(jquery = "[id$=':messageOneRenderFalse']")
+    @FindByJQuery("[id$=':messageOneRenderFalse']")
     private WebElement disableMessageOneRender;
 
-    @FindBy(jquery = "[id$=':messageOneDetailFalse']")
+    @FindByJQuery("[id$=':messageOneDetailFalse']")
     private WebElement disableMessageOneDetail;
 
-    @FindBy(jquery = "[id$=':messageOneSummaryTrue']")
+    @FindByJQuery("[id$=':messageOneSummaryTrue']")
     private WebElement enableMessageOneSummary;
 
-    @FindBy(jquery = "[id$=':messagesDisable']")
+    @FindByJQuery("[id$=':messagesDisable']")
     private WebElement disableMessages;
 
-    @FindBy(jquery = "[id$=':messagesEnableDetails']")
+    @FindByJQuery("[id$=':messagesEnableDetails']")
     private WebElement enableMessagesDetail;
 
-    @FindBy(jquery = "[id$=':messagesDisableSummary']")
+    @FindByJQuery("[id$=':messagesDisableSummary']")
     private WebElement disableMessagesSummary;
 
-    @FindBy(jquery = "[id$=':messagesEnableGlobal']")
+    @FindByJQuery("[id$=':messagesEnableGlobal']")
     private WebElement enableMessagesGlobal;
 
     public WebElement getInputOne() {

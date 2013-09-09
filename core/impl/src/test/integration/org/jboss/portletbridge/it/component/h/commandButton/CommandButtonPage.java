@@ -21,7 +21,7 @@
  */
 package org.jboss.portletbridge.it.component.h.commandButton;
 
-import org.jboss.arquillian.graphene.enricher.findby.FindBy;
+import org.jboss.arquillian.graphene.findby.FindByJQuery;
 import org.openqa.selenium.WebElement;
 
 /**
@@ -29,22 +29,22 @@ import org.openqa.selenium.WebElement;
  */
 public class CommandButtonPage {
 
-    @FindBy(jquery = "[id$=':submit']")
+    @FindByJQuery("[id$=':submit']")
     private WebElement submitButton;
 
-    @FindBy(jquery = "[id$=':reset']")
+    @FindByJQuery("[id$=':reset']")
     private WebElement resetButton;
 
-    @FindBy(jquery = "[id$=':ajax']")
+    @FindByJQuery("[id$=':ajax']")
     private WebElement ajaxButton;
 
-    @FindBy(jquery = "[id$=':alert']")
+    @FindByJQuery("[id$=':alert']")
     private WebElement alertButton;
 
-    @FindBy(jquery = "[id$=':output']")
+    @FindByJQuery("[id$=':output']")
     private WebElement outputText;
 
-    @FindBy(jquery = "[id$=':input']")
+    @FindByJQuery("[id$=':input']")
     private WebElement inputText;
 
     public WebElement getSubmitButton() {

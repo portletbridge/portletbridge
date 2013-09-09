@@ -4,7 +4,7 @@ import category.GateInOnly;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
-import org.jboss.arquillian.graphene.enricher.findby.FindBy;
+import org.jboss.arquillian.graphene.findby.FindByJQuery;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
@@ -54,10 +54,10 @@ public class ViewParamTest extends AbstractPortletTest {
         return browser;
     }
 
-    @FindBy(jquery = "[id$=':submit']")
+    @FindByJQuery("[id$=':submit']")
     private WebElement submitButton;
 
-    @FindBy(jquery = "[id$=':param1']")
+    @FindByJQuery("[id$=':param1']")
     private WebElement param1;
 
     @Test

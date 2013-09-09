@@ -21,33 +21,34 @@
  */
 package org.jboss.portletbridge.it.component.h.selectCheckbox;
 
-import org.jboss.arquillian.graphene.enricher.findby.FindBy;
+import org.jboss.arquillian.graphene.findby.FindByJQuery;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
 /**
  * @author <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
  */
 public class SelectCheckboxPage {
 
-    @FindBy(jquery = "[id$=':sbcAccepted']")
+    @FindByJQuery("[id$=':sbcAccepted']")
     private WebElement acceptCheckbox;
 
-    @FindBy(jquery = "[id$=':smcGender']")
+    @FindByJQuery("[id$=':smcGender']")
     private WebElement genderCheckbox;
 
-    @FindBy(jquery = "[id$=':smcGender:0']")
+    @FindByJQuery("[id$=':smcGender:0']")
     private WebElement genderOptionMale;
 
-    @FindBy(jquery = "[id$=':smcGender:1']")
+    @FindByJQuery("[id$=':smcGender:1']")
     private WebElement genderOptionFemale;
 
-    @FindBy(jquery = "[id$=':sorAge:0']")
+    @FindByJQuery("[id$=':sorAge:0']")
     private WebElement ageOptionYoung;
 
-    @FindBy(jquery = "[id$=':sorAge:1']")
+    @FindByJQuery("[id$=':sorAge:1']")
     private WebElement ageOptionAdult;
 
-    @FindBy(jquery = "[id$=':sorAge:2']")
+    @FindByJQuery("[id$=':sorAge:2']")
     private WebElement ageOptionSenior;
 
     @FindBy(xpath = "//option[contains(@value,'no_continent')]")
@@ -62,19 +63,19 @@ public class SelectCheckboxPage {
     @FindBy(xpath = "//option[contains(@value,'europe')]")
     private WebElement continentEurope;
 
-    @FindBy(jquery = "[id$=':smlColors']")
+    @FindByJQuery("[id$=':smlColors']")
     private WebElement colorsCheckbox;
 
-    @FindBy(jquery = "[id$=':submit']")
+    @FindByJQuery("[id$=':submit']")
     private WebElement submitButton;
 
-    @FindBy(jquery = "[id$=':ajax']")
+    @FindByJQuery("[id$=':ajax']")
     private WebElement ajaxButton;
 
-    @FindBy(jquery = "[id$=':messages']")
+    @FindByJQuery("[id$=':messages']")
     private WebElement messages;
 
-    @FindBy(jquery = "[id$=':result']")
+    @FindByJQuery("[id$=':result']")
     private WebElement result;
 
     public WebElement getAcceptCheckbox() {

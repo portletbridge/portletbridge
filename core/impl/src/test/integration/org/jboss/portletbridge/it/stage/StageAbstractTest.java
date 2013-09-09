@@ -22,12 +22,12 @@
 package org.jboss.portletbridge.it.stage;
 
 import org.jboss.arquillian.drone.api.annotation.Drone;
-import org.jboss.arquillian.graphene.enricher.findby.FindBy;
 import org.jboss.portletbridge.it.AbstractPortletTest;
 import org.jboss.shrinkwrap.descriptor.api.webapp30.WebAppDescriptor;
 import org.jboss.shrinkwrap.portal.api.PortletArchive;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 import org.portletbridge.arquillian.deployment.TestDeployment;
 
 public abstract class StageAbstractTest extends AbstractPortletTest {

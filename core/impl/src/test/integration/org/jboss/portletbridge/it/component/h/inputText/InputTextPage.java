@@ -22,6 +22,7 @@
 package org.jboss.portletbridge.it.component.h.inputText;
 
 import org.jboss.arquillian.graphene.enricher.findby.FindBy;
+import org.jboss.arquillian.graphene.findby.FindByJQuery;
 import org.openqa.selenium.WebElement;
 
 /**
@@ -29,28 +30,28 @@ import org.openqa.selenium.WebElement;
  */
 public class InputTextPage {
 
-    @FindBy(jquery = "[id$=':input1']")
+    @FindByJQuery("[id$=':input1']")
     private WebElement inputOne;
 
-    @FindBy(jquery = "[id$=':output1']")
+    @FindByJQuery("[id$=':output1']")
     private WebElement outputOne;
 
-    @FindBy(jquery = "[id$=':output1count']")
+    @FindByJQuery("[id$=':output1count']")
     private WebElement outputOneCounter;
 
-    @FindBy(jquery = "[id$=':submit1']")
+    @FindByJQuery("[id$=':submit1']")
     private WebElement submitOne;
 
-    @FindBy(jquery = "[id$=':input2']")
+    @FindByJQuery("[id$=':input2']")
     private WebElement inputTwo;
 
-    @FindBy(jquery = "[id$=':output2']")
+    @FindByJQuery("[id$=':output2']")
     private WebElement outputTwo;
 
-    @FindBy(jquery = "[id$=':output2count']")
+    @FindByJQuery("[id$=':output2count']")
     private WebElement outputTwoCounter;
 
-    @FindBy(jquery = "[id$=':messages']")
+    @FindByJQuery("[id$=':messages']")
     private WebElement messages;
 
     public WebElement getInputOne() {

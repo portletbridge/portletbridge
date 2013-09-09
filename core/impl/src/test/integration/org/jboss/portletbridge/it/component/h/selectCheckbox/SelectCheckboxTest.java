@@ -3,7 +3,7 @@ package org.jboss.portletbridge.it.component.h.selectCheckbox;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
-import org.jboss.arquillian.graphene.spi.annotations.Page;
+import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
@@ -21,7 +21,7 @@ import org.portletbridge.arquillian.deployment.TestDeployment;
 import java.net.URL;
 import java.util.List;
 
-import static org.jboss.arquillian.graphene.Graphene.guardXhr;
+import static org.jboss.arquillian.graphene.Graphene.guardAjax;
 import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
@@ -79,7 +79,7 @@ public class SelectCheckboxTest extends AbstractPortletTest {
         browser.get(portalURL.toString());
 
         // at first only accept is shown, must be clicked to show remaining
-        guardXhr(page.getAcceptCheckbox()).click();
+        guardAjax(page.getAcceptCheckbox()).click();
 
         assertTrue("Check that page contains GENDER checkbox element.", page.getGenderCheckbox().isDisplayed());
         assertTrue("Check that page contains COLORS checkbox element.", page.getColorsCheckbox().isDisplayed());
@@ -91,7 +91,7 @@ public class SelectCheckboxTest extends AbstractPortletTest {
         browser.get(portalURL.toString());
 
         // at first only accept is shown, must be clicked to show remaining
-        guardXhr(page.getAcceptCheckbox()).click();
+        guardAjax(page.getAcceptCheckbox()).click();
 
         assertTrue("Check that page contains GENDER checkbox element.", page.getGenderCheckbox().isDisplayed());
 
@@ -107,7 +107,7 @@ public class SelectCheckboxTest extends AbstractPortletTest {
         browser.get(portalURL.toString());
 
         // at first only accept is shown, must be clicked to show remaining
-        guardXhr(page.getAcceptCheckbox()).click();
+        guardAjax(page.getAcceptCheckbox()).click();
 
         assertTrue("Check that page contains GENDER checkbox element.", page.getGenderCheckbox().isDisplayed());
 
@@ -127,7 +127,7 @@ public class SelectCheckboxTest extends AbstractPortletTest {
         browser.get(portalURL.toString());
 
         // at first only accept is shown, must be clicked to show remaining
-        guardXhr(page.getAcceptCheckbox()).click();
+        guardAjax(page.getAcceptCheckbox()).click();
 
         assertTrue("Check that page contains COLORS checkbox element.", page.getColorsCheckbox().isDisplayed());
 
@@ -143,7 +143,7 @@ public class SelectCheckboxTest extends AbstractPortletTest {
         browser.get(portalURL.toString());
 
         // at first only accept is shown, must be clicked to show remaining
-        guardXhr(page.getAcceptCheckbox()).click();
+        guardAjax(page.getAcceptCheckbox()).click();
 
         assertFalse("Check that no option in AGE RADIO is selected by default.",
                 page.getAgeOptionYoung().isSelected() &&
@@ -181,7 +181,7 @@ public class SelectCheckboxTest extends AbstractPortletTest {
         browser.get(portalURL.toString());
 
         // at first only accept is shown, must be clicked to show remaining
-        guardXhr(page.getAcceptCheckbox()).click();
+        guardAjax(page.getAcceptCheckbox()).click();
 
         assertTrue("Check that noSelectionOption is selected by default.", page.getContinentNoSel().isSelected());
 
@@ -203,7 +203,7 @@ public class SelectCheckboxTest extends AbstractPortletTest {
         browser.get(portalURL.toString());
 
         // at first only accept is shown, must be clicked to show remaining
-        guardXhr(page.getAcceptCheckbox()).click();
+        guardAjax(page.getAcceptCheckbox()).click();
 
         // Select male gender
         page.getGenderOptionMale().click();
@@ -248,7 +248,7 @@ public class SelectCheckboxTest extends AbstractPortletTest {
         browser.get(portalURL.toString());
 
         // at first only accept is shown, must be clicked to show remaining
-        guardXhr(page.getAcceptCheckbox()).click();
+        guardAjax(page.getAcceptCheckbox()).click();
 
         // Select male gender
         page.getGenderOptionMale().click();
@@ -267,7 +267,7 @@ public class SelectCheckboxTest extends AbstractPortletTest {
             }
         }
 
-        guardXhr(page.getAjaxButton()).click();
+        guardAjax(page.getAjaxButton()).click();
 
         assertTrue("Check that 'male' is present in result string.", page.getResult().getText().contains("male"));
         assertFalse("Check that 'female' is not present in result string.", page.getResult().getText().contains("female"));

@@ -4,6 +4,7 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.enricher.findby.FindBy;
+import org.jboss.arquillian.graphene.findby.FindByJQuery;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
@@ -50,19 +51,19 @@ public class LinkTest extends AbstractPortletTest {
         return browser;
     }
 
-    @FindBy(jquery = "[id$=':link1']")
+    @FindByJQuery("[id$=':link1']")
     private WebElement linkOne;
 
-    @FindBy(jquery = "[id$=':link2']")
+    @FindByJQuery("[id$=':link2']")
     private WebElement linkTwo;
 
-    @FindBy(jquery = "[id$=':link3']")
+    @FindByJQuery("[id$=':link3']")
     private WebElement linkThree;
 
-    @FindBy(jquery = "[id$=':link4']")
+    @FindByJQuery("[id$=':link4']")
     private WebElement linkFour;
 
-    @FindBy(jquery = "[id$=':hideLink1']")
+    @FindByJQuery("[id$=':hideLink1']")
     private WebElement hideLink1;
 
     protected static final By LINK_THREE_IMAGE = By.xpath("img[contains(@id,':link3img')]");

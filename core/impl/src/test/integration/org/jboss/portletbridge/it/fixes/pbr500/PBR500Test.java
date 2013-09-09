@@ -25,6 +25,7 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.enricher.findby.FindBy;
+import org.jboss.arquillian.graphene.findby.FindByJQuery;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
@@ -39,7 +40,7 @@ import org.portletbridge.arquillian.deployment.TestDeployment;
 
 import java.net.URL;
 
-import static org.jboss.arquillian.graphene.Graphene.guardXhr;
+import static org.jboss.arquillian.graphene.Graphene.guardAjax;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -62,19 +63,19 @@ public class PBR500Test extends AbstractPortletTest {
 
     protected static final String TEXT = "Some Text";
 
-    @FindBy(jquery = "[id$=':input']")
+    @FindByJQuery("[id$=':input']")
     private WebElement inputField;
 
-    @FindBy(jquery = "[id$=':submit']")
+    @FindByJQuery("[id$=':submit']")
     private WebElement submitButton;
 
-    @FindBy(jquery = "[id$=':result']")
+    @FindByJQuery("[id$=':result']")
     private WebElement resultField;
 
-    @FindBy(jquery = "[id$=':link1']")
+    @FindByJQuery("[id$=':link1']")
     private WebElement linkWithContext;
 
-    @FindBy(jquery = "[id$=':link2']")
+    @FindByJQuery("[id$=':link2']")
     private WebElement linkWithoutContext;
 
     @ArquillianResource
@@ -94,7 +95,7 @@ public class PBR500Test extends AbstractPortletTest {
         browser.get(portalURL.toString());
 
         inputField.sendKeys(TEXT);
-        guardXhr(submitButton).click();
+        guardAjax(submitButton).click();
 
         assertEquals("Output Field set.", TEXT, resultField.getText());
     }

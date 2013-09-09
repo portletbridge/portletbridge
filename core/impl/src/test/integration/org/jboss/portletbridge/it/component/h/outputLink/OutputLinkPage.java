@@ -22,6 +22,7 @@
 package org.jboss.portletbridge.it.component.h.outputLink;
 
 import org.jboss.arquillian.graphene.enricher.findby.FindBy;
+import org.jboss.arquillian.graphene.findby.FindByJQuery;
 import org.openqa.selenium.WebElement;
 
 /**
@@ -29,25 +30,25 @@ import org.openqa.selenium.WebElement;
  */
 public class OutputLinkPage {
 
-    @FindBy(jquery = "[id$=':link0']")
+    @FindByJQuery("[id$=':link0']")
     private WebElement linkZero;
 
-    @FindBy(jquery = "[id$=':link1']")
+    @FindByJQuery("[id$=':link1']")
     private WebElement linkOne;
 
-    @FindBy(jquery = "[id$=':link2']")
+    @FindByJQuery("[id$=':link2']")
     private WebElement linkTwo;
 
-    @FindBy(jquery = "[id$=':link3']")
+    @FindByJQuery("[id$=':link3']")
     private WebElement linkThree;
 
-    @FindBy(jquery = "[id$=':link3img']")
+    @FindByJQuery("[id$=':link3img']")
     private WebElement linkThreeImage;
 
-    @FindBy(jquery = "[id$=':viewLink1']")
+    @FindByJQuery("[id$=':viewLink1']")
     private WebElement viewLinkOne;
 
-    @FindBy(jquery = "[id$=':viewLink2']")
+    @FindByJQuery("[id$=':viewLink2']")
     private WebElement viewLinkTwo;
 
     public WebElement getLinkZero() {

@@ -24,7 +24,7 @@ package org.jboss.portletbridge.it.facelet;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
-import org.jboss.arquillian.graphene.enricher.findby.FindBy;
+import org.jboss.arquillian.graphene.findby.FindByJQuery;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
@@ -56,13 +56,13 @@ public class FaceletCompositionRemoveTest {
         return deployment.getFinalArchive();
     }
 
-    @FindBy(jquery = "[id$='portletHeader']")
+    @FindByJQuery("[id$='portletHeader']")
     private WebElement header;
 
-    @FindBy(jquery = "[id$='unremoved']")
+    @FindByJQuery("[id$='unremoved']")
     private WebElement buttonUnremoved;
 
-    @FindBy(jquery = "[id$='deleted']")
+    @FindByJQuery("[id$='deleted']")
     private WebElement buttonRemoved;
 
     protected static final String headerContent = "UI:Remove";

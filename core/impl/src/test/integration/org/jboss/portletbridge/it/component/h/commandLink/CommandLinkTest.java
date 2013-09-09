@@ -3,7 +3,7 @@ package org.jboss.portletbridge.it.component.h.commandLink;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
-import org.jboss.arquillian.graphene.spi.annotations.Page;
+import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
@@ -18,7 +18,7 @@ import org.portletbridge.arquillian.deployment.TestDeployment;
 
 import java.net.URL;
 
-import static org.jboss.arquillian.graphene.Graphene.guardXhr;
+import static org.jboss.arquillian.graphene.Graphene.guardAjax;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
 
@@ -136,7 +136,7 @@ public class CommandLinkTest extends AbstractPortletTest {
         int nTimes = 4;
         for (int i = 0; i < nTimes; i++) {
             String oldText = page.getOutputText().getText();
-            guardXhr(page.getAjaxLink()).click();
+            guardAjax(page.getAjaxLink()).click();
             assertNotSame("Output Text set to new value", oldText, page.getOutputText().getText());
         }
 
