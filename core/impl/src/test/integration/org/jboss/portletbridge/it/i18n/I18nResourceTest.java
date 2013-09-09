@@ -24,7 +24,6 @@ package org.jboss.portletbridge.it.i18n;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
-import org.jboss.arquillian.graphene.enricher.findby.FindBy;
 import org.jboss.arquillian.graphene.findby.FindByJQuery;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;

@@ -38,7 +38,6 @@ import javax.faces.context.FacesContext;
 import javax.portlet.faces.BridgeUtil;
 import javax.servlet.http.HttpServletResponse;
 
-import org.jboss.portletbridge.application.resource.PortletResource;
 import org.jboss.portletbridge.application.resource.PortletResourceHandler;
 import org.jboss.portletbridge.bridge.logger.BridgeLogger;
 import org.jboss.portletbridge.bridge.logger.BridgeLogger.Level;

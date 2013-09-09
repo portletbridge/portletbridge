@@ -21,7 +21,6 @@
  */
 package org.jboss.portletbridge.it.component.h.inputText;
 
-import org.jboss.arquillian.graphene.enricher.findby.FindBy;
 import org.jboss.arquillian.graphene.findby.FindByJQuery;
 import org.openqa.selenium.WebElement;
 
