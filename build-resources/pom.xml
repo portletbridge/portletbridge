@@ -36,7 +36,7 @@
         <connection>scm:git:git://github.com/portletbridge/portletbridge.git</connection>
         <developerConnection>scm:git:git@github.com:portletbridge/portletbridge.git</developerConnection>
         <url>https://github.com/portletbridge/portletbridge</url>
-      <tag>HEAD</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <dependencies>
