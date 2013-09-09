@@ -96,10 +96,6 @@ abstract class ContextMap<K, V> extends AbstractMap<K, V> {
         return this.keySet;
     }
 
-    public Collection<V> values() {
-        return super.values();
-    }
-
     /**
      * Template method - all maps in ExternalFacesContext creates Set from parameters <code>Enumeration</code>
      *

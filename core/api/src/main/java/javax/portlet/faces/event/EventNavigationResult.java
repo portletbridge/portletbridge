@@ -108,23 +108,30 @@ public class EventNavigationResult {
      */
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         EventNavigationResult other = (EventNavigationResult) obj;
         if (fromAction == null) {
-            if (other.fromAction != null)
+            if (other.fromAction != null) {
                 return false;
-        } else if (!fromAction.equals(other.fromAction))
+            }
+        } else if (!fromAction.equals(other.fromAction)) {
             return false;
+        }
         if (outcome == null) {
-            if (other.outcome != null)
+            if (other.outcome != null) {
                 return false;
-        } else if (!outcome.equals(other.outcome))
+            }
+        } else if (!outcome.equals(other.outcome)) {
             return false;
+        }
         return true;
     }
 

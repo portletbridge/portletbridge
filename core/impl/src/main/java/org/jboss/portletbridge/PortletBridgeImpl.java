@@ -84,7 +84,7 @@ public class PortletBridgeImpl implements Bridge {
      */
     public void init(PortletConfig portletConfig) throws BridgeException {
         if (null == portletConfig) {
-            throw new NullPointerException("PortletConfig null when initializing Portlet Bridge");
+            throw new IllegalArgumentException("PortletConfig null when initializing Portlet Bridge");
         }
 
         if (this.initialized) {
@@ -309,10 +309,10 @@ public class PortletBridgeImpl implements Bridge {
 
     protected void assertParameters(PortletRequest request, PortletResponse response) {
         if (null == request) {
-            throw new NullPointerException("PortletRequest parameter is null");
+            throw new IllegalArgumentException("PortletRequest parameter is null");
         }
         if (null == response) {
-            throw new NullPointerException("PortletResponse parameter is null");
+            throw new IllegalArgumentException("PortletResponse parameter is null");
         }
         if (!initialized) {
             throw new BridgeUninitializedException("JSF Portlet Bridge is not initialized");

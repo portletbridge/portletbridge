@@ -70,7 +70,7 @@ public class CharBuffer {
      * @param bytes
      */
     public CharBuffer(char[] chars) {
-        this.chars = chars;
+        this.chars = chars.clone();
         usedSize = chars.length;
         if (usedSize < MIN_CACHE_SIZE) {
             this.cacheSize = MIN_CACHE_SIZE;
@@ -200,8 +200,9 @@ public class CharBuffer {
      */
     public void setNext(CharBuffer b) {
         next = b;
-        if (b != null)
+        if (b != null) {
             b.prev = this;
+        }
     }
 
     /**

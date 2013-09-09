@@ -57,7 +57,7 @@ public class RenderPortletExternalContextImpl extends MimeExternalContextImpl {
     @Override
     public void redirect(String url) throws IOException {
         if (null == url) {
-            throw new NullPointerException("Path to redirect is null");
+            throw new IllegalArgumentException("Path to redirect is null");
         }
         PortalActionURL actionURL = new PortalActionURL(url);
         Map<String, String[]> urlParams = null;

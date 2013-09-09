@@ -59,7 +59,7 @@ public class PortalActionURL {
 
     private PortalUrlQueryString queryString;
 
-    private int _length;
+    private int length;
 
     /**
      * @param url
@@ -76,7 +76,7 @@ public class PortalActionURL {
         if (!urlMatcher.matches()) {
             throw new MalformedURLException(url);
         }
-        _length = url.length();
+        length = url.length();
         this.protocol = urlMatcher.group(1);
         this.host = urlMatcher.group(2);
         String portStr = urlMatcher.group(4);
@@ -94,9 +94,9 @@ public class PortalActionURL {
      */
     public PortalActionURL(PortalActionURL src, boolean escape) {
         if (null == src) {
-            throw new NullPointerException("Source URL is null");
+            throw new IllegalArgumentException("Source URL is null");
         }
-        this._length = src._length;
+        this.length = src.length;
         this.protocol = src.protocol;
         this.host = src.host;
         this.port = src.port;
@@ -190,7 +190,7 @@ public class PortalActionURL {
 
     @Override
     public String toString() {
-        StringBuilder url = new StringBuilder(_length);
+        StringBuilder url = new StringBuilder(length);
         if (null != protocol) {
             url.append(protocol);
         }

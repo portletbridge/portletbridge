@@ -321,7 +321,7 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
         String charset = ((ClientDataRequest) getRequest()).getCharacterEncoding();
 
         if (null != contentType) {
-            int index = contentType.indexOf(";");
+            int index = contentType.indexOf(';');
             if (index < 0) {
                 contentTypeBuilder.append(contentType);
             } else {
@@ -721,7 +721,7 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
 
     public void dispatch(String path) throws IOException {
         if (null == path) {
-            throw new NullPointerException("Path to new view is null");
+            throw new IllegalArgumentException("Path to new view is null");
         }
         PortletRequestDispatcher dispatcher = getContext().getRequestDispatcher(path);
         if (null == dispatcher) {
@@ -937,7 +937,7 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
     @Override
     public String encodePartialActionURL(String url) {
         if (null == url) {
-            throw new NullPointerException();
+            throw new IllegalArgumentException();
         }
         String actionUrl = url;
         if (!actionUrl.startsWith("#")) {
@@ -1066,7 +1066,7 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
     @Override
     public String encodeBookmarkableURL(String baseUrl, Map<String, List<String>> parameters) {
         if (null == baseUrl) {
-            throw new NullPointerException();
+            throw new IllegalArgumentException();
         }
         String actionUrl = baseUrl;
         if (!actionUrl.startsWith("#")) {
@@ -1108,22 +1108,22 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
             return true;
         }
 
-        int i = url.indexOf(":");
+        int i = url.indexOf(':');
         if (i == -1) {
             return false;
         }
 
         String scheme = url.substring(0, i);
 
-        if (scheme.indexOf(";") != -1) {
+        if (scheme.indexOf(';') != -1) {
             return false;
-        } else if (scheme.indexOf("/") != -1) {
+        } else if (scheme.indexOf('/') != -1) {
             return false;
-        } else if (scheme.indexOf("#") != -1) {
+        } else if (scheme.indexOf('#') != -1) {
             return false;
-        } else if (scheme.indexOf("?") != -1) {
+        } else if (scheme.indexOf('?') != -1) {
             return false;
-        } else if (scheme.indexOf(" ") != -1) {
+        } else if (scheme.indexOf(' ') != -1) {
             return false;
         } else {
             return true;

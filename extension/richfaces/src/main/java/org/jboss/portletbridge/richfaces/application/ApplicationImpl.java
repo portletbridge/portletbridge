@@ -51,7 +51,7 @@ public class ApplicationImpl extends ApplicationWrapper {
     public ResourceHandler getResourceHandler() {
         ResourceHandler resourceHandler = wrapped.getResourceHandler();
 
-        if (null != resourceHandler && resourceHandler instanceof ResourceHandlerImpl) {
+        if (resourceHandler instanceof ResourceHandlerImpl) {
             resourceHandler = new OutermostRichFacesPortletResourceHandler(resourceHandler);
         }
         return resourceHandler;

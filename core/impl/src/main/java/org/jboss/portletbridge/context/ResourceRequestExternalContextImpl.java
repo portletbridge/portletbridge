@@ -148,7 +148,7 @@ public class ResourceRequestExternalContextImpl extends MimeExternalContextImpl 
 
     public void redirect(String url) throws IOException {
         if (null == url || url.length() < 0) {
-            throw new NullPointerException("Path to redirect is null");
+            throw new IllegalArgumentException("Path to redirect is null");
         }
 
         FacesContext facesContext = FacesContext.getCurrentInstance();

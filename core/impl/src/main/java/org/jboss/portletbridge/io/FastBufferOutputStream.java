@@ -87,7 +87,7 @@ public class FastBufferOutputStream extends OutputStream {
      */
     public void write(byte[] b) throws IOException {
         if (b == null) {
-            throw new NullPointerException();
+            throw new IllegalArgumentException();
         }
         int limit = b.length;
         length += limit;
@@ -99,7 +99,7 @@ public class FastBufferOutputStream extends OutputStream {
      */
     public void write(byte[] b, int off, int len) throws IOException {
         if (b == null) {
-            throw new NullPointerException();
+            throw new IllegalArgumentException();
         } else if ((off < 0) || (off > b.length) || (len < 0) || ((off + len) > b.length) || ((off + len) < 0)) {
             throw new IndexOutOfBoundsException();
         } else if (len == 0) {
@@ -129,8 +129,9 @@ public class FastBufferOutputStream extends OutputStream {
 
     public byte[] toByteArray() {
         ByteBuffer b = getFirstBuffer();
-        if (b == null)
+        if (b == null) {
             return new byte[0];
+        }
         ByteBuffer l = b;
         while (l.getNext() != null)
             l = l.getNext();
@@ -192,8 +193,9 @@ public class FastBufferOutputStream extends OutputStream {
         CharBuffer b = first;
         while (c != null) {
             c = c.getNext();
-            if (c == null)
+            if (c == null) {
                 break;
+            }
             CharBuffer n = c.toCharBuffer(encoding);
             b.setNext(n);
             b = n;
@@ -212,8 +214,9 @@ public class FastBufferOutputStream extends OutputStream {
         CharBuffer b = first;
         while (c != null) {
             c = c.getNext();
-            if (c == null)
+            if (c == null) {
                 break;
+            }
             CharBuffer n = c.toCharBuffer();
             b.setNext(n);
             b = n;

@@ -54,7 +54,7 @@ public class PortletExternalContextFactoryImpl extends ExternalContextFactory {
 
     public ExternalContext getExternalContext(Object context, Object request, Object response) throws FacesException {
         if ((null == context) || (null == request) || (null == response)) {
-            throw new NullPointerException("One or more parameters for a external context instantiation is null");
+            throw new IllegalArgumentException("One or more parameters for a external context instantiation is null");
         }
 
         ExternalContext externalContext;

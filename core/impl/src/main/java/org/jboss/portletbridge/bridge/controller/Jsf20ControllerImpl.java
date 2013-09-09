@@ -201,7 +201,7 @@ public class Jsf20ControllerImpl implements BridgeController {
             }
 
             BridgeRequestScope currentScope = encodeStateAware(bridgeContext, facesContext);
-            if (null != currentScope && currentScope != scope) {
+            if (null != currentScope && !currentScope.equals(scope)) {
                 removeScope = true;
             }
         } catch (Exception e) {

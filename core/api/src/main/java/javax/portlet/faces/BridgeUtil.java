@@ -48,8 +48,9 @@ public class BridgeUtil {
         // For example a renderkit might createComponents during such time -- as the bridge overrides faces Application
         // which implements createComponent and calls this method (to see if we need to wrap/replace with the
         // NamingContainer
-        if (ctx == null)
+        if (ctx == null) {
             return false;
+        }
 
         return null != getPortletRequestPhase();
     }

@@ -87,7 +87,7 @@ public class FastBufferWriter extends Writer {
      */
     public void write(char[] cbuf) throws IOException {
         if (cbuf == null) {
-            throw new NullPointerException();
+            throw new IllegalArgumentException();
         }
 
         lastBuffer = lastBuffer.append(cbuf, 0, cbuf.length);
@@ -100,7 +100,7 @@ public class FastBufferWriter extends Writer {
      */
     public void write(char[] cbuf, int off, int len) throws IOException {
         if (cbuf == null) {
-            throw new NullPointerException();
+            throw new IllegalArgumentException();
         }
         if ((off < 0) || (off > cbuf.length) || (len < 0) || ((off + len) > cbuf.length) || ((off + len) < 0)) {
             throw new IndexOutOfBoundsException();
@@ -144,11 +144,13 @@ public class FastBufferWriter extends Writer {
      */
     public char[] toCharArray() {
         CharBuffer b = firstBuffer;
-        if (b == null)
+        if (b == null) {
             return new char[0];
+        }
         CharBuffer l = b;
-        while (l.getNext() != null)
+        while (l.getNext() != null) {
             l = l.getNext();
+        }
         char[] result = new char[l.getTotalSize()];
         int index = 0;
         while (b != null) {
@@ -201,8 +203,9 @@ public class FastBufferWriter extends Writer {
         ByteBuffer b = first;
         while (c != null) {
             c = c.getNext();
-            if (c == null)
+            if (c == null) {
                 break;
+            }
             ByteBuffer n = c.toByteBuffer(encoding);
             b.setNext(n);
             b = n;
@@ -221,8 +224,9 @@ public class FastBufferWriter extends Writer {
         ByteBuffer b = first;
         while (c != null) {
             c = c.getNext();
-            if (c == null)
+            if (c == null) {
                 break;
+            }
             ByteBuffer n = c.toByteBuffer();
             b.setNext(n);
             b = n;

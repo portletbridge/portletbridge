@@ -146,8 +146,9 @@ public class PortletResourceHandler extends ResourceHandlerWrapper {
             InputStream in = null;
 
             int bufferSize = extContext.getResponseBufferSize();
-            if (0 == bufferSize)
+            if (0 == bufferSize) {
                 bufferSize = 2048;
+            }
             ByteBuffer buf = ByteBuffer.allocate(bufferSize);
             extContext.setResponseBufferSize(buf.capacity());
 
@@ -205,7 +206,7 @@ public class PortletResourceHandler extends ResourceHandlerWrapper {
     }
 
     protected boolean isPortletResource(Resource res) {
-        if (null == res || res instanceof PortletResource) {
+        if (res instanceof PortletResource) {
             return true;
         } else {
             return false;

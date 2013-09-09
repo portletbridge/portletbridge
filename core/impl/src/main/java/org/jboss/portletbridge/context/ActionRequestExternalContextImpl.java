@@ -106,9 +106,7 @@ public class ActionRequestExternalContextImpl extends PortletExternalContextImpl
                         // only valid window states supported.
                     }
                 }
-            } else if (key.equals(Bridge.PORTLET_SECURE_PARAMETER)) {
-                // ignore
-            } else {
+            } else if (!key.equals(Bridge.PORTLET_SECURE_PARAMETER)) {
                 stateResponse.setRenderParameter(key, value);
             }
         }
@@ -132,7 +130,7 @@ public class ActionRequestExternalContextImpl extends PortletExternalContextImpl
 
     public void redirect(String url) throws IOException {
         if (null == url || url.length() < 0) {
-            throw new NullPointerException("Path to redirect is null");
+            throw new IllegalArgumentException("Path to redirect is null");
         }
 
         PortalActionURL actionURL = new PortalActionURL(url);

@@ -94,7 +94,7 @@ public class PortletBridgeListener implements ServletContextListener, HttpSessio
             if (null != attribute && attribute.startsWith("javax.portlet.p.")) {
                 // Attribute is namespaced to a portlet and was added with PortletSession.setAttribute()
 
-                int pos = attribute.indexOf("?");
+                int pos = attribute.indexOf('?');
                 if (pos > 0) {
                     String jsfAttribute = attribute.substring(pos + 1);
 

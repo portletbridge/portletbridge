@@ -220,9 +220,9 @@ public class PortletViewHandler extends ViewHandlerWrapper {
                 // ExternalContext
                 // to use original view handler functionality.
                 super.renderView(context, viewToRender);
-            } catch (Throwable t) {
+            } catch (Exception e) {
                 logger.log(Level.DEBUG,
-                    "Error rendering view by parent ViewHandler, try to render as portletbridge JSP page", t);
+                    "Error rendering view by parent ViewHandler, try to render as portletbridge JSP page", e);
                 // Restore request/response objects if parent renderer change
                 // them.
                 if (portletRequest != externalContext.getRequest()) {

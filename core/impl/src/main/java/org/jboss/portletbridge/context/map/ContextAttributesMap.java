@@ -32,7 +32,7 @@ public abstract class ContextAttributesMap<V> extends ContextMap<String, V> {
     @Override
     public V get(Object key) {
         if (null == key) {
-            throw new NullPointerException();
+            throw new IllegalArgumentException();
         }
         return getAttribute(key.toString());
     }
@@ -40,7 +40,7 @@ public abstract class ContextAttributesMap<V> extends ContextMap<String, V> {
     @Override
     public boolean containsKey(Object key) {
         if (null == key) {
-            throw new NullPointerException();
+            throw new IllegalArgumentException();
         }
         return null != getAttribute(key.toString());
     }
@@ -48,18 +48,17 @@ public abstract class ContextAttributesMap<V> extends ContextMap<String, V> {
     @Override
     public V put(String key, V value) {
         if (null == key) {
-            throw new NullPointerException();
+            throw new IllegalArgumentException();
         }
-        String stringKey = key.toString();
-        V oldValue = getAttribute(stringKey);
-        setAttribute(stringKey, value);
+        V oldValue = getAttribute(key);
+        setAttribute(key, value);
         return oldValue;
     }
 
     @Override
     public V remove(Object key) {
         if (null == key) {
-            throw new NullPointerException();
+            throw new IllegalArgumentException();
         }
         String stringKey = key.toString();
         V oldValue = getAttribute(stringKey);

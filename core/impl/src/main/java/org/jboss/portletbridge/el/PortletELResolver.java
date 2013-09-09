@@ -100,7 +100,7 @@ public class PortletELResolver extends ELResolver {
         }
 
         if (null == context) {
-            throw new NullPointerException("PortletELResolver.getValue was passed a null ELContext");
+            throw new IllegalArgumentException("PortletELResolver.getValue was passed a null ELContext");
         }
 
         ELContextImpl portletELContext = (ELContextImpl) context.getContext(ELContextImpl.class);
@@ -268,47 +268,47 @@ public class PortletELResolver extends ELResolver {
         }
         ArrayList<FeatureDescriptor> list = new ArrayList<FeatureDescriptor>(20);
 
-        list.add(getFeatureDescriptor("actionRequest", "actionRequest", "actionRequest", false, false, true,
+        list.add(getFeatureDescriptor(ACTION_REQUEST, ACTION_REQUEST, ACTION_REQUEST, false, false, true,
                 ActionRequest.class, Boolean.TRUE));
-        list.add(getFeatureDescriptor("actionResponse", "actionResponse", "actionResponse", false, false, true,
+        list.add(getFeatureDescriptor(ACTION_RESPONSE, ACTION_RESPONSE, ACTION_RESPONSE, false, false, true,
                 ActionResponse.class, Boolean.TRUE));
-        list.add(getFeatureDescriptor("eventRequest", "eventRequest", "eventRequest", false, false, true, EventRequest.class,
+        list.add(getFeatureDescriptor(EVENT_REQUEST, EVENT_REQUEST, EVENT_REQUEST, false, false, true, EventRequest.class,
                 Boolean.TRUE));
-        list.add(getFeatureDescriptor("eventResponse", "eventResponse", "eventResponse", false, false, true,
+        list.add(getFeatureDescriptor(EVENT_RESPONSE, EVENT_RESPONSE, EVENT_RESPONSE, false, false, true,
                 EventResponse.class, Boolean.TRUE));
-        list.add(getFeatureDescriptor("httpSessionScope", "httpSessionScope", "httpSessionScope", false, false, true,
+        list.add(getFeatureDescriptor(HTTP_SESSION_SCOPE, HTTP_SESSION_SCOPE, HTTP_SESSION_SCOPE, false, false, true,
                 Map.class, Boolean.TRUE));
         list.add(getFeatureDescriptor("mutablePortletPreferences", "mutablePortletPreferences", "mutablePortletPreferences",
                 false, false, true, Map.class, Boolean.TRUE));
-        list.add(getFeatureDescriptor("portletConfig", "portletConfig", "portletConfig", false, false, true,
+        list.add(getFeatureDescriptor(PORTLET_CONFIG, PORTLET_CONFIG, PORTLET_CONFIG, false, false, true,
                 PortletConfig.class, Boolean.TRUE));
-        list.add(getFeatureDescriptor("portletPreferences", "portletPreferences", "portletPreferences", false, false, true,
+        list.add(getFeatureDescriptor(PORTLET_PREFERENCES, PORTLET_PREFERENCES, PORTLET_PREFERENCES, false, false, true,
                 PortletPreferences.class, Boolean.TRUE));
-        list.add(getFeatureDescriptor("portletPreferencesValues", "portletPreferencesValues", "portletPreferencesValues",
+        list.add(getFeatureDescriptor(PORTLET_PREFERENCES_VALUES, PORTLET_PREFERENCES_VALUES, PORTLET_PREFERENCES_VALUES,
                 false, false, true, Map.class, Boolean.TRUE));
-        list.add(getFeatureDescriptor("portletSession", "portletSession", "portletSession", false, false, true,
+        list.add(getFeatureDescriptor(PORTLET_SESSION, PORTLET_SESSION, PORTLET_SESSION, false, false, true,
                 PortletSession.class, Boolean.TRUE));
-        list.add(getFeatureDescriptor("portletSessionScope", "portletSessionScope", "portletSessionScope", false, false, true,
+        list.add(getFeatureDescriptor(PORTLET_SESSION_SCOPE, PORTLET_SESSION_SCOPE, PORTLET_SESSION_SCOPE, false, false, true,
                 Map.class, Boolean.TRUE));
-        list.add(getFeatureDescriptor("renderRequest", "renderRequest", "renderRequest", false, false, true,
+        list.add(getFeatureDescriptor(RENDER_REQUEST, RENDER_REQUEST, RENDER_REQUEST, false, false, true,
                 RenderRequest.class, Boolean.TRUE));
-        list.add(getFeatureDescriptor("renderResponse", "renderResponse", "renderResponse", false, false, true,
+        list.add(getFeatureDescriptor(RENDER_RESPONSE, RENDER_RESPONSE, RENDER_RESPONSE, false, false, true,
                 RenderResponse.class, Boolean.TRUE));
-        list.add(getFeatureDescriptor("resourceRequest", "resourceRequest", "resourceRequest", false, false, true,
+        list.add(getFeatureDescriptor(RESOURCE_REQUEST, RESOURCE_REQUEST, RESOURCE_REQUEST, false, false, true,
                 ResourceRequest.class, Boolean.TRUE));
-        list.add(getFeatureDescriptor("resourceResponse", "resourceResponse", "resourceResponse", false, false, true,
+        list.add(getFeatureDescriptor(RESOURCE_RESPONSE, RESOURCE_RESPONSE, RESOURCE_RESPONSE, false, false, true,
                 ResourceResponse.class, Boolean.TRUE));
 
-        list.add(getFeatureDescriptor("sessionApplicationScope", "sessionApplicationScope", "sessionApplicationScope", false,
+        list.add(getFeatureDescriptor(SESSION_APPLICATION_SCOPE, SESSION_APPLICATION_SCOPE, SESSION_APPLICATION_SCOPE, false,
                 false, true, Map.class, Boolean.TRUE));
-        list.add(getFeatureDescriptor("sessionPortletScope", "sessionPortletScope", "sessionPortletScope", false, false, true,
+        list.add(getFeatureDescriptor(SESSION_PORTLET_SCOPE, SESSION_PORTLET_SCOPE, SESSION_PORTLET_SCOPE, false, false, true,
                 Map.class, Boolean.TRUE));
-        list.add(getFeatureDescriptor("portletPreferenceValue", "portletPreferenceValue", "portletPreferenceValue", false,
+        list.add(getFeatureDescriptor(PORTLET_PREFERENCE_VALUE, PORTLET_PREFERENCE_VALUE, PORTLET_PREFERENCE_VALUE, false,
                 false, true, Map.class, Boolean.TRUE));
-        list.add(getFeatureDescriptor("portletPreferenceValues", "portletPreferenceValues", "portletPreferenceValues", false,
+        list.add(getFeatureDescriptor(PORTLET_PREFERENCE_VALUES, PORTLET_PREFERENCE_VALUES, PORTLET_PREFERENCE_VALUES, false,
                 false, true, Map.class, Boolean.TRUE));
 
-        list.add(getFeatureDescriptor("ajaxContext", "ajaxContext", "ajaxContext", false, false, true, Map.class, Boolean.TRUE));
+        list.add(getFeatureDescriptor(AJAX_CONTEXT, AJAX_CONTEXT, AJAX_CONTEXT, false, false, true, Map.class, Boolean.TRUE));
         return list.iterator();
 
     }

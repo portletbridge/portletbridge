@@ -47,7 +47,6 @@ public class ManagedBeanPhaseListener implements PhaseListener {
             return;
         }
 
-        PhaseId phaseId = event.getPhaseId();
         Object portletPhase = context.getExternalContext().getRequestMap().get(Bridge.PORTLET_LIFECYCLE_PHASE);
 
         if (Bridge.PortletPhase.RENDER_PHASE.equals(portletPhase)) {

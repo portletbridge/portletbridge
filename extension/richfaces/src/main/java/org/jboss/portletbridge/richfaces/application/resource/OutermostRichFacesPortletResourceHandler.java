@@ -64,7 +64,7 @@ public class OutermostRichFacesPortletResourceHandler extends ResourceHandlerWra
     }
 
     protected boolean isRichFacesPortletResource(Resource res) {
-        if (null == res || res instanceof RichFacesPortletResource) {
+        if (res instanceof RichFacesPortletResource) {
             return true;
         } else {
             return false;

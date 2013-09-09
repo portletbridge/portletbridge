@@ -98,8 +98,9 @@ public class RichFacesPortletResourceHandler extends PortletResourceHandler {
             InputStream in = null;
 
             int bufferSize = extContext.getResponseBufferSize();
-            if (0 == bufferSize)
+            if (0 == bufferSize) {
                 bufferSize = 2048;
+            }
             ByteBuffer buf = ByteBuffer.allocate(bufferSize);
             extContext.setResponseBufferSize(buf.capacity());
 
@@ -207,6 +208,7 @@ public class RichFacesPortletResourceHandler extends PortletResourceHandler {
                     cssContent = buf.toString();
                 } else {
                     // Filename not found
+                    logger.log(Level.WARNING, "Unable to retrieve resource referenced from css: " + cssContent.substring(fileNamePosStart, fileNamePosStart + 150));
                 }
 
                 urlStart = cssContent.indexOf(rfUrlType.getPathPrefix(), fileNamePosStart);
@@ -221,7 +223,7 @@ public class RichFacesPortletResourceHandler extends PortletResourceHandler {
     }
 
     protected boolean isRichFacesPortletResource(Resource res) {
-        if (null == res || res instanceof RichFacesPortletResource) {
+        if (res instanceof RichFacesPortletResource) {
             return true;
         } else {
             return false;

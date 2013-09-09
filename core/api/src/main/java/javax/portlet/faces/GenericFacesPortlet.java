@@ -240,8 +240,7 @@ public class GenericFacesPortlet extends GenericPortlet {
         if (null == preserveActionParams) {
             return false;
         }
-        Boolean isPreserveActionParams = Boolean.valueOf(preserveActionParams);
-        return isPreserveActionParams;
+        return Boolean.valueOf(preserveActionParams);
     }
 
     /**
@@ -265,8 +264,7 @@ public class GenericFacesPortlet extends GenericPortlet {
     public Boolean isAutoDispatchEvents() {
         String autoDispatchEvents = getPortletConfig().getInitParameter(BRIDGE_AUTO_DISPATCH_EVENTS);
         if (null != autoDispatchEvents) {
-            Boolean isAutoDispatchEvents = Boolean.valueOf(autoDispatchEvents);
-            return isAutoDispatchEvents;
+            return Boolean.valueOf(autoDispatchEvents);
         }
         return true;
     }
@@ -647,8 +645,7 @@ public class GenericFacesPortlet extends GenericPortlet {
      */
     @SuppressWarnings("unchecked")
     private <U> Class<? extends U> loadClassForName(String className) throws ClassNotFoundException {
-        Class<?> clazz = getClassLoader().loadClass(className);
-        return (Class<? extends U>) clazz;
+        return (Class<? extends U>) getClassLoader().loadClass(className);
     }
 
     /**
@@ -659,8 +656,7 @@ public class GenericFacesPortlet extends GenericPortlet {
      */
     private <U> U createInstanceByClassName(String className) throws PortletException {
         try {
-            U instance = this.<U> loadClassForName(className).newInstance();
-            return instance;
+            return this.<U> loadClassForName(className).newInstance();
         } catch (InstantiationException e) {
             throw new PortletException("Error instantiate class for name " + className);
         } catch (IllegalAccessException e) {

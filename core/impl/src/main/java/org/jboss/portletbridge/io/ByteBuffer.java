@@ -65,7 +65,7 @@ public class ByteBuffer {
      * @param bytes
      */
     public ByteBuffer(byte[] bytes) {
-        this.bytes = bytes;
+        this.bytes = bytes.clone();
         usedSize = bytes.length;
         cacheSize = usedSize;
     }
@@ -191,8 +191,9 @@ public class ByteBuffer {
      */
     public void setNext(ByteBuffer b) {
         next = b;
-        if (b != null)
+        if (b != null) {
             b.prev = this;
+        }
     }
 
     /**

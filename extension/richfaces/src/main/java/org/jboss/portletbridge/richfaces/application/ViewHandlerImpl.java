@@ -49,7 +49,7 @@ public class ViewHandlerImpl extends ViewHandlerWrapper {
             if (resp instanceof MimeResponse) {
                 String url = ((MimeResponse)resp).createResourceURL().toString();
                 if (null != url) {
-                    int pos = url.indexOf("?");
+                    int pos = url.indexOf('?');
                     if (pos > 0) {
                         url = url.substring(0, pos);
                     }
