@@ -9,4 +9,4 @@ overlays
 .faces-config.xml.jsfdia
 .factorypath
 arquillian-settings
-
+phantomjsdriver.log
