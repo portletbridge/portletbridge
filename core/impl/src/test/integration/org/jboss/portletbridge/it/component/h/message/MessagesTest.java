@@ -75,9 +75,9 @@ public class MessagesTest extends AbstractPortletTest {
     public void renderFacesPortlet() throws Exception {
         browser.get(portalURL.toString());
 
-        assertTrue("Page contains MESSAGES element", page.getMessages().isDisplayed());
-        assertTrue("Page contains MESSAGE ONE element", page.getMessageOne().isDisplayed());
-        assertTrue("Page contains MESSAGE TWO element", page.getMessageTwo().isDisplayed());
+        assertFalse("Page contains MESSAGES element", page.getMessages().isDisplayed());
+        assertFalse("Page contains MESSAGE ONE element", page.getMessageOne().isDisplayed());
+        assertFalse("Page contains MESSAGE TWO element", page.getMessageTwo().isDisplayed());
 
         // Check that messages start empty
         assertEquals("MESSAGES should be empty at begin.", "", page.getMessages().getText());
@@ -90,12 +90,12 @@ public class MessagesTest extends AbstractPortletTest {
         page.getSubmitButton().click();
 
         // Check that h:messages contains both error messages
-        assertTrue("MESSAGES should show SUMMARY ONE error message", page.getMessages().getText().contains(MessagesBean.ONE_ERROR_SUMMARY));
-        assertTrue("MESSAGES should show SUMMARY TWO error message", page.getMessages().getText().contains(MessagesBean.TWO_ERROR_SUMMARY));
+        assertTrue("MESSAGES does not show SUMMARY ONE error message", page.getMessages().getText().contains(MessagesBean.ONE_ERROR_SUMMARY));
+        assertTrue("MESSAGES does not show SUMMARY TWO error message", page.getMessages().getText().contains(MessagesBean.TWO_ERROR_SUMMARY));
 
         // Check individual message for each
-        assertEquals("MESSAGE ONE should show DETAIL error message", MessagesBean.ONE_ERROR_DETAIL, page.getMessageOne().getText());
-        assertEquals("MESSAGE TWO should show DETAIL error message", MessagesBean.TWO_ERROR_DETAIL, page.getMessageTwo().getText());
+        assertEquals("MESSAGE ONE does not show DETAIL error message", MessagesBean.ONE_ERROR_DETAIL, page.getMessageOne().getText());
+        assertEquals("MESSAGE TWO does not show DETAIL error message", MessagesBean.TWO_ERROR_DETAIL, page.getMessageTwo().getText());
 
         // Fix the input for input one
         page.getInputOne().clear();
@@ -105,12 +105,12 @@ public class MessagesTest extends AbstractPortletTest {
         page.getSubmitButton().click();
 
         // Check that h:messages contains correct messages
-        assertFalse("MESSAGES should NOT show SUMMARY error ONE message", page.getMessages().getText().contains(MessagesBean.ONE_ERROR_SUMMARY));
-        assertTrue("MESSAGES should show SUMMARY error TWO message", page.getMessages().getText().contains(MessagesBean.TWO_ERROR_SUMMARY));
+        assertFalse("MESSAGES is showing SUMMARY error ONE message", page.getMessages().getText().contains(MessagesBean.ONE_ERROR_SUMMARY));
+        assertTrue("MESSAGES does not show SUMMARY error TWO message", page.getMessages().getText().contains(MessagesBean.TWO_ERROR_SUMMARY));
 
         // Check individual message for each
-        assertEquals("MESSAGE ONE should show DETAIL ok message", MessagesBean.ONE_OK_DETAIL, page.getMessageOne().getText());
-        assertEquals("MESSAGE TWO should show DETAIL error message", MessagesBean.TWO_ERROR_DETAIL, page.getMessageTwo().getText());
+        assertEquals("MESSAGE ONE does not show DETAIL ok message", MessagesBean.ONE_OK_DETAIL, page.getMessageOne().getText());
+        assertEquals("MESSAGE TWO does not show DETAIL error message", MessagesBean.TWO_ERROR_DETAIL, page.getMessageTwo().getText());
 
         // Set both to their OK value
         page.getInputOne().clear();
@@ -120,12 +120,12 @@ public class MessagesTest extends AbstractPortletTest {
         page.getSubmitButton().click();
 
         // Check that h:messages contains correct messages
-        assertTrue("MESSAGES should show OK message", page.getMessages().getText().contains(MessagesBean.ONE_OK_SUMMARY));
-        assertTrue("MESSAGES should show OK message", page.getMessages().getText().contains(MessagesBean.TWO_OK_SUMMARY));
+        assertTrue("MESSAGES does not show OK message", page.getMessages().getText().contains(MessagesBean.ONE_OK_SUMMARY));
+        assertTrue("MESSAGES does not show OK message", page.getMessages().getText().contains(MessagesBean.TWO_OK_SUMMARY));
 
         // Check individual message for each
-        assertEquals("MESSAGE ONE should show DETAIL ok message", MessagesBean.ONE_OK_DETAIL, page.getMessageOne().getText());
-        assertEquals("MESSAGE TWO should show DETAIL ok message", MessagesBean.TWO_OK_DETAIL, page.getMessageTwo().getText());
+        assertEquals("MESSAGE ONE does not show DETAIL ok message", MessagesBean.ONE_OK_DETAIL, page.getMessageOne().getText());
+        assertEquals("MESSAGE TWO does not show DETAIL ok message", MessagesBean.TWO_OK_DETAIL, page.getMessageTwo().getText());
 
         // Set both inputs to neutral value
         page.getInputOne().clear();
@@ -135,7 +135,7 @@ public class MessagesTest extends AbstractPortletTest {
         page.getSubmitButton().click();
 
         // Check that h:messages is now empty
-        assertEquals("Messages should be empty at end.", "", page.getMessages().getText());
+        assertEquals("Messages is not empty at end.", "", page.getMessages().getText());
 
         // Individual message should be empty as well
         assertEquals("MESSAGE ONE should be empty at end.", "", page.getMessageOne().getText());
@@ -187,7 +187,7 @@ public class MessagesTest extends AbstractPortletTest {
 
         assertEquals("MESSAGES should show SUMMARY ONE ok message", MessagesBean.ONE_OK_SUMMARY, page.getMessages().getText());
 
-        assertTrue("MESSAGE ONE is part of page", page.getMessageOne().isDisplayed());
+        assertFalse("MESSAGE ONE is part of page", page.getMessageOne().isDisplayed());
         assertEquals("MESSAGE ONE should be empty", "", page.getMessageOne().getText());
     }
 

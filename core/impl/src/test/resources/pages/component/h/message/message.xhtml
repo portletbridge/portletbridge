@@ -19,25 +19,25 @@
             <h:commandButton id="submit" value="OK" />
 
             <!-- Used for updating booleans on backing bean that are used on components -->
-            <h:commandLink id="messageOneRenderFalse" action="#{renderActionBean.unrenderMessageOne}">
+            <h:commandLink id="messageOneRenderFalse" action="#{renderActionBean.unrenderMessageOne}" value="messageOneRenderFalse">
                 <f:ajax execute="@this" render="message_one" />
             </h:commandLink>
-            <h:commandLink id="messageOneDetailFalse" action="#{renderActionBean.hideDetailMessageOne}">
+            <h:commandLink id="messageOneDetailFalse" action="#{renderActionBean.hideDetailMessageOne}" value="messageOneDetailFalse">
                 <f:ajax execute="@this" render="message_one" />
             </h:commandLink>
-            <h:commandLink id="messageOneSummaryTrue" action="#{renderActionBean.enableSummaryMessageOne}">
+            <h:commandLink id="messageOneSummaryTrue" action="#{renderActionBean.enableSummaryMessageOne}" value="messageOneSummaryTrue">
                 <f:ajax execute="@this" render="message_one" />
             </h:commandLink>
-            <h:commandLink id="messagesDisable" action="#{renderActionBean.disableMessages}">
+            <h:commandLink id="messagesDisable" action="#{renderActionBean.disableMessages}" value="messagesDisable">
                 <f:ajax execute="@this" render=":messages" />
             </h:commandLink>
-            <h:commandLink id="messagesEnableDetails" action="#{renderActionBean.showDetailMessages}">
+            <h:commandLink id="messagesEnableDetails" action="#{renderActionBean.showDetailMessages}" value="messagesEnableDetails">
                 <f:ajax execute="@this" render=":messages" />
             </h:commandLink>
-            <h:commandLink id="messagesDisableSummary" action="#{renderActionBean.hideSummaryMessages}">
+            <h:commandLink id="messagesDisableSummary" action="#{renderActionBean.hideSummaryMessages}" value="messagesDisableSummary">
                 <f:ajax execute="@this" render=":messages" />
             </h:commandLink>
-            <h:commandLink id="messagesEnableGlobal" action="#{renderActionBean.enableGlobalMessages}">
+            <h:commandLink id="messagesEnableGlobal" action="#{renderActionBean.enableGlobalMessages}" value="messagesEnableGlobal">
                 <f:ajax execute="@this" render=":messages" />
             </h:commandLink>
         </h:form>

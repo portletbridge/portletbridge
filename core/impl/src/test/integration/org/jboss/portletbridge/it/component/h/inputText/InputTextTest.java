@@ -76,7 +76,6 @@ public class InputTextTest extends AbstractPortletTest {
         browser.get(portalURL.toString());
 
         assertTrue("Check that page contains INPUT ONE element.", page.getInputOne().isDisplayed());
-        assertTrue("Check that page contains OUTPUT ONE element.", page.getOutputOne().isDisplayed());
         assertTrue("Check that page contains SUBMIT ONE element.", page.getSubmitOne().isDisplayed());
 
         assertEquals("Check that INPUT ONE element starts empty.", "", page.getInputOne().getText());
@@ -96,7 +95,6 @@ public class InputTextTest extends AbstractPortletTest {
         browser.get(portalURL.toString());
 
         assertTrue("Check that page contains INPUT TWO element.", page.getInputTwo().isDisplayed());
-        assertTrue("Check that page contains OUTPUT TWO element.", page.getOutputTwo().isDisplayed());
 
         assertEquals("Check that INPUT TWO element starts empty.", "", page.getInputTwo().getText());
         assertEquals("Check that OUTPUT TWO element starts empty.", "", page.getOutputTwo().getText());
@@ -118,7 +116,6 @@ public class InputTextTest extends AbstractPortletTest {
         browser.get(portalURL.toString());
 
         assertTrue("Check that page contains INPUT TWO element.", page.getInputTwo().isDisplayed());
-        assertTrue("Check that page contains OUTPUT TWO element.", page.getOutputTwo().isDisplayed());
 
         assertEquals("Check that INPUT TWO element starts empty.", "", page.getInputTwo().getText());
         assertEquals("Check that OUTPUT TWO element starts empty.", "", page.getOutputTwo().getText());
@@ -146,7 +143,6 @@ public class InputTextTest extends AbstractPortletTest {
         browser.get(portalURL.toString());
 
         assertTrue("Check that page contains INPUT ONE element.", page.getInputOne().isDisplayed());
-        assertTrue("Check that page contains OUTPUT ONE element.", page.getOutputOne().isDisplayed());
         assertTrue("Check that page contains SUBMIT ONE element.", page.getSubmitOne().isDisplayed());
 
         assertEquals("Check that INPUT ONE element starts empty.", "", page.getInputOne().getText());
@@ -164,7 +160,6 @@ public class InputTextTest extends AbstractPortletTest {
         browser.get(portalURL.toString());
 
         assertTrue("Check that page contains INPUT ONE element.", page.getInputOne().isDisplayed());
-        assertTrue("Check that page contains OUTPUT ONE element.", page.getOutputOne().isDisplayed());
         assertTrue("Check that page contains SUBMIT ONE element.", page.getSubmitOne().isDisplayed());
 
         assertEquals("Check that INPUT ONE element starts empty.", "", page.getInputOne().getText());

@@ -120,7 +120,6 @@ public class ValidatorEmailTest extends AbstractPortletTest {
         inputField.sendKeys(INPUT4);
         submitButton.click();
 
-        assertTrue("Check that page after 4th submit contains output element", outputField.isDisplayed());
         assertEquals("Empty string set.", "", outputField.getText());
     }
 
