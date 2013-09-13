@@ -13,7 +13,6 @@ import org.jboss.shrinkwrap.portal.api.PortletArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.portletbridge.arquillian.deployment.TestDeployment;
 
 import java.net.URL;
@@ -102,26 +101,6 @@ public class CommandLinkTest extends AbstractPortletTest {
 
         assertEquals("New value for Step.", String.valueOf(newStep), page.getInputText().getAttribute("value"));
         assertEquals("New value for Output Text.", String.valueOf(oldValue + newStep), page.getOutputText().getText());
-    }
-
-    @Test
-    @RunAsClient
-    public void testCommandLinkOnClickJS() throws Exception {
-        // FIXME: this test fails with HtmlUnitDriver as there's no alert() support
-        if(browser instanceof HtmlUnitDriver) {
-            return;
-        }
-        browser.get(portalURL.toString());
-
-        // click the submit a few times ...
-        for(int i = 0; i < 3; i++) {
-            page.getSubmitLink().click();
-        }
-
-        String curValue = page.getOutputText().getText();
-        page.getAlertLink().click();
-
-        assertEquals("Check Alert text.", "Current Value is " + curValue, browser.switchTo().alert().getText());
     }
 
     @Test

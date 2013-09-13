@@ -13,7 +13,6 @@ import org.jboss.shrinkwrap.portal.api.PortletArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.portletbridge.arquillian.deployment.TestDeployment;
 
 import java.net.URL;
@@ -58,12 +57,10 @@ public class CommandButtonTest extends AbstractPortletTest {
         assertTrue("Page contains SUBMIT button.", page.getSubmitButton().isDisplayed());
         assertTrue("Page contains RESET button element.", page.getResetButton().isDisplayed());
         assertTrue("Page contains AJAX button element.", page.getAjaxButton().isDisplayed());
-        assertTrue("Page contains ALERT button element.", page.getAlertButton().isDisplayed());
 
         assertEquals("SUBMIT button type is submit (default).", "submit", page.getSubmitButton().getAttribute("type"));
         assertEquals("RESET button type is reset.", "reset", page.getResetButton().getAttribute("type"));
         assertEquals("AJAX button type is image.", "image", page.getAjaxButton().getAttribute("type"));
-        assertEquals("ALERT button type is button.", "button", page.getAlertButton().getAttribute("type"));
     }
 
     @Test
@@ -117,27 +114,6 @@ public class CommandButtonTest extends AbstractPortletTest {
 
         assertEquals("New value on input text.", String.valueOf(newStep), page.getInputText().getAttribute("value"));
         assertEquals("New value on output text", String.valueOf(oldValue + newStep), page.getOutputText().getText());
-    }
-
-    @Test
-    @RunAsClient
-    public void testCommandButtonOnClickJS() throws Exception {
-        // this test fails with HtmlUnitDriver as there's no alert() support
-        if (browser instanceof HtmlUnitDriver) {
-            return;
-        }
-
-        browser.get(portalURL.toString());
-
-        // click the submit a few times ...
-        for (int i = 0; i < 3; i++) {
-            page.getSubmitButton().click();
-        }
-
-        String curValue = page.getOutputText().getText();
-        page.getAlertButton().click();
-
-        assertEquals("Alert text correct", curValue, browser.switchTo().alert().getText());
     }
 
     @Test

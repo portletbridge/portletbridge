@@ -38,9 +38,6 @@ public class CommandLinkPage {
     @FindByJQuery("[id$=':ajax']")
     private WebElement ajaxLink;
 
-    @FindByJQuery("[id$=':alert']")
-    private WebElement alertLink;
-
     @FindByJQuery("[id$=':output']")
     private WebElement outputText;
 
@@ -49,10 +46,6 @@ public class CommandLinkPage {
 
     public WebElement getAjaxLink() {
         return ajaxLink;
-    }
-
-    public WebElement getAlertLink() {
-        return alertLink;
     }
 
     public WebElement getInputText() {

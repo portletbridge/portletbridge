@@ -17,10 +17,8 @@
             </h:commandLink> |
 			<h:commandLink id="ajax" action="#{commandLinkBean.incrementCounter}">
                 <h:graphicImage value="ajax.png" />
-                <f:ajax execute="@this" render="output alert" />
+                <f:ajax execute="@this" render="output" />
             </h:commandLink>
-            <h:commandLink id="alert" value="Alert"
-                onclick="alert('Current Value is #{commandLinkBean.counter}'); return false;" />
         </h:form>
 
         <h:messages id="messages" />

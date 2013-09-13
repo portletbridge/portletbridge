@@ -20,11 +20,8 @@
             <h:commandButton id="reset" type="reset" value="Reset" />
 
             <h:commandButton id="ajax" value="Ajax" image="ajax.png" action="#{commandButtonBean.incrementCounter}">
-                <f:ajax execute="@this" render="output alert" />
+                <f:ajax execute="@this" render="output" />
             </h:commandButton>
-
-            <h:commandButton id="alert" type="button" value="Alert"
-                onclick="alert('#{commandButtonBean.counter}');" />
 
         </h:form>
 

@@ -38,9 +38,6 @@ public class CommandButtonPage {
     @FindByJQuery("[id$=':ajax']")
     private WebElement ajaxButton;
 
-    @FindByJQuery("[id$=':alert']")
-    private WebElement alertButton;
-
     @FindByJQuery("[id$=':output']")
     private WebElement outputText;
 
@@ -57,10 +54,6 @@ public class CommandButtonPage {
 
     public WebElement getAjaxButton() {
         return ajaxButton;
-    }
-
-    public WebElement getAlertButton() {
-        return alertButton;
     }
 
     public WebElement getOutputText() {
