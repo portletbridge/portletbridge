@@ -1,0 +1,26 @@
+<f:view
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://xmlns.jcp.org/jsf/core"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xml:lang="en" lang="en">
+
+    <f:metadata>
+        <f:viewParam name="id" value="#{item.id}"/>
+        <f:viewAction action="#{item.loadItem}"/>
+    </f:metadata>
+
+    <h:head>
+    </h:head>
+
+    <h:body>
+        <h:form>
+            <h:panelGrid columns="2">
+                <h:outputText value="Id:"/>
+                <h:outputText id="id" value="#{item.item.id}"/>
+                <h:outputText value="Name:"/>
+                <h:outputText id="name" value="#{item.item.name}"/>
+                <h:commandLink id="update" value="Update" action="#{item.updateName('NewValue')}"/>
+            </h:panelGrid>
+        </h:form>
+    </h:body>
+</f:view>
