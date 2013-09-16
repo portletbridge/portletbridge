@@ -21,6 +21,7 @@
  */
 package org.jboss.portletbridge.it.scope.flash;
 
+import category.NotPlutoAndJsf21;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.drone.api.annotation.Drone;
@@ -32,6 +33,7 @@ import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.portletbridge.it.AbstractPortletTest;
 import org.jboss.shrinkwrap.portal.api.PortletArchive;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -47,6 +49,7 @@ import static org.junit.Assert.assertTrue;
  * @author <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
  */
 @RunWith(Arquillian.class)
+@Category(NotPlutoAndJsf21.class)
 @PortalTest
 public class FlashScopeTest extends AbstractPortletTest {
 

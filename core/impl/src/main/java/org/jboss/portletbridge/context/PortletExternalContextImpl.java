@@ -810,6 +810,11 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
         }
     }
 
+    @Override
+    public boolean isSecure() {
+        return getPortletRequest().isSecure();
+    }
+
     /**
      * @return the hasNavigationRedirect
      */
