@@ -78,7 +78,7 @@
         </dependency>
         <dependency>
             <groupId>org.jboss.arquillian.extension</groupId>
-            <artifactId>arquillian-portal-impl</artifactId>
+            <artifactId>arquillian-portal-impl-base</artifactId>
             <optional>true</optional>
         </dependency>
 

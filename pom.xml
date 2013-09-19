@@ -41,11 +41,9 @@
         <version.junit>4.11</version.junit>
         <version.arquillian.core>1.1.1.Final</version.arquillian.core>
         <version.arquillian.graphene>2.0.0.Alpha5</version.arquillian.graphene>
-        <version.arquillian.portal>1.0.0.CR1</version.arquillian.portal>
+        <version.arquillian.portal>1.1.0.Alpha1</version.arquillian.portal>
         <version.shrinkwrap.descriptors>2.0.0-alpha-5</version.shrinkwrap.descriptors>
         <version.shrinkwrap.resolver>2.0.0</version.shrinkwrap.resolver>
-        <version.gatein.portal.testing>1.0.0.Beta2</version.gatein.portal.testing>
-        <version.pluto.portal.testing>1.0.0.Beta1</version.pluto.portal.testing>
 
         <!-- Container versions -->
         <version.jbossas7>7.1.1.Final</version.jbossas7>
@@ -241,7 +239,7 @@
             </dependency>
             <dependency>
                 <groupId>org.jboss.arquillian.extension</groupId>
-                <artifactId>arquillian-portal-impl</artifactId>
+                <artifactId>arquillian-portal-impl-base</artifactId>
                 <version>${version.arquillian.portal}</version>
             </dependency>
             <dependency>
@@ -249,12 +247,17 @@
                 <artifactId>arquillian-portal-shrinkwrap-impl</artifactId>
                 <version>${version.arquillian.portal}</version>
             </dependency>
+            <dependency>
+                <groupId>org.jboss.arquillian.extension</groupId>
+                <artifactId>arquillian-portal-warp-jsf</artifactId>
+                <version>${version.arquillian.portal}</version>
+            </dependency>
 
             <!-- GateIn Testing dependencies -->
             <dependency>
-                <groupId>org.jboss.portletbridge.testing.gatein</groupId>
-                <artifactId>gatein-arquillian-extension</artifactId>
-                <version>${version.gatein.portal.testing}</version>
+                <groupId>org.jboss.arquillian.extension</groupId>
+                <artifactId>arquillian-portal-impl-gatein</artifactId>
+                <version>${version.arquillian.portal}</version>
             </dependency>
             <dependency>
                 <groupId>org.gatein.pc</groupId>
@@ -264,15 +267,15 @@
 
             <!-- Pluto Testing dependencies -->
             <dependency>
-                <groupId>org.jboss.portletbridge.testing.pluto</groupId>
-                <artifactId>pluto-jetty-bom</artifactId>
-                <version>${version.pluto.portal.testing}</version>
+                <groupId>org.jboss.arquillian.extension</groupId>
+                <artifactId>arquillian-portal-impl-pluto-jetty-bom</artifactId>
+                <version>${version.arquillian.portal}</version>
                 <type>pom</type>
             </dependency>
             <dependency>
-                <groupId>org.jboss.portletbridge.testing.pluto</groupId>
-                <artifactId>pluto-extension-jsf</artifactId>
-                <version>${version.pluto.portal.testing}</version>
+                <groupId>org.jboss.arquillian.extension</groupId>
+                <artifactId>arquillian-portal-impl-pluto-jsf</artifactId>
+                <version>${version.arquillian.portal}</version>
             </dependency>
 
             <!-- JBoss AS7 -->
@@ -568,6 +571,11 @@
                     <type>pom</type>
                     <scope>test</scope>
                 </dependency>
+                <dependency>
+                    <groupId>org.jboss.arquillian.extension</groupId>
+                    <artifactId>arquillian-portal-warp-jsf</artifactId>
+                    <scope>test</scope>
+                </dependency>
             </dependencies>
             <build>
                 <testResources>
@@ -739,8 +747,8 @@
                     <scope>test</scope>
                 </dependency>
                 <dependency>
-                    <groupId>org.jboss.portletbridge.testing.gatein</groupId>
-                    <artifactId>gatein-arquillian-extension</artifactId>
+                    <groupId>org.jboss.arquillian.extension</groupId>
+                    <artifactId>arquillian-portal-impl-gatein</artifactId>
                     <scope>test</scope>
                 </dependency>
 
@@ -793,6 +801,7 @@
             </activation>
             <properties>
                 <arquillian.launch.wildfly8>true</arquillian.launch.wildfly8>
+                <testCategory.excluded.container>,category.JBossASOnly</testCategory.excluded.container>
             </properties>
             <dependencies>
                 <dependency>
@@ -808,8 +817,8 @@
                     <scope>test</scope>
                 </dependency>
                 <dependency>
-                    <groupId>org.jboss.portletbridge.testing.gatein</groupId>
-                    <artifactId>gatein-arquillian-extension</artifactId>
+                    <groupId>org.jboss.arquillian.extension</groupId>
+                    <artifactId>arquillian-portal-impl-gatein</artifactId>
                     <scope>test</scope>
                 </dependency>
 
@@ -862,18 +871,18 @@
             </activation>
             <properties>
                 <arquillian.launch.jetty8>true</arquillian.launch.jetty8>
-                <testCategory.excluded.container>,category.GateInOnly, category.WildflyOnly</testCategory.excluded.container>
+                <testCategory.excluded.container>,category.GateInOnly, category.WildflyOnly, category.JBossASOnly</testCategory.excluded.container>
             </properties>
             <dependencies>
                 <dependency>
-                    <groupId>org.jboss.portletbridge.testing.pluto</groupId>
-                    <artifactId>pluto-jetty-bom</artifactId>
+                    <groupId>org.jboss.arquillian.extension</groupId>
+                    <artifactId>arquillian-portal-impl-pluto-jetty-bom</artifactId>
                     <type>pom</type>
                     <scope>test</scope>
                 </dependency>
                 <dependency>
-                    <groupId>org.jboss.portletbridge.testing.pluto</groupId>
-                    <artifactId>pluto-extension-jsf</artifactId>
+                    <groupId>org.jboss.arquillian.extension</groupId>
+                    <artifactId>arquillian-portal-impl-pluto-jsf</artifactId>
                     <scope>test</scope>
                 </dependency>
             </dependencies>
@@ -911,19 +920,19 @@
             </activation>
             <properties>
                 <arquillian.launch.jetty8>true</arquillian.launch.jetty8>
-                <testCategory.excluded.container>,category.GateInOnly, category.Jsf22Only, category.NotPlutoAndJsf21, category.WildflyOnly</testCategory.excluded.container>
+                <testCategory.excluded.container>,category.GateInOnly, category.Jsf22Only, category.NotPlutoAndJsf21, category.WildflyOnly, category.JBossASOnly</testCategory.excluded.container>
                 <version.mojarra2>2.1.26</version.mojarra2>
             </properties>
             <dependencies>
                 <dependency>
-                    <groupId>org.jboss.portletbridge.testing.pluto</groupId>
-                    <artifactId>pluto-jetty-bom</artifactId>
+                    <groupId>org.jboss.arquillian.extension</groupId>
+                    <artifactId>arquillian-portal-impl-pluto-jetty-bom</artifactId>
                     <type>pom</type>
                     <scope>test</scope>
                 </dependency>
                 <dependency>
-                    <groupId>org.jboss.portletbridge.testing.pluto</groupId>
-                    <artifactId>pluto-extension-jsf</artifactId>
+                    <groupId>org.jboss.arquillian.extension</groupId>
+                    <artifactId>arquillian-portal-impl-pluto-jsf</artifactId>
                     <scope>test</scope>
                 </dependency>
             </dependencies>
