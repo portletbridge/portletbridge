@@ -12,8 +12,8 @@
    </description>
 
    <properties>
-      <jsf.version>2.1.19</jsf.version>
-      <pbr.version>3.3.0.Final-SNAPSHOT</pbr.version>
+      <jsf.version>2.1.26</jsf.version>
+      <pbr.version>3.3.0.Alpha3</pbr.version>
    </properties>
 
    <licenses>
