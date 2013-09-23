@@ -400,4 +400,39 @@ public interface BridgeConfig {
      * @return <code>true</code> if <code>f:viewParam</code> is disabled. <code>false</code> indicates it is enabled.
      */
     boolean isViewParamHandlingDisabled();
+
+    /**
+     * Sets whether or not the bridge scope should store the result of an ajax request.
+     *
+     * @param bridgeScopeEnabledOnAjaxRequest <code>Boolean.TRUE</code> indicates the data should be stored in the bridge scope.
+     *                                        <code>Boolean.FALSE</code> indicates the data will not be stored in the bridge scope.
+     */
+    void setBridgeScopeEnabledOnAjaxRequest(boolean bridgeScopeEnabledOnAjaxRequest);
+
+    /**
+     * Gets whether or not the bridge scope should store the result of an ajax request. If not previously set, it
+     * returns <code>false</code>.
+     *
+     * @return <code>true</code> if ajax request data should be retained in bridge scope. <code>false</code> indicates
+     * it should not.
+     */
+    boolean isBridgeScopeEnabledOnAjaxRequest();
+
+    /**
+     * Sets whether or not Faces Messages should be stored in the bridge scope at the end of an ajax request. Only applicable
+     * if {@see isBridgeScopeEnabledOnAjaxRequest} is set to true.
+     *
+     * @param facesMessagesStoredOnAjaxRequest <code>Boolean.TRUE</code> indicates the messages should be stored.
+     *                                         <code>Boolean.FALSE</code> indicates the messages should not be stored.
+     */
+    void setFacesMessagesStoredOnAjaxRequest(boolean facesMessagesStoredOnAjaxRequest);
+
+    /**
+     * Gets whether or not Faces Messages should be stored in the bridge scope at the end of an ajax request. If not
+     * previously set, it returns <code>true</code>.
+     *
+     * @return <code>true</code> if faces messages should be stored in bridge scope, <code>false</code> indicates they
+     * should not.
+     */
+    boolean isFacesMessagesStoredOnAjaxRequest();
 }

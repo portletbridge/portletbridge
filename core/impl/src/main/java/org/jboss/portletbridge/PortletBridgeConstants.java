@@ -42,4 +42,16 @@ public interface PortletBridgeConstants {
      * portlet RENDER_RESPONSE. (See PBR-510).
      */
     String VIEW_PARAM_DISABLED = "org.jboss.portletbridge.VIEW_PARAMETERS_DISABLED";
+
+    /**
+     * Parameter to enable data created from an Ajax Request to be stored in the Bridge Request Scope,
+     * allowing it to be used on subsequent Render Requests.
+     */
+    String SCOPE_ENABLED_ON_AJAX = "org.jboss.portletbridge.BRIDGE_SCOPE_ENABLED_ON_AJAX_REQUEST";
+
+    /**
+     * Parameter to enable Faces Messages to be stored at the end of an Ajax Request. Value of <code>true</code> is
+     * only applicable if SCOPE_ENABLED_ON_AJAX is also <code>true</code>.
+     */
+    String FACES_MESSAGES_STORED_ON_AJAX = "org.jboss.portletbridge.FACES_MESSAGES_STORED_ON_AJAX_REQUEST";
 }

@@ -1,0 +1,16 @@
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html" xml:lang="en" lang="en">
+    <h:head>
+    </h:head>
+
+    <h:body>
+        <h:form>
+            <h:messages id="messages" showDetail="true" showSummary="true" />
+
+            <h:commandButton id="submit" action="#{pbr516.action}" value="Click">
+                <f:ajax execute="@this" render="@form" />
+            </h:commandButton>
+        </h:form>
+    </h:body>
+</f:view>

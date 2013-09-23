@@ -196,11 +196,28 @@ public class PortletBridgeImpl implements Bridge {
 
         // PBR-495 - Parameter to determine whether HeadRenderer forces non self-closing script tags
         String preventSelfClosing = portletContext.getInitParameter(PortletBridgeConstants.PREVENT_SELF_CLOSING_SCRIPT_TAG_PARAM);
-        bridgeConfig.setPreventSelfClosingScriptTag(Boolean.parseBoolean(preventSelfClosing) ? true : false);
+        if (preventSelfClosing != null) {
+            bridgeConfig.setPreventSelfClosingScriptTag(Boolean.parseBoolean(preventSelfClosing) ? true : false);
+        }
 
         // PBR-510 - Parameter to determine whether f:viewParam will work during Render Response
         String disableViewParam = portletContext.getInitParameter(PortletBridgeConstants.VIEW_PARAM_DISABLED);
-        bridgeConfig.setViewParamHandlingDisabled(Boolean.parseBoolean(disableViewParam) ? true : false);
+        if (disableViewParam != null) {
+            bridgeConfig.setViewParamHandlingDisabled(Boolean.parseBoolean(disableViewParam) ? true : false);
+        }
+
+        // PBR-516 - Parameter to determine whether to udpate the Bridge Request Scope with the result of an Ajax call
+        String ajaxEnabledParam = portletContext.getInitParameter(PortletBridgeConstants.SCOPE_ENABLED_ON_AJAX);
+        if (ajaxEnabledParam != null) {
+            bridgeConfig.setBridgeScopeEnabledOnAjaxRequest(Boolean.parseBoolean(ajaxEnabledParam) ? true : false);
+        }
+
+        // PBR-516 - Parameter to determine whether to store Faces Messages in Bridge Request Scope if
+        // PortletBridgeConstants.SCOPE_ENABLED_ON_AJAX is true
+        String facesMessagesEnabledParam = portletContext.getInitParameter(PortletBridgeConstants.FACES_MESSAGES_STORED_ON_AJAX);
+        if (facesMessagesEnabledParam != null) {
+            bridgeConfig.setFacesMessagesStoredOnAjaxRequest(Boolean.parseBoolean(facesMessagesEnabledParam) ? true : false);
+        }
 
         // Determine whether we're running with JSF 2.2 Runtime or not
         // Use FlashFactory presence to determine it

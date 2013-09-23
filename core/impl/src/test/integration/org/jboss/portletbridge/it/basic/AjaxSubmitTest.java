@@ -28,6 +28,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
+import org.jboss.portletbridge.PortletBridgeConstants;
 import org.jboss.portletbridge.it.AbstractPortletTest;
 import org.jboss.shrinkwrap.portal.api.PortletArchive;
 import org.junit.Test;
@@ -55,6 +56,9 @@ public class AjaxSubmitTest extends AbstractPortletTest {
                 .createFacesPortlet("AjaxSubmit", "Ajax Submit Portlet", "ajax.xhtml")
                 .addAsWebResource("pages/basic/ajax.xhtml", "ajax.xhtml")
                 .addClass(Bean.class);
+        deployment.webXml().createContextParam()
+                .paramName(PortletBridgeConstants.SCOPE_ENABLED_ON_AJAX)
+                .paramValue("true");
         return deployment.getFinalArchive();
     }
 
@@ -106,7 +110,7 @@ public class AjaxSubmitTest extends AbstractPortletTest {
         assertTrue("Input text updated.", inputField.getAttribute("value").contains(NEW_VALUE));
 
         // Re-render page
-        browser.get(portalURL.toString());
+        browser.navigate().refresh();
 
         assertTrue("Output text unchanged.", outputField.getText().contains(NEW_VALUE));
 

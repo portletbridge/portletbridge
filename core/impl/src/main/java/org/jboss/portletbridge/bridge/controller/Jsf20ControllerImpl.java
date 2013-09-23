@@ -468,10 +468,20 @@ public class Jsf20ControllerImpl implements BridgeController {
 
         saveFacesView(scope, facesContext);
 
-        if (Bridge.PortletPhase.RESOURCE_PHASE == bridgeContext.getPortletRequestPhase()) {
-            saveMessages(facesContext);
+        if (Bridge.PortletPhase.RESOURCE_PHASE == bridgeContext.getPortletRequestPhase() && isBridgeScopeAjaxEnabled()) {
+            if (isFacesMessagesStoredOnAjax()) {
+                saveMessages(facesContext);
+            }
             scope.putAll(facesContext.getExternalContext().getRequestMap());
         }
+    }
+
+    protected boolean isBridgeScopeAjaxEnabled() {
+        return bridgeConfig.isBridgeScopeEnabledOnAjaxRequest();
+    }
+
+    protected boolean isFacesMessagesStoredOnAjax() {
+        return bridgeConfig.isFacesMessagesStoredOnAjaxRequest();
     }
 
     protected void restoreScopeData(BridgeContext bridgeContext, FacesContext facesContext, BridgeRequestScope scope) {

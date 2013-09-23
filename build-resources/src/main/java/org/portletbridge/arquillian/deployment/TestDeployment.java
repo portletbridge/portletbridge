@@ -62,21 +62,25 @@ public class TestDeployment {
     }
 
     public TestDeployment(Class<?> testClass, boolean createWebXmlWithFacesServlet) {
-        this(testClass.getSimpleName() + ".war");
+        this(testClass.getSimpleName(), createWebXmlWithFacesServlet);
+    }
+
+    public TestDeployment(String deploymentName, boolean createWebXmlWithFacesServlet) {
+        this(deploymentName + ".war");
         if (createWebXmlWithFacesServlet) {
             this.webXml = Descriptors.create(WebAppDescriptor.class)
                     .addDefaultNamespaces()
                     .version(WebAppVersionType._3_0)
-                    .displayName(testClass.getSimpleName())
+                    .displayName(deploymentName)
                     .createServlet()
-                        .servletName("Faces Servlet")
-                        .servletClass("javax.faces.webapp.FacesServlet")
-                        .loadOnStartup(2)
-                        .up()
+                    .servletName("Faces Servlet")
+                    .servletClass("javax.faces.webapp.FacesServlet")
+                    .loadOnStartup(2)
+                    .up()
                     .createServletMapping()
-                        .servletName("Faces Servlet")
-                        .urlPattern("*.jsf")
-                        .up();
+                    .servletName("Faces Servlet")
+                    .urlPattern("*.jsf")
+                    .up();
         }
     }
 

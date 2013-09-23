@@ -70,6 +70,8 @@ public class BridgeConfigImpl implements BridgeConfig {
     private boolean preventSelfClosingScriptTag = false;
     private boolean insideJsf22Runtime = false;
     private boolean viewParamHandlingDisabled = false;
+    private boolean bridgeScopeEnabledOnAjaxRequest = false;
+    private boolean facesMessagesStoredOnAjaxRequest = true;
 
     public BridgeConfigImpl() {
     }
@@ -419,5 +421,37 @@ public class BridgeConfigImpl implements BridgeConfig {
     @Override
     public void setViewParamHandlingDisabled(boolean viewParamHandlingDisabled) {
         this.viewParamHandlingDisabled = viewParamHandlingDisabled;
+    }
+
+    /**
+     * @see org.jboss.portletbridge.bridge.config.BridgeConfig#isBridgeScopeEnabledOnAjaxRequest()
+     */
+    @Override
+    public boolean isBridgeScopeEnabledOnAjaxRequest() {
+        return bridgeScopeEnabledOnAjaxRequest;
+    }
+
+    /**
+     * @see org.jboss.portletbridge.bridge.config.BridgeConfig#setBridgeScopeEnabledOnAjaxRequest(boolean)
+     */
+    @Override
+    public void setBridgeScopeEnabledOnAjaxRequest(boolean bridgeScopeEnabledOnAjaxRequest) {
+        this.bridgeScopeEnabledOnAjaxRequest = bridgeScopeEnabledOnAjaxRequest;
+    }
+
+    /**
+     * @see org.jboss.portletbridge.bridge.config.BridgeConfig#isFacesMessagesStoredOnAjaxRequest()
+     */
+    @Override
+    public boolean isFacesMessagesStoredOnAjaxRequest() {
+        return facesMessagesStoredOnAjaxRequest;
+    }
+
+    /**
+     * @see org.jboss.portletbridge.bridge.config.BridgeConfig#setFacesMessagesStoredOnAjaxRequest(boolean)
+     */
+    @Override
+    public void setFacesMessagesStoredOnAjaxRequest(boolean facesMessagesStoredOnAjaxRequest) {
+        this.facesMessagesStoredOnAjaxRequest = facesMessagesStoredOnAjaxRequest;
     }
 }
