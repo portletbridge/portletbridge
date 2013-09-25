@@ -435,4 +435,19 @@ public interface BridgeConfig {
      * should not.
      */
     boolean isFacesMessagesStoredOnAjaxRequest();
+
+    /**
+     * Set the name of the parameter for the session id. Only relevant when cookies are disabled. Default value is
+     * <code>jsessionid</code>.
+     *
+     * @param sessionIdParameterName
+     */
+    void setSessionIdParameterName(String sessionIdParameterName);
+
+    /**
+     * Get the name of the parameter for the session id. If not overwritten, the default value is <code>jsessionid</code>.
+     *
+     * @return String Represents the name session id parameter
+     */
+    String getSessionIdParameterName();
 }

@@ -54,4 +54,9 @@ public interface PortletBridgeConstants {
      * only applicable if SCOPE_ENABLED_ON_AJAX is also <code>true</code>.
      */
     String FACES_MESSAGES_STORED_ON_AJAX = "org.jboss.portletbridge.FACES_MESSAGES_STORED_ON_AJAX_REQUEST";
+
+    /**
+     * Parameter to specify the name of the Session ID parameter. By default it is <code>jsessionid</code>.
+     */
+    String SESSION_ID_PARAMETER_NAME = "org.jboss.portletbridge.SESSION_ID_PARAMETER_NAME";
 }

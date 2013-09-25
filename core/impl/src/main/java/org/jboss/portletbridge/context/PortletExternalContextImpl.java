@@ -1229,6 +1229,13 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
                 return path;
             }
             inContextPath = path.substring(getRequestContextPath().length());
+
+            // Remove Session Id if present
+            int index = inContextPath.lastIndexOf(";" + bridgeContext.getBridgeConfig().getSessionIdParameterName());
+            if (index != -1) {
+                inContextPath = inContextPath.substring(0, index);
+            }
+
             // return path;
         } else {
             // resolve relative URL aganist current view.

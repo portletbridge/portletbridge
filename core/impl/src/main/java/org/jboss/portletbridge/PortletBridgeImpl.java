@@ -219,6 +219,12 @@ public class PortletBridgeImpl implements Bridge {
             bridgeConfig.setFacesMessagesStoredOnAjaxRequest(Boolean.parseBoolean(facesMessagesEnabledParam) ? true : false);
         }
 
+        // Retrieve name of session id parameter, if set
+        String sessionIdParameter = portletContext.getInitParameter(PortletBridgeConstants.SESSION_ID_PARAMETER_NAME);
+        if (sessionIdParameter != null && sessionIdParameter.trim().length() > 0) {
+            bridgeConfig.setSessionIdParameterName(sessionIdParameter);
+        }
+
         // Determine whether we're running with JSF 2.2 Runtime or not
         // Use FlashFactory presence to determine it
         try {

@@ -512,6 +512,12 @@ public class BridgeContextImpl extends BridgeContext implements ELContextListene
             path = path.substring(0, index);
         }
 
+        // Remove Session Id if present
+        index = path.lastIndexOf(";" + bridgeConfig.getSessionIdParameterName());
+        if (index != -1) {
+            path = path.substring(0, index);
+        }
+
         // Now remove up through the ContextPath
         path = getPathWithoutContext(path, getPortletRequest().getContextPath());
 

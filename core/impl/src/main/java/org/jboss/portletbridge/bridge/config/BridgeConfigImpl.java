@@ -72,6 +72,7 @@ public class BridgeConfigImpl implements BridgeConfig {
     private boolean viewParamHandlingDisabled = false;
     private boolean bridgeScopeEnabledOnAjaxRequest = false;
     private boolean facesMessagesStoredOnAjaxRequest = true;
+    private String sessionIdParameterName = "jsessionid";
 
     public BridgeConfigImpl() {
     }
@@ -453,5 +454,21 @@ public class BridgeConfigImpl implements BridgeConfig {
     @Override
     public void setFacesMessagesStoredOnAjaxRequest(boolean facesMessagesStoredOnAjaxRequest) {
         this.facesMessagesStoredOnAjaxRequest = facesMessagesStoredOnAjaxRequest;
+    }
+
+    /**
+     * @see org.jboss.portletbridge.bridge.config.BridgeConfig#getSessionIdParameterName()
+     */
+    @Override
+    public String getSessionIdParameterName() {
+        return sessionIdParameterName;
+    }
+
+    /**
+     * @see org.jboss.portletbridge.bridge.config.BridgeConfig#setSessionIdParameterName(String)
+     */
+    @Override
+    public void setSessionIdParameterName(String sessionIdParameterName) {
+        this.sessionIdParameterName = sessionIdParameterName;
     }
 }
