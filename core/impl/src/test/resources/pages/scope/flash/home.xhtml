@@ -6,12 +6,18 @@
 
     <h:body>
         <h:form>
-            <p id="request">
+            <p>
                 <h:inputText id="in" value="#{requestBean.name}" />
             </p>
-            <p id="submit">
+            <p>
                 <h:commandButton id="sub1" action="/done.xhtml?faces-redirect=true" value="Click1" />
                 <h:commandButton id="sub2" action="#{requestBean.next}" value="Click2" />
+                <h:commandButton id="subAjax1" action="/done.xhtml?faces-redirect=true" value="ClickAjax1">
+                    <f:ajax execute="@form" />
+                </h:commandButton>
+                <h:commandButton id="subAjax2" action="#{requestBean.next}" value="ClickAjax2">
+                    <f:ajax execute="@form" />
+                </h:commandButton>
             </p>
         </h:form>
     </h:body>

@@ -42,6 +42,7 @@ import org.portletbridge.arquillian.deployment.TestDeployment;
 
 import java.net.URL;
 
+import static org.jboss.arquillian.graphene.Graphene.guardAjax;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -74,6 +75,12 @@ public class FlashScopeTest extends AbstractPortletTest {
 
     @FindByJQuery("[id$=':sub2']")
     private WebElement submitButton2;
+
+    @FindByJQuery("[id$=':subAjax1']")
+    private WebElement submitAjaxButton1;
+
+    @FindByJQuery("[id$=':subAjax2']")
+    private WebElement submitAjaxButton2;
 
     @FindBy(id = "output1")
     private WebElement outputField1;
@@ -110,6 +117,22 @@ public class FlashScopeTest extends AbstractPortletTest {
 
     @Test
     @RunAsClient
+    public void requestScopeShouldBeResetWithAjaxCall() throws Exception {
+        browser.get(portalURL.toString());
+
+        assertTrue("Check that page contains input element", inputField.isDisplayed());
+
+        assertEquals("input field set.", RequestBean.ORIG_VALUE, inputField.getAttribute("value"));
+
+        inputField.sendKeys(NEW_VALUE);
+        guardAjax(submitAjaxButton1).click();
+
+        assertEquals("output1 field set to original.", RequestBean.ORIG_VALUE, outputField1.getText());
+        assertEquals("output2 field should be empty", "", outputField2.getText());
+    }
+
+    @Test
+    @RunAsClient
     public void flashScopeShouldRetainBeanThroughRedirect() throws Exception {
         browser.get(portalURL.toString());
 
@@ -119,6 +142,22 @@ public class FlashScopeTest extends AbstractPortletTest {
 
         inputField.sendKeys(NEW_VALUE);
         submitButton2.click();
+
+        assertEquals("output1 field set to original.", RequestBean.ORIG_VALUE, outputField1.getText());
+        assertTrue("output2 field updated.", outputField2.getText().contains(NEW_VALUE));
+    }
+
+    @Test
+    @RunAsClient
+    public void flashScopeShouldRetainBeanThroughRedirectWithAjaxCall() throws Exception {
+        browser.get(portalURL.toString());
+
+        assertTrue("Check that page contains input element", inputField.isDisplayed());
+
+        assertEquals("input field set.", RequestBean.ORIG_VALUE, inputField.getAttribute("value"));
+
+        inputField.sendKeys(NEW_VALUE);
+        guardAjax(submitAjaxButton2).click();
 
         assertEquals("output1 field set to original.", RequestBean.ORIG_VALUE, outputField1.getText());
         assertTrue("output2 field updated.", outputField2.getText().contains(NEW_VALUE));
