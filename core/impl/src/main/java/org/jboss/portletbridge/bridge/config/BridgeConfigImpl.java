@@ -73,6 +73,7 @@ public class BridgeConfigImpl implements BridgeConfig {
     private boolean bridgeScopeEnabledOnAjaxRequest = false;
     private boolean facesMessagesStoredOnAjaxRequest = true;
     private String sessionIdParameterName = "jsessionid";
+    private boolean bridgeScopePreservedPostRender = false;
 
     public BridgeConfigImpl() {
     }
@@ -470,5 +471,21 @@ public class BridgeConfigImpl implements BridgeConfig {
     @Override
     public void setSessionIdParameterName(String sessionIdParameterName) {
         this.sessionIdParameterName = sessionIdParameterName;
+    }
+
+    /**
+     * @see org.jboss.portletbridge.bridge.config.BridgeConfig#isBridgeScopePreservedPostRender()
+     */
+    @Override
+    public boolean isBridgeScopePreservedPostRender() {
+        return bridgeScopePreservedPostRender;
+    }
+
+    /**
+     * @see org.jboss.portletbridge.bridge.config.BridgeConfig#setBridgeScopePreservedPostRender(boolean)
+     */
+    @Override
+    public void setBridgeScopePreservedPostRender(boolean bridgeScopePreservedPostRender) {
+        this.bridgeScopePreservedPostRender = bridgeScopePreservedPostRender;
     }
 }

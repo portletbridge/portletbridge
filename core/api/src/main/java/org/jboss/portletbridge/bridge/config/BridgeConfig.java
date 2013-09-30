@@ -450,4 +450,20 @@ public interface BridgeConfig {
      * @return String Represents the name session id parameter
      */
     String getSessionIdParameterName();
+
+    /**
+     * Sets whether or not the bridge scope should be retained at the end of a Render Request for future use.
+     *
+     * @param bridgeScopePreservedPostRender <code>Boolean.TRUE</code> indicates scope should be retained.
+     *                                        <code>Boolean.FALSE</code> indicates scope should be removed.
+     */
+    void setBridgeScopePreservedPostRender(boolean bridgeScopePreservedPostRender);
+
+    /**
+     * Gets whether or not the bridge scope should be retained at the completion of a Render Request. If not previously set,
+     * it returns <code>false</code>.
+     *
+     * @return <code>true</code> if bridge scope should be retained. <code>false</code> indicates it should not.
+     */
+    boolean isBridgeScopePreservedPostRender();
 }

@@ -1,0 +1,17 @@
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html" xml:lang="en" lang="en">
+
+    <h:head>
+    </h:head>
+
+    <h:body>
+        <h:form>
+            <h:outputText id="textId" value="#{viewBean.text}" />
+
+            <h:commandButton id="change"
+                    value="Change text"
+                    action="#{viewBean.changeText}" />
+        </h:form>
+    </h:body>
+</f:view>

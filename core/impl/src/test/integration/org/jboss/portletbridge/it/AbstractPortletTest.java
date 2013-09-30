@@ -22,7 +22,10 @@
 package org.jboss.portletbridge.it;
 
 import org.junit.Before;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+
+import java.util.Set;
 
 /**
  * @author <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
@@ -32,6 +35,16 @@ public abstract class AbstractPortletTest {
     public void setupTest() {
         // Delete all cookies to ensure a new Session is created for each test
         getBrowser().manage().deleteAllCookies();
+    }
+
+    protected void createNewTab() {
+        ((JavascriptExecutor) getBrowser()).executeScript("window.open()");
+    }
+
+    protected void switchToTab(int tab) {
+        Set<String> windowHandles = getBrowser().getWindowHandles();
+        String[] handlesArray = windowHandles.toArray(new String[windowHandles.size()]);
+        getBrowser().switchTo().window(handlesArray[tab-1]);
     }
 
     protected abstract WebDriver getBrowser();

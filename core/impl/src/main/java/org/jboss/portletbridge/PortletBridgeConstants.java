@@ -59,4 +59,9 @@ public interface PortletBridgeConstants {
      * Parameter to specify the name of the Session ID parameter. By default it is <code>jsessionid</code>.
      */
     String SESSION_ID_PARAMETER_NAME = "org.jboss.portletbridge.SESSION_ID_PARAMETER_NAME";
+
+    /**
+     * Parameter to specify whether the Bridge Scope is preserved on completion of a Render Request.
+     */
+    String REQUEST_SCOPE_PRESERVED = "org.jboss.portletbridge.BRIDGE_SCOPE_PRESERVED_POST_RENDER";
 }

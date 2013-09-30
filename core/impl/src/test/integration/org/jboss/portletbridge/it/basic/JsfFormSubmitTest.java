@@ -28,6 +28,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.portal.api.PortalTest;
 import org.jboss.arquillian.portal.api.PortalURL;
 import org.jboss.arquillian.test.api.ArquillianResource;
+import org.jboss.portletbridge.PortletBridgeConstants;
 import org.jboss.portletbridge.it.AbstractPortletTest;
 import org.jboss.shrinkwrap.portal.api.PortletArchive;
 import org.junit.Test;
@@ -55,6 +56,9 @@ public class JsfFormSubmitTest extends AbstractPortletTest {
                 .createFacesPortlet("JsfFormSubmit", "JSF Form Portlet", "form.xhtml")
                 .addAsWebResource("pages/basic/form.xhtml", "form.xhtml")
                 .addClass(Bean.class);
+        deployment.webXml().createContextParam()
+                .paramName(PortletBridgeConstants.REQUEST_SCOPE_PRESERVED)
+                .paramValue("true");
         return deployment.getFinalArchive();
     }
 
@@ -81,7 +85,7 @@ public class JsfFormSubmitTest extends AbstractPortletTest {
     @Test
     @RunAsClient
     public void renderFormPortlet() throws Exception {
-        browser.get(portalURL.toString());
+        browser.navigate().to(portalURL);
 
         assertEquals("Output text set.", Bean.HELLO_JSF_PORTLET, outputField.getText());
 
@@ -93,7 +97,7 @@ public class JsfFormSubmitTest extends AbstractPortletTest {
     @Test
     @RunAsClient
     public void testSubmitAndRemainOnPage() throws Exception {
-        browser.get(portalURL.toString());
+        browser.navigate().to(portalURL);
 
         inputField.sendKeys(NEW_VALUE);
         submitButton.click();
@@ -103,7 +107,7 @@ public class JsfFormSubmitTest extends AbstractPortletTest {
         assertTrue("Input text updated.", inputField.getAttribute("value").contains(NEW_VALUE));
 
         // Re-render page
-        browser.get(portalURL.toString());
+        browser.navigate().refresh();
 
         assertTrue("Output text unchanged.", outputField.getText().contains(NEW_VALUE));
 

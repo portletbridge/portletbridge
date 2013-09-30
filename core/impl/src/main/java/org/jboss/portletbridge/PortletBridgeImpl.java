@@ -225,6 +225,12 @@ public class PortletBridgeImpl implements Bridge {
             bridgeConfig.setSessionIdParameterName(sessionIdParameter);
         }
 
+        // PBR-499 - Parameter to determine whether Bridge Scope is retained after Render
+        String bridgeScopeRetained = getInitParameter(portletConfig, PortletBridgeConstants.REQUEST_SCOPE_PRESERVED);
+        if (bridgeScopeRetained != null) {
+            bridgeConfig.setBridgeScopePreservedPostRender(Boolean.parseBoolean(bridgeScopeRetained) ? true : false);
+        }
+
         // Determine whether we're running with JSF 2.2 Runtime or not
         // Use FlashFactory presence to determine it
         try {
@@ -234,6 +240,16 @@ public class PortletBridgeImpl implements Bridge {
             // Default is already non JSF 2.2 runtime, so don't need to set again.
         }
         return bridgeConfig;
+    }
+
+    private String getInitParameter(PortletConfig portletConfig, String name) {
+        String parameter = portletConfig.getInitParameter(name);
+
+        if (parameter == null) {
+            parameter = portletConfig.getPortletContext().getInitParameter(name);
+        }
+
+        return parameter;
     }
 
     @SuppressWarnings("unchecked")

@@ -262,6 +262,11 @@ public class Jsf20ControllerImpl implements BridgeController {
         } catch (Exception e) {
             throwBridgeException(e);
         } finally {
+            // PBR-499 Clear Bridge Scope after Render unless config says to retain it
+            if (!bridgeConfig.isBridgeScopePreservedPostRender()) {
+                clearBridgeRequestScope(bridgeContext);
+            }
+
             if (null != facesContext) {
                 releaseFacesContext(bridgeContext, facesContext);
             }
@@ -687,7 +692,6 @@ public class Jsf20ControllerImpl implements BridgeController {
         if (null == scope) {
             scope = bridgeContext.getBridgeScope();
         }
-        // TODO Add something to ignore it if a setting is true? ie. http://jira.portletfaces.org/browse/BRIDGE-219
         return scope;
     }
 
