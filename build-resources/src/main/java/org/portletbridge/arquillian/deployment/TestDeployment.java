@@ -26,7 +26,6 @@ import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.descriptor.api.Descriptors;
 import org.jboss.shrinkwrap.descriptor.api.facesconfig20.FacesConfigVersionType;
 import org.jboss.shrinkwrap.descriptor.api.facesconfig21.WebFacesConfigDescriptor;
-import org.jboss.shrinkwrap.descriptor.api.portletapp20.PortletDescriptor;
 import org.jboss.shrinkwrap.descriptor.api.webapp30.WebAppDescriptor;
 import org.jboss.shrinkwrap.descriptor.api.webcommon30.WebAppVersionType;
 import org.jboss.shrinkwrap.portal.api.PortletArchive;
@@ -49,7 +48,6 @@ public class TestDeployment {
 
     private WebFacesConfigDescriptor facesConfig;
     private WebAppDescriptor webXml;
-    private PortletDescriptor portletXml;
 
     private Set<String> mavenDeps = new HashSet<String>();
 
@@ -109,9 +107,6 @@ public class TestDeployment {
         if (null != facesConfig) {
             finalArchive = finalArchive.addAsWebInfResource(new StringAsset(facesConfig.exportAsString()), "faces-config.xml");
         }
-        if (null != portletXml) {
-            finalArchive = finalArchive.setPortletXML(new StringAsset(portletXml.exportAsString()));
-        }
 
         includeMavenDependencies(finalArchive);
 
@@ -142,15 +137,6 @@ public class TestDeployment {
         }
 
         return this.webXml;
-    }
-
-    public PortletDescriptor portletXml() {
-        if (null == this.portletXml) {
-            this.portletXml = Descriptors.create(PortletDescriptor.class)
-                                            .addDefaultNamespaces()
-                                            .version("2.0");
-        }
-        return this.portletXml;
     }
 
     /**
