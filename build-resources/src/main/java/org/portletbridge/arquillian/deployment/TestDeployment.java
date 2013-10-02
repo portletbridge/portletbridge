@@ -22,6 +22,7 @@
 package org.portletbridge.arquillian.deployment;
 
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.descriptor.api.Descriptors;
 import org.jboss.shrinkwrap.descriptor.api.facesconfig20.FacesConfigVersionType;
@@ -144,6 +145,12 @@ public class TestDeployment {
      */
     public TestDeployment addMavenDependency(String... dependencies) {
         mavenDeps.addAll(Arrays.asList(dependencies));
+        return this;
+    }
+
+    public TestDeployment configureCdi() {
+        addMavenDependency("org.gatein:cdi-portlet-integration");
+        archive().addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
         return this;
     }
 

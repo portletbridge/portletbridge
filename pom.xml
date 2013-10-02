@@ -35,7 +35,7 @@
         <version.servlet3>3.0.1</version.servlet3>
         <version.jsp>2.1</version.jsp>
         <version.inject>1</version.inject>
-        <version.cdi>1.0-SP4</version.cdi>
+        <version.cdi>1.1</version.cdi>
 
         <!-- Testing versions -->
         <version.junit>4.11</version.junit>
@@ -723,7 +723,7 @@
             </activation>
             <properties>
                 <arquillian.launch.jbossas71>true</arquillian.launch.jbossas71>
-                <testCategory.excluded.container>,category.Jsf22Only</testCategory.excluded.container>
+                <testCategory.excluded.container>,category.Jsf22Only, category.WildflyOnly</testCategory.excluded.container>
             </properties>
             <dependencies>
                 <dependency>
@@ -813,6 +813,13 @@
                     <scope>test</scope>
                 </dependency>
 
+                <!-- CDI Integration Library -->
+                <dependency>
+                    <groupId>org.gatein</groupId>
+                    <artifactId>cdi-portlet-integration</artifactId>
+                    <scope>test</scope>
+                </dependency>
+
                 <!-- Container -->
                 <dependency>
                     <groupId>org.wildfly</groupId>
@@ -862,7 +869,7 @@
             </activation>
             <properties>
                 <arquillian.launch.jetty8>true</arquillian.launch.jetty8>
-                <testCategory.excluded.container>,category.GateInOnly</testCategory.excluded.container>
+                <testCategory.excluded.container>,category.GateInOnly, category.WildflyOnly</testCategory.excluded.container>
             </properties>
             <dependencies>
                 <dependency>
@@ -911,7 +918,7 @@
             </activation>
             <properties>
                 <arquillian.launch.jetty8>true</arquillian.launch.jetty8>
-                <testCategory.excluded.container>,category.GateInOnly,category.Jsf22Only, category.NotPlutoAndJsf21</testCategory.excluded.container>
+                <testCategory.excluded.container>,category.GateInOnly, category.Jsf22Only, category.NotPlutoAndJsf21, category.WildflyOnly</testCategory.excluded.container>
                 <version.mojarra2>2.1.26</version.mojarra2>
             </properties>
             <dependencies>

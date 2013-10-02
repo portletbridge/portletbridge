@@ -1,0 +1,19 @@
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html" xml:lang="en" lang="en">
+
+    <h:body>
+        <h:form>
+            <h:dataTable value="#{cdiUserList.users}" var="user">
+                <h:column>
+                    <h:commandButton action="#{cdiUserList.delete}" value="Delete">
+                        <f:setPropertyActionListener value="#{user}" target="#{cdiUserList.selectedUser}" />
+                    </h:commandButton>
+                </h:column>
+                <h:column>
+                    <h:outputText value="#{user}" />
+                </h:column>
+            </h:dataTable>
+        </h:form>
+    </h:body>
+</f:view>
