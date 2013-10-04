@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2012, Red Hat, Inc., and individual contributors
+ * Copyright 2013, Red Hat, Inc., and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -69,8 +69,7 @@ import org.jboss.portletbridge.bridge.scope.BridgeRequestScope;
 import org.jboss.portletbridge.context.map.EnumerationIterator;
 
 /**
- * Version of the {@link ExternalContext} for a Portlet request. {@link FacesContextFactory} will create instance of this class
- * for a portal <code>action</code> phase.
+ * Version of the {@link ExternalContext} for a Portlet request.
  *
  * @author asmirnov, <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
  */
@@ -81,7 +80,9 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
     public static final String ACTION_URL_DO_NOTHITG = "/JBossPortletBridge/actionUrl/do/nothing";
     public static final String RESOURCE_URL_DO_NOTHITG = "/JBossPortletBridge/resourceUrl/do/nothing";
     public static final String PARTIAL_URL_DO_NOTHITG = "/JBossPortletBridge/resourceUrl/do/nothing";
-    public static final String WSRP_REWRITE = "wsrp_rewrite?";
+    public static final String WSRP_REWRITE = "wsrp_rewrite";
+    public static final String WSRP_REWRITE_WITH_QUESTION = WSRP_REWRITE + "?";
+    public static final String NAMESPACE_PREFIX = "pb";
 
     private String namespace;
     private String servletPath = null;
@@ -193,6 +194,35 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
     protected String getNamespace() {
         if (null == namespace) {
             namespace = getPortletResponse().getNamespace();
+
+            // PBR-547 - Enhance the namespace generation to support shortening it.
+
+            // Check for WSRP
+            if (namespace.startsWith(WSRP_REWRITE)) {
+                namespace = bridgeContext.getBridgeConfig().getPortletConfig().getPortletName() +
+                        bridgeContext.getPortletContext().getPortletContextName();
+            }
+
+            if (bridgeContext.getBridgeConfig().isComponentNamespaceShortened()) {
+                int hash = namespace.hashCode();
+
+                // Ensure the hash is not negative
+                if (hash < 0) {
+                    hash = hash * -1;
+                }
+
+                String hashString = Integer.toString(hash);
+                int hashStringLen = hashString.length();
+
+                // Shorten the hash to be the last 5 chars, as this should provide uniqueness
+                if (hashStringLen > 5) {
+                    hashString = hashString.substring(hashStringLen - 5);
+                }
+
+                namespace = hashString;
+            }
+
+            namespace = NAMESPACE_PREFIX + namespace;
         }
         return namespace;
     }
@@ -840,7 +870,7 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
         if (url.startsWith("#")) {
             actionUrl = url;
             actionParameters = Collections.emptyMap();
-        } else if (url.startsWith(PortletExternalContextImpl.WSRP_REWRITE)) {
+        } else if (url.startsWith(WSRP_REWRITE_WITH_QUESTION)) {
             actionUrl = url;
             actionParameters = Collections.emptyMap();
         } else {
@@ -972,7 +1002,7 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
                 portalUrl.removeParameter(Bridge.VIEW_LINK);
                 encodeBackLink(portalUrl);
                 return replaceUrlWhitespace(encodeActionURL(portalUrl.toString()));
-            } else if (url.startsWith(PortletExternalContextImpl.WSRP_REWRITE)) {
+            } else if (url.startsWith(WSRP_REWRITE_WITH_QUESTION)) {
                 return url = encodeURL(url);
             } else if (isOpaqueURL(url)) {
                 // Opaque URL

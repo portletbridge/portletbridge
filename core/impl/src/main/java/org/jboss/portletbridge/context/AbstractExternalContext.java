@@ -152,7 +152,9 @@ public abstract class AbstractExternalContext extends ExternalContext {
     protected abstract String getNamespace();
 
     public String encodeNamespace(String name) {
-
+        if (name == null) {
+            return getNamespace();
+        }
         return getNamespace() + name;
     }
 

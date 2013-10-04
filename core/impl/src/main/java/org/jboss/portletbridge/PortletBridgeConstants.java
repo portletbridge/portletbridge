@@ -64,4 +64,9 @@ public interface PortletBridgeConstants {
      * Parameter to specify whether the Bridge Scope is preserved on completion of a Render Request.
      */
     String REQUEST_SCOPE_PRESERVED = "org.jboss.portletbridge.BRIDGE_SCOPE_PRESERVED_POST_RENDER";
+
+    /**
+     * Parameter to specify whether the generated namespace for a component should be shortened.
+     */
+    String COMPONENT_NAMESPACE_SHORTENED = "org.jboss.portletbridge.COMPONENT_NAMESPACE_SHORTENED";
 }

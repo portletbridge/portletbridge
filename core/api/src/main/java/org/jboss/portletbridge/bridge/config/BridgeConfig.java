@@ -466,4 +466,21 @@ public interface BridgeConfig {
      * @return <code>true</code> if bridge scope should be retained. <code>false</code> indicates it should not.
      */
     boolean isBridgeScopePreservedPostRender();
+
+    /**
+     * Sets whether or not the namespace added to components should be shortened to make them easier to read and reduce
+     * the bandwidth requirements for transport to the browser.
+     *
+     * @param componentNamespaceShortened <code>Boolean.TRUE</code> indicates the namespace should be shortened.
+     *                                    <code>Boolean.FALSE</code> indicates the namespace should not be shortened.
+     */
+    void setComponentNamespaceShortened(boolean componentNamespaceShortened);
+
+    /**
+     * Gets whether or not the namespace added to components should be shortened. If not previously set, it returns
+     * <code>true</code>.
+     *
+     * @return <code>true</code> if the namespace should be shortened. <code>false</code> indicates it should not.
+     */
+    boolean isComponentNamespaceShortened();
 }

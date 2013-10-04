@@ -74,6 +74,7 @@ public class BridgeConfigImpl implements BridgeConfig {
     private boolean facesMessagesStoredOnAjaxRequest = true;
     private String sessionIdParameterName = "jsessionid";
     private boolean bridgeScopePreservedPostRender = false;
+    private boolean componentNamespaceShortened = true;
 
     public BridgeConfigImpl() {
     }
@@ -487,5 +488,21 @@ public class BridgeConfigImpl implements BridgeConfig {
     @Override
     public void setBridgeScopePreservedPostRender(boolean bridgeScopePreservedPostRender) {
         this.bridgeScopePreservedPostRender = bridgeScopePreservedPostRender;
+    }
+
+    /**
+     * @see org.jboss.portletbridge.bridge.config.BridgeConfig#isComponentNamespaceShortened()
+     */
+    @Override
+    public boolean isComponentNamespaceShortened() {
+        return componentNamespaceShortened;
+    }
+
+    /**
+     * @see org.jboss.portletbridge.bridge.config.BridgeConfig#setComponentNamespaceShortened(boolean)
+     */
+    @Override
+    public void setComponentNamespaceShortened(boolean componentNamespaceShortened) {
+        this.componentNamespaceShortened = componentNamespaceShortened;
     }
 }

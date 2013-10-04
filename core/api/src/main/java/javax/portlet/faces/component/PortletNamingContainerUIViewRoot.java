@@ -27,7 +27,6 @@ import javax.faces.component.NamingContainer;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.portlet.faces.Bridge;
 import javax.portlet.faces.BridgeUtil;
 import javax.portlet.faces.annotation.PortletNamingContainer;
 
@@ -41,7 +40,7 @@ import javax.portlet.faces.annotation.PortletNamingContainer;
 public class PortletNamingContainerUIViewRoot extends UIViewRoot implements Serializable, NamingContainer {
     private static final long serialVersionUID = -690876000289020800L;
 
-    private static final String NAMESPACE_PREFIX = "pb";
+    private String namespace;
 
     public PortletNamingContainerUIViewRoot() {
         super();
@@ -54,9 +53,12 @@ public class PortletNamingContainerUIViewRoot extends UIViewRoot implements Seri
                 id = createUniqueId();
             }
 
-            if (!id.startsWith(NAMESPACE_PREFIX)) {
-                ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-                id = NAMESPACE_PREFIX + ec.encodeNamespace("") + "_" + id;
+            if (namespace == null) {
+                getContainerClientId(FacesContext.getCurrentInstance());
+            }
+
+            if (!id.startsWith(namespace)) {
+                id = namespace + "_" + id;
             }
         }
         super.setId(id);
@@ -65,17 +67,16 @@ public class PortletNamingContainerUIViewRoot extends UIViewRoot implements Seri
     /**
      * Implements NamingContainer semantics. Ensures that the returned identifier contains the consumer (portal) provided unique
      * portlet id. This ensures that those components in this NamingContainer generate ids which will not collide in the
-     * consumer page. Implementation merely calls the static form of this method.
+     * consumer page.
      */
     @Override
     public String getContainerClientId(FacesContext context) {
-        ExternalContext externalContext = context.getExternalContext();
-        if (externalContext.getRequestMap().containsKey(Bridge.PORTLET_LIFECYCLE_PHASE)) {
-            String rootId = this.getId();
-            if (null == rootId || !rootId.startsWith(NAMESPACE_PREFIX)) {
-                setId(this.getId());
+        if (BridgeUtil.isPortletRequest()) {
+            if (namespace == null) {
+                ExternalContext externalContext = context.getExternalContext();
+                namespace = externalContext.encodeNamespace("");
             }
-            return super.getContainerClientId(context);
+            return namespace;
         } else {
             return null;
         }

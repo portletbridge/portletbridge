@@ -231,6 +231,12 @@ public class PortletBridgeImpl implements Bridge {
             bridgeConfig.setBridgeScopePreservedPostRender(Boolean.parseBoolean(bridgeScopeRetained) ? true : false);
         }
 
+        // PBR-547 - Parameter to determine whether to shorten component namespaces
+        String componentNamespaceShortened = getInitParameter(portletConfig, PortletBridgeConstants.COMPONENT_NAMESPACE_SHORTENED);
+        if (componentNamespaceShortened != null) {
+            bridgeConfig.setComponentNamespaceShortened(Boolean.parseBoolean(componentNamespaceShortened) ? true : false);
+        }
+
         // Determine whether we're running with JSF 2.2 Runtime or not
         // Use FlashFactory presence to determine it
         try {
