@@ -49,7 +49,7 @@
 
         <!-- Container versions -->
         <version.jbossas7>7.1.1.Final</version.jbossas7>
-        <version.wildfly8>8.0.0.Alpha3</version.wildfly8>
+        <version.wildfly8>8.0.0.Beta1</version.wildfly8>
 
         <!-- Plugin versions -->
         <version.plugin.surefire>2.15</version.plugin.surefire>
@@ -279,7 +279,7 @@
             <dependency>
                 <groupId>org.jboss.as</groupId>
                 <artifactId>jboss-as-arquillian-container-managed</artifactId>
-                <version>7.1.1.Final</version>
+                <version>${version.jbossas7}</version>
                 <scope>test</scope>
             </dependency>
 
@@ -287,7 +287,7 @@
             <dependency>
                 <groupId>org.wildfly</groupId>
                 <artifactId>wildfly-arquillian-container-managed</artifactId>
-                <version>8.0.0.Alpha3</version>
+                <version>${version.wildfly8}</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
