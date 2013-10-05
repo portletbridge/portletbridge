@@ -19,46 +19,49 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+
 package org.jboss.portletbridge.renderkit.portlet;
 
-import javax.faces.context.FacesContext;
-import javax.faces.context.PartialViewContext;
+import javax.faces.component.UIComponent;
 import javax.faces.context.ResponseWriter;
-import javax.faces.render.RenderKit;
-import javax.faces.render.RenderKitWrapper;
+import javax.faces.context.ResponseWriterWrapper;
+import java.io.IOException;
 import java.io.Writer;
 
 /**
- * Override the {@link ResponseWriter} to use a Portlet one that fixes some JSF response writing
- * problems. There is a separate writer to handle partial request specific problems.
- *
  * @author <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
  */
-public class PortletRenderKitImpl extends RenderKitWrapper {
+public class PortletResponseWriter extends ResponseWriterWrapper {
 
-    private RenderKit wrappedRenderKit;
+    private ResponseWriter wrappedResponseWriter;
 
-    public PortletRenderKitImpl(RenderKit parent) {
-        this.wrappedRenderKit = parent;
+
+    public PortletResponseWriter(ResponseWriter parent) {
+        this.wrappedResponseWriter = parent;
     }
 
     @Override
-    public RenderKit getWrapped() {
-        return wrappedRenderKit;
+    public ResponseWriter getWrapped() {
+        return wrappedResponseWriter;
     }
 
     @Override
-    public ResponseWriter createResponseWriter(Writer writer, String contentTypeList, String characterEncoding) {
-        PartialViewContext partialViewContext = FacesContext.getCurrentInstance().getPartialViewContext();
-        boolean isPartialRequest = partialViewContext.isPartialRequest();
+    public ResponseWriter cloneWithWriter(Writer writer) {
+        return new PortletResponseWriter(wrappedResponseWriter.cloneWithWriter(writer));
+    }
 
-        ResponseWriter wrappedWriter = getWrapped().createResponseWriter(writer, contentTypeList, characterEncoding);
-        ResponseWriter portletWriter = new PortletResponseWriter(wrappedWriter);
+    @Override
+    public void endElement(String name) throws IOException {
+        super.endElement(name);
+    }
 
-        if (isPartialRequest) {
-            return new PortletPartialResponseWriter(portletWriter);
-        } else {
-            return portletWriter;
-        }
+    @Override
+    public void startElement(String name, UIComponent component) throws IOException {
+        super.startElement(name, component);
+    }
+
+    @Override
+    public void writeAttribute(String name, Object value, String property) throws IOException {
+        super.writeAttribute(name, value, property);
     }
 }
