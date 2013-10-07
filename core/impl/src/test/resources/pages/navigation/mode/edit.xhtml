@@ -1,0 +1,13 @@
+<f:view xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html">
+    <h:head/>
+    <h:body>
+        <h:outputText id="title" value="Edit Page" />
+
+        <h:form>
+            <h:commandButton id="actionButton" action="#{modeBean.action}" value="Action" />
+            <h:commandButton id="actionRedirectButton" action="#{modeBean.actionWithRedirect}" value="Action Redirect" />
+            <h:commandButton id="homePageButton" action="main?javax.portlet.faces.PortletMode=view" value="Home" />
+        </h:form>
+    </h:body>
+</f:view>
