@@ -1,0 +1,13 @@
+<f:view xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html"
+        contracts="#{switcher.theme}">
+    <ui:composition template="/template.xhtml">
+        <ui:define name="content">
+            <h:form>
+                <h:commandButton id="selectDefault" action="#{switcher.selectDefault}" value="Switch to Default" />
+                <h:commandButton id="selectEnhanced" action="#{switcher.selectEnhanced}" value="Switch to Enhanced" />
+                <h:commandButton id="selectInvalid" action="#{switcher.selectInvalid}" value="Switch to Invalid" />
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</f:view>
