@@ -42,6 +42,8 @@ import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.context.FacesContextFactory;
+import javax.faces.event.PhaseEvent;
+import javax.faces.event.PhaseId;
 import javax.faces.event.PostAddToViewEvent;
 import javax.faces.event.PreRemoveFromViewEvent;
 import javax.faces.event.SystemEvent;
@@ -95,6 +97,7 @@ public class Jsf20ControllerImpl implements BridgeController {
     private static final String FACES_MESSAGES_WRAPPER = "org.jboss.portletbridge.facesMessagesHolder";
     private static final String MANAGED_BEANS_WRAPPER = "org.jboss.portletbridge.managedBeansHolder";
     private static final String REQUEST_SCOPE_ID = "__pbrReqScopeId";
+    private static final String FACES_EXECUTED_DURING_ACTION_REQUEST = "facesDuringAction";
 
     public Jsf20ControllerImpl(BridgeConfig bridgeConfig) {
         this.bridgeConfig = bridgeConfig;
@@ -371,6 +374,9 @@ public class Jsf20ControllerImpl implements BridgeController {
                 }
 
                 saveActionParams(bridgeContext, facesContext);
+
+                // Save parameter to let us know Faces Lifecycle was executed
+                scope.put(FACES_EXECUTED_DURING_ACTION_REQUEST, "true");
             }
 
             saveBeans(bridgeContext, facesContext);
@@ -405,15 +411,21 @@ public class Jsf20ControllerImpl implements BridgeController {
                 facesLifecycle.addPhaseListener(ppPhaseListener);
                 facesLifecycle.addPhaseListener(portalPhaseListener);
 
-                // PBR-510 - Only end facesLifecycle.execute() after RESTORE_VIEW if we don't want f:viewParam to work
-                if (bridgeConfig.isViewParamHandlingDisabled()) {
-                    renderResponsePhaseListener = new RenderResponsePhaseListener();
-                    facesLifecycle.addPhaseListener(renderResponsePhaseListener);
-                }
-
                 performPreExecuteTasks(facesContext, facesLifecycle);
 
-                facesLifecycle.execute(facesContext);
+                if (scope != null && Boolean.parseBoolean((String) scope.get(FACES_EXECUTED_DURING_ACTION_REQUEST))) {
+                    scope.remove(FACES_EXECUTED_DURING_ACTION_REQUEST);
+                    PhaseEvent fakeRestoreViewEvent = new PhaseEvent(facesContext, PhaseId.RESTORE_VIEW, facesLifecycle);
+                    ppPhaseListener.afterPhase(fakeRestoreViewEvent);
+                } else {
+                    // PBR-510 - Only end facesLifecycle.execute() after RESTORE_VIEW if we don't want f:viewParam to work
+                    if (bridgeConfig.isViewParamHandlingDisabled()) {
+                        renderResponsePhaseListener = new RenderResponsePhaseListener();
+                        facesLifecycle.addPhaseListener(renderResponsePhaseListener);
+                    }
+
+                    facesLifecycle.execute(facesContext);
+                }
             } finally {
                 if (null != facesLifecycle) {
                     if (null != ppPhaseListener) {
