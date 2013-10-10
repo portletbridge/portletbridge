@@ -148,9 +148,14 @@ public class TestDeployment {
         return this;
     }
 
+    public TestDeployment addEmptyBeansXml() {
+        archive().addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+        return this;
+    }
+
     public TestDeployment configureCdi() {
         addMavenDependency("org.gatein:cdi-portlet-integration");
-        archive().addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+        addEmptyBeansXml();
         return this;
     }
 
