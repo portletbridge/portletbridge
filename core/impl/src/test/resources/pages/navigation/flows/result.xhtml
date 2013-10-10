@@ -1,0 +1,10 @@
+<f:view xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html">
+    <h:head/>
+    <h:body>
+        <h:outputText id="title" value="Complete" />
+
+        <h:outputText id="flow" value="#{null != facesContext.application.flowHandler.currentFlow}" />
+        <h:outputText id="flowValue" value="#{flowScope.value}" />
+    </h:body>
+</f:view>

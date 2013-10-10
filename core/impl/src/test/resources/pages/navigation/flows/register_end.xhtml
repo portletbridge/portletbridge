@@ -1,0 +1,21 @@
+<f:view xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html">
+    <h:head/>
+    <h:body>
+        <h:outputText id="title" value="Page Three" />
+
+        <h:outputText id="flow" value="#{null != facesContext.application.flowHandler.currentFlow}" />
+        <h:outputText id="flowValue" value="#{flowScope.value}" />
+
+        <h:form>
+            <h:outputText id="first" value="#{registerBean.firstName}" />
+            <h:outputText id="last" value="#{registerBean.lastName}" />
+
+            <h:outputText id="user" value="#{registerBean.userName}" />
+
+            <h:commandButton id="return" value="Return" action="complete" />
+            <h:commandButton id="back" value="Back" action="middle" />
+            <h:commandButton id="home" value="Home" action="goHome" />
+        </h:form>
+    </h:body>
+</f:view>
