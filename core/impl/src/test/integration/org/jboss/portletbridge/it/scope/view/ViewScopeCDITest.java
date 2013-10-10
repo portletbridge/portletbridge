@@ -39,7 +39,7 @@ public class ViewScopeCDITest extends AbstractPortletTest {
                 .addAsWebResource("pages/scope/view/usersCdi.xhtml", "users.xhtml")
                 .addClass(CdiUserList.class)
                 .addClasses(AbstractPortletTest.class, Category.class, WildflyOnly.class, PortalTest.class);
-        deployment.configureCdi();
+        deployment.addEmptyBeansXml();
         return deployment.getFinalArchive();
     }
 
