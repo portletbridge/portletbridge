@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2012, Red Hat, Inc., and individual contributors
+ * Copyright 2013, Red Hat, Inc., and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -84,11 +84,11 @@ import com.sun.faces.context.StateContext;
 import com.sun.faces.context.StateContext.AddRemoveListener;
 
 /**
- * @author kenfinnigan
+ * @author <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
  */
 public class Jsf20ControllerImpl implements BridgeController {
-    private BridgeConfig bridgeConfig = null;
-    private FacesContextFactory facesContextFactory = null;
+    protected BridgeConfig bridgeConfig = null;
+    protected FacesContextFactory facesContextFactory = null;
 
     protected static final String RENDER_REDIRECT_VIEW_PARAMS = "org.jboss.portletbridge.renderRedirectViewParams";
     protected static final String RENDER_REDIRECT_PUBLIC_PARAM_MAP = "org.jboss.portletbridge.renderRedirectPublicParamMap";
@@ -96,11 +96,8 @@ public class Jsf20ControllerImpl implements BridgeController {
     private static final String MANAGED_BEANS_WRAPPER = "org.jboss.portletbridge.managedBeansHolder";
     private static final String REQUEST_SCOPE_ID = "__pbrReqScopeId";
 
-    /**
-     * @see org.jboss.portletbridge.bridge.controller.BridgeController#init(org.jboss.portletbridge.bridge.config.BridgeConfig)
-     */
-    public void init(BridgeConfig config) throws BridgeException {
-        bridgeConfig = config;
+    public Jsf20ControllerImpl(BridgeConfig bridgeConfig) {
+        this.bridgeConfig = bridgeConfig;
     }
 
     /**
@@ -128,6 +125,9 @@ public class Jsf20ControllerImpl implements BridgeController {
 
             ppPhaseListener = new PublicParameterPhaseListener(bridgeConfig, bridgeContext.getPortletRequest());
             facesLifecycle.addPhaseListener(ppPhaseListener);
+
+            performPreExecuteTasks(facesContext, facesLifecycle);
+
             facesLifecycle.execute(facesContext);
 
             if (!facesContext.getResponseComplete()) {
@@ -182,6 +182,9 @@ public class Jsf20ControllerImpl implements BridgeController {
 
             ppPhaseListener = new PublicParameterPhaseListener(bridgeConfig, bridgeContext.getPortletRequest());
             facesLifecycle.addPhaseListener(ppPhaseListener);
+
+            performPreExecuteTasks(facesContext, facesLifecycle);
+
             facesLifecycle.execute(facesContext);
 
             EventNavigationResult eventResult = bridgeConfig.getEventHandler().handleEvent(facesContext,
@@ -407,6 +410,8 @@ public class Jsf20ControllerImpl implements BridgeController {
                     renderResponsePhaseListener = new RenderResponsePhaseListener();
                     facesLifecycle.addPhaseListener(renderResponsePhaseListener);
                 }
+
+                performPreExecuteTasks(facesContext, facesLifecycle);
 
                 facesLifecycle.execute(facesContext);
             } finally {
@@ -740,5 +745,16 @@ public class Jsf20ControllerImpl implements BridgeController {
                     outgoingFunction, bridgeConfig.getPortletConfig().getPortletName());
 
         }
+    }
+
+    /**
+     * Perform any tasks that need to be completed before calling <code>Lifecycle.execute()</code>. For JSF 2.0, nothing
+     * is required.
+     *
+     * @param facesContext      Faces Context for the current portlet request.
+     * @param facesLifecycle    Lifecycle for the current portlet request.
+     */
+    protected void performPreExecuteTasks(FacesContext facesContext, Lifecycle facesLifecycle) {
+        // Do Nothing for JSF 2.0
     }
 }

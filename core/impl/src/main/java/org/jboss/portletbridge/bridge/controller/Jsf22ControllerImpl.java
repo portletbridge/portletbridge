@@ -19,29 +19,32 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.portletbridge.bridge.factory;
-
-import javax.faces.FacesException;
+package org.jboss.portletbridge.bridge.controller;
 
 import org.jboss.portletbridge.bridge.config.BridgeConfig;
-import org.jboss.portletbridge.bridge.context.BridgeContext;
-import org.jboss.portletbridge.bridge.context.BridgeContextImpl;
-import org.jboss.portletbridge.bridge.context.BridgeContextJsf22Impl;
+
+import javax.faces.context.FacesContext;
+import javax.faces.lifecycle.Lifecycle;
 
 /**
+ * Controller to handle JSF 2.2 specific actions that would cause JSF 2.0 runtimes to break due to missing classes,
+ * methods, etc.
+ *
  * @author <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
  */
-public class BridgeContextFactoryImpl extends BridgeContextFactory {
-
-    /**
-     * Check whether we're using JSF 2.2, so that we can create a <code>BridgeContext</code> instance that is appropriate.
-     *
-     * @see org.jboss.portletbridge.bridge.factory.BridgeContextFactory#getBridgeContext(BridgeConfig)
-     */
-    @Override
-    public BridgeContext getBridgeContext(BridgeConfig bridgeConfig) throws FacesException {
-        boolean isJsf22 = bridgeConfig.isJsf22Runtime();
-        return isJsf22 ? new BridgeContextJsf22Impl(bridgeConfig) : new BridgeContextImpl(bridgeConfig);
+public class Jsf22ControllerImpl extends Jsf20ControllerImpl {
+    public Jsf22ControllerImpl(BridgeConfig bridgeConfig) {
+        super(bridgeConfig);
     }
 
+    /**
+     * Call <code>Lifecycle.attachWindow()</code> to retrieve/create a Client Window Id for this request.
+     *
+     * @param facesContext      Faces Context for the current portlet request.
+     * @param facesLifecycle    Lifecycle for the current portlet request.
+     */
+    @Override
+    protected void performPreExecuteTasks(FacesContext facesContext, Lifecycle facesLifecycle) {
+        facesLifecycle.attachWindow(facesContext);
+    }
 }

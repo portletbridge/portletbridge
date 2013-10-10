@@ -24,6 +24,7 @@ package org.jboss.portletbridge.context;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.ExternalContextWrapper;
 import javax.faces.lifecycle.ClientWindow;
+import javax.portlet.PortletSession;
 
 /**
  * @author <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
@@ -46,6 +47,16 @@ public class Jsf22PortletExternalContextWrapper extends ExternalContextWrapper {
     @Override
     public void setClientWindow(ClientWindow window) {
         clientWindow = window;
+    }
+
+    @Override
+    public String getSessionId(boolean create) {
+        Object session = super.getSession(create);
+        if (session != null) {
+            return ((PortletSession) session).getId();
+        }
+
+        return null;
     }
 
     @Override

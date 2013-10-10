@@ -454,6 +454,15 @@ public abstract class BridgeContext {
     public abstract String getDefaultFacesViewIdForRequest(boolean excludeQueryString)
         throws BridgeDefaultViewNotSpecifiedException;
 
+    /**
+     * Provide the ability to append the Client Window Id to urls that need to be encoded. This is only expected to result
+     * in a modified url being returned when running under JSF 2.2.
+     *
+     * @param url URL that requires the Client Window Id appended to it.
+     * @return String representing a URL that will have the Client Window Id appended when running under JSF 2.2.
+     */
+    public abstract String appendClientWindowId(String url);
+
     // ---------------------------------------------------------- Static Methods
 
     /**

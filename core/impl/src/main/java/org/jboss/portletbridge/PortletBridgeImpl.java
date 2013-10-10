@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2012, Red Hat, Inc., and individual contributors
+ * Copyright 2013, Red Hat, Inc., and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -68,7 +68,7 @@ import org.jboss.portletbridge.config.WebXmlProcessor;
 import org.jboss.portletbridge.context.InitFacesContext;
 
 /**
- * @author kenfinnigan
+ * @author <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
  */
 public class PortletBridgeImpl implements Bridge {
 
@@ -99,8 +99,7 @@ public class PortletBridgeImpl implements Bridge {
         this.bridgeConfig = getBridgeConfig(portletConfig);
 
         this.bridgeController = ((BridgeControllerFactory) BridgeFactoryFinder
-                .getFactoryInstance(BridgeControllerFactory.class)).getBridgeController();
-        this.bridgeController.init(bridgeConfig);
+                .getFactoryInstance(BridgeControllerFactory.class)).getBridgeController(bridgeConfig);
 
         this.initialized = true;
         if (logger.isLoggable(Level.FINE)) {
@@ -370,10 +369,8 @@ public class PortletBridgeImpl implements Bridge {
 
     protected BridgeContext getBridgeContext(PortletRequest request, PortletResponse response, PortletPhase phase) {
         BridgeContext bridgeContext = ((BridgeContextFactory) BridgeFactoryFinder
-                .getFactoryInstance(BridgeContextFactory.class)).getBridgeContext();
+                .getFactoryInstance(BridgeContextFactory.class)).getBridgeContext(bridgeConfig);
 
-        bridgeContext.setBridgeConfig(bridgeConfig);
-        bridgeContext.setPortletContext(bridgeConfig.getPortletConfig().getPortletContext());
         bridgeContext.setPortletRequest(request);
         bridgeContext.setPortletRequestPhase(phase);
         bridgeContext.setPortletResponse(response);

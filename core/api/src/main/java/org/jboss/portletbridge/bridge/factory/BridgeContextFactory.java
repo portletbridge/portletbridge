@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2012, Red Hat, Inc., and individual contributors
+ * Copyright 2013, Red Hat, Inc., and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -23,6 +23,7 @@ package org.jboss.portletbridge.bridge.factory;
 
 import javax.faces.FacesException;
 
+import org.jboss.portletbridge.bridge.config.BridgeConfig;
 import org.jboss.portletbridge.bridge.context.BridgeContext;
 
 /**
@@ -31,6 +32,6 @@ import org.jboss.portletbridge.bridge.context.BridgeContext;
  */
 public abstract class BridgeContextFactory extends BridgeFactory<BridgeContextFactory> {
 
-    public abstract BridgeContext getBridgeContext() throws FacesException;
+    public abstract BridgeContext getBridgeContext(BridgeConfig bridgeConfig) throws FacesException;
 
 }

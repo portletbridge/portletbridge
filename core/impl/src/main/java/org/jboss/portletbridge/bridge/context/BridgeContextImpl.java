@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2012, Red Hat, Inc., and individual contributors
+ * Copyright 2013, Red Hat, Inc., and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -57,7 +57,7 @@ import org.jboss.portletbridge.context.PortalActionURL;
 import org.jboss.portletbridge.el.ELContextImpl;
 
 /**
- * @author kenfinnigan
+ * @author <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
  */
 public class BridgeContextImpl extends BridgeContext implements ELContextListener {
 
@@ -80,8 +80,11 @@ public class BridgeContextImpl extends BridgeContext implements ELContextListene
     private Map<String, String[]> preservedActionParams;
     private boolean viewHistoryInitialized = false;
 
-    public BridgeContextImpl() {
+    public BridgeContextImpl(BridgeConfig bridgeConfig) {
         BridgeContext.setCurrentInstance(this);
+
+        this.bridgeConfig = bridgeConfig;
+        this.portletContext = bridgeConfig.getPortletConfig().getPortletContext();
 
         // Add as ELContextListener to the Faces App so we can add the
         // portletConfig to any newly created contexts.
@@ -581,6 +584,15 @@ public class BridgeContextImpl extends BridgeContext implements ELContextListene
             viewId = excludeQuery(viewId);
         }
         return viewId;
+    }
+
+    /**
+     * @see org.jboss.portletbridge.bridge.context.BridgeContext#appendClientWindowId(String)
+     */
+    @Override
+    public String appendClientWindowId(String url) {
+        // Do Nothing for JSF 2.0
+        return url;
     }
 
     protected String excludeQuery(String viewId) {

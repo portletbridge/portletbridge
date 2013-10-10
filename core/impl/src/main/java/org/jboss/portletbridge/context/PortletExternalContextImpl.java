@@ -867,6 +867,9 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
         String actionUrl = null;
         Map<String, String[]> actionParameters;
 
+        // Append Client Window Id if required
+        url = bridgeContext.appendClientWindowId(url);
+
         if (url.startsWith("#")) {
             actionUrl = url;
             actionParameters = Collections.emptyMap();
@@ -974,6 +977,10 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
         if (null == url) {
             throw new IllegalArgumentException();
         }
+
+        // Append Client Window Id if required
+        url = bridgeContext.appendClientWindowId(url);
+
         String actionUrl = url;
         if (!actionUrl.startsWith("#")) {
             try {
@@ -1103,6 +1110,10 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
         if (null == baseUrl) {
             throw new IllegalArgumentException();
         }
+
+        // Append Client Window Id if required
+        baseUrl = bridgeContext.appendClientWindowId(baseUrl);
+
         String actionUrl = baseUrl;
         if (!actionUrl.startsWith("#")) {
             try {
@@ -1122,6 +1133,10 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
 
     @Override
     public String encodeRedirectURL(String baseUrl, Map<String, List<String>> parameters) {
+
+        // Append Client Window Id if required
+        baseUrl = bridgeContext.appendClientWindowId(baseUrl);
+
         try {
             PortalActionURL portalUrl = new PortalActionURL(baseUrl);
             if (null != parameters && !parameters.isEmpty()) {

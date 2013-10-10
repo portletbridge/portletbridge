@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2012, Red Hat, Inc., and individual contributors
+ * Copyright 2013, Red Hat, Inc., and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -23,20 +23,25 @@ package org.jboss.portletbridge.bridge.factory;
 
 import javax.faces.FacesException;
 
+import org.jboss.portletbridge.bridge.config.BridgeConfig;
 import org.jboss.portletbridge.bridge.controller.BridgeController;
 import org.jboss.portletbridge.bridge.controller.Jsf20ControllerImpl;
+import org.jboss.portletbridge.bridge.controller.Jsf22ControllerImpl;
 
 /**
- * @author kenfinnigan
+ * @author <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
  */
 public class BridgeControllerFactoryImpl extends BridgeControllerFactory {
 
     /**
-     * @see org.jboss.portletbridge.bridge.factory.BridgeControllerFactory#getBridgeController()
+     * Check whether we're using JSF 2.2, so that we can create a <code>BridgeController</code> instance that is appropriate.
+     *
+     * @see org.jboss.portletbridge.bridge.factory.BridgeControllerFactory#getBridgeController(BridgeConfig)
      */
     @Override
-    public BridgeController getBridgeController() throws FacesException {
-        return new Jsf20ControllerImpl();
+    public BridgeController getBridgeController(BridgeConfig bridgeConfig) throws FacesException {
+        boolean isJsf22 = bridgeConfig.isJsf22Runtime();
+        return isJsf22 ? new Jsf22ControllerImpl(bridgeConfig) : new Jsf20ControllerImpl(bridgeConfig);
     }
 
 }
