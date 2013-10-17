@@ -49,17 +49,11 @@ public class PortletNamingContainerUIViewRoot extends UIViewRoot implements Seri
     @Override
     public void setId(String id) {
         if (BridgeUtil.isPortletRequest()) {
-            if (null == id) {
-                id = createUniqueId();
-            }
-
             if (namespace == null) {
                 getContainerClientId(FacesContext.getCurrentInstance());
             }
 
-            if (!id.startsWith(namespace)) {
-                id = namespace + "_" + id;
-            }
+            id = namespace;
         }
         super.setId(id);
     }

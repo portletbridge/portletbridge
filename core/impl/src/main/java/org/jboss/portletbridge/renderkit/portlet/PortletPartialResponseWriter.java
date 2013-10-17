@@ -41,8 +41,8 @@ public class PortletPartialResponseWriter extends PartialResponseWriter {
     private static final String SCRIPT_ELEMENT = "script";
 
     private boolean isScriptElement = false;
-    private ResponseWriter tempResponseWriter;
-    private FastBufferWriter writer;
+    private ResponseWriter scriptTempResponseWriter;
+    private FastBufferWriter scriptWriter;
 
     public PortletPartialResponseWriter(ResponseWriter writer) {
         super(writer);
@@ -60,17 +60,17 @@ public class PortletPartialResponseWriter extends PartialResponseWriter {
     @Override
     public void endElement(String name) throws IOException {
         if (isScriptElement && SCRIPT_ELEMENT.equals(name)) {
-            tempResponseWriter.endElement(name);
+            scriptTempResponseWriter.endElement(name);
 
             // Retrieve the captured content and replace characters as needed before writing result
-            String result = writer.toString();
+            String result = scriptWriter.toString();
             result = result.replace("&amp;", "&");
             super.write(result);
 
             // Reset variables
             isScriptElement = false;
-            writer = null;
-            tempResponseWriter = null;
+            scriptWriter = null;
+            scriptTempResponseWriter = null;
         } else {
             super.endElement(name);
         }
@@ -88,9 +88,9 @@ public class PortletPartialResponseWriter extends PartialResponseWriter {
     @Override
     public void startElement(String name, UIComponent component) throws IOException {
         if (!isScriptElement && SCRIPT_ELEMENT.equals(name)) {
-            writer = new FastBufferWriter();
-            tempResponseWriter = super.cloneWithWriter(writer);
-            tempResponseWriter.startElement(name, component);
+            scriptWriter = new FastBufferWriter();
+            scriptTempResponseWriter = super.cloneWithWriter(scriptWriter);
+            scriptTempResponseWriter.startElement(name, component);
             isScriptElement = true;
         } else {
             super.startElement(name, component);
@@ -109,7 +109,7 @@ public class PortletPartialResponseWriter extends PartialResponseWriter {
     @Override
     public void writeAttribute(String name, Object value, String property) throws IOException {
         if (isScriptElement) {
-            tempResponseWriter.writeAttribute(name, value, property);
+            scriptTempResponseWriter.writeAttribute(name, value, property);
         } else {
             super.writeAttribute(name, value, property);
         }
