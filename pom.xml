@@ -27,7 +27,7 @@
         <version.gatein.pc>2.4.2.Final</version.gatein.pc>
 
         <!-- CDI/JSF Portlet Integration -->
-        <version.cdi.portlet.integration>1.0.2.Final</version.cdi.portlet.integration>
+        <version.cdi.portlet.integration>1.0.3.Final</version.cdi.portlet.integration>
 
         <!-- Spec versions -->
         <version.portlet>2.0</version.portlet>
@@ -810,13 +810,6 @@
                 <dependency>
                     <groupId>org.jboss.portletbridge.testing.gatein</groupId>
                     <artifactId>gatein-arquillian-extension</artifactId>
-                    <scope>test</scope>
-                </dependency>
-
-                <!-- CDI Integration Library -->
-                <dependency>
-                    <groupId>org.gatein</groupId>
-                    <artifactId>cdi-portlet-integration</artifactId>
                     <scope>test</scope>
                 </dependency>
 
