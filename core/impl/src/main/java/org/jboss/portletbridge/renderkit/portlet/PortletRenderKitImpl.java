@@ -24,11 +24,13 @@ package org.jboss.portletbridge.renderkit.portlet;
 import org.jboss.portletbridge.bridge.context.BridgeContext;
 import org.jboss.portletbridge.renderkit.portlet.jsf2_0.Jsf20PortletPartialResponseWriter;
 
+import javax.faces.component.UIOutput;
 import javax.faces.context.FacesContext;
 import javax.faces.context.PartialViewContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitWrapper;
+import javax.faces.render.Renderer;
 import java.io.Writer;
 
 /**
@@ -63,12 +65,24 @@ public class PortletRenderKitImpl extends RenderKitWrapper {
 
         if (isPartialRequest) {
             if (!isJsf22Runtime) {
-                return new Jsf20PortletPartialResponseWriter(new PortletPartialResponseWriter(wrappedWriter));
+                return new Jsf20PortletPartialResponseWriter(wrappedWriter);
             }
 
-            return new Jsf22PortletPartialResponseWriter(new PortletPartialResponseWriter(wrappedWriter));
+            return new Jsf22PortletPartialResponseWriter(wrappedWriter);
         } else {
             return wrappedWriter;
         }
+    }
+
+    @Override
+    public Renderer getRenderer(String family, String rendererType) {
+        Renderer renderer = super.getRenderer(family, rendererType);
+
+        if (UIOutput.COMPONENT_FAMILY.equals(family) &&
+                ("javax.faces.resource.Script".equals(rendererType) || "javax.faces.resource.Stylesheet".equals(rendererType))) {
+            renderer = new PortletScriptRenderer(renderer);
+        }
+
+        return renderer;
     }
 }

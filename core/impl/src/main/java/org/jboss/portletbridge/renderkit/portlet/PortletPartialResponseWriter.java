@@ -21,97 +21,67 @@
  */
 package org.jboss.portletbridge.renderkit.portlet;
 
-import org.jboss.portletbridge.io.FastBufferWriter;
+import com.sun.faces.util.HtmlUtils;
 
 import javax.faces.component.UIComponent;
-import javax.faces.context.PartialResponseWriter;
 import javax.faces.context.ResponseWriter;
+import javax.faces.context.ResponseWriterWrapper;
 import java.io.IOException;
+import java.io.StringWriter;
 
 /**
- * Portlet specific {@link PartialResponseWriter} that will use a different underlying writer
- * when a <code>script</code> element is found. This is done to be able to convert <code>&amp;</code>
+ * Portlet specific writer to be able to convert <code>&amp;</code>
  * to <code>&</code> within the generated url, as <code>&amp;</code> is unable to be interpreted
  * in a partial response and the script fails to load.
  *
  * @author <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
  */
-public class PortletPartialResponseWriter extends PartialResponseWriter {
+public class PortletPartialResponseWriter extends ResponseWriterWrapper {
 
-    private static final String SCRIPT_ELEMENT = "script";
-
-    private boolean isScriptElement = false;
-    private ResponseWriter scriptTempResponseWriter;
-    private FastBufferWriter scriptWriter;
+    private ResponseWriter wrappedResponseWriter;
 
     public PortletPartialResponseWriter(ResponseWriter writer) {
-        super(writer);
+        this.wrappedResponseWriter = writer;
     }
 
-    /**
-     * If a <code>script</code> element is ending, call endElement() on the cloned writer,
-     * then retrieve the written content from the underlying writer so that we can convert
-     * <code>&amp;</code> to <code>&</code>. Lastly we write the modified content as a
-     * String to the real {@link PartialResponseWriter}.
-     *
-     * @param name
-     * @throws IOException
-     */
+    @Override
+    public ResponseWriter getWrapped() {
+        return wrappedResponseWriter;
+    }
+
     @Override
     public void endElement(String name) throws IOException {
-        if (isScriptElement && SCRIPT_ELEMENT.equals(name)) {
-            scriptTempResponseWriter.endElement(name);
-
-            // Retrieve the captured content and replace characters as needed before writing result
-            String result = scriptWriter.toString();
-            result = result.replace("&amp;", "&");
-            super.write(result);
-
-            // Reset variables
-            isScriptElement = false;
-            scriptWriter = null;
-            scriptTempResponseWriter = null;
-        } else {
-            super.endElement(name);
-        }
+        super.write("></" + name + ">");
     }
 
-    /**
-     * If a <code>script</code> element is beginning, create a new underlying writer and
-     * clone the wrapped {@link ResponseWriter} with the new underlying writer. Call startElement()
-     * on the cloned writer.
-     *
-     * @param name
-     * @param component
-     * @throws IOException
-     */
     @Override
     public void startElement(String name, UIComponent component) throws IOException {
-        if (!isScriptElement && SCRIPT_ELEMENT.equals(name)) {
-            scriptWriter = new FastBufferWriter();
-            scriptTempResponseWriter = super.cloneWithWriter(scriptWriter);
-            scriptTempResponseWriter.startElement(name, component);
-            isScriptElement = true;
-        } else {
-            super.startElement(name, component);
-        }
+        super.write("<" + name);
     }
 
-    /**
-     * If we're currently processing a <code>script</code> element, then call writeAttribute() on
-     * the cloned writer and not our parent.
-     *
-     * @param name
-     * @param value
-     * @param property
-     * @throws IOException
-     */
     @Override
     public void writeAttribute(String name, Object value, String property) throws IOException {
-        if (isScriptElement) {
-            scriptTempResponseWriter.writeAttribute(name, value, property);
+        super.write(" " + name + "=\"" + value + "\"");
+    }
+
+    @Override
+    public void writeURIAttribute(String name, Object value, String property) throws IOException {
+        if (value != null && (value instanceof String)) {
+            StringWriter writer = new StringWriter();
+            String url = (String) value;
+            char[] buff = new char[url.length() * 2];
+
+            HtmlUtils.writeURL(writer, url, buff , wrappedResponseWriter.getCharacterEncoding());
+
+            writer.flush();
+
+            String encodedUrl = writer.toString();
+            if (encodedUrl != null) {
+                encodedUrl = encodedUrl.replaceAll("[&]amp;", "&");
+                writeAttribute(name, encodedUrl, property);
+            }
         } else {
-            super.writeAttribute(name, value, property);
+            super.writeURIAttribute(name, value, property);
         }
     }
 }
