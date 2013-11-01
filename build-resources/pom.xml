@@ -3,7 +3,7 @@
 
     <groupId>org.jboss.portletbridge</groupId>
     <artifactId>portletbridge-build-resources</artifactId>
-    <version>3.3.0.CR1</version>
+    <version>3.3.0.Final-SNAPSHOT</version>
     <name>Portlet Bridge Build Resources</name>
 
     <description>Resources that are necessary for building Portlet Bridge (used by plugins, tests, etc)</description>
@@ -38,7 +38,7 @@
         <connection>scm:git:git://github.com/portletbridge/portletbridge.git</connection>
         <developerConnection>scm:git:git@github.com:portletbridge/portletbridge.git</developerConnection>
         <url>https://github.com/portletbridge/portletbridge</url>
-        <tag>3.3.0.CR1</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <dependencies>
