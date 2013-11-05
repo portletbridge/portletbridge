@@ -40,7 +40,7 @@ public class WarpSimpleTest extends AbstractPortletTest {
 
     @Deployment
     public static PortletArchive createDeployment() {
-        TestDeployment deployment = new TestDeployment(JsfFormSubmitTest.class, true);
+        TestDeployment deployment = new TestDeployment(WarpSimpleTest.class, true);
         deployment.archive()
                 .createFacesPortlet("Warp", "Warp Portlet", "form.xhtml")
                 .addAsWebResource("pages/basic/form.xhtml", "form.xhtml")
