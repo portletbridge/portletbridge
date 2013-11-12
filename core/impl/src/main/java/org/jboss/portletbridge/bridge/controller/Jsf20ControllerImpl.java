@@ -44,6 +44,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.FacesContextFactory;
 import javax.faces.event.PhaseEvent;
 import javax.faces.event.PhaseId;
+import javax.faces.event.PhaseListener;
 import javax.faces.event.PostAddToViewEvent;
 import javax.faces.event.PreRemoveFromViewEvent;
 import javax.faces.event.SystemEvent;
@@ -417,6 +418,14 @@ public class Jsf20ControllerImpl implements BridgeController {
                     scope.remove(FACES_EXECUTED_DURING_ACTION_REQUEST);
                     PhaseEvent fakeRestoreViewEvent = new PhaseEvent(facesContext, PhaseId.RESTORE_VIEW, facesLifecycle);
                     ppPhaseListener.afterPhase(fakeRestoreViewEvent);
+
+                    // PBR-558 Trigger RESTORE_VIEW event for WeldPhaseListener to activate Conversation context
+                    for (PhaseListener listener : facesLifecycle.getPhaseListeners()) {
+                        if ("WeldPhaseListener".equals(listener.getClass().getSimpleName())) {
+                            listener.beforePhase(fakeRestoreViewEvent);
+                            break;
+                        }
+                    }
                 } else {
                     // PBR-510 - Only end facesLifecycle.execute() after RESTORE_VIEW if we don't want f:viewParam to work
                     if (bridgeConfig.isViewParamHandlingDisabled()) {
