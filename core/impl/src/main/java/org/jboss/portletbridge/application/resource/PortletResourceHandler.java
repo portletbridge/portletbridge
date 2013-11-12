@@ -206,7 +206,7 @@ public class PortletResourceHandler extends ResourceHandlerWrapper {
     }
 
     protected boolean isPortletResource(Resource res) {
-        if (res instanceof PortletResource) {
+        if (null == res || res instanceof PortletResource) {
             return true;
         } else {
             return false;

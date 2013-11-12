@@ -223,7 +223,7 @@ public class RichFacesPortletResourceHandler extends PortletResourceHandler {
     }
 
     protected boolean isRichFacesPortletResource(Resource res) {
-        if (res instanceof RichFacesPortletResource) {
+        if (null == res || res instanceof RichFacesPortletResource) {
             return true;
         } else {
             return false;
