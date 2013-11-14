@@ -1,0 +1,45 @@
+<f:view
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xml:lang="en" lang="en">
+
+    <f:metadata>
+        <f:viewParam name="param" value="#{requestScope['param']}"/>
+    </f:metadata>
+
+    <h:head>
+    </h:head>
+
+    <h:body>
+        <h:form>
+            <h:outputText id="paramValue" value="Param:=#{param['param']}"/>
+            <br/>
+            <h:outputText id="scopeValue" value="requestScope:=#{requestScope['param']}"/>
+            <br/>
+            <br/>
+
+            <h:commandLink id="setValue"
+                    value="SET value">
+                <f:param name="param" value="value"/>
+                <f:ajax execute="@form" render="@form"/>
+            </h:commandLink>
+            <h:commandLink id="unsetValue"
+                    value="UNSET value">
+                <f:param name="param" value=""/>
+                <f:ajax execute="@form" render="@form"/>
+            </h:commandLink>
+            <br/>
+            <br/>
+
+            <h:commandButton id="postback" value="POSTBACK" />
+            <br/>
+
+            <h:link id="linkParams" value="LINK with ViewParams" includeViewParams="true" outcome="#{view.viewId}"/>
+            <br/>
+
+            <h:link id="linkNoParams" value="LINK without ViewParams" includeViewParams="false" outcome="#{view.viewId}"/>
+            <br/>
+        </h:form>
+    </h:body>
+</f:view>

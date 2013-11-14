@@ -489,22 +489,28 @@ public class Jsf20ControllerImpl implements BridgeController {
     }
 
     protected void encodeMarkupResponse(BridgeContext bridgeContext, FacesContext facesContext, BridgeRequestScope scope) {
-        if (null == scope) {
-            if (Bridge.PortletPhase.RENDER_PHASE == bridgeContext.getPortletRequestPhase()) {
+        if (Bridge.PortletPhase.RENDER_PHASE == bridgeContext.getPortletRequestPhase()) {
+            if (null == scope) {
                 return;
-            } else {
-                scope = newBridgeRequestScope(bridgeContext);
+            }
+
+            saveFacesView(scope, facesContext);
+        } else {
+            // We're in Resource Request
+            if (isBridgeScopeAjaxEnabled()) {
+                if (null == scope) {
+                    scope = newBridgeRequestScope(bridgeContext);
+                }
+
+                saveFacesView(scope, facesContext);
+
+                if (isFacesMessagesStoredOnAjax()) {
+                    saveMessages(facesContext);
+                }
+                scope.putAll(facesContext.getExternalContext().getRequestMap());
             }
         }
 
-        saveFacesView(scope, facesContext);
-
-        if (Bridge.PortletPhase.RESOURCE_PHASE == bridgeContext.getPortletRequestPhase() && isBridgeScopeAjaxEnabled()) {
-            if (isFacesMessagesStoredOnAjax()) {
-                saveMessages(facesContext);
-            }
-            scope.putAll(facesContext.getExternalContext().getRequestMap());
-        }
     }
 
     protected boolean isBridgeScopeAjaxEnabled() {
@@ -725,6 +731,7 @@ public class Jsf20ControllerImpl implements BridgeController {
         BridgeRequestScope scope = bridgeContext.getBridgeScope();
         if (null != scope) {
             scope.clear();
+            bridgeContext.getBridgeRequestScopeManager().removeRequestScope(bridgeContext, scope);
         }
     }
 
