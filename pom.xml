@@ -431,11 +431,35 @@
                     <optimize>true</optimize>
                     <fork>true</fork>
                     <argLine>-Xmx512M</argLine>
-                    <compilerArguments>
-                        <source>1.6</source>
-                        <target>1.6</target>
-                    </compilerArguments>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>java-6-compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <compilerArguments>
+                                <source>1.6</source>
+                                <target>1.6</target>
+                            </compilerArguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>java-7-compile</id>
+                        <phase>process-test-sources</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                        <configuration>
+                            <compilerArguments>
+                                <source>1.7</source>
+                                <target>1.7</target>
+                            </compilerArguments>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
             <!-- Release plugin -->
