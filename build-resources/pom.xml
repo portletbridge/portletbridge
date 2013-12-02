@@ -100,14 +100,12 @@
                     <showDeprecation>false</showDeprecation>
                     <showWarnings>true</showWarnings>
                     <optimize>true</optimize>
-                    <compilerVersion>1.7</compilerVersion>
                     <fork>true</fork>
                     <compilerArguments>
                         <source>1.6</source>
                         <target>1.6</target>
                     </compilerArguments>
                     <argLine>-Xmx512M</argLine>
-                    <executable>${JAVA_HOME}/bin/javac</executable>
                 </configuration>
             </plugin>
 

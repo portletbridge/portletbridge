@@ -411,9 +411,6 @@
                         <requireMavenVersion>
                             <version>[3.0.0,)</version>
                         </requireMavenVersion>
-                        <requireJavaVersion>
-                            <version>1.7.0</version> <!-- Must be JDK7 -->
-                        </requireJavaVersion>
                         <requireProperty>
                             <property>env.JAVA_HOME</property>
                             <message>"JAVA_HOME needs to be set (to Java7)"</message>
@@ -432,10 +429,12 @@
                     <showDeprecation>false</showDeprecation>
                     <showWarnings>true</showWarnings>
                     <optimize>true</optimize>
-                    <compilerVersion>1.7</compilerVersion>
                     <fork>true</fork>
                     <argLine>-Xmx512M</argLine>
-                    <executable>${JAVA_HOME}/bin/javac</executable>
+                    <compilerArguments>
+                        <source>1.6</source>
+                        <target>1.6</target>
+                    </compilerArguments>
                 </configuration>
             </plugin>
 
