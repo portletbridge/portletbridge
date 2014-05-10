@@ -768,6 +768,13 @@ public class BridgeContextImpl extends BridgeContext implements ELContextListene
             }
         }
 
+        if (null != viewId) {
+            int i = viewId.indexOf(':');
+            if (i >= 0) {
+                return null;
+            }
+        }
+
         if (null != viewId && excludeQueryString) {
             viewId = excludeQuery(viewId);
         }
