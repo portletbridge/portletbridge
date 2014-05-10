@@ -17,7 +17,7 @@
 
     <properties>
         <!-- JSF2 Implementations -->
-        <version.mojarra2>2.2.3</version.mojarra2>
+        <version.mojarra2>2.2.6</version.mojarra2>
 
         <!-- RichFaces 4 versions -->
         <version.richfaces4>4.3.4.Final</version.richfaces4>

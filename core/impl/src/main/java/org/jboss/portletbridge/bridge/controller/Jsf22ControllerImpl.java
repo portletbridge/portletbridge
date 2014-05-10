@@ -47,4 +47,9 @@ public class Jsf22ControllerImpl extends Jsf20ControllerImpl {
     protected void performPreExecuteTasks(FacesContext facesContext, Lifecycle facesLifecycle) {
         facesLifecycle.attachWindow(facesContext);
     }
+
+    @Override
+    protected String stateContextListenerClassname() {
+        return "com.sun.faces.context.StateContext$DynamicAddRemoveListener";
+    }
 }

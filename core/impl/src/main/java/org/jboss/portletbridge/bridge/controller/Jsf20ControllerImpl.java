@@ -84,7 +84,6 @@ import org.jboss.portletbridge.util.ParameterFunction;
 import org.jboss.portletbridge.util.PublicParameterUtil;
 
 import com.sun.faces.context.StateContext;
-import com.sun.faces.context.StateContext.AddRemoveListener;
 
 /**
  * @author <a href="http://community.jboss.org/people/kenfinni">Ken Finnigan</a>
@@ -347,7 +346,7 @@ public class Jsf20ControllerImpl implements BridgeController {
             List<SystemEventListener> postAddListeners = facesContext.getViewRoot().getViewListenersForEventClass(PostAddToViewEvent.class);
             if (null != postAddListeners && !postAddListeners.isEmpty()) {
                 for (SystemEventListener listener : postAddListeners) {
-                    if (listener instanceof AddRemoveListener) {
+                    if (listener.getClass().getName().equals(stateContextListenerClassname())) {
                         facesContext.getViewRoot().unsubscribeFromViewEvent(PostAddToViewEvent.class, listener);
                     }
                 }
@@ -356,7 +355,7 @@ public class Jsf20ControllerImpl implements BridgeController {
             List<SystemEventListener> preRemoveListeners = facesContext.getViewRoot().getViewListenersForEventClass(PreRemoveFromViewEvent.class);
             if (null != preRemoveListeners && !preRemoveListeners.isEmpty()) {
                 for (SystemEventListener listener : preRemoveListeners) {
-                    if (listener instanceof AddRemoveListener) {
+                    if (listener.getClass().getName().equals(stateContextListenerClassname())) {
                         facesContext.getViewRoot().unsubscribeFromViewEvent(PreRemoveFromViewEvent.class, listener);
                     }
                 }
@@ -784,5 +783,9 @@ public class Jsf20ControllerImpl implements BridgeController {
      */
     protected void performPreExecuteTasks(FacesContext facesContext, Lifecycle facesLifecycle) {
         // Do Nothing for JSF 2.0
+    }
+
+    protected String stateContextListenerClassname() {
+        return "com.sun.faces.context.StateContext$AddRemoveListener";
     }
 }
