@@ -96,7 +96,9 @@ public class PortletFacesContextFactoryImpl extends FacesContextFactory {
                 ELContextListener[] listeners = app.getELContextListeners();
                 ELContextEvent elEvent = new ELContextEvent(elContext);
                 for (ELContextListener elContextListener : listeners) {
-                    elContextListener.contextCreated(elEvent);
+                    if (elContextListener != null) {
+                        elContextListener.contextCreated(elEvent);
+                    }
                 }
             }
             return elContext;
