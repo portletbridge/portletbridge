@@ -47,7 +47,7 @@
 
         <!-- Container versions -->
         <version.jbossas7>7.1.1.Final</version.jbossas7>
-        <version.wildfly8>8.0.0.Final</version.wildfly8>
+        <version.wildfly8>8.1.0.Final</version.wildfly8>
 
         <!-- Plugin versions -->
         <version.plugin.surefire>2.17</version.plugin.surefire>

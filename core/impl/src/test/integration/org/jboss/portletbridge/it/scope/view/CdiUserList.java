@@ -24,6 +24,8 @@ package org.jboss.portletbridge.it.scope.view;
 import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -31,7 +33,7 @@ import java.util.ArrayList;
  */
 @ViewScoped
 @Named
-public class CdiUserList {
+public class CdiUserList implements Serializable {
 
     private ArrayList<String> users;
     private String selectedUser;
