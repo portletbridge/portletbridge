@@ -39,8 +39,8 @@
 
         <!-- Testing versions -->
         <version.junit>4.11</version.junit>
-        <version.arquillian.core>1.1.1.Final</version.arquillian.core>
-        <version.arquillian.graphene>2.0.0.Final</version.arquillian.graphene>
+        <version.arquillian.core>1.1.4.Final</version.arquillian.core>
+        <version.arquillian.graphene>2.0.3.Final</version.arquillian.graphene>
         <version.arquillian.portal>1.1.0.Alpha1</version.arquillian.portal>
         <version.shrinkwrap.descriptors>2.0.0-alpha-5</version.shrinkwrap.descriptors>
         <version.shrinkwrap.resolver>2.1.1</version.shrinkwrap.resolver>
