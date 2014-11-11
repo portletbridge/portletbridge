@@ -31,6 +31,7 @@ import javax.faces.context.ExceptionHandlerWrapper;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ExceptionQueuedEvent;
 import javax.faces.event.ExceptionQueuedEventContext;
+import javax.faces.event.PhaseId;
 import javax.servlet.ServletException;
 
 import org.jboss.portletbridge.bridge.context.BridgeContext;
@@ -71,10 +72,27 @@ public class PortletExceptionHandler extends ExceptionHandlerWrapper {
                     String errorView = getErrorView(t, errorViews);
                     if (null != errorView) {
                         FacesContext fc = FacesContext.getCurrentInstance();
-                        NavigationHandler nav = fc.getApplication().getNavigationHandler();
                         try {
-                            nav.handleNavigation(fc, null, errorView);
-                            fc.renderResponse();
+                            if (fc.getCurrentPhaseId().equals(PhaseId.RENDER_RESPONSE)) {
+                                // if we are already redirecting from this error
+                                // to this error, just skip
+                                // this would happen if there's an error on the
+                                // errorView and would cause an infinite loop
+                                if (!errorView.equals(bridgeContext.getRedirectViewId())) {
+                                    // browser has seen already some content, so, we can't
+                                    // reset the buffer/response
+                                    if (!fc.getExternalContext().isResponseCommitted()) {
+                                        fc.getExternalContext().responseReset();
+                                        fc.getExternalContext().setResponseBufferSize(-1);
+                                    }
+                                    bridgeContext.setRedirectViewId(errorView);
+                                    bridgeContext.setRenderRedirect(true);
+                                }
+                            } else {
+                                NavigationHandler nav = fc.getApplication().getNavigationHandler();
+                                nav.handleNavigation(fc, null, errorView);
+                                fc.renderResponse();
+                            }
                         } finally {
                             i.remove();
                         }
