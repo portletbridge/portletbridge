@@ -79,10 +79,13 @@ public class PortletExceptionHandler extends ExceptionHandlerWrapper {
                                 // this would happen if there's an error on the
                                 // errorView and would cause an infinite loop
                                 if (!errorView.equals(bridgeContext.getRedirectViewId())) {
-                                    fc.getExternalContext().responseReset();
-                                    fc.getExternalContext().setResponseBufferSize(-1);
+                                    // browser has seen already some content, so, we can't
+                                    // reset the buffer/response
+                                    if (!fc.getExternalContext().isResponseCommitted()) {
+                                        fc.getExternalContext().responseReset();
+                                        fc.getExternalContext().setResponseBufferSize(-1);
+                                    }
                                     bridgeContext.setRedirectViewId(errorView);
-
                                     bridgeContext.setRenderRedirect(true);
                                 }
                             } else {
