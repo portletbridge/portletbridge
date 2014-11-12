@@ -13,6 +13,14 @@
    <packaging>maven-archetype</packaging>
    <name>JSF 2 Portlet archetype</name>
 
+   <dependencies>
+       <dependency>
+           <groupId>junit</groupId>
+           <artifactId>junit</artifactId>
+           <scope>test</scope>
+       </dependency>
+   </dependencies>
+
    <build>
     <extensions>
       <extension>
