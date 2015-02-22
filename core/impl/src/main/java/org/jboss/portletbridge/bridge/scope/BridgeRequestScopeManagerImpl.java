@@ -148,7 +148,9 @@ public class BridgeRequestScopeManagerImpl implements BridgeRequestScopeManager,
      */
     public BridgeRequestScope removeRequestScopeById(BridgeContext ctx, String id) {
         BridgeRequestScope scope = this.bridgeRequestScopeCache.remove(id);
-        scope.clear();
+        if (scope != null) {
+            scope.clear();
+        }
         return scope;
     }
 
@@ -157,7 +159,7 @@ public class BridgeRequestScopeManagerImpl implements BridgeRequestScopeManager,
      *      org.jboss.portletbridge.bridge.scope.BridgeRequestScope)
      */
     public BridgeRequestScope removeRequestScope(BridgeContext ctx, BridgeRequestScope scope) {
-        return removeRequestScope(ctx, scope.getId());
+        return removeRequestScope(ctx, scope.getViewId());
     }
 
     /**
@@ -172,9 +174,7 @@ public class BridgeRequestScopeManagerImpl implements BridgeRequestScopeManager,
         BridgeRequestScope scope = null;
         if (null != scopeKey) {
             scope = removeRequestScopeById(ctx, scopeKey);
-            if (null == scope) {
-                this.scopeIdMap.remove(idPrefix);
-            }
+            this.scopeIdMap.remove(idPrefix);
         }
         return scope;
     }
