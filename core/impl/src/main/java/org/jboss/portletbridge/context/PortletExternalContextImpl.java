@@ -1198,7 +1198,8 @@ public abstract class PortletExternalContextImpl extends AbstractExternalContext
         if (queryStart < 0) {
             return false;
         } else {
-            return url.indexOf("&amp;", queryStart) > 0;
+            // %3C == < (open tag)
+            return url.indexOf("&amp;", queryStart) > 0 || url.indexOf("%3C", queryStart) > 0;
         }
     }
 
