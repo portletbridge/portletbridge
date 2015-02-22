@@ -13,7 +13,7 @@
 
    <properties>
       <jsf.version>2.1.28</jsf.version>
-      <pbr.version>3.3.3.Final</pbr.version>
+      <pbr.version>3.3.4.Final-SNAPSHOT</pbr.version>
    </properties>
 
    <licenses>
