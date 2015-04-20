@@ -10,3 +10,6 @@ overlays
 .factorypath
 arquillian-settings
 phantomjsdriver.log
+
+pom.xml.releaseBackup
+release.properties
