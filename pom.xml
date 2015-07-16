@@ -11,7 +11,7 @@
 
     <groupId>org.jboss.portletbridge</groupId>
     <artifactId>portletbridge-parent</artifactId>
-    <version>3.3.4.Final</version>
+    <version>3.3.5.Final-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>JSF2 Portlet Bridge for a portlet environment, parent pom</name>
 
@@ -98,7 +98,7 @@
         <connection>scm:git:git://github.com/portletbridge/portletbridge.git</connection>
         <developerConnection>scm:git:git@github.com:portletbridge/portletbridge.git</developerConnection>
         <url>https://github.com/portletbridge/portletbridge</url>
-        <tag>3.3.4.Final</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <dependencyManagement>
