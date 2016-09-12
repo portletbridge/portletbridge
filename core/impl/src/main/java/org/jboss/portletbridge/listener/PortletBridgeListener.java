@@ -107,17 +107,15 @@ public class PortletBridgeListener implements ServletContextListener, HttpSessio
                         if (!destroyCalled) {
                             String valueClass = value.getClass().getName();
 
-                            if (null != valueClass && valueClass.contains("com.sun.faces")) {
+                            if (null != valueClass && MOJARRA_ACTIVE_VIEW_MAPS.equals(jsfAttribute)) {
                                 session.setAttribute(jsfAttribute, value);
 
-                                if (MOJARRA_ACTIVE_VIEW_MAPS.equals(jsfAttribute)) {
-                                    // Clean up View Scoped beans
-                                    HttpSessionListener viewScopeManager =
-                                            (HttpSessionListener) servletContext.getAttribute(MOJARRA_VIEW_SCOPE_MANAGER);
+                                // Clean up View Scoped beans
+                                HttpSessionListener viewScopeManager =
+                                        (HttpSessionListener) servletContext.getAttribute(MOJARRA_VIEW_SCOPE_MANAGER);
 
-                                    if (null != viewScopeManager) {
-                                        viewScopeManager.sessionDestroyed(se);
-                                    }
+                                if (null != viewScopeManager) {
+                                    viewScopeManager.sessionDestroyed(se);
                                 }
                             }
                         }
