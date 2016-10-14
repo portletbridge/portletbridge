@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      >
+    <h:head/>
+    <h:body>
+        <h1 id="header">I18n</h1>
+
+        <h:form>
+            <h:outputText id="output" value="#{i18n['welcome.jsf']}" />
+
+            <h:selectOneMenu id="selector" value="#{language.localeCode}"
+                             valueChangeListener="#{language.countryLocaleCodeChanged}">
+                <f:selectItems value="#{language.countriesInMap}" />
+                <f:ajax render="output" event="change"/>
+            </h:selectOneMenu>
+        </h:form>
+
+    </h:body>
+</html>
