@@ -1,0 +1,28 @@
+<f:view id="ajaxEcho" xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html">
+    <h:head/>
+    <h:body>
+        <h1 id="title">MainPage</h1>
+        <h:outputText value="Implicit"/>
+        <!-- http://www.mkyong.com/jsf2/implicit-navigation-in-jsf-2-0/ -->
+        <h:form>
+            <h:commandButton id="buttonTarget" action="target" value="Move to target.xhtml" />
+        </h:form>
+
+        <h:form>
+            <h:commandButton id="buttonTargetController" action="#{pageController.moveToPage2}" value="Move to target.xhtml by managed bean" />
+        </h:form>
+        <h:form>
+            <!-- http://www.mkyong.com/jsf2/jsf-page-forward-vs-page-redirect/ -->
+            <!-- TODO - Warning, not working, maybe not supported -->
+            <h:commandButton id="buttonTargetRedirect" action="target?faces-redirect=true" value="Move to target.xhtml with redirect" />
+        </h:form>
+
+        <h:outputText value="JSF “From-Action” Navigation Rule Example"/>
+        <!-- http://www.mkyong.com/jsf2/jsf-form-action-navigation-rule-example/ -->
+        <h:form>
+            <h:commandButton id="buttonTargetNav1" action="#{pageController.processPage1}" value="Page1" />
+            <h:commandButton id="buttonTargetNav2" action="#{pageController.processPage2}" value="Page2" />
+        </h:form>       
+    </h:body>
+</f:view>
