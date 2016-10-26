@@ -354,7 +354,10 @@ public final class WebXmlProcessor {
 
             @Override
             protected void endLastElement() {
-                errorPages.put(exceptionType.toString().trim(), location.toString().trim());
+                // PBR-575 - Just skip non exception-type error-pages
+                if(exceptionType.toString()!=null && exceptionType.toString().trim().length() > 0) {
+                   errorPages.put(exceptionType.toString().trim(), location.toString().trim());
+                }
             }
         }
     }
